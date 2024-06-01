@@ -1,4 +1,4 @@
-package Trabajo;
+package Trabajo.Conexions;
 
 import java.sql.*;
 
@@ -12,6 +12,7 @@ public class Conexion {
 
     public static Connection getConnection(String usuario) throws SQLException, ClassNotFoundException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        usuario = usuario.toLowerCase().trim();
         return switch (usuario) {
             case "pac" -> DriverManager.getConnection(URL, "pacientes", passwordPac);
             case "doc" -> DriverManager.getConnection(URL, "doctores", passwordDoc);

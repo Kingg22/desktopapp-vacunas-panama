@@ -8,6 +8,7 @@ public class Conexion {
     private static String passwordPac = System.getenv("PASSWORD_PAC");
     private static String passwordDoc = System.getenv("PASSWORD_DOC");
     private static String passwordProv = System.getenv("PASSWORD_PROV");
+    private static String password = System.getenv("PASSWORD_ADM");
     private static final String URL = "jdbc:sqlserver://localhost\\" + servidor +":"+ puerto + ";database=MINSA;encrypt=false;integratedSecurity=true;";
 
     public static Connection getConnection(String usuario) throws SQLException, ClassNotFoundException {
@@ -17,7 +18,7 @@ public class Conexion {
             case "pac" -> DriverManager.getConnection(URL, "pacientes", passwordPac);
             case "doc" -> DriverManager.getConnection(URL, "doctores", passwordDoc);
             case "prov" -> DriverManager.getConnection(URL, "proveedores", passwordProv);
-            case "admin" -> DriverManager.getConnection(URL);
+            case "admin" -> DriverManager.getConnection(URL, "admin", password);
             default -> null;
         };
     }

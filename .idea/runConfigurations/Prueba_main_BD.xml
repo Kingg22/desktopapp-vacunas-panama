@@ -1,11 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Prueba main BD" type="Application" factoryName="Application">
     <envs>
+      <env name="PASSWORD_DOC" value="doc2024MINSA17Bd2" />
       <env name="PASSWORD_PAC" value="pac2024MINSA17Bd2" />
+      <env name="PASSWORD_PROV" value="prov2024MINSA17Bd2" />
       <env name="PUERTO" value="51718" />
       <env name="SERVER" value="DESTOP-DELL-REY\\SQLEXPRESS" />
-      <env name="PASSWORD_DOC" value="doc2024MINSA17Bd2" />
-      <env name="PASSWORD_PROV" value="prov2024MINSA17Bd2" />
+      <env name="PASSWORD_ADM" value="admin2024MINSA2.0Bd2" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="Main" />
     <module name="Proyecto_App" />

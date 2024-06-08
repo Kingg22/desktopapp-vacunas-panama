@@ -12,9 +12,9 @@ public class DatabaseOperaciones {
     private DatabaseInfo databaseInfo;
 
     public DatabaseOperaciones(Connection connection) throws SQLException, ClassNotFoundException {
-        // Por defecto, iniciar con el usuario "pac"
+        // Por defecto, iniciar con el rol "pac"
         cambiarUsuario("pac");
-        this.databaseInfo = new DatabaseInfo().scan(connection);
+        this.databaseInfo = new DatabaseInfo(connection);
     }
 
     public void cambiarUsuario(String rol) throws SQLException, ClassNotFoundException {
@@ -29,14 +29,34 @@ public class DatabaseOperaciones {
         this.usuarioActual = rol;
     }
 
-    public List<String[]> queryView(String tipo) throws SQLException {
+    public List<String[]> query(int tipo, String table) throws SQLException {
+        if (tipo > 4 || tipo < 1 || table == null) {
+            throw new SQLException("Tipo de objeto no valido para query. " +
+                    "\nPermitidos 1= tablas 2= vistas 3= procedimientos" +
+                    "\nNombre de objeto debe estar lo más cerca posible. " +
+                    "\nIntente nuevamente.");
+        }
         List<String[]> resultados = new ArrayList<>();
 
-        String tabla = buscarTabla(tipo);
+        String tabla = buscarTabla(table);
         if (tabla != null) {
-            List<Column> columnasLista = databaseInfo.getColumnsForView("Vista " + tabla);
-            String query = "SELECT * FROM [" + tabla + "]";
-            if (columnasLista != null) {
+            String query = null;
+            List<Column> columnasLista = null;
+            switch (tipo) {
+                case 1:
+                    query = "SELECT * FROM " + table;
+                    columnasLista = databaseInfo.getColumnsForTable(table);
+                    break;
+                case 2:
+                    query = "SELECT * FROM [" + table + "]";
+                    columnasLista = databaseInfo.getColumnsForView(tabla);
+                    break;
+                case 3:
+                    query = null; // PROCEDIMIENTOS POR IMPLEMENTAR
+                    columnasLista = databaseInfo.getColumnsForProcedure(tabla);
+                    break;
+            }
+            if (columnasLista != null && query != null || query.isEmpty() || query.isEmpty()) {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query);
                      ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
@@ -58,7 +78,9 @@ public class DatabaseOperaciones {
     }
 
     private String buscarTabla(String pattern) {
-        List<String> tablas = databaseInfo.getTablasNames();
+        List<String> tablas = new ArrayList<>(databaseInfo.getTablasNames());
+        tablas.addAll(databaseInfo.getVistasNames());
+        tablas.addAll(databaseInfo.getProcedimientosNames());
 
         for (String tabla : tablas) {
             if (tabla.equalsIgnoreCase(pattern)) {

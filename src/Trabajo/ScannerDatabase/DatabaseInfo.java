@@ -11,58 +11,79 @@ public class DatabaseInfo {
     List<String> vistasNames = new ArrayList<>();
     List<String> procedimientosNames = new ArrayList<>();
 
-    // método tipo constructor que realiza todas las operaciones y devuelve el objeto de la clase para obtener la información.
-    public DatabaseInfo scan(Connection conexion) throws SQLException {
-        DatabaseInfo dbInfo = new DatabaseInfo();
-        dbInfo.getTablesDynamic(conexion);
-        dbInfo.getViewsDynamic(conexion);
-        dbInfo.getProceduresDynamic(conexion);
-        return dbInfo;
+    //  que realiza todas las operaciones de escanear la base de datos
+    public DatabaseInfo(Connection conexion) throws SQLException {
+        getTablesDynamic(conexion);
+        getViewsDynamic(conexion);
+        getProceduresDynamic(conexion);
     }
+
     // Métodos para explorar los objetos de la database
-    List<String> getTablesDynamic(Connection conexion) throws SQLException {
-        List<String> tablas = new ArrayList<String>();
-        ResultSet rs;
-        DatabaseMetaData meta = conexion.getMetaData();
-        rs = meta.getTables(null, null, "%", new String[]{"TABLE"});
-        while (rs.next()) {
-            String tableName = rs.getString("TABLE_NAME");
-            tablas.add(tableName);
-            tablasColumnas.put(tableName, getColumnsDynamic(conexion, tableName));
+    private void getTablesDynamic(Connection conexion) throws SQLException {
+        // filtrar las tablas creadas primero
+        String query = "SELECT name FROM sys.tables WHERE is_ms_shipped = 0";
+        try (PreparedStatement preparedStatement = conexion.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                tablasNames.add(resultSet.getString("name"));
+            }
         }
-        this.tablasNames = tablas;
-        return tablas;
+
+        DatabaseMetaData meta = conexion.getMetaData();
+        for (String tabla : tablasNames) {
+            try (ResultSet rs = meta.getTables(null, null, tabla, new String[]{"TABLE"})) {
+                while (rs.next()) {
+                    String tableName = rs.getString("TABLE_NAME");
+                    tablasColumnas.put(tableName, getColumnsDynamic(conexion, tableName));
+                }
+            }
+        }
     }
 
-    List<String> getViewsDynamic(Connection conexion) throws SQLException {
-        List<String> vistas = new ArrayList<>();
-        ResultSet rs;
-        DatabaseMetaData meta = conexion.getMetaData();
-        rs = meta.getTables(null, null, "%", new String[]{"VIEW"});
-        while (rs.next()) {
-            String viewName = rs.getString("TABLE_NAME");
-            vistas.add(viewName);
-            vistasColumnas.put(viewName, getColumnsDynamic(conexion, viewName));
+    private void getViewsDynamic(Connection conexion) throws SQLException {
+        // filtrar las vistas personalizadas primero
+        String query = "SELECT name FROM sys.views WHERE is_ms_shipped = 0";
+        try (PreparedStatement preparedStatement = conexion.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                vistasNames.add(resultSet.getString("name"));
+            }
         }
-        this.vistasNames = vistas;
-        return vistas;
+        // buscar el resto de información de las vistas
+        DatabaseMetaData meta = conexion.getMetaData();
+        for (String vista : vistasNames) {
+            try (ResultSet rs = meta.getTables(null, null, vista, new String[]{"VIEW"})) {
+                while (rs.next()) {
+                    String viewName = rs.getString("TABLE_NAME");
+                    vistasColumnas.put(viewName, getColumnsDynamic(conexion, viewName));
+                }
+            }
+        }
     }
 
-    List<String> getProceduresDynamic(Connection conexion) throws SQLException {
-        List<String> procedimientos = new ArrayList<>();
-        ResultSet rs;
-        DatabaseMetaData meta = conexion.getMetaData();
-        rs = meta.getProcedures(null, null, "%");
-        while (rs.next()) {
-            String procedureName = rs.getString("PROCEDURE_NAME");
-            procedimientos.add(procedureName);
-            procedimientosColumnas.put(procedureName, getProcedureColumnsDynamic(conexion, procedureName));
+    private void getProceduresDynamic(Connection conexion) throws SQLException {
+        // filtrar los procedimientos personalizados primero
+        String query = "SELECT name FROM sys.procedures WHERE is_ms_shipped = 0";
+        try (PreparedStatement preparedStatement = conexion.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                procedimientosNames.add(resultSet.getString("name"));
+            }
         }
-        this.procedimientosNames = procedimientos;
-        return procedimientos;
+        // buscar la información de los procedimientos personalizados
+        DatabaseMetaData meta = conexion.getMetaData();
+        for (String procedimiento : procedimientosNames) {
+            try (ResultSet rs = meta.getProcedures(null, null, procedimiento)) {
+                while (rs.next()) {
+                    String procedureName = rs.getString("PROCEDURE_NAME");
+                    procedimientosColumnas.put(procedureName, getProcedureColumnsDynamic(conexion, procedureName));
+                }
+            }
+        }
     }
-    // método para recorrer de manera dinámica las tablas y vistas
-    List<Column> getColumnsDynamic(Connection conexion, String tableName) throws SQLException {
+
+    // método para recorrer de manera dinámica las tablas y vistas personalizadas
+    private List<Column> getColumnsDynamic(Connection conexion, String tableName) throws SQLException {
         List<Column> columnas = new ArrayList<>();
 
         ResultSet rs = conexion.getMetaData().getColumns(null, null, tableName, "%");
@@ -75,8 +96,9 @@ public class DatabaseInfo {
         }
         return columnas;
     }
-    // método para recorrer de manera dinámica los procedimientos almacenados
-    List<Column> getProcedureColumnsDynamic(Connection conexion, String tableName) throws SQLException {
+
+    // método para recorrer de manera dinámica los procedimientos almacenados personalizados
+    private List<Column> getProcedureColumnsDynamic(Connection conexion, String tableName) throws SQLException {
         List<Column> columnas = new ArrayList<>();
 
         ResultSet rs = conexion.getMetaData().getProcedureColumns(null, null, tableName, "%");
@@ -89,6 +111,7 @@ public class DatabaseInfo {
         }
         return columnas;
     }
+
     // getters
     public Map<String, List<Column>> getTablasColumnas() {
         return tablasColumnas;

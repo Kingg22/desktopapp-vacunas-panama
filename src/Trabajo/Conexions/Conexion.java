@@ -11,10 +11,11 @@ public class Conexion {
     private static String password = System.getenv("PASSWORD_ADM");
     private static final String URL = "jdbc:sqlserver://localhost\\" + servidor +":"+ puerto + ";database=MINSA;encrypt=false;integratedSecurity=true;";
 
-    public static Connection getConnection(String usuario) throws SQLException, ClassNotFoundException {
+    public static Connection getConnection(String rol) throws SQLException, ClassNotFoundException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        usuario = usuario.toLowerCase().trim();
-        return switch (usuario) {
+        rol = rol.toLowerCase().trim();
+        return switch (rol) {
+            // IMPLEMENTAR ROLES DE LA DATABASE Y NO LA CONEXIÓN
             case "pac" -> DriverManager.getConnection(URL, "pacientes", passwordPac);
             case "doc" -> DriverManager.getConnection(URL, "doctores", passwordDoc);
             case "prov" -> DriverManager.getConnection(URL, "proveedores", passwordProv);
@@ -24,7 +25,7 @@ public class Conexion {
     }
 
     public static Connection setRoleConnection() throws SQLException, ClassNotFoundException {
-        return null; // POR IMPLEMENTAR
+        return null; // POR IMPLEMENTAR ROLES DE LA DATABASE
     }
 
     public static void closeConnection(Connection connection) throws SQLException{

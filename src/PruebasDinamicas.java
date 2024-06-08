@@ -7,7 +7,7 @@ public class PruebasDinamicas {
     public static void main(String[] args) {
         try {
             DatabaseOperaciones db = new DatabaseOperaciones(Conexion.getConnection("pac"));
-            List<String[]> result = db.queryView("Paciente");
+            List<String[]> result = db.query(2, "Vista Paciente");
             System.out.println("Vista Paciente");
             for (String[] row : result) {
                 System.out.print(row[0]);
@@ -17,7 +17,7 @@ public class PruebasDinamicas {
                 System.out.println("\n");
             }
         } catch (Exception e) {
-            System.err.println("Error al conectar con la base de datos "+ e);
+            System.err.println(e);
         }
     }
 }

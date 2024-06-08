@@ -11,7 +11,7 @@ public class DatabaseOperaciones {
     private String usuarioActual = null;
     private DatabaseInfo databaseInfo;
 
-    public DatabaseOperaciones(Connection connection) throws SQLException, ClassNotFoundException {
+    public DatabaseOperaciones() throws SQLException, ClassNotFoundException {
         // Por defecto, iniciar con el rol "pac"
         cambiarUsuario("pac");
         this.databaseInfo = new DatabaseInfo(connection);

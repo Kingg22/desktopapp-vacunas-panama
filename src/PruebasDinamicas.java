@@ -6,7 +6,7 @@ import java.util.List;
 public class PruebasDinamicas {
     public static void main(String[] args) {
         try {
-            DatabaseOperaciones db = new DatabaseOperaciones(Conexion.getConnection("pac"));
+            DatabaseOperaciones db = new DatabaseOperaciones();
             List<String[]> result = db.query(2, "Vista Paciente");
             System.out.println("Vista Paciente");
             for (String[] row : result) {

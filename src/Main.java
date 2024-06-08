@@ -1,8 +1,8 @@
-import Trabajo.*;
+/*import Trabajo.*;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
-/*
+
 public class Main {
     public static void main(String[] args) {
         // Venta principal

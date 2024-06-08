@@ -1,14 +1,17 @@
 package Trabajo.Conexions;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.sql.*;
 
 public class Conexion {
-    private static String puerto = System.getenv("PUERTO");
-    private static String servidor = System.getenv("SERVER");
-    private static String passwordPac = System.getenv("PASSWORD_PAC");
-    private static String passwordDoc = System.getenv("PASSWORD_DOC");
-    private static String passwordProv = System.getenv("PASSWORD_PROV");
-    private static String password = System.getenv("PASSWORD_ADM");
+    private static Dotenv dotenv = Dotenv.configure().load();
+    private static String puerto = dotenv.get("PUERTO");
+    private static String servidor = dotenv.get("SERVER");
+    private static String passwordPac = dotenv.get("PASSWORD_PAC");
+    private static String passwordDoc = dotenv.get("PASSWORD_DOC");
+    private static String passwordProv = dotenv.get("PASSWORD_PROV");
+    private static String password = dotenv.get("PASSWORD_ADM");
     private static final String URL = "jdbc:sqlserver://localhost\\" + servidor +":"+ puerto + ";database=MINSA;encrypt=false;integratedSecurity=true;";
 
     public static Connection getConnection(String rol) throws SQLException, ClassNotFoundException {

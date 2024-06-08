@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
-
+/*
 public class Ventana extends JFrame implements ActionListener {
     private JLabel labelTitulo;
     private JButton buttonPaciente;
@@ -115,4 +115,4 @@ public class Ventana extends JFrame implements ActionListener {
             mostrarFrame("Vista ADMIN", "admin");
         }
     }
-}
+}*/

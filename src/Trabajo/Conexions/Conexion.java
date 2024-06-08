@@ -22,6 +22,11 @@ public class Conexion {
             default -> null;
         };
     }
+
+    public static Connection setRoleConnection() throws SQLException, ClassNotFoundException {
+        return null; // POR IMPLEMENTAR
+    }
+
     public static void closeConnection(Connection connection) throws SQLException{
         if(connection != null) {
             connection.close();

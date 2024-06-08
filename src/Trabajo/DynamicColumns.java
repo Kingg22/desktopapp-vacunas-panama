@@ -7,9 +7,10 @@ import java.util.List;
 public class DynamicColumns {
     List<String[]> resultados = new ArrayList<>();
 
-    void getTableDynamic(String Table) throws SQLException {
+    void getDataDynamic(String Table) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:your_database_url", "username", "password");
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM ?"))
+        {
             stmt.setString(1, Table);
             stmt.executeUpdate();
             ResultSet resultSet = stmt.executeQuery();

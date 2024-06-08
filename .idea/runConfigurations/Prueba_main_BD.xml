@@ -8,7 +8,7 @@
       <env name="SERVER" value="DESTOP-DELL-REY\\SQLEXPRESS" />
       <env name="PASSWORD_ADM" value="admin2024MINSA2.0Bd2" />
     </envs>
-    <option name="MAIN_CLASS_NAME" value="Main" />
+    <option name="MAIN_CLASS_NAME" value="PruebasDinamicas" />
     <module name="Proyecto_App" />
     <selectedOptions>
       <option name="vmParameters" />

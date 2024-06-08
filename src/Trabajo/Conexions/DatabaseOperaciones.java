@@ -1,87 +1,109 @@
 package Trabajo.Conexions;
 
+import Trabajo.ScannerDatabase.Column;
+import Trabajo.ScannerDatabase.DatabaseInfo;
+
 import java.sql.*;
 import java.util.*;
 
 public class DatabaseOperaciones {
     private Connection connection = null;
     private String usuarioActual = null;
-    private List<String[]> resultados = new ArrayList<>();
-    private List<String> columnas = new ArrayList<>();
+    private DatabaseInfo databaseInfo;
 
-    public DatabaseOperaciones() throws SQLException, ClassNotFoundException {
+    public DatabaseOperaciones(Connection connection) throws SQLException, ClassNotFoundException {
         // Por defecto, iniciar con el usuario "pac"
         cambiarUsuario("pac");
+        this.databaseInfo = new DatabaseInfo().scan(connection);
     }
 
-    public void cambiarUsuario(String usuario) throws SQLException, ClassNotFoundException {
+    public void cambiarUsuario(String rol) throws SQLException, ClassNotFoundException {
         // Cerrar la conexión actual si existe
         if (connection != null) {
             Conexion.closeConnection(connection);
         }
-        // Obtener una nueva conexión con el usuario especificado
-        this.connection = Conexion.getConnection(usuario);
-        this.usuarioActual = usuario;
+        // Obtener una nueva conexión con el usuario especificado en el servidor
+
+        // IMPLEMENTAR ROLES DE LA DATABASE
+        this.connection = Conexion.getConnection(rol);
+        this.usuarioActual = rol;
     }
 
-    public void queryViewPaciente() throws SQLException {
-        queryView("SELECT * FROM [Vista Paciente]",
-                Arrays.asList("cedula", "nombre_pac", "apellido_pac", "sexo", "edad_calculada", "fecha_aplicacion", "nombre_vac"));
-    }
+    public List<String[]> queryView(String tipo) throws SQLException {
+        List<String[]> resultados = new ArrayList<>();
 
-    public void queryViewDoctor() throws SQLException, ClassNotFoundException {
-        cambiarUsuario("doc");
-        queryView("SELECT * FROM [Vista Doctor]",
-                Arrays.asList("id_doctor", "nombre_doc", "apellido_doc", "especialidad", "sexo", "fecha_ingreso", "nombre_hospital"));
-    }
-
-    public void queryViewProveedor() throws SQLException, ClassNotFoundException {
-        cambiarUsuario("prov");
-        queryView("SELECT * FROM [Vista Proveedor]",
-                Arrays.asList("id_proveedor", "nombre_prov", "contacto_prov", "direccion_prov", "ciudad", "pais", "telefono"));
-    }
-
-    public void queryViewAdmin() throws SQLException, ClassNotFoundException {
-        cambiarUsuario("admin");
-        queryView("SELECT * FROM [Vista Admin]",
-                Arrays.asList("id_admin", "nombre_admin", "apellido_admin", "cargo", "sexo", "fecha_inicio", "nombre_departamento"));
-    }
-
-    private void queryView(String query, List<String> columnasLista) throws SQLException {
-        resultados.clear();
-        columnas.clear();
-        columnas.addAll(columnasLista);
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                String[] resultado = new String[columnasLista.size()];
-                for (int i = 0; i < columnasLista.size(); i++) {
-                    resultado[i] = resultSet.getString(columnasLista.get(i));
+        String tabla = buscarTabla(tipo);
+        if (tabla != null) {
+            List<Column> columnasLista = databaseInfo.getColumnsForView("Vista " + tabla);
+            String query = "SELECT * FROM [" + tabla + "]";
+            if (columnasLista != null) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+                     ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String[] resultado = new String[columnasLista.size()];
+                        int i= -1;
+                        for (Column column : columnasLista) {
+                            i++;
+                            resultado[i] = getColumnValueDynamic(resultSet, column);
+                        }
+                        resultados.add(resultado);
+                    }
+                } finally {
+                    closeConnection();
                 }
-                resultados.add(resultado);
             }
         }
-    }
 
-    public List<String[]> getResultados() {
         return resultados;
     }
 
-    public String[][] getResultadosArray() {
-        String[][] array = new String[resultados.size()][];
-        for (int i = 0; i < resultados.size(); i++) {
-            array[i] = resultados.get(i);
+    private String buscarTabla(String pattern) {
+        List<String> tablas = databaseInfo.getTablasNames();
+
+        for (String tabla : tablas) {
+            if (tabla.equalsIgnoreCase(pattern)) {
+                return tabla;
+            }
         }
-        return array;
+
+        for(String tabla : tablas) {
+            if(tabla.toLowerCase().contains(pattern.toLowerCase())) {
+                return tabla;
+            }
+        }
+        return null;
     }
 
-    public List<String> getColumnas() {
-        return columnas;
-    }
-
-    public String[] getColumnasArray() {
-        return columnas.toArray(new String[0]);
+    private String getColumnValueDynamic(ResultSet resultSet, Column column) throws SQLException {
+        String columnName = column.getName();
+        String columnType = column.getType();
+        switch (columnType.toUpperCase()) {
+            case "VARCHAR":
+            case "CHAR":
+            case "TEXT":
+                return resultSet.getString(columnName);
+            case "INT":
+            case "INTEGER":
+                return String.valueOf(resultSet.getInt(columnName));
+            case "FLOAT":
+            case "REAL":
+            case "DOUBLE":
+                return String.valueOf(resultSet.getDouble(columnName));
+            case "BOOLEAN":
+                return String.valueOf(resultSet.getBoolean(columnName));
+            case "DATE":
+                return String.valueOf(resultSet.getDate(columnName));
+            case "TIME":
+                return String.valueOf(resultSet.getTime(columnName));
+            case "TIMESTAMP":
+            case "DATETIME":
+                // Obtener el valor TIMESTAMP o DATETIME como un objeto Timestamp
+                Timestamp timestampValue = resultSet.getTimestamp(columnName);
+                // Convertir el objeto Timestamp a String
+                return (timestampValue != null) ? timestampValue.toString() : null;
+            default:
+                return resultSet.getString(columnName); // Default to String if type is unknown
+        }
     }
 
     public void closeConnection() throws SQLException {

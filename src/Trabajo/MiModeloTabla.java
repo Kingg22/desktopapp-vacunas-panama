@@ -5,7 +5,7 @@ import Trabajo.Conexions.DatabaseOperaciones;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.sql.SQLException;
-
+/*
 public class MiModeloTabla extends AbstractTableModel {
     private static DatabaseOperaciones db;
     private String[][] data;
@@ -80,4 +80,4 @@ public class MiModeloTabla extends AbstractTableModel {
     public static void setDb(DatabaseOperaciones db) {
         MiModeloTabla.db = db;
     }
-}
+}*/

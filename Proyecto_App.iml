@@ -35,5 +35,23 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="AbsoluteLayout by Netbeans">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Librerias/AbsoluteLayout.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Crypto">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Librerias/spring-security-crypto-6.3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

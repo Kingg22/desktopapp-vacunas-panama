@@ -1,9 +1,8 @@
-import Trabajo.Conexions.Conexion;
 import Trabajo.Conexions.DatabaseOperaciones;
 
 import java.util.List;
 
-public class PruebasDinamicas {
+public class PruebasDinamicasOperaciones {
     public static void main(String[] args) {
         try {
             DatabaseOperaciones db = new DatabaseOperaciones();

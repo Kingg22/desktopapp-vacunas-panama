@@ -10,6 +10,10 @@ public class Validator {
             Pattern.CASE_INSENSITIVE
     );
 
+    // Expresión regular para el formato de correo electrónico
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+            "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$"
+    );
 
     // Método para validar la cédula
     public static boolean isValidCedula(String cedula) {
@@ -20,7 +24,17 @@ public class Validator {
         return matcher.matches();
     }
 
+    // Método para validar el correo electrónico
+    public static boolean isValidEmail(String email) {
+        if (email == null) {
+            return false;
+        }
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        return matcher.matches();
+    }
+
     // Método para sanitizar la entrada limitando la longitud
+    /*
     public static String sanitizeInput(String input, int maxLength) {
         if (input == null) {
             return null;
@@ -29,5 +43,5 @@ public class Validator {
             input = input.substring(0, maxLength);
         }
         return input.trim(); // Elimina espacios al inicio y al final
-    }
+    } */
 }

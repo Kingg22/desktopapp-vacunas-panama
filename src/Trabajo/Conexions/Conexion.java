@@ -11,18 +11,19 @@ public class Conexion {
     private static String passwordPac = dotenv.get("PASSWORD_PAC");
     private static String passwordDoc = dotenv.get("PASSWORD_DOC");
     private static String passwordProv = dotenv.get("PASSWORD_PROV");
+    private static String passwordOfic = dotenv.get("PASSWORD_ADMINISTRATIVO");
     private static String password = dotenv.get("PASSWORD_ADM");
-    private static final String URL = "jdbc:sqlserver://localhost\\" + servidor +":"+ puerto + ";database=MINSA;encrypt=false;integratedSecurity=true;";
+    private static final String URL = "jdbc:sqlserver://localhost\\" + servidor +":"+ puerto + ";database=MINSA;encrypt=false;";
 
     public static Connection getConnection(String rol) throws SQLException, ClassNotFoundException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         rol = rol.toLowerCase().trim();
         return switch (rol) {
-            // IMPLEMENTAR ROLES DE LA DATABASE Y NO LA CONEXIÓN
-            case "pac" -> DriverManager.getConnection(URL, "pacientes", passwordPac);
-            case "doc" -> DriverManager.getConnection(URL, "doctores", passwordDoc);
-            case "prov" -> DriverManager.getConnection(URL, "proveedores", passwordProv);
-            case "admin" -> DriverManager.getConnection(URL, "admin", password);
+            case "pac" -> DriverManager.getConnection(URL, "Pacientes", passwordPac);
+            case "doc" -> DriverManager.getConnection(URL, "Doctores", passwordDoc);
+            case "prov" -> DriverManager.getConnection(URL, "Proveedores", passwordProv);
+            case "ofic" -> DriverManager.getConnection(URL, "Administrativos", passwordOfic);
+            case "admin" -> DriverManager.getConnection(URL, "Administrativos", password);
             default -> null;
         };
     }

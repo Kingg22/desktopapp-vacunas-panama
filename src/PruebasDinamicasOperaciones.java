@@ -6,7 +6,8 @@ public class PruebasDinamicasOperaciones {
     public static void main(String[] args) {
         try {
             DatabaseOperaciones db = new DatabaseOperaciones();
-            List<String[]> result = db.query(2, "Vista Paciente");
+            db.cambiarUsuario("pac");
+            List<String[]> result = db.query(2, "Paciente");
             System.out.println("Vista Paciente");
             for (String[] row : result) {
                 System.out.print(row[0]);

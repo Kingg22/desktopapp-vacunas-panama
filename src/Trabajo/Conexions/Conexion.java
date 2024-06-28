@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class Conexion {
     private static Dotenv dotenv = Dotenv.configure().load();
-    private static String puerto = dotenv.get("PUERTO");
+    private static String puerto = dotenv.get("PUERTO_P");
     private static String servidor = dotenv.get("SERVER");
     private static String passwordPac = dotenv.get("PASSWORD_PAC");
     private static String passwordDoc = dotenv.get("PASSWORD_DOC");
@@ -23,13 +23,9 @@ public class Conexion {
             case "doc" -> DriverManager.getConnection(URL, "Doctores", passwordDoc);
             case "prov" -> DriverManager.getConnection(URL, "Proveedores", passwordProv);
             case "ofic" -> DriverManager.getConnection(URL, "Administrativos", passwordOfic);
-            case "admin" -> DriverManager.getConnection(URL, "Administrativos", password);
+            case "admin" -> DriverManager.getConnection(URL, "Administradores", password);
             default -> null;
         };
-    }
-
-    public static Connection setRoleConnection() throws SQLException, ClassNotFoundException {
-        return null; // POR IMPLEMENTAR ROLES DE LA DATABASE
     }
 
     public static void closeConnection(Connection connection) throws SQLException{

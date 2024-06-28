@@ -1,10 +1,10 @@
 package Trabajo.Validations;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.prefs.Preferences;
+
 import org.springframework.security.crypto.bcrypt.*;
 
 class Usuario {
@@ -14,6 +14,7 @@ class Usuario {
     private String correo;
     private String usuario;
     private String passwordHash;
+    private Preferencias prefs;
 
     public Usuario(String nombre, String apellido, String cedula, String correo, String usuario, String password) {
         this.nombre = nombre;
@@ -67,13 +68,25 @@ class Usuario {
     public String toString() {
         return nombre + " " + apellido + " " + cedula + " " + correo + " " + usuario;
     }
+
+    public Preferencias getPrefs() {
+        return prefs;
+    }
 }
 
 public class InicioSesion {
-    private static List<Usuario> usuarios = new ArrayList<Usuario>();
+    private static HashMap<String, List<Usuario>> usuariosRole = new HashMap<String, List<Usuario>>(); // IMPLEMENTAR HASHMAP DE USUARIOS SEGÚN ROLES
 
-    public static boolean autentificar(String usuario, String password) {
-        Usuario consultado = obtener(usuario);
+    public InicioSesion() {
+        String[] roles = {"Paciente", "Doctor", "Proveedor", "Administrativo", "Autoridad", "Administrador"};
+        for (String role : roles) {
+            usuariosRole.put(role, new ArrayList<Usuario>());
+        }
+        insertar("admin", "admin", null, "admin@admin.com", "admin", "admin1234*", "Administrador");
+    }
+
+    public static boolean autentificar(String usuario, String password, String rol) {
+        Usuario consultado = obtener(usuario, rol);
         if (consultado != null) {
             return consultado.checkPassword(password);
         } else {
@@ -81,59 +94,113 @@ public class InicioSesion {
         }
     }
 
-    private int buscar(String cedula) {
-        for(int i = 0; i < usuarios.size(); i++) {
-            if(usuarios.get(i).getCedula().equals(cedula)) {
-                return i;
-            }
-        }
-        return Integer.MIN_VALUE;
-    }
-
-    private static Usuario obtener(String usuario) {
-        for(int i = 0; i < usuarios.size(); i++) {
-            if(usuarios.get(i).getUsuario().equals(usuario)) {
-                return usuarios.get(i);
+    public static Usuario buscar(String cedula, String rol) {
+        List<Usuario> usuarios = usuariosRole.get(rol);
+        if (usuarios != null) {
+            for (Usuario u : usuarios) {
+                if (u.getCedula().equals(cedula)) {
+                    return u;
+                }
             }
         }
         return null;
     }
 
-    public boolean insertar(String nombre, String apellido, String cedula, String correo, String usuario, String password) {
-        if(buscar(cedula) == Integer.MIN_VALUE) {
-            return usuarios.add(new Usuario(nombre, apellido, cedula, correo, usuario, password));
+    private static Usuario obtener(String usuario, String rol) {
+        List<Usuario> usuarios = usuariosRole.get(rol);
+        if (usuarios != null) {
+            for (Usuario u : usuarios) {
+                if (u.getUsuario().equals(usuario)) {
+                    return u;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean insertar(String nombre, String apellido, String cedula, String correo, String usuario, String password, String rol) {
+        if (buscar(cedula, rol) == null) {
+            return usuariosRole.get(rol).add(new Usuario(nombre, apellido, cedula, correo, usuario, password));
         } else {
             return false;
         }
     }
 
-    public boolean modificarDatos(String cedula, String nombre, String apellido, String correo) {
-        int i = buscar(cedula);
-        if(i != Integer.MIN_VALUE) {
-            usuarios.get(i).modificarDatos(nombre, apellido, cedula, correo);
+    public boolean modificarDatos(String cedula, String nombre, String apellido, String correo, String rol) {
+        Usuario usuario = buscar(cedula, rol);
+        if (usuario != null) {
+            usuario.modificarDatos(nombre, apellido, cedula, correo);
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean modificarCredenciales(String cedula, String usuario, String password) {
-        int i = buscar(cedula);
-        if(i != Integer.MIN_VALUE) {
-            usuarios.get(i).modificarCredenciales(usuario, password);
+    public boolean modificarCredenciales(String cedula, String usuario, String password, String rol) {
+        Usuario usuarioF = buscar(cedula, rol);
+        if (usuarioF != null) {
+            usuarioF.modificarCredenciales(usuario, password);
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean eliminar(String cedula) {
-        int i = buscar(cedula);
-        if(i != Integer.MIN_VALUE) {
-            usuarios.remove(i);
-            return true;
-        } else {
-            return false;
+    public boolean eliminar(String cedula, String rol) {
+        List<Usuario> usuarios = usuariosRole.get(rol);
+        if (usuarios != null) {
+            for (int i = 0; i < usuarios.size(); i++) {
+                if (usuarios.get(i).getCedula().equals(cedula)) {
+                    usuarios.remove(i);
+                    return true;
+                }
+            }
         }
+        return false;
+    }
+}
+
+class Preferencias {
+    private Preferences prefs = Preferences.userNodeForPackage(Usuario.class);
+
+    public void setPrefInputs(boolean valor) {
+        prefs.putBoolean("prefInput", valor);
+        // emergente true, en tabla false
+    }
+
+    public boolean getPrefInput() {
+        return prefs.getBoolean("prefInput", false);
+    }
+
+    public void setFontSize(int valor) {
+        prefs.putInt("fontSize", valor);
+    }
+
+    public int getFontSize() {
+        return prefs.getInt("fontSize", 12);
+    }
+
+    public void setFontName(String valor) {
+        prefs.put("fontName", valor);
+    }
+
+    public String getFontName() {
+        return prefs.get("fontName", "Arial");
+    }
+
+    public void setSede(String sede) {
+        prefs.put("sede", sede);
+    }
+
+    public String getSede() {
+        return prefs.get("sede", "Complejo Hospitalario Doctor Arnulfo Arias Madrid");
+    }
+
+    public void setExportFileType(String fileType) {
+        prefs.put("exportFileType", fileType);
+    }
+
+    public String getExportFileType() {
+        return prefs.get("exportFileType", "PDF");
     }
 }

@@ -9,12 +9,11 @@ import java.util.*;
 public class DatabaseOperaciones {
     private Connection connection = null;
     private String usuarioActual = null;
-    private DatabaseInfo databaseInfo;
+    private DatabaseInfo databaseInfo = null;
 
     public DatabaseOperaciones() throws SQLException, ClassNotFoundException {
-        // Por defecto, iniciar con el rol "pac"
-        cambiarUsuario("pac");
-        this.databaseInfo = new DatabaseInfo(connection);
+        // Por defecto, iniciar con el rol "admin"
+        cambiarUsuario("admin");
     }
 
     public void cambiarUsuario(String rol) throws SQLException, ClassNotFoundException {
@@ -22,15 +21,13 @@ public class DatabaseOperaciones {
         if (connection != null) {
             Conexion.closeConnection(connection);
         }
-        // Obtener una nueva conexión con el usuario especificado en el servidor
-
-        // IMPLEMENTAR ROLES DE LA DATABASE
         this.connection = Conexion.getConnection(rol);
+        databaseInfo = new DatabaseInfo(connection);
         this.usuarioActual = rol;
     }
 
-    public List<String[]> query(int tipo, String table) throws SQLException {
-        if (tipo > 4 || tipo < 1 || table == null) {
+    public List<String[]> query(int tipo, String name) throws SQLException {
+        if (tipo > 4 || tipo < 1 || name == null) {
             throw new SQLException("Tipo de objeto no valido para query. " +
                     "\nPermitidos 1= tablas 2= vistas 3= procedimientos" +
                     "\nNombre de objeto debe estar lo más cerca posible. " +
@@ -38,30 +35,30 @@ public class DatabaseOperaciones {
         }
         List<String[]> resultados = new ArrayList<>();
 
-        String tabla = buscarTabla(table);
+        String tabla = searchName(tipo, name);
         if (tabla != null) {
             String query = null;
             List<Column> columnasLista = null;
             switch (tipo) {
                 case 1:
-                    query = "SELECT * FROM " + table;
-                    columnasLista = databaseInfo.getColumnsForTable(table);
+                    query = "SELECT * FROM " + tabla;
+                    columnasLista = databaseInfo.getColumnsForTable(tabla);
                     break;
                 case 2:
-                    query = "SELECT * FROM [" + table + "]";
+                    query = "SELECT * FROM [" + tabla + "]";
                     columnasLista = databaseInfo.getColumnsForView(tabla);
                     break;
                 case 3:
-                    query = null; // PROCEDIMIENTOS POR IMPLEMENTAR
+                    query = ""; // PROCEDIMIENTOS POR IMPLEMENTAR
                     columnasLista = databaseInfo.getColumnsForProcedure(tabla);
                     break;
             }
-            if (columnasLista != null && query != null || query.isEmpty() || query.isEmpty()) {
+            if (columnasLista != null && query != null || query.isBlank()) {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query);
                      ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
                         String[] resultado = new String[columnasLista.size()];
-                        int i= -1;
+                        int i = -1;
                         for (Column column : columnasLista) {
                             i++;
                             resultado[i] = getColumnValueDynamic(resultSet, column);
@@ -72,28 +69,58 @@ public class DatabaseOperaciones {
                     closeConnection();
                 }
             }
-        }
+        } else
+            throw new SQLException("No se encontró objeto que coincida.");
 
         return resultados;
     }
 
-    private String buscarTabla(String pattern) {
-        List<String> tablas = new ArrayList<>(databaseInfo.getTablasNames());
-        tablas.addAll(databaseInfo.getVistasNames());
-        tablas.addAll(databaseInfo.getProcedimientosNames());
+    private String searchName(int type, String pattern) {
+        List<String> names = null;
+        if (pattern == null || pattern.trim().isEmpty()) {
+            return null;
+        }
+        switch (type) {
+            case 1:
+                names = new ArrayList<>(databaseInfo.getTablasNames());
+                break;
+            case 2:
+                names = new ArrayList<>(databaseInfo.getVistasNames());
+                break;
+            case 3:
+                names = new ArrayList<>(databaseInfo.getProcedimientosNames());
+                break;
+            default:
+                return null;
+        }
+        // Primero buscar coincidencia exacta
+        Optional<String> exactMatch = names.stream()
+                .filter(name -> name.equalsIgnoreCase(pattern))
+                .findFirst();
 
-        for (String tabla : tablas) {
+        if (exactMatch.isPresent()) {
+            return exactMatch.get();
+        }
+
+        // Luego buscar por coincidencia parcial (ignorando mayúsculas y minúsculas)
+        Optional<String> partialMatch = names.stream()
+                .filter(name -> name.toLowerCase().contains(pattern.toLowerCase()))
+                .findFirst();
+
+        return partialMatch.orElse(null);
+        /*
+        for (String tabla : names) {
             if (tabla.equalsIgnoreCase(pattern)) {
                 return tabla;
             }
         }
 
-        for(String tabla : tablas) {
-            if(tabla.toLowerCase().contains(pattern.toLowerCase())) {
+        for (String tabla : names) {
+            if (tabla.toLowerCase().contains(pattern.toLowerCase())) {
                 return tabla;
             }
         }
-        return null;
+        return null; */
     }
 
     private String getColumnValueDynamic(ResultSet resultSet, Column column) throws SQLException {

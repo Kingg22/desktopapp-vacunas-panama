@@ -1,4 +1,4 @@
-package Trabajo.ScannerDatabase;
+package Logica.ScannerDatabase;
 
 public class Column {
     private String name;

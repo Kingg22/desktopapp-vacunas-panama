@@ -1,4 +1,4 @@
-import Trabajo.Conexions.DatabaseOperaciones;
+import Logica.Conexions.DatabaseOperaciones;
 
 import java.util.List;
 

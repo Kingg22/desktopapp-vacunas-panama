@@ -1,7 +1,7 @@
-package Trabajo.Conexions;
+package Logica.Conexions;
 
-import Trabajo.ScannerDatabase.Column;
-import Trabajo.ScannerDatabase.DatabaseInfo;
+import Logica.ScannerDatabase.Column;
+import Logica.ScannerDatabase.DatabaseInfo;
 
 import java.sql.*;
 import java.util.*;

@@ -1,4 +1,4 @@
-package Trabajo.ScannerDatabase;
+package Logica.ScannerDatabase;
 
 import java.sql.*;
 import java.util.*;

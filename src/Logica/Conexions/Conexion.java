@@ -1,4 +1,4 @@
-package Trabajo.Conexions;
+package Logica.Conexions;
 
 import io.github.cdimascio.dotenv.Dotenv;
 

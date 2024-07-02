@@ -1,13 +1,8 @@
 package InterfazDesktop;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
+import java.awt.*;
 
 public class PantallaBlock extends JFrame {
 
@@ -16,9 +11,9 @@ public class PantallaBlock extends JFrame {
         initComponents();
 
         JButton[] botones = {button_opcion1, button_opcion2, button_opcion3,
-            button_opcion4, button_opcion5, button_modificarDatos,
-            button_modificarCred, button_preferencias,
-            button_soporte};
+                button_opcion4, button_opcion5, button_modificarDatos,
+                button_modificarCred, button_preferencias,
+                button_soporte};
         for (JButton boton : botones) {
             boton.setUI(new BasicButtonUI());
             boton.setBackground(new Color(86, 86, 86));
@@ -28,6 +23,7 @@ public class PantallaBlock extends JFrame {
         this.setExtendedState(MAXIMIZED_BOTH);
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
         jScrollPane3 = new javax.swing.JScrollPane();
         background = new JPanel();
@@ -90,12 +86,12 @@ public class PantallaBlock extends JFrame {
         javax.swing.GroupLayout separador1Layout = new javax.swing.GroupLayout(separador1);
         separador1.setLayout(separador1Layout);
         separador1Layout.setHorizontalGroup(
-            separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         separador1Layout.setVerticalGroup(
-            separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jPanel_menuOpciones.add(separador1);
@@ -118,12 +114,12 @@ public class PantallaBlock extends JFrame {
         javax.swing.GroupLayout separador3Layout = new javax.swing.GroupLayout(separador3);
         separador3.setLayout(separador3Layout);
         separador3Layout.setHorizontalGroup(
-            separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         separador3Layout.setVerticalGroup(
-            separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jPanel_menuOpciones.add(separador3);
@@ -153,12 +149,12 @@ public class PantallaBlock extends JFrame {
         javax.swing.GroupLayout separador2Layout = new javax.swing.GroupLayout(separador2);
         separador2.setLayout(separador2Layout);
         separador2Layout.setHorizontalGroup(
-            separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         separador2Layout.setVerticalGroup(
-            separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jPanel_menuOpciones.add(separador2);
@@ -215,12 +211,12 @@ public class PantallaBlock extends JFrame {
         javax.swing.GroupLayout separador4Layout = new javax.swing.GroupLayout(separador4);
         separador4.setLayout(separador4Layout);
         separador4Layout.setHorizontalGroup(
-            separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         separador4Layout.setVerticalGroup(
-            separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jPanel_menuOpciones.add(separador4);
@@ -294,28 +290,28 @@ public class PantallaBlock extends JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(227, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(11, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 789, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(16, Short.MAX_VALUE)))
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(227, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addContainerGap(11, Short.MAX_VALUE)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 789, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(16, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(752, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(57, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(11, Short.MAX_VALUE)))
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(752, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addContainerGap(57, Short.MAX_VALUE)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(11, Short.MAX_VALUE)))
         );
 
         jPanel_derecho.add(jPanel1, "vacio");
@@ -328,7 +324,7 @@ public class PantallaBlock extends JFrame {
 
         pack();
         setLocationRelativeTo(null);
-    }
+    }// </editor-fold>
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {
         Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
@@ -363,7 +359,8 @@ public class PantallaBlock extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PantallaBlock.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 

@@ -1,7 +1,10 @@
 package Logica.ScannerDatabase;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DatabaseInfo {
     Map<String, List<Column>> tablasColumnas = new HashMap<>();

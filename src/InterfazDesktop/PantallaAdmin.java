@@ -1,27 +1,13 @@
 package InterfazDesktop;
 
-import Validations.LimitarCamposSQL;
-import Validations.LimitarCamposSeguro;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
-import java.awt.GridLayout;
-import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.SpinnerNumberModel;
+import Logica.Validations.LimitarCamposSQL;
+import Logica.Validations.LimitarCamposSeguro;
+
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 
 public class PantallaAdmin extends javax.swing.JFrame {
 
@@ -32,9 +18,9 @@ public class PantallaAdmin extends javax.swing.JFrame {
         this.jPanel_filtrar = new JTableFiltrar(jTable_Content);
 
         JButton[] botones = {button_opcion1, button_opcion2,
-            button_opcion5, button_modificarDatos,
-            button_modificarCred, button_preferencias, jButton_savePreferences,
-            button_soporte, button_opcion6, button_opcion7};
+                button_opcion5, button_modificarDatos,
+                button_modificarCred, button_preferencias, jButton_savePreferences,
+                button_soporte, button_opcion6, button_opcion7};
         for (JButton boton : botones) {
             boton.setUI(new BasicButtonUI());
             boton.setBackground(new Color(86, 86, 86));
@@ -44,11 +30,8 @@ public class PantallaAdmin extends javax.swing.JFrame {
 
         this.setExtendedState(MAXIMIZED_BOTH);
     }
-
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-
         jComboBox_columna3 = new javax.swing.JComboBox<>();
         jTextField_valorInsert2 = new javax.swing.JTextField();
         jPanel_select = new javax.swing.JPanel();
@@ -173,7 +156,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
 
         jComboBox_columna3.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_columna3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "*" }));
+        jComboBox_columna3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"*"}));
         jComboBox_columna3.setPreferredSize(new java.awt.Dimension(150, 27));
 
         jTextField_valorInsert2.setDocument(new LimitarCamposSQL(50, "Valor"));
@@ -183,6 +166,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_valorInsert2FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_valorInsert2FocusLost(evt);
             }
@@ -221,7 +205,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel3.add(select);
 
         jComboBox_columna.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_columna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "*" }));
+        jComboBox_columna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"*"}));
         jComboBox_columna.setPreferredSize(new java.awt.Dimension(150, 27));
         jPanel3.add(jComboBox_columna);
 
@@ -233,6 +217,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_selectComplejoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_selectComplejoFocusLost(evt);
             }
@@ -269,7 +254,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel4.add(from);
 
         jComboBox_tabla.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_tabla.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tabla1" }));
+        jComboBox_tabla.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla.setMaximumSize(new java.awt.Dimension(367, 32767));
         jComboBox_tabla.setPreferredSize(new java.awt.Dimension(150, 27));
         jPanel4.add(jComboBox_tabla);
@@ -283,7 +268,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel4.add(cantJoin);
 
         jComboBox_joins.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_joins.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5" }));
+        jComboBox_joins.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"0", "1", "2", "3", "4", "5"}));
         jComboBox_joins.setMaximumSize(new java.awt.Dimension(80, 32767));
         jComboBox_joins.setPreferredSize(new java.awt.Dimension(80, 27));
         jComboBox_joins.addActionListener(new java.awt.event.ActionListener() {
@@ -440,6 +425,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTablaFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTablaFocusLost(evt);
             }
@@ -532,12 +518,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel_separador1Layout = new javax.swing.GroupLayout(jPanel_separador1);
         jPanel_separador1.setLayout(jPanel_separador1Layout);
         jPanel_separador1Layout.setHorizontalGroup(
-            jPanel_separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 977, Short.MAX_VALUE)
+                jPanel_separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
         );
         jPanel_separador1Layout.setVerticalGroup(
-            jPanel_separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 25, Short.MAX_VALUE)
+                jPanel_separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 25, Short.MAX_VALUE)
         );
 
         jPanel_preferencias.add(jPanel_separador1);
@@ -554,12 +540,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel_separador2Layout = new javax.swing.GroupLayout(jPanel_separador2);
         jPanel_separador2.setLayout(jPanel_separador2Layout);
         jPanel_separador2Layout.setHorizontalGroup(
-            jPanel_separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 977, Short.MAX_VALUE)
+                jPanel_separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
         );
         jPanel_separador2Layout.setVerticalGroup(
-            jPanel_separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 15, Short.MAX_VALUE)
+                jPanel_separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 15, Short.MAX_VALUE)
         );
 
         jPanel_preferencias.add(jPanel_separador2);
@@ -601,12 +587,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel_separador3Layout = new javax.swing.GroupLayout(jPanel_separador3);
         jPanel_separador3.setLayout(jPanel_separador3Layout);
         jPanel_separador3Layout.setHorizontalGroup(
-            jPanel_separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 977, Short.MAX_VALUE)
+                jPanel_separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
         );
         jPanel_separador3Layout.setVerticalGroup(
-            jPanel_separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 25, Short.MAX_VALUE)
+                jPanel_separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 25, Short.MAX_VALUE)
         );
 
         jPanel_preferencias.add(jPanel_separador3);
@@ -618,7 +604,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel_preferencias.add(jLabel1);
 
         jComboBox_exportarType.setFont(new java.awt.Font("Roboto", 0, 14));
-        jComboBox_exportarType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir...", "CSV", "TXT", "PDF", "Excel" }));
+        jComboBox_exportarType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir...", "CSV", "TXT", "PDF", "Excel"}));
         jComboBox_exportarType.setMaximumSize(new java.awt.Dimension(367, 40));
         jComboBox_exportarType.setPreferredSize(new java.awt.Dimension(190, 37));
         jPanel_preferencias.add(jComboBox_exportarType);
@@ -629,12 +615,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel_separador4Layout = new javax.swing.GroupLayout(jPanel_separador4);
         jPanel_separador4.setLayout(jPanel_separador4Layout);
         jPanel_separador4Layout.setHorizontalGroup(
-            jPanel_separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 977, Short.MAX_VALUE)
+                jPanel_separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
         );
         jPanel_separador4Layout.setVerticalGroup(
-            jPanel_separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 25, Short.MAX_VALUE)
+                jPanel_separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 25, Short.MAX_VALUE)
         );
 
         jPanel_preferencias.add(jPanel_separador4);
@@ -646,7 +632,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel_preferencias.add(jLabel5);
 
         jComboBox_exportarType1.setFont(new java.awt.Font("Roboto", 0, 14));
-        jComboBox_exportarType1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir..." }));
+        jComboBox_exportarType1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir..."}));
         jComboBox_exportarType1.setMaximumSize(new java.awt.Dimension(567, 40));
         jComboBox_exportarType1.setPreferredSize(new java.awt.Dimension(450, 37));
         jPanel_preferencias.add(jComboBox_exportarType1);
@@ -657,12 +643,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel_separador5Layout = new javax.swing.GroupLayout(jPanel_separador5);
         jPanel_separador5.setLayout(jPanel_separador5Layout);
         jPanel_separador5Layout.setHorizontalGroup(
-            jPanel_separador5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 977, Short.MAX_VALUE)
+                jPanel_separador5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
         );
         jPanel_separador5Layout.setVerticalGroup(
-            jPanel_separador5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 25, Short.MAX_VALUE)
+                jPanel_separador5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 25, Short.MAX_VALUE)
         );
 
         jPanel_preferencias.add(jPanel_separador5);
@@ -713,7 +699,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel10.add(update);
 
         jComboBox_tabla1.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_tabla1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tabla1" }));
+        jComboBox_tabla1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla1.setMaximumSize(new java.awt.Dimension(367, 32767));
         jComboBox_tabla1.setPreferredSize(new java.awt.Dimension(150, 27));
         jComboBox_tabla1.addActionListener(new java.awt.event.ActionListener() {
@@ -732,7 +718,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel10.add(set1);
 
         jComboBox_columna2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_columna2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "*" }));
+        jComboBox_columna2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"*"}));
         jComboBox_columna2.setPreferredSize(new java.awt.Dimension(150, 27));
         jPanel10.add(jComboBox_columna2);
 
@@ -753,6 +739,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_valorUpdateFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_valorUpdateFocusLost(evt);
             }
@@ -773,7 +760,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel10.add(cantColumn1);
 
         jComboBox_cantColumn1.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_cantColumn1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19" }));
+        jComboBox_cantColumn1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"}));
         jComboBox_cantColumn1.setMaximumSize(new java.awt.Dimension(80, 32767));
         jComboBox_cantColumn1.setPreferredSize(new java.awt.Dimension(80, 27));
         jComboBox_cantColumn1.addActionListener(new java.awt.event.ActionListener() {
@@ -793,6 +780,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_updateComplejoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_updateComplejoFocusLost(evt);
             }
@@ -834,6 +822,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_where1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_where1FocusLost(evt);
             }
@@ -874,7 +863,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel12.add(insert);
 
         jComboBox_tabla2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_tabla2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tabla1" }));
+        jComboBox_tabla2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla2.setMaximumSize(new java.awt.Dimension(367, 32767));
         jComboBox_tabla2.setPreferredSize(new java.awt.Dimension(150, 27));
         jComboBox_tabla2.addActionListener(new java.awt.event.ActionListener() {
@@ -893,7 +882,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel12.add(punto2);
 
         jComboBox_columna1.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_columna1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "*" }));
+        jComboBox_columna1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"*"}));
         jComboBox_columna1.setPreferredSize(new java.awt.Dimension(150, 27));
         jPanel12.add(jComboBox_columna1);
 
@@ -930,6 +919,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_valorInsertFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_valorInsertFocusLost(evt);
             }
@@ -950,7 +940,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel12.add(cantColumn);
 
         jComboBox_cantColumn2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_cantColumn2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19" }));
+        jComboBox_cantColumn2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"}));
         jComboBox_cantColumn2.setMaximumSize(new java.awt.Dimension(80, 32767));
         jComboBox_cantColumn2.setPreferredSize(new java.awt.Dimension(80, 27));
         jComboBox_cantColumn2.addActionListener(new java.awt.event.ActionListener() {
@@ -970,6 +960,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_insertComplejoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_insertComplejoFocusLost(evt);
             }
@@ -1019,7 +1010,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
         jPanel13.add(delete);
 
         jComboBox_tabla3.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_tabla3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tabla1" }));
+        jComboBox_tabla3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla3.setPreferredSize(new java.awt.Dimension(150, 27));
         jPanel13.add(jComboBox_tabla3);
 
@@ -1032,6 +1023,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_deleteComplejoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_deleteComplejoFocusLost(evt);
             }
@@ -1074,6 +1066,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_where2FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_where2FocusLost(evt);
             }
@@ -1110,12 +1103,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout separadorLayout = new javax.swing.GroupLayout(separador);
         separador.setLayout(separadorLayout);
         separadorLayout.setHorizontalGroup(
-            separadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 794, Short.MAX_VALUE)
+                separadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 794, Short.MAX_VALUE)
         );
         separadorLayout.setVerticalGroup(
-            separadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
+                separadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 30, Short.MAX_VALUE)
         );
 
         jPanel_insert_update_delete.add(separador);
@@ -1136,12 +1129,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel_backupLayout = new javax.swing.GroupLayout(jPanel_backup);
         jPanel_backup.setLayout(jPanel_backupLayout);
         jPanel_backupLayout.setHorizontalGroup(
-            jPanel_backupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+                jPanel_backupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 100, Short.MAX_VALUE)
         );
         jPanel_backupLayout.setVerticalGroup(
-            jPanel_backupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+                jPanel_backupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 100, Short.MAX_VALUE)
         );
 
         jPanel15.setBackground(new java.awt.Color(227, 218, 201));
@@ -1179,12 +1172,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout separador1Layout = new javax.swing.GroupLayout(separador1);
         separador1.setLayout(separador1Layout);
         separador1Layout.setHorizontalGroup(
-            separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         separador1Layout.setVerticalGroup(
-            separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jPanel_menuOpciones.add(separador1);
@@ -1207,12 +1200,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout separador3Layout = new javax.swing.GroupLayout(separador3);
         separador3.setLayout(separador3Layout);
         separador3Layout.setHorizontalGroup(
-            separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         separador3Layout.setVerticalGroup(
-            separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jPanel_menuOpciones.add(separador3);
@@ -1242,12 +1235,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout separador2Layout = new javax.swing.GroupLayout(separador2);
         separador2.setLayout(separador2Layout);
         separador2Layout.setHorizontalGroup(
-            separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         separador2Layout.setVerticalGroup(
-            separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jPanel_menuOpciones.add(separador2);
@@ -1311,12 +1304,12 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout separador4Layout = new javax.swing.GroupLayout(separador4);
         separador4.setLayout(separador4Layout);
         separador4Layout.setHorizontalGroup(
-            separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
         separador4Layout.setVerticalGroup(
-            separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+                separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jPanel_menuOpciones.add(separador4);
@@ -1391,18 +1384,18 @@ public class PantallaAdmin extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(198, Short.MAX_VALUE))
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(198, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(752, Short.MAX_VALUE))
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(752, Short.MAX_VALUE))
         );
 
         jPanel_derecho.add(jPanel1, "vacio");
@@ -1617,8 +1610,7 @@ public class PantallaAdmin extends javax.swing.JFrame {
                 jPanel2.add(join4, 3);
                 jPanel2.add(join5, 3);
             }
-            default ->
-                System.err.println("Caso no esperado en switch de cantidad de joins a crear en el panel Select");
+            default -> System.err.println("Caso no esperado en switch de cantidad de joins a crear en el panel Select");
         }
         jPanel2.revalidate();
         jPanel2.repaint();
@@ -1988,7 +1980,8 @@ public class PantallaAdmin extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PantallaAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 

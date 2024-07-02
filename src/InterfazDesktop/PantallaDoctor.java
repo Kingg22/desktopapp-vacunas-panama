@@ -1,30 +1,12 @@
 package InterfazDesktop;
 
-import Validations.LimitarCamposNumeric;
-import Validations.LimitarCamposSeguro;
-import Validations.LimitarCamposAlpha;
-import Validations.LimitarCamposFecha;
-import Validations.LimitarCamposString;
-import Validations.LimitarCamposEmail;
-import Validations.LimitarCamposCedula;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
-import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.RowFilter;
-import javax.swing.SpinnerNumberModel;
+import Logica.Validations.*;
+
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 
 public class PantallaDoctor extends javax.swing.JFrame {
 
@@ -37,9 +19,9 @@ public class PantallaDoctor extends javax.swing.JFrame {
         this.jPanel_filtrar3 = new JTableFiltrar(jTable_Content5);
 
         JButton[] botones = {button_opcion1, button_opcion2, button_opcion3,
-            button_opcion4, button_opcion5, button_opcion6, button_opcion7, button_opcion8,
-            button_soporte, button_modificarDatos, button_modificarCred, button_preferencias,
-            jButton_savePreferences};
+                button_opcion4, button_opcion5, button_opcion6, button_opcion7, button_opcion8,
+                button_soporte, button_modificarDatos, button_modificarCred, button_preferencias,
+                jButton_savePreferences};
         for (JButton boton : botones) {
             boton.setUI(new BasicButtonUI());
             boton.setBackground(new Color(86, 86, 86));
@@ -50,10 +32,8 @@ public class PantallaDoctor extends javax.swing.JFrame {
         this.setExtendedState(MAXIMIZED_BOTH);
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-
         jPanel_mostrarTabla = new javax.swing.JPanel();
         titulo_contenido = new javax.swing.JLabel();
         jScrollPane_Table = new javax.swing.JScrollPane();
@@ -249,16 +229,16 @@ public class PantallaDoctor extends javax.swing.JFrame {
         usuario_nuevo = new javax.swing.JLabel();
         jTextField_usuarioNuevo = new javax.swing.JTextField();
         jSeparator21 = new javax.swing.JSeparator();
-        contraseña = new javax.swing.JLabel();
+        contrasena = new javax.swing.JLabel();
         jPasswordField_nueva1 = new javax.swing.JPasswordField();
         jSeparator11 = new javax.swing.JSeparator();
-        repetir_contraseña = new javax.swing.JLabel();
+        repetir_contrasena = new javax.swing.JLabel();
         jPasswordField_nueva2 = new javax.swing.JPasswordField();
         jSeparator7 = new javax.swing.JSeparator();
         errorMessage2 = new javax.swing.JLabel();
         jButton_modificar2 = new javax.swing.JButton();
         jButton_cancelar2 = new javax.swing.JButton();
-        contraseña_anterior = new javax.swing.JLabel();
+        contrasena_anterior = new javax.swing.JLabel();
         jPasswordField_vieja = new javax.swing.JPasswordField();
         jSeparator26 = new javax.swing.JSeparator();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -332,6 +312,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTablaFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTablaFocusLost(evt);
             }
@@ -420,8 +401,10 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 jPanel_buscarPacienteAncestorAdded(evt);
             }
+
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
+
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
@@ -441,7 +424,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
         titulo_contenido1.setPreferredSize(new java.awt.Dimension(550, 17));
         jPanel2.add(titulo_contenido1, java.awt.BorderLayout.NORTH);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cédula", "Nombre completo", "Fecha de nacimiento" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Cédula", "Nombre completo", "Fecha de nacimiento"}));
         jComboBox1.setPreferredSize(new java.awt.Dimension(150, 26));
         jPanel2.add(jComboBox1, java.awt.BorderLayout.WEST);
 
@@ -452,6 +435,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField1FocusLost(evt);
             }
@@ -505,6 +489,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTabla1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTabla1FocusLost(evt);
             }
@@ -617,6 +602,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_cedula2FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_cedula2FocusLost(evt);
             }
@@ -657,6 +643,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_nombre1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_nombre1FocusLost(evt);
             }
@@ -689,6 +676,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_apellido1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_apellido1FocusLost(evt);
             }
@@ -722,6 +710,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_cedula1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_cedula1FocusLost(evt);
             }
@@ -754,6 +743,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_fechaNacimiento1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_fechaNacimiento1FocusLost(evt);
             }
@@ -778,7 +768,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
         jComboBox_sexo1.setBackground(java.awt.Color.gray);
         jComboBox_sexo1.setFont(new java.awt.Font("Roboto", 0, 14));
         jComboBox_sexo1.setForeground(java.awt.Color.black);
-        jComboBox_sexo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir", "Masculino", "Feminino" }));
+        jComboBox_sexo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Masculino", "Feminino"}));
         jPanel_manipularPaciente.add(jComboBox_sexo1);
 
         jPanel3.setBackground(new java.awt.Color(227, 218, 201));
@@ -787,12 +777,12 @@ public class PantallaDoctor extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 616, Short.MAX_VALUE)
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 616, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 55, Short.MAX_VALUE)
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 55, Short.MAX_VALUE)
         );
 
         jPanel_manipularPaciente.add(jPanel3);
@@ -806,7 +796,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
         jComboBox_distrito1.setBackground(java.awt.Color.gray);
         jComboBox_distrito1.setFont(new java.awt.Font("Roboto", 0, 14));
         jComboBox_distrito1.setForeground(java.awt.Color.black);
-        jComboBox_distrito1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir", "Distrito por registrar" }));
+        jComboBox_distrito1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Distrito por registrar"}));
         jPanel_manipularPaciente.add(jComboBox_distrito1);
 
         jPanel4.setBackground(new java.awt.Color(227, 218, 201));
@@ -815,12 +805,12 @@ public class PantallaDoctor extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 616, Short.MAX_VALUE)
+                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 616, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 55, Short.MAX_VALUE)
+                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 55, Short.MAX_VALUE)
         );
 
         jPanel_manipularPaciente.add(jPanel4);
@@ -841,6 +831,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_direccion1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_direccion1FocusLost(evt);
             }
@@ -873,6 +864,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_correo1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_correo1FocusLost(evt);
             }
@@ -906,6 +898,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_telefono1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_telefono1FocusLost(evt);
             }
@@ -988,6 +981,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_nombreFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_nombreFocusLost(evt);
             }
@@ -1020,6 +1014,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_apellidoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_apellidoFocusLost(evt);
             }
@@ -1089,7 +1084,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
         jComboBox_sexo.setBackground(java.awt.Color.gray);
         jComboBox_sexo.setFont(new java.awt.Font("Roboto", 0, 14));
         jComboBox_sexo.setForeground(java.awt.Color.black);
-        jComboBox_sexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir", "Masculino", "Feminino" }));
+        jComboBox_sexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Masculino", "Feminino"}));
         background_dialog1.add(jComboBox_sexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 308, 170, -1));
 
         direccion.setBackground(new java.awt.Color(0, 0, 0));
@@ -1109,6 +1104,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_direccionFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_direccionFocusLost(evt);
             }
@@ -1129,7 +1125,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
         jComboBox_distrito.setBackground(java.awt.Color.gray);
         jComboBox_distrito.setFont(new java.awt.Font("Roboto", 0, 14));
         jComboBox_distrito.setForeground(java.awt.Color.black);
-        jComboBox_distrito.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir", "Distrito por registrar" }));
+        jComboBox_distrito.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Distrito por registrar"}));
         background_dialog1.add(jComboBox_distrito, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 356, 190, -1));
 
         jSeparator10.setForeground(new java.awt.Color(30, 30, 30));
@@ -1153,6 +1149,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_correoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_correoFocusLost(evt);
             }
@@ -1179,6 +1176,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_telefonoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_telefonoFocusLost(evt);
             }
@@ -1233,14 +1231,14 @@ public class PantallaDoctor extends javax.swing.JFrame {
         javax.swing.GroupLayout jDialog_modificarDatosLayout = new javax.swing.GroupLayout(jDialog_modificarDatos.getContentPane());
         jDialog_modificarDatos.getContentPane().setLayout(jDialog_modificarDatosLayout);
         jDialog_modificarDatosLayout.setHorizontalGroup(
-            jDialog_modificarDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialog_modificarDatosLayout.createSequentialGroup()
-                .addComponent(jScrollPane1)
-                .addGap(0, 0, Short.MAX_VALUE))
+                jDialog_modificarDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jDialog_modificarDatosLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1)
+                                .addGap(0, 0, Short.MAX_VALUE))
         );
         jDialog_modificarDatosLayout.setVerticalGroup(
-            jDialog_modificarDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+                jDialog_modificarDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1)
         );
 
         jPanel_inventario.setBackground(new java.awt.Color(227, 218, 201));
@@ -1286,6 +1284,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTabla3FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTabla3FocusLost(evt);
             }
@@ -1400,6 +1399,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTabla4FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_buscarTabla4FocusLost(evt);
             }
@@ -1481,7 +1481,7 @@ public class PantallaDoctor extends javax.swing.JFrame {
         jLabel7.setText("Filtro por fecha");
         jPanel_filtrarEstadistica.add(jLabel7);
 
-        jComboBox_filterColumn1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir...", "Día", "Mes", "Año", "Sede" }));
+        jComboBox_filterColumn1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir...", "Día", "Mes", "Año", "Sede"}));
         jComboBox_filterColumn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox_filterColumn1ActionPerformed(evt);
@@ -1502,1021 +1502,1033 @@ public class PantallaDoctor extends javax.swing.JFrame {
         jPanel5.setLayout(new java.awt.GridLayout(3, 10));
         jPanel_soporte.add(jPanel5, java.awt.BorderLayout.CENTER);
         jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo creo el paciente a vacunar?",
-            "1. Dar click al botón \'Crear/Editar paciente\' \n"
-            + "2. Llene el formulario con los datos personales del paciente\n"
-            + "3. Si el paciente tiene cartilla de vacunación física, dar click en \'Sí\' y debe registrar cada vacuna\n"
-            + "En este paso puede añadir la vacuna que se va aplicar el paciente.\n"
-            + "4. Espere el mensaje de confirmación de registro."));
-    jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo registro una dosis de vacuna a un paciente?",
-        "1. Dar click en el botón \'Buscar paciente\' y buscamos con los datos al paciente a vacunar\n"
-        + "2. Rellenar el formulario de la dosis, editar los campos que tienen autocompletado si es necesario\n"
-        + "3. Dar click en \'Registrar\' y esperar el mensaje de confirmación\n"
-        + "El paciente tendrá registrada su dosis de vacuna y si es necesario, puede programar una cita para la siguiente dosis."));
-jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo buscar una dosis de vacuna del paciente o al paciente completo?",
-    "1. Dar click en el botón \'Buscar dosis de vacuna\' y buscar con los datos del paciente y vacuna\n"
-    + "2. Si la consulta no da resultados, buscar al paciente completo: \n"
-    + "2.1 Dar click en el botón \'Buscar paciente\' y buscamos con los datos del paciente\n"
-    + "2.2 Si aún no hay resultados esto significa que el paciente no esta registrado en el programa de vacunas y debe crearlo.\n"
-    + "    Refiérase a la pregunta 1 ¿Cómo creo al paciente a vacuna?"));
-    jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo actualizo una dosis de vacuna?",
-        "1. Similar a registrar una vacuna. \n"
-        + "Dar click en el botón \'Actualizar dosis\' y buscamos al paciente a vacunar y la vacuna\n"
-        + "Si existe la dosis, podrás editar la fecha de aplicación, el número de dosis, el proveedor, sede aplicada.\n"
-        + "La vacuna no se puede modificar, para hacerlo debe eliminar el registro y crear un nuevo registro de vacuna.\n"
-        + "Refiérase a la pregunta 2 ¿Cómo registro una dosis de vacuna a un paciente?"));
-jPanel5.add(PantallaBase.createQuestionPanel("No veo el nombre de vacuna para aplicar ¿Cómo creo una vacuna nueva?",
-    "1. Si el nombre de la vacuna para aplicar no lo encuentra, primero verifique con otros nombres como el comercial o de laboratorio o acrónimos\n"
-    + "Si aún no la encuentra, solicite al personal administrativo o informática crear la vacuna nueva\n"
-    + "Por mientras puede utilizar la vacuna de nombre \'NONE - Por Registrar\' para completar la jornada.\n"
-    + "Recuerde actualizar la dosis del paciente con el nombre de la vacuna correcto. Ninguna dosis debe quedar con la vacuna NONE."));
-    jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo programo una cita de vacunación a un paciente?",
-        "Dar click en \'Agendar cita de vacuna\' y rellenar el formulario basado tanto en los tiempos recomendados de la vacuna y la cómodida del paciente. Esto genera una notificación para el doctor y sede escogido."));
-jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo observo el inventario de vacunas?",
-    "1. Dar click en el botón \'Inventario de vacunas\' y podremos ver todas las vacunas con inventario en la sede preferida\n"
-    + "Si la sede no es la que deseamos, buscar la sede en la barra de búsqueda o cambiar la preferencia del usuario. "
-    + "Refiérase a la siguiente pregunta \'¿Cómo cambiar mis preferencias?\'"));
-    jPanel5.add(PantallaBase.createQuestionPanel("No veo ningún dato al consultar",
-        "Esto significa que usted puede o no estar registrado y/o no tiene ninguna vacuna aplicada.\n"
-        + "Para verificar que este registrado con sus datos correctamente:\n"
-        + "1. De click en el botón \'Modificar datos personales\' y observe si algún dato como su cédula de identidad personal esta mal escrito, si es así, debe modificar para corregir.\n"
-        + "Si a pesar de esto, no ve ningún dato, significa que no tiene ninguna vacuna registrada en el sistema. Puede acudir a su médico para registrar su cartilla de vacunación."));
-jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo cambiar mis preferencias de usuario?",
-    "1. Dar click en el botón \'Preferencias\' y actualizamos las preferencias, de manera inicial, el sistema define la sede y el distrito en la primera.\n"
-    + "Para el distrito no puede definir una preferencia.\n"
-    + "Si selecciona que las campos de insertar algún dato sean en una ventana emergente siempre será así, excepto en Modificar datos personales y Modificar credenciales que son ventanas emergentes y no se puede cambiar.\n"
-    + "Si tiene activada editar directo en tabla podrá editar las dosis de vacuna, datos del paciente y agregar datos en las opciones de consulta sin necesidad de usar el otro botón.\n"
-    + "Si desea modificar sus datos personales o su credencial de acceso (usuario y contraseña)\n"
-    + "Refiérase a la siguiente pregunta \'¿Cómo cambio mis datos personales o credenciales de acceso?\'"));
-    jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo cambio mis datos personales o credenciales de acceso?",
-        "Nota: Se cambia sus datos personales, no los del paciente\n"
-        + "1. Dar click en el botón \'Modificar datos personales\' o \'Modificar credenciales\' y editar solamente los datos que deseamos modificar.\n"
-        + "Consejos: La cédula de identidad personal debe estar escrito tal cual su documento.\n"
-        + "La fecha de nacimiento debe estar en el formato año - mes - día hora : minutos (la hora y minutos es opcional).\n"
-        + "Si su distrito no se encuentra, puede significar que es nuevo y debe utilizar \'Distrito por registrar\'. Debe informar su distrito y provincia correcta a su médico o sede para corregir.\n"
-        + "El teléfono puede ser celular o fijo y debe estar los números pegados. Si es extranjero o diferente de 507 debe colocar su prefijo y códigos necesarios al inicio.\n"
-        + "Al dar click en el botón \'Actualizar\' se cerrará su sesión y debe ingresar nuevamente con sus credenciales correctas.\n"
-        + "Si olvido su contraseña, deberá cerrar sesión y dar click en \'¿Olvidó su contraseña?\'"));
-jPanel5.revalidate();
-jPanel5.repaint();
-
-jLabel11.setFont(new java.awt.Font("Microsoft YaHei", 0, 14));
-jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-jLabel11.setText("Si su duda no fue resuelta. Contacte al soporte técnico de una sede hospitalaria pública o pregunte a su doctor.");
-jPanel_soporte.add(jLabel11, java.awt.BorderLayout.SOUTH);
-
-jPanel_filtrarInventario.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-jPanel_filtrarInventario.setLayout(new java.awt.GridLayout(3, 2));
-jPanel_filtrarInventario.add(jSeparator24);
-jPanel_filtrarInventario.add(jSeparator25);
-
-jLabel8.setText("Filtrar por sede");
-jPanel_filtrarInventario.add(jLabel8);
-
-jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jComboBox_filterColumn2ActionPerformed(evt);
-    }
-    });
-    jPanel_filtrarInventario.add(jComboBox_filterColumn2);
-
-    jLabel12.setText("Filtrar por vacuna");
-    jPanel_filtrarInventario.add(jLabel12);
-
-    jComboBox_filterColumn3.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jComboBox_filterColumn3ActionPerformed(evt);
-        }
-    });
-    jPanel_filtrarInventario.add(jComboBox_filterColumn3);
-
-    jPanel_buscarDosis.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_buscarDosis.setForeground(new java.awt.Color(227, 218, 201));
-    jPanel_buscarDosis.setPreferredSize(new java.awt.Dimension(794, 794));
-    jPanel_buscarDosis.addAncestorListener(new javax.swing.event.AncestorListener() {
-        public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-            jPanel_buscarDosisAncestorAdded(evt);
-        }
-        public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-        }
-        public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-        }
-    });
-    jPanel_buscarDosis.setLayout(new javax.swing.BoxLayout(jPanel_buscarDosis, javax.swing.BoxLayout.Y_AXIS));
-
-    jPanel7.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel7.setMaximumSize(new java.awt.Dimension(2147483647, 500));
-    jPanel7.setMinimumSize(new java.awt.Dimension(293, 107));
-    jPanel7.setPreferredSize(new java.awt.Dimension(694, 125));
-    jPanel7.setLayout(new java.awt.BorderLayout());
-
-    titulo_contenido5.setBackground(new java.awt.Color(255, 255, 255));
-    titulo_contenido5.setFont(new java.awt.Font("Roboto", 3, 14));
-    titulo_contenido5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    titulo_contenido5.setText("Resultados Obtenidos de Dosis");
-    titulo_contenido5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    titulo_contenido5.setOpaque(true);
-    titulo_contenido5.setPreferredSize(new java.awt.Dimension(794, 17));
-    jPanel7.add(titulo_contenido5, java.awt.BorderLayout.NORTH);
-
-    jPanel6.setPreferredSize(new java.awt.Dimension(794, 75));
-    jPanel6.setLayout(new java.awt.GridLayout(5, 2, 20, 0));
-
-    jLabel13.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    jLabel13.setText("Sede");
-    jPanel6.add(jLabel13);
-
-    jTextField3.setDocument(new LimitarCamposSeguro(50, "Buscar por sede..."));
-    jTextField3.setText("Buscar por sede...");
-    jTextField3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-    RegistrarUser.handleFocusGain(jTextField3, "Buscar por sede...");
-    jTextField3.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jTextField3FocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jTextField3FocusLost(evt);
-        }
-    });
-    jTextField3.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField3ActionPerformed(evt);
-        }
-    });
-    jPanel6.add(jTextField3);
-
-    jLabel14.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    jLabel14.setText("Desde");
-    jPanel6.add(jLabel14);
-
-    jTextField4.setDocument(new LimitarCamposSeguro(50, "Buscar desde la fecha AAAA-MM-DD..."));
-    jTextField4.setText("Buscar desde la fecha AAAA-MM-DD...");
-    jTextField4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-    RegistrarUser.handleFocusGain(jTextField4, "Buscar desde la fecha AAAA-MM-DD...");
-    jTextField4.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jTextField4FocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jTextField4FocusLost(evt);
-        }
-    });
-    jTextField4.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField4ActionPerformed(evt);
-        }
-    });
-    jPanel6.add(jTextField4);
-
-    jLabel15.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    jLabel15.setText("Hasta");
-    jPanel6.add(jLabel15);
-
-    jTextField5.setDocument(new LimitarCamposSeguro(50, "Buscar hasta la fecha AAAA-MM-DD..."));
-    jTextField5.setText("Buscar hasta la fecha AAAA-MM-DD...");
-    jTextField5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-    RegistrarUser.handleFocusGain(jTextField5, "Buscar hasta la fecha AAAA-MM-DD...");
-    jTextField5.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jTextField5FocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jTextField5FocusLost(evt);
-        }
-    });
-    jTextField5.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField5ActionPerformed(evt);
-        }
-    });
-    jPanel6.add(jTextField5);
-
-    jLabel16.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    jLabel16.setText("Vacuna");
-    jPanel6.add(jLabel16);
-
-    jComboBox3.setPreferredSize(new java.awt.Dimension(150, 26));
-    jComboBox3.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jComboBox3ActionPerformed(evt);
-        }
-    });
-    jPanel6.add(jComboBox3);
-
-    jLabel17.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    jLabel17.setText("Número de Dosis");
-    jPanel6.add(jLabel17);
-
-    jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir...", "Primera dosis", "Segunda dosis", "Tercera dosis", "Refuerzo", "Primer refuerzo", "Segundo refuerzo", "Dosis previa" }));
-    jComboBox4.setPreferredSize(new java.awt.Dimension(150, 26));
-    jComboBox4.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jComboBox4ActionPerformed(evt);
-        }
-    });
-    jPanel6.add(jComboBox4);
-
-    jPanel7.add(jPanel6, java.awt.BorderLayout.CENTER);
-
-    jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lupa_icon.png")));
-    jButton2.setPreferredSize(new java.awt.Dimension(70, 27));
-    jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton2MouseClicked(evt);
-        }
-    });
-    jPanel7.add(jButton2, java.awt.BorderLayout.EAST);
-
-    jPanel_buscarDosis.add(jPanel7);
-
-    jScrollPane_Table5.setBackground(new java.awt.Color(227, 218, 201));
-    jScrollPane_Table5.setForeground(new java.awt.Color(227, 218, 201));
-    jScrollPane_Table5.setOpaque(true);
-    jScrollPane_Table5.setPreferredSize(new java.awt.Dimension(794, 625));
-    jScrollPane_Table5.setViewportView(null);
-
-    jTable_Content5.setBackground(new java.awt.Color(227, 218, 201));
-    jTable_Content5.setFont(new java.awt.Font("Roboto", 0, 12));
-    jTable_Content5.setForeground(new java.awt.Color(227, 218, 201));
-    jTable_Content5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    jTable_Content5.setMinimumSize(new java.awt.Dimension(50, 50));
-    jTable_Content5.setPreferredSize(new java.awt.Dimension(788, 619));
-    jTable_Content5.setShowGrid(true);
-    jScrollPane_Table5.setViewportView(jTable_Content5);
-
-    jPanel_buscarDosis.add(jScrollPane_Table5);
-
-    opcionesTabla5.setBackground(new java.awt.Color(0, 153, 204));
-    opcionesTabla5.setMaximumSize(new java.awt.Dimension(32767, 100));
-    opcionesTabla5.setMinimumSize(new java.awt.Dimension(594, 24));
-    opcionesTabla5.setPreferredSize(new java.awt.Dimension(794, 44));
-    opcionesTabla5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 20, 10));
-
-    jTextField_buscarTabla5.setDocument(new LimitarCamposSeguro(25, "Buscar...")
-    );
-    jTextField_buscarTabla5.setText("Buscar...");
-    jTextField_buscarTabla5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    jTextField_buscarTabla5.setPreferredSize(new java.awt.Dimension(125, 26));
-    RegistrarUser.handleFocusGain(jTextField_buscarTabla5, "Buscar...");
-    jTextField_buscarTabla5.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jTextField_buscarTabla5FocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jTextField_buscarTabla5FocusLost(evt);
-        }
-    });
-    jTextField_buscarTabla5.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField_buscarTabla5ActionPerformed(evt);
-        }
-    });
-    opcionesTabla5.add(jTextField_buscarTabla5);
-
-    jButton_buscar5.setBackground(new java.awt.Color(204, 204, 204));
-    jButton_buscar5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lupa_icon.png")));
-    jButton_buscar5.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_buscar5MouseClicked(evt);
-        }
-    });
-    opcionesTabla5.add(jButton_buscar5);
-
-    jButton_acercar5.setText("Acercar");
-    jButton_acercar5.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_acercar5MouseClicked(evt);
-        }
-    });
-    opcionesTabla5.add(jButton_acercar5);
-
-    jButton_alejar5.setText("Alejar");
-    jButton_alejar5.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_alejar5MouseClicked(evt);
-        }
-    });
-    opcionesTabla5.add(jButton_alejar5);
-
-    jButton_ordenar5.setText("Ordenar");
-    jButton_ordenar5.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_ordenar5MouseClicked(evt);
-        }
-    });
-    opcionesTabla5.add(jButton_ordenar5);
-
-    jButton_filtros5.setText("Filtros");
-    jButton_filtros5.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_filtros5MouseClicked(evt);
-        }
-    });
-    opcionesTabla5.add(jButton_filtros5);
-
-    jButton_fuente5.setText("Fuente y tamaño");
-    jButton_fuente5.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_fuente5MouseClicked(evt);
-        }
-    });
-    opcionesTabla5.add(jButton_fuente5);
-
-    jButton_exportar5.setText("Exportar tabla");
-    jButton_exportar5.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_exportar5MouseClicked(evt);
-        }
-    });
-    opcionesTabla5.add(jButton_exportar5);
-
-    jPanel_buscarDosis.add(opcionesTabla5);
-
-    jPanel_preferencias.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_preferencias.setPreferredSize(new java.awt.Dimension(794, 794));
-    jPanel_preferencias.setLayout(new javax.swing.BoxLayout(jPanel_preferencias, javax.swing.BoxLayout.Y_AXIS));
-
-    icon_preferencias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ajuetes3.png")));
-    icon_preferencias.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    icon_preferencias.setPreferredSize(new java.awt.Dimension(130, 120));
-    jPanel_preferencias.add(icon_preferencias);
-
-    titulo3.setFont(new java.awt.Font("Microsoft YaHei", 1, 24));
-    titulo3.setForeground(new java.awt.Color(0, 0, 0));
-    titulo3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    titulo3.setText("Preferencias");
-    titulo3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jPanel_preferencias.add(titulo3);
-
-    jPanel_separador1.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_separador1.setMaximumSize(new java.awt.Dimension(32767, 25));
-
-    javax.swing.GroupLayout jPanel_separador1Layout = new javax.swing.GroupLayout(jPanel_separador1);
-    jPanel_separador1.setLayout(jPanel_separador1Layout);
-    jPanel_separador1Layout.setHorizontalGroup(
-        jPanel_separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 977, Short.MAX_VALUE)
-    );
-    jPanel_separador1Layout.setVerticalGroup(
-        jPanel_separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 25, Short.MAX_VALUE)
-    );
-
-    jPanel_preferencias.add(jPanel_separador1);
-
-    jLabel4.setFont(new java.awt.Font("Roboto", 0, 14));
-    jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel4.setText("Tamaño y Fuente preferida");
-    jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jPanel_preferencias.add(jLabel4);
-
-    jPanel_separador2.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_separador2.setMaximumSize(new java.awt.Dimension(32767, 15));
-
-    javax.swing.GroupLayout jPanel_separador2Layout = new javax.swing.GroupLayout(jPanel_separador2);
-    jPanel_separador2.setLayout(jPanel_separador2Layout);
-    jPanel_separador2Layout.setHorizontalGroup(
-        jPanel_separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 977, Short.MAX_VALUE)
-    );
-    jPanel_separador2Layout.setVerticalGroup(
-        jPanel_separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 15, Short.MAX_VALUE)
-    );
-
-    jPanel_preferencias.add(jPanel_separador2);
-
-    jPanel_fontChooser.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_fontChooser.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    jPanel_fontChooser.setMaximumSize(new java.awt.Dimension(700, 250));
-    jPanel_fontChooser.setPreferredSize(new java.awt.Dimension(460, 250));
-    jPanel_fontChooser.setLayout(new java.awt.GridLayout(3, 2, 10, 10));
-    jPanel_preferencias.add(jPanel_fontChooser);
-    // Familia de la fuente
-    JLabel familyLabel = new JLabel("Familia:");
-    familyLabel.setFont(new Font("Roboto", 0, 14));
-    JComboBox<String> familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
-    familyComboBox.setFont(new Font("Roboto", 0, 14));
-    jPanel_fontChooser.add(familyLabel);
-    jPanel_fontChooser.add(familyComboBox);
-
-    // Estilo de la fuente
-    JLabel styleLabel = new JLabel("Estilo:");
-    styleLabel.setFont(new Font("Roboto", 0, 14));
-    String[] styles = {"Regular", "Negrita", "Cursiva", "Negrita Cursiva"};
-    JComboBox<String> styleComboBox = new JComboBox<>(styles);
-    styleComboBox.setFont(new Font("Roboto", 0, 14));
-    jPanel_fontChooser.add(styleLabel);
-    jPanel_fontChooser.add(styleComboBox);
-
-    // Tamaño de la fuente
-    JLabel sizeLabel = new JLabel("Tamaño:");
-    sizeLabel.setFont(new Font("Roboto", 0, 14));
-    JSpinner sizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
-    sizeSpinner.setFont(new Font("Roboto", 0, 14));
-    jPanel_fontChooser.add(sizeLabel);
-    jPanel_fontChooser.add(sizeSpinner);
-
-    jPanel_separador3.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_separador3.setMaximumSize(new java.awt.Dimension(32767, 25));
-
-    javax.swing.GroupLayout jPanel_separador3Layout = new javax.swing.GroupLayout(jPanel_separador3);
-    jPanel_separador3.setLayout(jPanel_separador3Layout);
-    jPanel_separador3Layout.setHorizontalGroup(
-        jPanel_separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 977, Short.MAX_VALUE)
-    );
-    jPanel_separador3Layout.setVerticalGroup(
-        jPanel_separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 25, Short.MAX_VALUE)
-    );
-
-    jPanel_preferencias.add(jPanel_separador3);
-
-    jLabel1.setFont(new java.awt.Font("Roboto", 0, 14));
-    jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel1.setText("Tipo de archivo exportar preferido");
-    jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jPanel_preferencias.add(jLabel1);
-
-    jComboBox_exportarType.setFont(new java.awt.Font("Roboto", 0, 14));
-    jComboBox_exportarType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir...", "CSV", "TXT", "PDF", "Excel" }));
-    jComboBox_exportarType.setMaximumSize(new java.awt.Dimension(367, 40));
-    jComboBox_exportarType.setPreferredSize(new java.awt.Dimension(190, 37));
-    jPanel_preferencias.add(jComboBox_exportarType);
-
-    jPanel_separador4.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_separador4.setMaximumSize(new java.awt.Dimension(32767, 25));
-
-    javax.swing.GroupLayout jPanel_separador4Layout = new javax.swing.GroupLayout(jPanel_separador4);
-    jPanel_separador4.setLayout(jPanel_separador4Layout);
-    jPanel_separador4Layout.setHorizontalGroup(
-        jPanel_separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 977, Short.MAX_VALUE)
-    );
-    jPanel_separador4Layout.setVerticalGroup(
-        jPanel_separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 25, Short.MAX_VALUE)
-    );
-
-    jPanel_preferencias.add(jPanel_separador4);
-
-    jLabel5.setFont(new java.awt.Font("Roboto", 0, 14));
-    jLabel5.setForeground(new java.awt.Color(0, 0, 0));
-    jLabel5.setText("Sede de salud preferida");
-    jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jPanel_preferencias.add(jLabel5);
-
-    jComboBox_exportarType1.setFont(new java.awt.Font("Roboto", 0, 14));
-    jComboBox_exportarType1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir..." }));
-    jComboBox_exportarType1.setMaximumSize(new java.awt.Dimension(567, 40));
-    jComboBox_exportarType1.setPreferredSize(new java.awt.Dimension(450, 37));
-    jPanel_preferencias.add(jComboBox_exportarType1);
-
-    jPanel_separador5.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_separador5.setMaximumSize(new java.awt.Dimension(32767, 25));
-
-    javax.swing.GroupLayout jPanel_separador5Layout = new javax.swing.GroupLayout(jPanel_separador5);
-    jPanel_separador5.setLayout(jPanel_separador5Layout);
-    jPanel_separador5Layout.setHorizontalGroup(
-        jPanel_separador5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 977, Short.MAX_VALUE)
-    );
-    jPanel_separador5Layout.setVerticalGroup(
-        jPanel_separador5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 25, Short.MAX_VALUE)
-    );
-
-    jPanel_preferencias.add(jPanel_separador5);
-
-    jButton_savePreferences.setFont(new java.awt.Font("Roboto", 0, 14));
-    jButton_savePreferences.setForeground(new java.awt.Color(255, 255, 255));
-    jButton_savePreferences.setText("Guardar preferencias");
-    jButton_savePreferences.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    jButton_savePreferences.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jButton_savePreferences.setMaximumSize(new java.awt.Dimension(166, 48));
-    jButton_savePreferences.setPreferredSize(new java.awt.Dimension(166, 48));
-    jButton_savePreferences.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_savePreferencesMouseClicked(evt);
-        }
-    });
-    jPanel_preferencias.add(jButton_savePreferences);
-
-    jDialog_modificarCred1.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-    jDialog_modificarCred1.setTitle("Programa Vacunas Panamá - Modificar credenciales");
-    jDialog_modificarCred1.setResizable(false);
-    jDialog_modificarCred1.setSize(new java.awt.Dimension(450, 550));
-
-    jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-    background_dialog3.setBackground(new java.awt.Color(255, 255, 255));
-    background_dialog3.setPreferredSize(new java.awt.Dimension(444, 494));
-    background_dialog3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-    titulo4.setFont(new java.awt.Font("Microsoft YaHei", 1, 14));
-    titulo4.setForeground(new java.awt.Color(0, 0, 0));
-    titulo4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    titulo4.setText("Modificar credenciales de acceso");
-    background_dialog3.add(titulo4, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 25, 269, -1));
-
-    jTextArea4.setEditable(false);
-    jTextArea4.setBackground(new java.awt.Color(255, 255, 255));
-    jTextArea4.setFont(new java.awt.Font("Microsoft YaHei", 2, 11));
-    jTextArea4.setForeground(new java.awt.Color(102, 102, 102));
-    jTextArea4.setLineWrap(true);
-    jTextArea4.setRows(5);
-    jTextArea4.setText("Indicaciones: Para modificar las credenciales debe ingresar su usuario y contraseña anterior, si solo desea cambiar el usuario debe dejar en blanco los campos de nueva contraseña.\nDebe repetir la contraseña nueva si desea modificarla, sino no se cambiará la misma.\nSi desea modificar otro dato personal, utilice el otro botón.");
-    jTextArea4.setWrapStyleWord(true);
-    jTextArea4.setBorder(null);
-    jTextArea4.setFocusable(false);
-    background_dialog3.add(jTextArea4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 380, 100));
-
-    usuario1.setBackground(new java.awt.Color(0, 0, 0));
-    usuario1.setFont(new java.awt.Font("Roboto", 0, 12));
-    usuario1.setForeground(new java.awt.Color(0, 0, 0));
-    usuario1.setText("Usuario anterior *");
-    background_dialog3.add(usuario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
-
-    jTextField_usuario1.setBackground(new java.awt.Color(255, 255, 255));
-    jTextField_usuario1.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
-    jTextField_usuario1.setFont(new java.awt.Font("Roboto", 0, 14));
-    jTextField_usuario1.setForeground(java.awt.Color.gray);
-    jTextField_usuario1.setText("Ingrese su usuario");
-    jTextField_usuario1.setActionCommand("<Not Set>");
-    jTextField_usuario1.setBorder(null);
-    jTextField_usuario1.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-    RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese su usuario");
-    jTextField_usuario1.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jTextField_usuario1FocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jTextField_usuario1FocusLost(evt);
-        }
-    });
-    jTextField_usuario1.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField_usuario1ActionPerformed(evt);
-        }
-    });
-    background_dialog3.add(jTextField_usuario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 380, -1));
-
-    jSeparator8.setForeground(new java.awt.Color(30, 30, 30));
-    background_dialog3.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 380, 21));
-
-    usuario_nuevo.setBackground(new java.awt.Color(0, 0, 0));
-    usuario_nuevo.setFont(new java.awt.Font("Roboto", 0, 12));
-    usuario_nuevo.setForeground(new java.awt.Color(0, 0, 0));
-    usuario_nuevo.setText("Usuario nuevo");
-    background_dialog3.add(usuario_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
-
-    jTextField_usuarioNuevo.setBackground(new java.awt.Color(255, 255, 255));
-    jTextField_usuarioNuevo.setDocument(new LimitarCamposSeguro(50, "Ingrese un usuario nuevo"));
-    jTextField_usuarioNuevo.setFont(new java.awt.Font("Roboto", 0, 14));
-    jTextField_usuarioNuevo.setForeground(java.awt.Color.gray);
-    jTextField_usuarioNuevo.setText("Ingrese un usuario nuevo");
-    jTextField_usuarioNuevo.setActionCommand("<Not Set>");
-    jTextField_usuarioNuevo.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-    RegistrarUser.handleFocusGain(jTextField_usuarioNuevo, "Ingrese un usuario nuevo");
-    jTextField_usuarioNuevo.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jTextField_usuarioNuevoFocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jTextField_usuarioNuevoFocusLost(evt);
-        }
-    });
-    jTextField_usuarioNuevo.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField_usuarioNuevoActionPerformed(evt);
-        }
-    });
-    background_dialog3.add(jTextField_usuarioNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 380, -1));
-
-    jSeparator21.setForeground(new java.awt.Color(30, 30, 30));
-    background_dialog3.add(jSeparator21, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 380, 21));
-
-    contraseña.setBackground(new java.awt.Color(0, 0, 0));
-    contraseña.setFont(new java.awt.Font("Roboto", 0, 12));
-    contraseña.setForeground(new java.awt.Color(0, 0, 0));
-    contraseña.setText("Contraseña nueva");
-    background_dialog3.add(contraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, -1, -1));
-
-    jPasswordField_nueva1.setBackground(new java.awt.Color(255, 255, 255));
-    jPasswordField_nueva1.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
-    jPasswordField_nueva1.setFont(new java.awt.Font("Roboto", 0, 14));
-    jPasswordField_nueva1.setForeground(java.awt.Color.gray);
-    jPasswordField_nueva1.setText("Ingrese su contraseña");
-    jPasswordField_nueva1.setBorder(null);
-    jPasswordField_nueva1.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-    RegistrarUser.handleFocusGain(jPasswordField_nueva1, "Ingrese su contraseña");
-    jPasswordField_nueva1.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jPasswordField_nueva1FocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jPasswordField_nueva1FocusLost(evt);
-        }
-    });
-    jPasswordField_nueva1.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jPasswordField_nueva1ActionPerformed(evt);
-        }
-    });
-    background_dialog3.add(jPasswordField_nueva1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 380, -1));
-
-    jSeparator11.setForeground(new java.awt.Color(30, 30, 30));
-    background_dialog3.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 380, 21));
-
-    repetir_contraseña.setBackground(new java.awt.Color(0, 0, 0));
-    repetir_contraseña.setFont(new java.awt.Font("Roboto", 0, 12));
-    repetir_contraseña.setForeground(new java.awt.Color(0, 0, 0));
-    repetir_contraseña.setText("Repetir contraseña nueva *");
-    background_dialog3.add(repetir_contraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, -1));
-
-    jPasswordField_nueva2.setBackground(new java.awt.Color(255, 255, 255));
-    jPasswordField_nueva2.setDocument(new LimitarCamposSeguro(20, "Repita su contraseña"));
-    jPasswordField_nueva2.setFont(new java.awt.Font("Roboto", 0, 14));
-    jPasswordField_nueva2.setForeground(java.awt.Color.gray);
-    jPasswordField_nueva2.setText("Repita su contraseña");
-    jPasswordField_nueva2.setBorder(null);
-    jPasswordField_nueva2.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-    RegistrarUser.handleFocusGain(jPasswordField_nueva2, "Repita su contraseña");
-    jPasswordField_nueva2.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jPasswordField_nueva2FocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jPasswordField_nueva2FocusLost(evt);
-        }
-    });
-    jPasswordField_nueva2.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jPasswordField_nueva2ActionPerformed(evt);
-        }
-    });
-    background_dialog3.add(jPasswordField_nueva2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 380, -1));
-
-    jSeparator7.setForeground(new java.awt.Color(30, 30, 30));
-    background_dialog3.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 380, 21));
-
-    errorMessage2.setFont(new java.awt.Font("Roboto", 1, 14));
-    errorMessage2.setForeground(java.awt.Color.red);
-    errorMessage2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    errorMessage2.setText("Error. ");
-    errorMessage2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    errorMessage2.setVisible(false);
-    background_dialog3.add(errorMessage2, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 430, 440, -1));
-
-    jButton_modificar2.setBackground(new java.awt.Color(0, 204, 0));
-    jButton_modificar2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    jButton_modificar2.setForeground(new java.awt.Color(0, 0, 0));
-    jButton_modificar2.setText("Modificar");
-    jButton_modificar2.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_modificar2MouseClicked(evt);
-        }
-    });
-    background_dialog3.add(jButton_modificar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 450, -1, -1));
-
-    jButton_cancelar2.setBackground(new java.awt.Color(153, 153, 153));
-    jButton_cancelar2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    jButton_cancelar2.setForeground(new java.awt.Color(0, 0, 0));
-    jButton_cancelar2.setText("Cancelar");
-    jButton_cancelar2.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jButton_cancelar2MouseClicked(evt);
-        }
-    });
-    background_dialog3.add(jButton_cancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 450, -1, -1));
-
-    contraseña_anterior.setBackground(new java.awt.Color(0, 0, 0));
-    contraseña_anterior.setFont(new java.awt.Font("Roboto", 0, 12));
-    contraseña_anterior.setForeground(new java.awt.Color(0, 0, 0));
-    contraseña_anterior.setText("Contraseña anterior *");
-    background_dialog3.add(contraseña_anterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, -1));
-
-    jPasswordField_vieja.setBackground(new java.awt.Color(255, 255, 255));
-    jPasswordField_vieja.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
-    jPasswordField_vieja.setFont(new java.awt.Font("Roboto", 0, 14));
-    jPasswordField_vieja.setForeground(java.awt.Color.gray);
-    jPasswordField_vieja.setText("Ingrese su contraseña");
-    jPasswordField_vieja.setBorder(null);
-    jPasswordField_vieja.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-    RegistrarUser.handleFocusGain(jPasswordField_vieja, "Ingrese su contraseña");
-    jPasswordField_vieja.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            jPasswordField_viejaFocusGained(evt);
-        }
-        public void focusLost(java.awt.event.FocusEvent evt) {
-            jPasswordField_viejaFocusLost(evt);
-        }
-    });
-    jPasswordField_vieja.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jPasswordField_viejaActionPerformed(evt);
-        }
-    });
-    background_dialog3.add(jPasswordField_vieja, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 380, -1));
-
-    jSeparator26.setForeground(new java.awt.Color(30, 30, 30));
-    background_dialog3.add(jSeparator26, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 380, 21));
-
-    jScrollPane4.setViewportView(background_dialog3);
-
-    javax.swing.GroupLayout jDialog_modificarCred1Layout = new javax.swing.GroupLayout(jDialog_modificarCred1.getContentPane());
-    jDialog_modificarCred1.getContentPane().setLayout(jDialog_modificarCred1Layout);
-    jDialog_modificarCred1Layout.setHorizontalGroup(
-        jDialog_modificarCred1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane4)
-    );
-    jDialog_modificarCred1Layout.setVerticalGroup(
-        jDialog_modificarCred1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane4)
-    );
-
-    setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-    setTitle("Programa Vacunas Panamá - Doctor / Enfermera");
-    setSize(new java.awt.Dimension(1000, 800));
-    addComponentListener(new java.awt.event.ComponentAdapter() {
-        public void componentShown(java.awt.event.ComponentEvent evt) {
-            formComponentShown(evt);
-        }
-    });
-    addWindowListener(new java.awt.event.WindowAdapter() {
-        public void windowClosing(java.awt.event.WindowEvent evt) {
-            formWindowClosing(evt);
-        }
-    });
-
-    jScrollPane3.setPreferredSize(getSize());
-
-    background.setBackground(new java.awt.Color(227, 218, 201));
-    background.setForeground(new java.awt.Color(227, 218, 201));
-    background.setMinimumSize(new java.awt.Dimension(994, 794));
-    background.setPreferredSize(new java.awt.Dimension(994, 794));
-    background.setLayout(new java.awt.BorderLayout());
-
-    jPanel_menuOpciones.setBackground(new java.awt.Color(39, 104, 165));
-    jPanel_menuOpciones.setForeground(new java.awt.Color(48, 48, 46));
-    jPanel_menuOpciones.setAutoscrolls(true);
-    jPanel_menuOpciones.setMaximumSize(getSize());
-    jPanel_menuOpciones.setPreferredSize(new java.awt.Dimension(200, 0));
-    jPanel_menuOpciones.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 5));
-
-    separador1.setBackground(new java.awt.Color(39, 104, 165));
-    separador1.setForeground(new java.awt.Color(48, 48, 46));
-    separador1.setPreferredSize(new java.awt.Dimension(150, 35));
-
-    javax.swing.GroupLayout separador1Layout = new javax.swing.GroupLayout(separador1);
-    separador1.setLayout(separador1Layout);
-    separador1Layout.setHorizontalGroup(
-        separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 0, Short.MAX_VALUE)
-    );
-    separador1Layout.setVerticalGroup(
-        separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 0, Short.MAX_VALUE)
-    );
-
-    jPanel_menuOpciones.add(separador1);
-
-    icon_project.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    icon_project.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/operacionVacunas_logo.png")));
-    icon_project.setAlignmentX(0.5F);
-    icon_project.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    icon_project.setMaximumSize(new java.awt.Dimension(200, 200));
-    icon_project.setMinimumSize(new java.awt.Dimension(50, 50));
-    icon_project.setName("");
-    icon_project.setPreferredSize(new java.awt.Dimension(135, 135));
-    jPanel_menuOpciones.add(icon_project);
-    icon_project.getAccessibleContext().setAccessibleName("logo");
-
-    rolName.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    rolName.setForeground(new java.awt.Color(255, 255, 255));
-    rolName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    rolName.setText("¡ Hola Doctor / Enfermera !");
-    rolName.setAlignmentX(1.0F);
-    rolName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    rolName.setPreferredSize(new java.awt.Dimension(170, 30));
-    jPanel_menuOpciones.add(rolName);
-
-    nombreBienvenida.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-    nombreBienvenida.setForeground(new java.awt.Color(255, 255, 255));
-    nombreBienvenida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    nombreBienvenida.setText("Nombre");
-    nombreBienvenida.setAlignmentX(1.0F);
-    nombreBienvenida.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    nombreBienvenida.setPreferredSize(new java.awt.Dimension(150, 30));
-    jPanel_menuOpciones.add(nombreBienvenida);
-
-    button_opcion1.setForeground(new java.awt.Color(255, 255, 255));
-    button_opcion1.setText("Mis pacientes");
-    button_opcion1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_opcion1.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_opcion1.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_opcion1MouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_opcion1);
-
-    button_opcion2.setForeground(new java.awt.Color(255, 255, 255));
-    button_opcion2.setText("Buscar paciente");
-    button_opcion2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_opcion2.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_opcion2.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_opcion2MouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_opcion2);
-
-    button_opcion3.setForeground(new java.awt.Color(255, 255, 255));
-    button_opcion3.setText("Buscar dosis de vacuna");
-    button_opcion3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_opcion3.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_opcion3.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_opcion3MouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_opcion3);
-
-    button_opcion4.setForeground(new java.awt.Color(255, 255, 255));
-    button_opcion4.setText("Actualizar dosis");
-    button_opcion4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_opcion4.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_opcion4.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_opcion4MouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_opcion4);
-
-    button_opcion5.setForeground(new java.awt.Color(255, 255, 255));
-    button_opcion5.setText("Agendar cita de vacuna");
-    button_opcion5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_opcion5.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_opcion5.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_opcion5MouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_opcion5);
-
-    button_opcion6.setForeground(new java.awt.Color(255, 255, 255));
-    button_opcion6.setText("Crear / Editar paciente");
-    button_opcion6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_opcion6.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_opcion6.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_opcion6MouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_opcion6);
-
-    button_opcion7.setForeground(new java.awt.Color(255, 255, 255));
-    button_opcion7.setText("Inventario de vacunas");
-    button_opcion7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_opcion7.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_opcion7.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_opcion7MouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_opcion7);
-
-    button_opcion8.setForeground(new java.awt.Color(255, 255, 255));
-    button_opcion8.setText("Reporte y estadísticas");
-    button_opcion8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_opcion8.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_opcion8.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_opcion8MouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_opcion8);
-
-    separador2.setBackground(new java.awt.Color(39, 104, 165));
-    separador2.setForeground(new java.awt.Color(48, 48, 46));
-    separador2.setPreferredSize(new java.awt.Dimension(150, 17));
-
-    javax.swing.GroupLayout separador2Layout = new javax.swing.GroupLayout(separador2);
-    separador2.setLayout(separador2Layout);
-    separador2Layout.setHorizontalGroup(
-        separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 0, Short.MAX_VALUE)
-    );
-    separador2Layout.setVerticalGroup(
-        separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGap(0, 0, Short.MAX_VALUE)
-    );
-
-    jPanel_menuOpciones.add(separador2);
-
-    button_modificarDatos.setForeground(new java.awt.Color(255, 255, 255));
-    button_modificarDatos.setText("Modificar datos personales");
-    button_modificarDatos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_modificarDatos.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_modificarDatos.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_modificarDatosMouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_modificarDatos);
-
-    button_modificarCred.setForeground(new java.awt.Color(255, 255, 255));
-    button_modificarCred.setText("Modificar credenciales");
-    button_modificarCred.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_modificarCred.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_modificarCred.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_modificarCredMouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_modificarCred);
-
-    button_preferencias.setForeground(new java.awt.Color(255, 255, 255));
-    button_preferencias.setText("Preferencias");
-    button_preferencias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_preferencias.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_preferencias.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_preferenciasMouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_preferencias);
-
-    button_soporte.setForeground(new java.awt.Color(255, 255, 255));
-    button_soporte.setText("Soporte");
-    button_soporte.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_soporte.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_soporte.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_soporteMouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_soporte);
-
-    button_logOut.setBackground(new java.awt.Color(255, 85, 73));
-    button_logOut.setForeground(new java.awt.Color(255, 255, 255));
-    button_logOut.setText("Salir");
-    button_logOut.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    button_logOut.setPreferredSize(new java.awt.Dimension(160, 30));
-    button_logOut.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            button_logOutMouseClicked(evt);
-        }
-    });
-    jPanel_menuOpciones.add(button_logOut);
-
-    background.add(jPanel_menuOpciones, java.awt.BorderLayout.WEST);
-
-    jPanel_derecho.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel_derecho.setPreferredSize(new java.awt.Dimension(794, 0));
-    jPanel_derecho.setLayout(new java.awt.CardLayout());
-
-    jPanel1.setBackground(new java.awt.Color(227, 218, 201));
-    jPanel1.setPreferredSize(new java.awt.Dimension(794, 0));
-    mostrando = jPanel1;
-
-    jLabel6.setFont(new java.awt.Font("Microsoft YaHei", 1, 20));
-    jLabel6.setForeground(new java.awt.Color(102, 102, 102));
-    jLabel6.setText("Bienvenido al Programa Vacunas Panamá");
-
-    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-    jPanel1.setLayout(jPanel1Layout);
-    jPanel1Layout.setHorizontalGroup(
-        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGap(23, 23, 23)
-            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-    jPanel1Layout.setVerticalGroup(
-        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(jPanel1Layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-
-    jPanel_derecho.add(jPanel1, "vacio");
-
-    background.add(jPanel_derecho, java.awt.BorderLayout.CENTER);
-
-    jScrollPane3.setViewportView(background);
-
-    getContentPane().add(jScrollPane3, java.awt.BorderLayout.CENTER);
-
-    pack();
-    setLocationRelativeTo(null);
+                "1. Dar click al botón \'Crear/Editar paciente\' \n"
+                        + "2. Llene el formulario con los datos personales del paciente\n"
+                        + "3. Si el paciente tiene cartilla de vacunación física, dar click en \'Sí\' y debe registrar cada vacuna\n"
+                        + "En este paso puede añadir la vacuna que se va aplicar el paciente.\n"
+                        + "4. Espere el mensaje de confirmación de registro."));
+        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo registro una dosis de vacuna a un paciente?",
+                "1. Dar click en el botón \'Buscar paciente\' y buscamos con los datos al paciente a vacunar\n"
+                        + "2. Rellenar el formulario de la dosis, editar los campos que tienen autocompletado si es necesario\n"
+                        + "3. Dar click en \'Registrar\' y esperar el mensaje de confirmación\n"
+                        + "El paciente tendrá registrada su dosis de vacuna y si es necesario, puede programar una cita para la siguiente dosis."));
+        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo buscar una dosis de vacuna del paciente o al paciente completo?",
+                "1. Dar click en el botón \'Buscar dosis de vacuna\' y buscar con los datos del paciente y vacuna\n"
+                        + "2. Si la consulta no da resultados, buscar al paciente completo: \n"
+                        + "2.1 Dar click en el botón \'Buscar paciente\' y buscamos con los datos del paciente\n"
+                        + "2.2 Si aún no hay resultados esto significa que el paciente no esta registrado en el programa de vacunas y debe crearlo.\n"
+                        + "    Refiérase a la pregunta 1 ¿Cómo creo al paciente a vacuna?"));
+        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo actualizo una dosis de vacuna?",
+                "1. Similar a registrar una vacuna. \n"
+                        + "Dar click en el botón \'Actualizar dosis\' y buscamos al paciente a vacunar y la vacuna\n"
+                        + "Si existe la dosis, podrás editar la fecha de aplicación, el número de dosis, el proveedor, sede aplicada.\n"
+                        + "La vacuna no se puede modificar, para hacerlo debe eliminar el registro y crear un nuevo registro de vacuna.\n"
+                        + "Refiérase a la pregunta 2 ¿Cómo registro una dosis de vacuna a un paciente?"));
+        jPanel5.add(PantallaBase.createQuestionPanel("No veo el nombre de vacuna para aplicar ¿Cómo creo una vacuna nueva?",
+                "1. Si el nombre de la vacuna para aplicar no lo encuentra, primero verifique con otros nombres como el comercial o de laboratorio o acrónimos\n"
+                        + "Si aún no la encuentra, solicite al personal administrativo o informática crear la vacuna nueva\n"
+                        + "Por mientras puede utilizar la vacuna de nombre \'NONE - Por Registrar\' para completar la jornada.\n"
+                        + "Recuerde actualizar la dosis del paciente con el nombre de la vacuna correcto. Ninguna dosis debe quedar con la vacuna NONE."));
+        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo programo una cita de vacunación a un paciente?",
+                "Dar click en \'Agendar cita de vacuna\' y rellenar el formulario basado tanto en los tiempos recomendados de la vacuna y la cómodida del paciente. Esto genera una notificación para el doctor y sede escogido."));
+        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo observo el inventario de vacunas?",
+                "1. Dar click en el botón \'Inventario de vacunas\' y podremos ver todas las vacunas con inventario en la sede preferida\n"
+                        + "Si la sede no es la que deseamos, buscar la sede en la barra de búsqueda o cambiar la preferencia del usuario. "
+                        + "Refiérase a la siguiente pregunta \'¿Cómo cambiar mis preferencias?\'"));
+        jPanel5.add(PantallaBase.createQuestionPanel("No veo ningún dato al consultar",
+                "Esto significa que usted puede o no estar registrado y/o no tiene ninguna vacuna aplicada.\n"
+                        + "Para verificar que este registrado con sus datos correctamente:\n"
+                        + "1. De click en el botón \'Modificar datos personales\' y observe si algún dato como su cédula de identidad personal esta mal escrito, si es así, debe modificar para corregir.\n"
+                        + "Si a pesar de esto, no ve ningún dato, significa que no tiene ninguna vacuna registrada en el sistema. Puede acudir a su médico para registrar su cartilla de vacunación."));
+        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo cambiar mis preferencias de usuario?",
+                "1. Dar click en el botón \'Preferencias\' y actualizamos las preferencias, de manera inicial, el sistema define la sede y el distrito en la primera.\n"
+                        + "Para el distrito no puede definir una preferencia.\n"
+                        + "Si selecciona que las campos de insertar algún dato sean en una ventana emergente siempre será así, excepto en Modificar datos personales y Modificar credenciales que son ventanas emergentes y no se puede cambiar.\n"
+                        + "Si tiene activada editar directo en tabla podrá editar las dosis de vacuna, datos del paciente y agregar datos en las opciones de consulta sin necesidad de usar el otro botón.\n"
+                        + "Si desea modificar sus datos personales o su credencial de acceso (usuario y contraseña)\n"
+                        + "Refiérase a la siguiente pregunta \'¿Cómo cambio mis datos personales o credenciales de acceso?\'"));
+        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo cambio mis datos personales o credenciales de acceso?",
+                "Nota: Se cambia sus datos personales, no los del paciente\n"
+                        + "1. Dar click en el botón \'Modificar datos personales\' o \'Modificar credenciales\' y editar solamente los datos que deseamos modificar.\n"
+                        + "Consejos: La cédula de identidad personal debe estar escrito tal cual su documento.\n"
+                        + "La fecha de nacimiento debe estar en el formato año - mes - día hora : minutos (la hora y minutos es opcional).\n"
+                        + "Si su distrito no se encuentra, puede significar que es nuevo y debe utilizar \'Distrito por registrar\'. Debe informar su distrito y provincia correcta a su médico o sede para corregir.\n"
+                        + "El teléfono puede ser celular o fijo y debe estar los números pegados. Si es extranjero o diferente de 507 debe colocar su prefijo y códigos necesarios al inicio.\n"
+                        + "Al dar click en el botón \'Actualizar\' se cerrará su sesión y debe ingresar nuevamente con sus credenciales correctas.\n"
+                        + "Si olvido su contraseña, deberá cerrar sesión y dar click en \'¿Olvidó su contraseña?\'"));
+        jPanel5.revalidate();
+        jPanel5.repaint();
+
+        jLabel11.setFont(new java.awt.Font("Microsoft YaHei", 0, 14));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("Si su duda no fue resuelta. Contacte al soporte técnico de una sede hospitalaria pública o pregunte a su doctor.");
+        jPanel_soporte.add(jLabel11, java.awt.BorderLayout.SOUTH);
+
+        jPanel_filtrarInventario.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        jPanel_filtrarInventario.setLayout(new java.awt.GridLayout(3, 2));
+        jPanel_filtrarInventario.add(jSeparator24);
+        jPanel_filtrarInventario.add(jSeparator25);
+
+        jLabel8.setText("Filtrar por sede");
+        jPanel_filtrarInventario.add(jLabel8);
+
+        jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox_filterColumn2ActionPerformed(evt);
+            }
+        });
+        jPanel_filtrarInventario.add(jComboBox_filterColumn2);
+
+        jLabel12.setText("Filtrar por vacuna");
+        jPanel_filtrarInventario.add(jLabel12);
+
+        jComboBox_filterColumn3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox_filterColumn3ActionPerformed(evt);
+            }
+        });
+        jPanel_filtrarInventario.add(jComboBox_filterColumn3);
+
+        jPanel_buscarDosis.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_buscarDosis.setForeground(new java.awt.Color(227, 218, 201));
+        jPanel_buscarDosis.setPreferredSize(new java.awt.Dimension(794, 794));
+        jPanel_buscarDosis.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                jPanel_buscarDosisAncestorAdded(evt);
+            }
+
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        jPanel_buscarDosis.setLayout(new javax.swing.BoxLayout(jPanel_buscarDosis, javax.swing.BoxLayout.Y_AXIS));
+
+        jPanel7.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel7.setMaximumSize(new java.awt.Dimension(2147483647, 500));
+        jPanel7.setMinimumSize(new java.awt.Dimension(293, 107));
+        jPanel7.setPreferredSize(new java.awt.Dimension(694, 125));
+        jPanel7.setLayout(new java.awt.BorderLayout());
+
+        titulo_contenido5.setBackground(new java.awt.Color(255, 255, 255));
+        titulo_contenido5.setFont(new java.awt.Font("Roboto", 3, 14));
+        titulo_contenido5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titulo_contenido5.setText("Resultados Obtenidos de Dosis");
+        titulo_contenido5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        titulo_contenido5.setOpaque(true);
+        titulo_contenido5.setPreferredSize(new java.awt.Dimension(794, 17));
+        jPanel7.add(titulo_contenido5, java.awt.BorderLayout.NORTH);
+
+        jPanel6.setPreferredSize(new java.awt.Dimension(794, 75));
+        jPanel6.setLayout(new java.awt.GridLayout(5, 2, 20, 0));
+
+        jLabel13.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Sede");
+        jPanel6.add(jLabel13);
+
+        jTextField3.setDocument(new LimitarCamposSeguro(50, "Buscar por sede..."));
+        jTextField3.setText("Buscar por sede...");
+        jTextField3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        RegistrarUser.handleFocusGain(jTextField3, "Buscar por sede...");
+        jTextField3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField3FocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField3FocusLost(evt);
+            }
+        });
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jTextField3);
+
+        jLabel14.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("Desde");
+        jPanel6.add(jLabel14);
+
+        jTextField4.setDocument(new LimitarCamposSeguro(50, "Buscar desde la fecha AAAA-MM-DD..."));
+        jTextField4.setText("Buscar desde la fecha AAAA-MM-DD...");
+        jTextField4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        RegistrarUser.handleFocusGain(jTextField4, "Buscar desde la fecha AAAA-MM-DD...");
+        jTextField4.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField4FocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField4FocusLost(evt);
+            }
+        });
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jTextField4);
+
+        jLabel15.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel15.setText("Hasta");
+        jPanel6.add(jLabel15);
+
+        jTextField5.setDocument(new LimitarCamposSeguro(50, "Buscar hasta la fecha AAAA-MM-DD..."));
+        jTextField5.setText("Buscar hasta la fecha AAAA-MM-DD...");
+        jTextField5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        RegistrarUser.handleFocusGain(jTextField5, "Buscar hasta la fecha AAAA-MM-DD...");
+        jTextField5.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField5FocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField5FocusLost(evt);
+            }
+        });
+        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField5ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jTextField5);
+
+        jLabel16.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel16.setText("Vacuna");
+        jPanel6.add(jLabel16);
+
+        jComboBox3.setPreferredSize(new java.awt.Dimension(150, 26));
+        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox3ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jComboBox3);
+
+        jLabel17.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Número de Dosis");
+        jPanel6.add(jLabel17);
+
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir...", "Primera dosis", "Segunda dosis", "Tercera dosis", "Refuerzo", "Primer refuerzo", "Segundo refuerzo", "Dosis previa"}));
+        jComboBox4.setPreferredSize(new java.awt.Dimension(150, 26));
+        jComboBox4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox4ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jComboBox4);
+
+        jPanel7.add(jPanel6, java.awt.BorderLayout.CENTER);
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lupa_icon.png")));
+        jButton2.setPreferredSize(new java.awt.Dimension(70, 27));
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jPanel7.add(jButton2, java.awt.BorderLayout.EAST);
+
+        jPanel_buscarDosis.add(jPanel7);
+
+        jScrollPane_Table5.setBackground(new java.awt.Color(227, 218, 201));
+        jScrollPane_Table5.setForeground(new java.awt.Color(227, 218, 201));
+        jScrollPane_Table5.setOpaque(true);
+        jScrollPane_Table5.setPreferredSize(new java.awt.Dimension(794, 625));
+        jScrollPane_Table5.setViewportView(null);
+
+        jTable_Content5.setBackground(new java.awt.Color(227, 218, 201));
+        jTable_Content5.setFont(new java.awt.Font("Roboto", 0, 12));
+        jTable_Content5.setForeground(new java.awt.Color(227, 218, 201));
+        jTable_Content5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTable_Content5.setMinimumSize(new java.awt.Dimension(50, 50));
+        jTable_Content5.setPreferredSize(new java.awt.Dimension(788, 619));
+        jTable_Content5.setShowGrid(true);
+        jScrollPane_Table5.setViewportView(jTable_Content5);
+
+        jPanel_buscarDosis.add(jScrollPane_Table5);
+
+        opcionesTabla5.setBackground(new java.awt.Color(0, 153, 204));
+        opcionesTabla5.setMaximumSize(new java.awt.Dimension(32767, 100));
+        opcionesTabla5.setMinimumSize(new java.awt.Dimension(594, 24));
+        opcionesTabla5.setPreferredSize(new java.awt.Dimension(794, 44));
+        opcionesTabla5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 20, 10));
+
+        jTextField_buscarTabla5.setDocument(new LimitarCamposSeguro(25, "Buscar...")
+        );
+        jTextField_buscarTabla5.setText("Buscar...");
+        jTextField_buscarTabla5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jTextField_buscarTabla5.setPreferredSize(new java.awt.Dimension(125, 26));
+        RegistrarUser.handleFocusGain(jTextField_buscarTabla5, "Buscar...");
+        jTextField_buscarTabla5.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField_buscarTabla5FocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField_buscarTabla5FocusLost(evt);
+            }
+        });
+        jTextField_buscarTabla5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField_buscarTabla5ActionPerformed(evt);
+            }
+        });
+        opcionesTabla5.add(jTextField_buscarTabla5);
+
+        jButton_buscar5.setBackground(new java.awt.Color(204, 204, 204));
+        jButton_buscar5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lupa_icon.png")));
+        jButton_buscar5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_buscar5MouseClicked(evt);
+            }
+        });
+        opcionesTabla5.add(jButton_buscar5);
+
+        jButton_acercar5.setText("Acercar");
+        jButton_acercar5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_acercar5MouseClicked(evt);
+            }
+        });
+        opcionesTabla5.add(jButton_acercar5);
+
+        jButton_alejar5.setText("Alejar");
+        jButton_alejar5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_alejar5MouseClicked(evt);
+            }
+        });
+        opcionesTabla5.add(jButton_alejar5);
+
+        jButton_ordenar5.setText("Ordenar");
+        jButton_ordenar5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_ordenar5MouseClicked(evt);
+            }
+        });
+        opcionesTabla5.add(jButton_ordenar5);
+
+        jButton_filtros5.setText("Filtros");
+        jButton_filtros5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_filtros5MouseClicked(evt);
+            }
+        });
+        opcionesTabla5.add(jButton_filtros5);
+
+        jButton_fuente5.setText("Fuente y tamaño");
+        jButton_fuente5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_fuente5MouseClicked(evt);
+            }
+        });
+        opcionesTabla5.add(jButton_fuente5);
+
+        jButton_exportar5.setText("Exportar tabla");
+        jButton_exportar5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_exportar5MouseClicked(evt);
+            }
+        });
+        opcionesTabla5.add(jButton_exportar5);
+
+        jPanel_buscarDosis.add(opcionesTabla5);
+
+        jPanel_preferencias.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_preferencias.setPreferredSize(new java.awt.Dimension(794, 794));
+        jPanel_preferencias.setLayout(new javax.swing.BoxLayout(jPanel_preferencias, javax.swing.BoxLayout.Y_AXIS));
+
+        icon_preferencias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ajuetes3.png")));
+        icon_preferencias.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        icon_preferencias.setPreferredSize(new java.awt.Dimension(130, 120));
+        jPanel_preferencias.add(icon_preferencias);
+
+        titulo3.setFont(new java.awt.Font("Microsoft YaHei", 1, 24));
+        titulo3.setForeground(new java.awt.Color(0, 0, 0));
+        titulo3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titulo3.setText("Preferencias");
+        titulo3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel_preferencias.add(titulo3);
+
+        jPanel_separador1.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_separador1.setMaximumSize(new java.awt.Dimension(32767, 25));
+
+        javax.swing.GroupLayout jPanel_separador1Layout = new javax.swing.GroupLayout(jPanel_separador1);
+        jPanel_separador1.setLayout(jPanel_separador1Layout);
+        jPanel_separador1Layout.setHorizontalGroup(
+                jPanel_separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
+        );
+        jPanel_separador1Layout.setVerticalGroup(
+                jPanel_separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 25, Short.MAX_VALUE)
+        );
+
+        jPanel_preferencias.add(jPanel_separador1);
+
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("Tamaño y Fuente preferida");
+        jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel_preferencias.add(jLabel4);
+
+        jPanel_separador2.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_separador2.setMaximumSize(new java.awt.Dimension(32767, 15));
+
+        javax.swing.GroupLayout jPanel_separador2Layout = new javax.swing.GroupLayout(jPanel_separador2);
+        jPanel_separador2.setLayout(jPanel_separador2Layout);
+        jPanel_separador2Layout.setHorizontalGroup(
+                jPanel_separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
+        );
+        jPanel_separador2Layout.setVerticalGroup(
+                jPanel_separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 15, Short.MAX_VALUE)
+        );
+
+        jPanel_preferencias.add(jPanel_separador2);
+
+        jPanel_fontChooser.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_fontChooser.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        jPanel_fontChooser.setMaximumSize(new java.awt.Dimension(700, 250));
+        jPanel_fontChooser.setPreferredSize(new java.awt.Dimension(460, 250));
+        jPanel_fontChooser.setLayout(new java.awt.GridLayout(3, 2, 10, 10));
+        jPanel_preferencias.add(jPanel_fontChooser);
+        // Familia de la fuente
+        JLabel familyLabel = new JLabel("Familia:");
+        familyLabel.setFont(new Font("Roboto", 0, 14));
+        JComboBox<String> familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+        familyComboBox.setFont(new Font("Roboto", 0, 14));
+        jPanel_fontChooser.add(familyLabel);
+        jPanel_fontChooser.add(familyComboBox);
+
+        // Estilo de la fuente
+        JLabel styleLabel = new JLabel("Estilo:");
+        styleLabel.setFont(new Font("Roboto", 0, 14));
+        String[] styles = {"Regular", "Negrita", "Cursiva", "Negrita Cursiva"};
+        JComboBox<String> styleComboBox = new JComboBox<>(styles);
+        styleComboBox.setFont(new Font("Roboto", 0, 14));
+        jPanel_fontChooser.add(styleLabel);
+        jPanel_fontChooser.add(styleComboBox);
+
+        // Tamaño de la fuente
+        JLabel sizeLabel = new JLabel("Tamaño:");
+        sizeLabel.setFont(new Font("Roboto", 0, 14));
+        JSpinner sizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
+        sizeSpinner.setFont(new Font("Roboto", 0, 14));
+        jPanel_fontChooser.add(sizeLabel);
+        jPanel_fontChooser.add(sizeSpinner);
+
+        jPanel_separador3.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_separador3.setMaximumSize(new java.awt.Dimension(32767, 25));
+
+        javax.swing.GroupLayout jPanel_separador3Layout = new javax.swing.GroupLayout(jPanel_separador3);
+        jPanel_separador3.setLayout(jPanel_separador3Layout);
+        jPanel_separador3Layout.setHorizontalGroup(
+                jPanel_separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
+        );
+        jPanel_separador3Layout.setVerticalGroup(
+                jPanel_separador3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 25, Short.MAX_VALUE)
+        );
+
+        jPanel_preferencias.add(jPanel_separador3);
+
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Tipo de archivo exportar preferido");
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel_preferencias.add(jLabel1);
+
+        jComboBox_exportarType.setFont(new java.awt.Font("Roboto", 0, 14));
+        jComboBox_exportarType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir...", "CSV", "TXT", "PDF", "Excel"}));
+        jComboBox_exportarType.setMaximumSize(new java.awt.Dimension(367, 40));
+        jComboBox_exportarType.setPreferredSize(new java.awt.Dimension(190, 37));
+        jPanel_preferencias.add(jComboBox_exportarType);
+
+        jPanel_separador4.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_separador4.setMaximumSize(new java.awt.Dimension(32767, 25));
+
+        javax.swing.GroupLayout jPanel_separador4Layout = new javax.swing.GroupLayout(jPanel_separador4);
+        jPanel_separador4.setLayout(jPanel_separador4Layout);
+        jPanel_separador4Layout.setHorizontalGroup(
+                jPanel_separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
+        );
+        jPanel_separador4Layout.setVerticalGroup(
+                jPanel_separador4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 25, Short.MAX_VALUE)
+        );
+
+        jPanel_preferencias.add(jPanel_separador4);
+
+        jLabel5.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Sede de salud preferida");
+        jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel_preferencias.add(jLabel5);
+
+        jComboBox_exportarType1.setFont(new java.awt.Font("Roboto", 0, 14));
+        jComboBox_exportarType1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir..."}));
+        jComboBox_exportarType1.setMaximumSize(new java.awt.Dimension(567, 40));
+        jComboBox_exportarType1.setPreferredSize(new java.awt.Dimension(450, 37));
+        jPanel_preferencias.add(jComboBox_exportarType1);
+
+        jPanel_separador5.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_separador5.setMaximumSize(new java.awt.Dimension(32767, 25));
+
+        javax.swing.GroupLayout jPanel_separador5Layout = new javax.swing.GroupLayout(jPanel_separador5);
+        jPanel_separador5.setLayout(jPanel_separador5Layout);
+        jPanel_separador5Layout.setHorizontalGroup(
+                jPanel_separador5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 977, Short.MAX_VALUE)
+        );
+        jPanel_separador5Layout.setVerticalGroup(
+                jPanel_separador5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 25, Short.MAX_VALUE)
+        );
+
+        jPanel_preferencias.add(jPanel_separador5);
+
+        jButton_savePreferences.setFont(new java.awt.Font("Roboto", 0, 14));
+        jButton_savePreferences.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_savePreferences.setText("Guardar preferencias");
+        jButton_savePreferences.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_savePreferences.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton_savePreferences.setMaximumSize(new java.awt.Dimension(166, 48));
+        jButton_savePreferences.setPreferredSize(new java.awt.Dimension(166, 48));
+        jButton_savePreferences.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_savePreferencesMouseClicked(evt);
+            }
+        });
+        jPanel_preferencias.add(jButton_savePreferences);
+
+        jDialog_modificarCred1.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        jDialog_modificarCred1.setTitle("Programa Vacunas Panamá - Modificar credenciales");
+        jDialog_modificarCred1.setResizable(false);
+        jDialog_modificarCred1.setSize(new java.awt.Dimension(450, 550));
+
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        background_dialog3.setBackground(new java.awt.Color(255, 255, 255));
+        background_dialog3.setPreferredSize(new java.awt.Dimension(444, 494));
+        background_dialog3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        titulo4.setFont(new java.awt.Font("Microsoft YaHei", 1, 14));
+        titulo4.setForeground(new java.awt.Color(0, 0, 0));
+        titulo4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titulo4.setText("Modificar credenciales de acceso");
+        background_dialog3.add(titulo4, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 25, 269, -1));
+
+        jTextArea4.setEditable(false);
+        jTextArea4.setBackground(new java.awt.Color(255, 255, 255));
+        jTextArea4.setFont(new java.awt.Font("Microsoft YaHei", 2, 11));
+        jTextArea4.setForeground(new java.awt.Color(102, 102, 102));
+        jTextArea4.setLineWrap(true);
+        jTextArea4.setRows(5);
+        jTextArea4.setText("Indicaciones: Para modificar las credenciales debe ingresar su usuario y contraseña anterior, si solo desea cambiar el usuario debe dejar en blanco los campos de nueva contraseña.\nDebe repetir la contraseña nueva si desea modificarla, sino no se cambiará la misma.\nSi desea modificar otro dato personal, utilice el otro botón.");
+        jTextArea4.setWrapStyleWord(true);
+        jTextArea4.setBorder(null);
+        jTextArea4.setFocusable(false);
+        background_dialog3.add(jTextArea4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 380, 100));
+
+        usuario1.setBackground(new java.awt.Color(0, 0, 0));
+        usuario1.setFont(new java.awt.Font("Roboto", 0, 12));
+        usuario1.setForeground(new java.awt.Color(0, 0, 0));
+        usuario1.setText("Usuario anterior *");
+        background_dialog3.add(usuario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
+
+        jTextField_usuario1.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField_usuario1.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
+        jTextField_usuario1.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_usuario1.setForeground(java.awt.Color.gray);
+        jTextField_usuario1.setText("Ingrese su usuario");
+        jTextField_usuario1.setActionCommand("<Not Set>");
+        jTextField_usuario1.setBorder(null);
+        jTextField_usuario1.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        RegistrarUser.handleFocusGain(jTextField_usuario1, "Ingrese su usuario");
+        jTextField_usuario1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField_usuario1FocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField_usuario1FocusLost(evt);
+            }
+        });
+        jTextField_usuario1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField_usuario1ActionPerformed(evt);
+            }
+        });
+        background_dialog3.add(jTextField_usuario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 380, -1));
+
+        jSeparator8.setForeground(new java.awt.Color(30, 30, 30));
+        background_dialog3.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 380, 21));
+
+        usuario_nuevo.setBackground(new java.awt.Color(0, 0, 0));
+        usuario_nuevo.setFont(new java.awt.Font("Roboto", 0, 12));
+        usuario_nuevo.setForeground(new java.awt.Color(0, 0, 0));
+        usuario_nuevo.setText("Usuario nuevo");
+        background_dialog3.add(usuario_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
+
+        jTextField_usuarioNuevo.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField_usuarioNuevo.setDocument(new LimitarCamposSeguro(50, "Ingrese un usuario nuevo"));
+        jTextField_usuarioNuevo.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_usuarioNuevo.setForeground(java.awt.Color.gray);
+        jTextField_usuarioNuevo.setText("Ingrese un usuario nuevo");
+        jTextField_usuarioNuevo.setActionCommand("<Not Set>");
+        jTextField_usuarioNuevo.setBorder(null);
+        jTextField_usuarioNuevo.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        RegistrarUser.handleFocusGain(jTextField_usuarioNuevo, "Ingrese un usuario nuevo");
+        jTextField_usuarioNuevo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField_usuarioNuevoFocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField_usuarioNuevoFocusLost(evt);
+            }
+        });
+        jTextField_usuarioNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField_usuarioNuevoActionPerformed(evt);
+            }
+        });
+        background_dialog3.add(jTextField_usuarioNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 380, -1));
+
+        jSeparator21.setForeground(new java.awt.Color(30, 30, 30));
+        background_dialog3.add(jSeparator21, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 380, 21));
+
+        contrasena.setBackground(new java.awt.Color(0, 0, 0));
+        contrasena.setFont(new java.awt.Font("Roboto", 0, 12));
+        contrasena.setForeground(new java.awt.Color(0, 0, 0));
+        contrasena.setText("Contraseña nueva");
+        background_dialog3.add(contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, -1, -1));
+
+        jPasswordField_nueva1.setBackground(new java.awt.Color(255, 255, 255));
+        jPasswordField_nueva1.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
+        jPasswordField_nueva1.setFont(new java.awt.Font("Roboto", 0, 14));
+        jPasswordField_nueva1.setForeground(java.awt.Color.gray);
+        jPasswordField_nueva1.setText("Ingrese su contraseña");
+        jPasswordField_nueva1.setBorder(null);
+        jPasswordField_nueva1.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        RegistrarUser.handleFocusGain(jPasswordField_nueva1, "Ingrese su contraseña");
+        jPasswordField_nueva1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPasswordField_nueva1FocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jPasswordField_nueva1FocusLost(evt);
+            }
+        });
+        jPasswordField_nueva1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordField_nueva1ActionPerformed(evt);
+            }
+        });
+        background_dialog3.add(jPasswordField_nueva1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 380, -1));
+
+        jSeparator11.setForeground(new java.awt.Color(30, 30, 30));
+        background_dialog3.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 380, 21));
+
+        repetir_contrasena.setBackground(new java.awt.Color(0, 0, 0));
+        repetir_contrasena.setFont(new java.awt.Font("Roboto", 0, 12));
+        repetir_contrasena.setForeground(new java.awt.Color(0, 0, 0));
+        repetir_contrasena.setText("Repetir contraseña nueva *");
+        background_dialog3.add(repetir_contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, -1));
+
+        jPasswordField_nueva2.setBackground(new java.awt.Color(255, 255, 255));
+        jPasswordField_nueva2.setDocument(new LimitarCamposSeguro(20, "Repita su contraseña"));
+        jPasswordField_nueva2.setFont(new java.awt.Font("Roboto", 0, 14));
+        jPasswordField_nueva2.setForeground(java.awt.Color.gray);
+        jPasswordField_nueva2.setText("Repita su contraseña");
+        jPasswordField_nueva2.setBorder(null);
+        jPasswordField_nueva2.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        RegistrarUser.handleFocusGain(jPasswordField_nueva2, "Repita su contraseña");
+        jPasswordField_nueva2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPasswordField_nueva2FocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jPasswordField_nueva2FocusLost(evt);
+            }
+        });
+        jPasswordField_nueva2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordField_nueva2ActionPerformed(evt);
+            }
+        });
+        background_dialog3.add(jPasswordField_nueva2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 380, -1));
+
+        jSeparator7.setForeground(new java.awt.Color(30, 30, 30));
+        background_dialog3.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 380, 21));
+
+        errorMessage2.setFont(new java.awt.Font("Roboto", 1, 14));
+        errorMessage2.setForeground(java.awt.Color.red);
+        errorMessage2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        errorMessage2.setText("Error. ");
+        errorMessage2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        errorMessage2.setVisible(false);
+        background_dialog3.add(errorMessage2, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 430, 440, -1));
+
+        jButton_modificar2.setBackground(new java.awt.Color(0, 204, 0));
+        jButton_modificar2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jButton_modificar2.setForeground(new java.awt.Color(0, 0, 0));
+        jButton_modificar2.setText("Modificar");
+        jButton_modificar2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_modificar2MouseClicked(evt);
+            }
+        });
+        background_dialog3.add(jButton_modificar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 450, -1, -1));
+
+        jButton_cancelar2.setBackground(new java.awt.Color(153, 153, 153));
+        jButton_cancelar2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jButton_cancelar2.setForeground(new java.awt.Color(0, 0, 0));
+        jButton_cancelar2.setText("Cancelar");
+        jButton_cancelar2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_cancelar2MouseClicked(evt);
+            }
+        });
+        background_dialog3.add(jButton_cancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 450, -1, -1));
+
+        contrasena_anterior.setBackground(new java.awt.Color(0, 0, 0));
+        contrasena_anterior.setFont(new java.awt.Font("Roboto", 0, 12));
+        contrasena_anterior.setForeground(new java.awt.Color(0, 0, 0));
+        contrasena_anterior.setText("Contraseña anterior *");
+        background_dialog3.add(contrasena_anterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, -1));
+
+        jPasswordField_vieja.setBackground(new java.awt.Color(255, 255, 255));
+        jPasswordField_vieja.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
+        jPasswordField_vieja.setFont(new java.awt.Font("Roboto", 0, 14));
+        jPasswordField_vieja.setForeground(java.awt.Color.gray);
+        jPasswordField_vieja.setText("Ingrese su contraseña");
+        jPasswordField_vieja.setBorder(null);
+        jPasswordField_vieja.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        RegistrarUser.handleFocusGain(jPasswordField_vieja, "Ingrese su contraseña");
+        jPasswordField_vieja.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPasswordField_viejaFocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jPasswordField_viejaFocusLost(evt);
+            }
+        });
+        jPasswordField_vieja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordField_viejaActionPerformed(evt);
+            }
+        });
+        background_dialog3.add(jPasswordField_vieja, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 380, -1));
+
+        jSeparator26.setForeground(new java.awt.Color(30, 30, 30));
+        background_dialog3.add(jSeparator26, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 380, 21));
+
+        jScrollPane4.setViewportView(background_dialog3);
+
+        javax.swing.GroupLayout jDialog_modificarCred1Layout = new javax.swing.GroupLayout(jDialog_modificarCred1.getContentPane());
+        jDialog_modificarCred1.getContentPane().setLayout(jDialog_modificarCred1Layout);
+        jDialog_modificarCred1Layout.setHorizontalGroup(
+                jDialog_modificarCred1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane4)
+        );
+        jDialog_modificarCred1Layout.setVerticalGroup(
+                jDialog_modificarCred1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane4)
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Programa Vacunas Panamá - Doctor / Enfermera");
+        setSize(new java.awt.Dimension(1000, 800));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        jScrollPane3.setPreferredSize(getSize());
+
+        background.setBackground(new java.awt.Color(227, 218, 201));
+        background.setForeground(new java.awt.Color(227, 218, 201));
+        background.setMinimumSize(new java.awt.Dimension(994, 794));
+        background.setPreferredSize(new java.awt.Dimension(994, 794));
+        background.setLayout(new java.awt.BorderLayout());
+
+        jPanel_menuOpciones.setBackground(new java.awt.Color(39, 104, 165));
+        jPanel_menuOpciones.setForeground(new java.awt.Color(48, 48, 46));
+        jPanel_menuOpciones.setAutoscrolls(true);
+        jPanel_menuOpciones.setMaximumSize(getSize());
+        jPanel_menuOpciones.setPreferredSize(new java.awt.Dimension(200, 0));
+        jPanel_menuOpciones.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 5));
+
+        separador1.setBackground(new java.awt.Color(39, 104, 165));
+        separador1.setForeground(new java.awt.Color(48, 48, 46));
+        separador1.setPreferredSize(new java.awt.Dimension(150, 35));
+
+        javax.swing.GroupLayout separador1Layout = new javax.swing.GroupLayout(separador1);
+        separador1.setLayout(separador1Layout);
+        separador1Layout.setHorizontalGroup(
+                separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
+        );
+        separador1Layout.setVerticalGroup(
+                separador1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jPanel_menuOpciones.add(separador1);
+
+        icon_project.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icon_project.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/operacionVacunas_logo.png")));
+        icon_project.setAlignmentX(0.5F);
+        icon_project.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        icon_project.setMaximumSize(new java.awt.Dimension(200, 200));
+        icon_project.setMinimumSize(new java.awt.Dimension(50, 50));
+        icon_project.setName("");
+        icon_project.setPreferredSize(new java.awt.Dimension(135, 135));
+        jPanel_menuOpciones.add(icon_project);
+        icon_project.getAccessibleContext().setAccessibleName("logo");
+
+        rolName.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        rolName.setForeground(new java.awt.Color(255, 255, 255));
+        rolName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        rolName.setText("¡ Hola Doctor / Enfermera !");
+        rolName.setAlignmentX(1.0F);
+        rolName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        rolName.setPreferredSize(new java.awt.Dimension(170, 30));
+        jPanel_menuOpciones.add(rolName);
+
+        nombreBienvenida.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        nombreBienvenida.setForeground(new java.awt.Color(255, 255, 255));
+        nombreBienvenida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nombreBienvenida.setText("Nombre");
+        nombreBienvenida.setAlignmentX(1.0F);
+        nombreBienvenida.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        nombreBienvenida.setPreferredSize(new java.awt.Dimension(150, 30));
+        jPanel_menuOpciones.add(nombreBienvenida);
+
+        button_opcion1.setForeground(new java.awt.Color(255, 255, 255));
+        button_opcion1.setText("Mis pacientes");
+        button_opcion1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_opcion1.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_opcion1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_opcion1MouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_opcion1);
+
+        button_opcion2.setForeground(new java.awt.Color(255, 255, 255));
+        button_opcion2.setText("Buscar paciente");
+        button_opcion2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_opcion2.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_opcion2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_opcion2MouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_opcion2);
+
+        button_opcion3.setForeground(new java.awt.Color(255, 255, 255));
+        button_opcion3.setText("Buscar dosis de vacuna");
+        button_opcion3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_opcion3.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_opcion3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_opcion3MouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_opcion3);
+
+        button_opcion4.setForeground(new java.awt.Color(255, 255, 255));
+        button_opcion4.setText("Actualizar dosis");
+        button_opcion4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_opcion4.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_opcion4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_opcion4MouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_opcion4);
+
+        button_opcion5.setForeground(new java.awt.Color(255, 255, 255));
+        button_opcion5.setText("Agendar cita de vacuna");
+        button_opcion5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_opcion5.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_opcion5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_opcion5MouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_opcion5);
+
+        button_opcion6.setForeground(new java.awt.Color(255, 255, 255));
+        button_opcion6.setText("Crear / Editar paciente");
+        button_opcion6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_opcion6.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_opcion6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_opcion6MouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_opcion6);
+
+        button_opcion7.setForeground(new java.awt.Color(255, 255, 255));
+        button_opcion7.setText("Inventario de vacunas");
+        button_opcion7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_opcion7.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_opcion7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_opcion7MouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_opcion7);
+
+        button_opcion8.setForeground(new java.awt.Color(255, 255, 255));
+        button_opcion8.setText("Reporte y estadísticas");
+        button_opcion8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_opcion8.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_opcion8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_opcion8MouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_opcion8);
+
+        separador2.setBackground(new java.awt.Color(39, 104, 165));
+        separador2.setForeground(new java.awt.Color(48, 48, 46));
+        separador2.setPreferredSize(new java.awt.Dimension(150, 17));
+
+        javax.swing.GroupLayout separador2Layout = new javax.swing.GroupLayout(separador2);
+        separador2.setLayout(separador2Layout);
+        separador2Layout.setHorizontalGroup(
+                separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
+        );
+        separador2Layout.setVerticalGroup(
+                separador2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jPanel_menuOpciones.add(separador2);
+
+        button_modificarDatos.setForeground(new java.awt.Color(255, 255, 255));
+        button_modificarDatos.setText("Modificar datos personales");
+        button_modificarDatos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_modificarDatos.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_modificarDatos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_modificarDatosMouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_modificarDatos);
+
+        button_modificarCred.setForeground(new java.awt.Color(255, 255, 255));
+        button_modificarCred.setText("Modificar credenciales");
+        button_modificarCred.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_modificarCred.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_modificarCred.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_modificarCredMouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_modificarCred);
+
+        button_preferencias.setForeground(new java.awt.Color(255, 255, 255));
+        button_preferencias.setText("Preferencias");
+        button_preferencias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_preferencias.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_preferencias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_preferenciasMouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_preferencias);
+
+        button_soporte.setForeground(new java.awt.Color(255, 255, 255));
+        button_soporte.setText("Soporte");
+        button_soporte.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_soporte.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_soporte.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_soporteMouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_soporte);
+
+        button_logOut.setBackground(new java.awt.Color(255, 85, 73));
+        button_logOut.setForeground(new java.awt.Color(255, 255, 255));
+        button_logOut.setText("Salir");
+        button_logOut.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button_logOut.setPreferredSize(new java.awt.Dimension(160, 30));
+        button_logOut.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                button_logOutMouseClicked(evt);
+            }
+        });
+        jPanel_menuOpciones.add(button_logOut);
+
+        background.add(jPanel_menuOpciones, java.awt.BorderLayout.WEST);
+
+        jPanel_derecho.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel_derecho.setPreferredSize(new java.awt.Dimension(794, 0));
+        jPanel_derecho.setLayout(new java.awt.CardLayout());
+
+        jPanel1.setBackground(new java.awt.Color(227, 218, 201));
+        jPanel1.setPreferredSize(new java.awt.Dimension(794, 0));
+        mostrando = jPanel1;
+
+        jLabel6.setFont(new java.awt.Font("Microsoft YaHei", 1, 20));
+        jLabel6.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel6.setText("Bienvenido al Programa Vacunas Panamá");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel_derecho.add(jPanel1, "vacio");
+
+        background.add(jPanel_derecho, java.awt.BorderLayout.CENTER);
+
+        jScrollPane3.setViewportView(background);
+
+        getContentPane().add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>
 
     private void jButton_acercarMouseClicked(java.awt.event.MouseEvent evt) {
@@ -2544,7 +2556,7 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
 
     private void jButton_exportarMouseClicked(java.awt.event.MouseEvent evt) {
         /* TODO llamada al método exportar en csv o excel o pdf */
- /* TODO por mover eventos de jPanel mostrarTabla en doctor es Mis Pacientes */
+        /* TODO por mover eventos de jPanel mostrarTabla en doctor es Mis Pacientes */
     }
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {
@@ -2980,9 +2992,6 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
     }
 
     private void jTextField_fechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {
-        if (jComboBox_sexo.getSelectedIndex() <= 0) {
-            jComboBox_sexo.setSelectedIndex(3);
-        }
         jTextField_direccion.requestFocus();
     }
 
@@ -3045,8 +3054,9 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
         boolean condicion2 = apellidoM.isBlank() || apellidoM.equals("Ingrese el apellido");
         boolean condicion3 = cedulaM.isBlank() || cedulaM.equals("Ingrese la cédula");
         boolean condicion4 = fechaNacimientoM.isBlank() || fechaNacimientoM.equals("Ingrese la fecha de nacimiento YYYY-MM-DD hh:mm:ss");
-        boolean condicionesObligatorias = !condicion1 && !condicion2 && !condicion3 && !condicion4;
-        boolean condicionOp1 = sexoM == 'E';
+        boolean condicion5 = sexoM == 'E';
+        boolean condicionesObligatorias = !condicion1 && !condicion2 && !condicion3 && !condicion4 && !condicion5;
+
         boolean condicionOp2 = distritoM.equals("Elegir");
         boolean condicionOp3 = direccionM.isBlank() || direccionM.equals("Ingrese la dirección");
         boolean condicionOp4 = correoM.isBlank() || correoM.equals("Ingrese el correo electrónico");
@@ -3059,7 +3069,7 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
 
         errorMessage.setVisible(false);
 
-        if (condicionesObligatorias) {
+        if (!condicionesObligatorias) {
             errorMessage.setText("Error. Algunos campos son obligatorios*. Revisar");
             errorMessage.setVisible(true);
             return;
@@ -3081,33 +3091,23 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
                 errorMessage.setVisible(true);
                 return;
             } else {
-                if (!condicionOp1) {
-                    if (!condicionOp2 && !condicionOp3 && !condicionOp4 && !condicionOp5) {
-                        /* manipular todos los datos */
-                    } else if (!condicionOp2 && !condicionOp3 && !condicionOp4) {
-                        /* manipular todos los datos MENOS el telefono */
-                    } else if (!condicionOp2 && !condicionOp3) {
-                        /*manipular todos los datos MENOS el telefono y correo */
-                    } else {
-                        /* manipular todos los datos MENOS el telefono, correo y direccion con su distrito (adicional el sexo) */
-                    }
-                } else if (!condicionOp2 && !condicionOp3) {
+                if (!condicionOp2 && !condicionOp3) {
                     if (!condicionOp4 && !condicionOp5) {
-                        /* manipular todos los datos menos el sexo */
+                        /* manipular todos los datos */
                     } else if (!condicionOp4) {
-                        /* manipular todos los datos MENOS el telefono y el sexo*/
+                        /* manipular todos los datos MENOS el teléfono */
                     } else {
                         /* manipular todos los datos y la dirección con su distrito */
                     }
                 } else if (!condicionOp4) {
-                    if (!condicionOp4 && !condicionOp5) {
-                        /* manipular todos los datos menos el sexo y la dirección */
+                    if (!condicionOp5) {
+                        /* manipular todos los datos menos la dirección */
                     } else {
-                        /* manipular todos los datos adicional el correo */
+                        /* manipular todos los datos, adicional el correo */
                     }
                 } else if (!condicionOp5) {
                     /* manipular los datos obligatorios y el teléfono */
-                } else if (!condicionesObligatorias) {
+                } else {
                     /* manipular solo los datos obligatorios */
                 }
             }
@@ -3576,15 +3576,15 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
                 && (!String.valueOf(jPasswordField_nueva2.getPassword()).isBlank()
                 || !String.valueOf(jPasswordField_nueva2.getPassword()).equals("Repita su contraseña"))) {
             if (!String.valueOf(jPasswordField_nueva1.getPassword()).equals(String.valueOf(jPasswordField_nueva2.getPassword()))) {
-                repetir_contraseña.setForeground(Color.red);
+                repetir_contrasena.setForeground(Color.red);
                 jPasswordField_nueva2.setForeground(Color.red);
-                contraseña.setForeground(Color.red);
+                contrasena.setForeground(Color.red);
                 jPasswordField_nueva1.setForeground(Color.red);
                 errorMessage2.setText("Error. Las contraseñas nuevas no son iguales.");
                 errorMessage2.setVisible(true);
             }
             /* else if (! verificar anterior jPasswordField4.getPassword()) {
-            contraseña_anterior.setForeground(Color.red);
+            contrasena_anterior.setForeground(Color.red);
             jPasswordField4.setForeground(Color.red);
             errorMessage2.setText("Error. La contraseña anterior no coincide. Cambios cancelado");
             errorMessage2.setVisible(true);
@@ -3640,7 +3640,8 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PantallaDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
@@ -3683,8 +3684,8 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
     private javax.swing.JLabel cedula;
     private javax.swing.JLabel cedula1;
     private javax.swing.JLabel cedula2;
-    private javax.swing.JLabel contraseña;
-    private javax.swing.JLabel contraseña_anterior;
+    private javax.swing.JLabel contrasena;
+    private javax.swing.JLabel contrasena_anterior;
     private javax.swing.JLabel correo;
     private javax.swing.JLabel correo1;
     private javax.swing.JLabel direccion;
@@ -3878,7 +3879,7 @@ jComboBox_filterColumn2.addActionListener(new java.awt.event.ActionListener() {
     private javax.swing.JPanel opcionesTabla3;
     private javax.swing.JPanel opcionesTabla4;
     private javax.swing.JPanel opcionesTabla5;
-    private javax.swing.JLabel repetir_contraseña;
+    private javax.swing.JLabel repetir_contrasena;
     private javax.swing.JLabel rolName;
     private javax.swing.JPanel separador1;
     private javax.swing.JPanel separador2;

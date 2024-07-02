@@ -1,22 +1,11 @@
 package InterfazDesktop;
 
-import Logica.Validations.InicioSesion;
-import Validations.LimitarCamposNumeric;
-import Validations.LimitarCamposSeguro;
-import Validations.LimitarCamposAlpha;
-import Validations.LimitarCamposFecha;
-import Validations.LimitarCamposString;
-import Validations.LimitarCampos;
-import Validations.LimitarCamposEmail;
-import Validations.LimitarCamposCedula;
+import Logica.Validations.*;
 
-import java.awt.*;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import java.awt.*;
 
 public class RegistrarUser extends javax.swing.JFrame {
 
@@ -27,6 +16,7 @@ public class RegistrarUser extends javax.swing.JFrame {
 
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
         jScrollPane1 = new javax.swing.JScrollPane();
         background = new javax.swing.JPanel();
@@ -145,6 +135,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_nombreFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_nombreFocusLost(evt);
             }
@@ -177,6 +168,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_apellidoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_apellidoFocusLost(evt);
             }
@@ -209,6 +201,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_cedulaFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_cedulaFocusLost(evt);
             }
@@ -241,6 +234,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_fechaNacimientoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_fechaNacimientoFocusLost(evt);
             }
@@ -264,7 +258,7 @@ public class RegistrarUser extends javax.swing.JFrame {
         jComboBox_sexo.setBackground(java.awt.Color.gray);
         jComboBox_sexo.setFont(new java.awt.Font("Roboto", 0, 14));
         jComboBox_sexo.setForeground(java.awt.Color.black);
-        jComboBox_sexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir", "Masculino", "Feminino" }));
+        jComboBox_sexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Masculino", "Feminino"}));
         background.add(jComboBox_sexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 170, -1));
 
         direccion.setBackground(new java.awt.Color(0, 0, 0));
@@ -284,6 +278,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_direccionFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_direccionFocusLost(evt);
             }
@@ -304,7 +299,7 @@ public class RegistrarUser extends javax.swing.JFrame {
         jComboBox_distrito.setBackground(java.awt.Color.gray);
         jComboBox_distrito.setFont(new java.awt.Font("Roboto", 0, 14));
         jComboBox_distrito.setForeground(java.awt.Color.black);
-        jComboBox_distrito.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elegir", "Distrito por registrar" }));
+        jComboBox_distrito.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Distrito por registrar"}));
         background.add(jComboBox_distrito, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 345, 290, -1));
 
         jSeparator10.setForeground(new java.awt.Color(30, 30, 30));
@@ -328,6 +323,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_correoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_correoFocusLost(evt);
             }
@@ -360,6 +356,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_telefonoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_telefonoFocusLost(evt);
             }
@@ -393,6 +390,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_usuarioFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_usuarioFocusLost(evt);
             }
@@ -414,17 +412,18 @@ public class RegistrarUser extends javax.swing.JFrame {
         background.add(contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 530, -1, -1));
 
         jPasswordField.setBackground(new java.awt.Color(255, 255, 255));
-        jPasswordField.setDocument(new LimitarCamposSeguro(20, "Ingrese una contrasena"));
+        jPasswordField.setDocument(new LimitarCamposSeguro(20, "Ingrese una contraseña"));
         jPasswordField.setFont(new java.awt.Font("Roboto", 0, 14));
         jPasswordField.setForeground(java.awt.Color.gray);
-        jPasswordField.setText("Ingrese una contrasena");
+        jPasswordField.setText("Ingrese una contraseña");
         jPasswordField.setBorder(null);
         jPasswordField.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jPasswordField, "Ingrese una contrasena");
+        RegistrarUser.handleFocusGain(jPasswordField, "Ingrese una contraseña");
         jPasswordField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jPasswordFieldFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jPasswordFieldFocusLost(evt);
             }
@@ -517,7 +516,8 @@ public class RegistrarUser extends javax.swing.JFrame {
 
         setSize(new java.awt.Dimension(616, 738));
         setLocationRelativeTo(null);
-    }
+    }// </editor-fold>
+
     /* eventos */
     private void formComponentShown(java.awt.event.ComponentEvent evt) {
         Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
@@ -563,7 +563,7 @@ public class RegistrarUser extends javax.swing.JFrame {
             }
         } else {
             /* TODO IMPLEMEMNTAR LOGICA DE CREACIÓN DE USUARIO Y/O CREACIÓN DE PACIENTE EN BD */
-            if(InicioSesion.buscar(jTextField_cedula.getText(), rol.getText()) != null) {
+            if (InicioSesion.buscar(jTextField_cedula.getText(), rol.getText()) != null) {
                 System.out.println("Creando un usuario local");
                 boolean insertadoLocal = login.insertar(jTextField_nombre.getText(), jTextField_apellido.getText(), jTextField_cedula.getText(), jTextField_correo.getText(), jTextField_usuario.getText(), String.valueOf(jPasswordField.getPassword()), rol.getText());
 
@@ -609,9 +609,6 @@ public class RegistrarUser extends javax.swing.JFrame {
     }
 
     private void jTextField_fechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {
-        if (jComboBox_sexo.getSelectedIndex() == 0) {
-            jComboBox_sexo.setSelectedIndex(3);
-        }
         jTextField_direccion.requestFocus();
     }
 
@@ -687,11 +684,11 @@ public class RegistrarUser extends javax.swing.JFrame {
     }
 
     private void jPasswordFieldFocusGained(java.awt.event.FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField, "Ingrese una contrasena");
+        RegistrarUser.handleFocusPassword(jPasswordField, "Ingrese una contraseña");
     }
 
     private void jPasswordFieldFocusLost(java.awt.event.FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField, "Ingrese una contrasena");
+        RegistrarUser.handleFocusPassword(jPasswordField, "Ingrese una contraseña");
     }
 
     /* métodos propios */
@@ -711,7 +708,7 @@ public class RegistrarUser extends javax.swing.JFrame {
                 || jTextField_cedula.getText().equals("Ingrese su cédula")
                 || jTextField_fechaNacimiento.getText().equals("Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss")
                 || jTextField_usuario.getText().equals("Ingrese un usuario")
-                || String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contrasena");
+                || String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña");
     }
 
     public void setRol(String rol) {
@@ -753,21 +750,10 @@ public class RegistrarUser extends javax.swing.JFrame {
         Document document = field.getDocument();
         String text = field.getText();
 
-        if (text.equals(defaultText)) {
-            if (document instanceof LimitarCampos doc) {
+        if (text.isBlank()) {
+            if (document instanceof LimitarCampos) {
                 try {
-                    doc.remove(0, doc.getLength());
-                } catch (BadLocationException e) {
-                    System.err.println(e);
-                }
-            } else {
-                field.setText("");
-            }
-            field.setForeground(Color.BLACK);
-        } else if (text.isBlank()) {
-            if (document instanceof LimitarCampos doc) {
-                try {
-                    doc.remove(0, doc.getLength());
+                    document.remove(0, document.getLength());
                 } catch (BadLocationException e) {
                     System.err.println(e);
                 }
@@ -775,6 +761,17 @@ public class RegistrarUser extends javax.swing.JFrame {
                 field.setText(defaultText);
             }
             field.setForeground(Color.gray);
+        } else if (text.equals(defaultText)) {
+            if (document instanceof LimitarCampos) {
+                try {
+                    document.remove(0, document.getLength());
+                } catch (BadLocationException e) {
+                    System.err.println(e);
+                }
+            } else {
+                field.setText("");
+            }
+            field.setForeground(Color.BLACK);
         }
     }
 
@@ -787,7 +784,8 @@ public class RegistrarUser extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(RegistrarUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 

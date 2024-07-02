@@ -6,6 +6,7 @@ public class JPanelJoin extends javax.swing.JPanel {
         initComponents();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
         jComboBox_innerTyp = new javax.swing.JComboBox<>();
         join = new javax.swing.JLabel();
@@ -25,7 +26,7 @@ public class JPanelJoin extends javax.swing.JPanel {
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
 
         jComboBox_innerTyp.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_innerTyp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "INNER", "FULL", "LEFT", "RIGHT", "CROSS" }));
+        jComboBox_innerTyp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"INNER", "FULL", "LEFT", "RIGHT", "CROSS"}));
         jComboBox_innerTyp.setPreferredSize(new java.awt.Dimension(80, 27));
         add(jComboBox_innerTyp);
 
@@ -38,7 +39,7 @@ public class JPanelJoin extends javax.swing.JPanel {
         add(join);
 
         jComboBox_tabla2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_tabla2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tabla2" }));
+        jComboBox_tabla2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Tabla2"}));
         jComboBox_tabla2.setPreferredSize(new java.awt.Dimension(150, 27));
         jComboBox_tabla2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -56,7 +57,7 @@ public class JPanelJoin extends javax.swing.JPanel {
         add(punto2);
 
         jComboBox_tabla3.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_tabla3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tabla1" }));
+        jComboBox_tabla3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla3.setPreferredSize(new java.awt.Dimension(150, 27));
         jComboBox_tabla3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -74,7 +75,7 @@ public class JPanelJoin extends javax.swing.JPanel {
         add(punto);
 
         jComboBox_columna1.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_columna1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "*" }));
+        jComboBox_columna1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"*"}));
         jComboBox_columna1.setPreferredSize(new java.awt.Dimension(150, 27));
         add(jComboBox_columna1);
 
@@ -87,7 +88,7 @@ public class JPanelJoin extends javax.swing.JPanel {
         add(punto4);
 
         jComboBox_tabla4.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_tabla4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tabla2" }));
+        jComboBox_tabla4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Tabla2"}));
         jComboBox_tabla4.setPreferredSize(new java.awt.Dimension(150, 27));
         jComboBox_tabla4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,10 +106,10 @@ public class JPanelJoin extends javax.swing.JPanel {
         add(punto3);
 
         jComboBox_columna3.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
-        jComboBox_columna3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "*" }));
+        jComboBox_columna3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"*"}));
         jComboBox_columna3.setPreferredSize(new java.awt.Dimension(150, 27));
         add(jComboBox_columna3);
-    }
+    }// </editor-fold>
 
     private void jComboBox_tabla2ActionPerformed(java.awt.event.ActionEvent evt) {
         /* TODO buscar y colocar las columnas de dicha tabla */

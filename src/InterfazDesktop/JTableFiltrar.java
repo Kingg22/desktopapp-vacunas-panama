@@ -1,8 +1,8 @@
 package InterfazDesktop;
 
-import Validations.LimitarCamposSeguro;
-import javax.swing.JTable;
-import javax.swing.RowFilter;
+import Logica.Validations.LimitarCamposSeguro;
+
+import javax.swing.*;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -14,10 +14,8 @@ public class JTableFiltrar extends javax.swing.JPanel {
         initComponents();
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
@@ -51,6 +49,7 @@ public class JTableFiltrar extends javax.swing.JPanel {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_buscarColumnFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField_buscarColumnFocusLost(evt);
             }

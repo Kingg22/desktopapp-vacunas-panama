@@ -38,7 +38,7 @@ public class JFontChooser extends JDialog {
         fontPanel.add(sizeLabel);
         fontPanel.add(sizeSpinner);
 
-        add(fontPanel, BorderLayout.CENTER);
+        this.add(fontPanel, BorderLayout.CENTER);
 
         // Botones OK y Cancelar
         JPanel buttonPanel = new JPanel();
@@ -46,7 +46,7 @@ public class JFontChooser extends JDialog {
         JButton cancelButton = new JButton("Cancelar");
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
-        add(buttonPanel, BorderLayout.SOUTH);
+        this.add(buttonPanel, BorderLayout.SOUTH);
 
         okButton.addActionListener(new ActionListener() {
             @Override
@@ -66,13 +66,12 @@ public class JFontChooser extends JDialog {
                 setVisible(false);
             }
         });
-
         this.pack();
     }
 
     public boolean showDialog(Component parent) {
-        setLocationRelativeTo(parent);
-        setVisible(true);
+        this.setLocationRelativeTo(parent);
+        this.setVisible(true);
         return okPressed;
     }
 

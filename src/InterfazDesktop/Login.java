@@ -1,11 +1,17 @@
 package InterfazDesktop;
 
 import Logica.Validations.*;
+import org.netbeans.lib.awtextra.AbsoluteConstraints;
+import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
+import java.awt.event.*;
 
-public class Login extends javax.swing.JFrame {
+public class Login extends JFrame {
 
     public Login() {
         initComponents();
@@ -16,769 +22,774 @@ public class Login extends javax.swing.JFrame {
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-        jFrame_restaurarAcceso = new javax.swing.JFrame();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        background1 = new javax.swing.JPanel();
-        titulo = new javax.swing.JLabel();
-        icon_project1 = new javax.swing.JLabel();
-        mensaje_validar = new javax.swing.JLabel();
-        rolRestaurar = new javax.swing.JLabel();
-        jComboBox_rol = new javax.swing.JComboBox<>();
-        jTextField_cedula = new javax.swing.JTextField();
-        cedula = new javax.swing.JLabel();
-        jSeparator5 = new javax.swing.JSeparator();
-        fecha_nacimiento = new javax.swing.JLabel();
-        jTextField_fechaNacimiento = new javax.swing.JTextField();
-        jSeparator9 = new javax.swing.JSeparator();
-        acceptTerms = new javax.swing.JCheckBox();
-        button_validar = new javax.swing.JLabel();
-        mensaje_hola = new javax.swing.JLabel();
-        respuesta = new javax.swing.JLabel();
-        usuario = new javax.swing.JLabel();
-        jTextField_usuario = new javax.swing.JTextField();
-        jSeparator8 = new javax.swing.JSeparator();
-        contrasena = new javax.swing.JLabel();
-        jPasswordField = new javax.swing.JPasswordField();
-        jSeparator7 = new javax.swing.JSeparator();
-        errorMessage = new javax.swing.JLabel();
-        mensaje3 = new javax.swing.JLabel();
-        mensaje4 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        background = new javax.swing.JPanel();
-        icon_project = new javax.swing.JLabel();
-        jPanel_background_loginForm = new javax.swing.JPanel();
-        bienvenido = new javax.swing.JLabel();
-        elija_su_rol = new javax.swing.JLabel();
-        userInput = new javax.swing.JTextField();
-        passwordInput = new javax.swing.JPasswordField();
-        jPanel_pacienteBotton = new javax.swing.JPanel();
-        paciente = new javax.swing.JLabel();
-        paciente_icon = new javax.swing.JLabel();
-        jPanel_doctorBotton = new javax.swing.JPanel();
-        doctor = new javax.swing.JLabel();
-        doctor_icon = new javax.swing.JLabel();
-        jPanel_proveedorBotton = new javax.swing.JPanel();
-        proveedor = new javax.swing.JLabel();
-        proveedor_icon = new javax.swing.JLabel();
-        jPanel_administrativoBotton = new javax.swing.JPanel();
-        administrativo = new javax.swing.JLabel();
-        administrativo_icon = new javax.swing.JLabel();
-        jPanel_autoridadBotton = new javax.swing.JPanel();
-        autoridad = new javax.swing.JLabel();
-        autoridad_icon = new javax.swing.JLabel();
-        mensaje_error = new javax.swing.JPanel();
-        mensaje = new javax.swing.JLabel();
-        jPanel_loginBotton = new javax.swing.JPanel();
-        iniciarSesion = new javax.swing.JLabel();
-        mensaje_restaurar = new javax.swing.JLabel();
-        mensaje2 = new javax.swing.JLabel();
-        mensaje1 = new javax.swing.JLabel();
-        jPanelOculto = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton_restaurar = new javax.swing.JButton();
-        jButton_cancelar5 = new javax.swing.JButton();
+        jFrame_restaurarAcceso = new JFrame();
+        jScrollPane2 = new JScrollPane();
+        background1 = new JPanel();
+        titulo = new JLabel();
+        icon_project1 = new JLabel();
+        mensaje_validar = new JLabel();
+        rolRestaurar = new JLabel();
+        jComboBox_rol = new JComboBox<>();
+        jTextField_cedula = new JTextField();
+        cedula = new JLabel();
+        jSeparator5 = new JSeparator();
+        fecha_nacimiento = new JLabel();
+        jTextField_fechaNacimiento = new JTextField();
+        jSeparator9 = new JSeparator();
+        acceptTerms = new JCheckBox();
+        button_validar = new JLabel();
+        mensaje_hola = new JLabel();
+        respuesta = new JLabel();
+        usuario = new JLabel();
+        jTextField_usuario = new JTextField();
+        jSeparator8 = new JSeparator();
+        contrasena = new JLabel();
+        jPasswordField = new JPasswordField();
+        jSeparator7 = new JSeparator();
+        errorMessage = new JLabel();
+        mensaje3 = new JLabel();
+        mensaje4 = new JLabel();
+        jScrollPane1 = new JScrollPane();
+        background = new JPanel();
+        icon_project = new JLabel();
+        jPanel_background_loginForm = new JPanel();
+        bienvenido = new JLabel();
+        elija_su_rol = new JLabel();
+        userInput = new JTextField();
+        passwordInput = new JPasswordField();
+        jPanel_pacienteBotton = new JPanel();
+        paciente = new JLabel();
+        paciente_icon = new JLabel();
+        jPanel_doctorBotton = new JPanel();
+        doctor = new JLabel();
+        doctor_icon = new JLabel();
+        jPanel_proveedorBotton = new JPanel();
+        proveedor = new JLabel();
+        proveedor_icon = new JLabel();
+        jPanel_administrativoBotton = new JPanel();
+        administrativo = new JLabel();
+        administrativo_icon = new JLabel();
+        jPanel_autoridadBotton = new JPanel();
+        autoridad = new JLabel();
+        autoridad_icon = new JLabel();
+        mensaje_error = new JPanel();
+        mensaje = new JLabel();
+        jPanel_loginBotton = new JPanel();
+        iniciarSesion = new JLabel();
+        mensaje_restaurar = new JLabel();
+        mensaje2 = new JLabel();
+        mensaje1 = new JLabel();
+        jPanelOculto = new JPanel();
+        jLabel1 = new JLabel();
+        jLabel2 = new JLabel();
+        jButton_restaurar = new JButton();
+        jButton_cancelar5 = new JButton();
 
-        jFrame_restaurarAcceso.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        jFrame_restaurarAcceso.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         jFrame_restaurarAcceso.setTitle("Programa Vacunas Panamá - Restaurar acceso");
         jFrame_restaurarAcceso.setResizable(false);
-        jFrame_restaurarAcceso.setSize(new java.awt.Dimension(600, 650));
-        jFrame_restaurarAcceso.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
+        jFrame_restaurarAcceso.setSize(new Dimension(600, 650));
+        jFrame_restaurarAcceso.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
                 jFrame_restaurarAccesoWindowClosing(evt);
             }
         });
-        jFrame_restaurarAcceso.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jFrame_restaurarAcceso.getContentPane().setLayout(new AbsoluteLayout());
 
-        jScrollPane2.setPreferredSize(new java.awt.Dimension(600, 600));
+        jScrollPane2.setPreferredSize(new Dimension(600, 600));
 
-        background1.setBackground(new java.awt.Color(255, 255, 255));
-        background1.setPreferredSize(new java.awt.Dimension(594, 594));
-        background1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        background1.setBackground(new Color(255, 255, 255));
+        background1.setPreferredSize(new Dimension(594, 594));
+        background1.setLayout(new AbsoluteLayout());
 
-        titulo.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 16));
-        titulo.setForeground(new java.awt.Color(0, 0, 0));
-        titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titulo.setFont(new Font("Microsoft YaHei", Font.BOLD, 16));
+        titulo.setForeground(new Color(0, 0, 0));
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setText("Restaurar acceso al Programa Vacunas Panamá");
-        background1.add(titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 510, -1));
+        background1.add(titulo, new AbsoluteConstraints(0, 30, 510, -1));
 
-        icon_project1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/operacionVacunas_logo.png")));
-        icon_project1.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+        icon_project1.setIcon(new ImageIcon(getClass().getResource("/images/operacionVacunas_logo.png")));
+        icon_project1.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent evt) {
                 icon_project1AncestorAdded(evt);
             }
 
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+
             }
 
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            @Override
+            public void ancestorMoved(AncestorEvent event) {
+
             }
         });
-        background1.add(icon_project1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 10, 110, 80));
+        background1.add(icon_project1, new AbsoluteConstraints(460, 10, 110, 80));
 
-        mensaje_validar.setFont(new java.awt.Font("Roboto", Font.ITALIC, 14));
-        mensaje_validar.setForeground(new java.awt.Color(0, 0, 0));
+        mensaje_validar.setFont(new Font("Roboto", Font.ITALIC, 14));
+        mensaje_validar.setForeground(new Color(0, 0, 0));
         mensaje_validar.setText("Validar sus datos personales");
-        background1.add(mensaje_validar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 180, -1));
+        background1.add(mensaje_validar, new AbsoluteConstraints(30, 70, 180, -1));
 
-        rolRestaurar.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
-        rolRestaurar.setForeground(java.awt.Color.black);
-        rolRestaurar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        rolRestaurar.setFont(new Font("Roboto", Font.PLAIN, 12));
+        rolRestaurar.setForeground(Color.black);
+        rolRestaurar.setHorizontalAlignment(SwingConstants.LEFT);
         rolRestaurar.setText("Rol en el programa*");
-        background1.add(rolRestaurar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 120, -1));
+        background1.add(rolRestaurar, new AbsoluteConstraints(30, 100, 120, -1));
 
-        jComboBox_rol.setBackground(java.awt.Color.gray);
-        jComboBox_rol.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
-        jComboBox_rol.setForeground(java.awt.Color.black);
-        jComboBox_rol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Paciente", "Doctor - Enfermera", "Proveedor", "Administrativo", "Autoridad"}));
-        background1.add(jComboBox_rol, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 170, -1));
+        jComboBox_rol.setBackground(Color.gray);
+        jComboBox_rol.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jComboBox_rol.setForeground(Color.black);
+        jComboBox_rol.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Paciente", "Doctor - Enfermera", "Proveedor", "Administrativo", "Autoridad"}));
+        background1.add(jComboBox_rol, new AbsoluteConstraints(30, 120, 170, -1));
 
-        jTextField_cedula.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField_cedula.setBackground(new Color(255, 255, 255));
         jTextField_cedula.setDocument(new LimitarCamposCedula(15, "Ingrese su cédula"));
-        jTextField_cedula.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
-        jTextField_cedula.setForeground(java.awt.Color.gray);
+        jTextField_cedula.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jTextField_cedula.setForeground(Color.gray);
         jTextField_cedula.setText("Ingrese su cédula");
         jTextField_cedula.setBorder(null);
-        jTextField_cedula.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        jTextField_cedula.setMaximumSize(new Dimension(2147483647, 50));
         RegistrarUser.handleFocusGain(jTextField_cedula, "Ingrese su cédula");
-        jTextField_cedula.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
+        jTextField_cedula.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
                 jTextField_cedulaFocusGained(evt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(FocusEvent evt) {
                 jTextField_cedulaFocusLost(evt);
             }
         });
-        jTextField_cedula.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTextField_cedula.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jTextField_cedulaActionPerformed(evt);
             }
         });
-        background1.add(jTextField_cedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 540, -1));
+        background1.add(jTextField_cedula, new AbsoluteConstraints(30, 180, 540, -1));
 
-        cedula.setBackground(new java.awt.Color(0, 0, 0));
-        cedula.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
-        cedula.setForeground(new java.awt.Color(0, 0, 0));
+        cedula.setBackground(new Color(0, 0, 0));
+        cedula.setFont(new Font("Roboto", Font.PLAIN, 12));
+        cedula.setForeground(new Color(0, 0, 0));
         cedula.setText("Cédula *");
-        background1.add(cedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
+        background1.add(cedula, new AbsoluteConstraints(30, 160, -1, -1));
 
-        jSeparator5.setForeground(new java.awt.Color(30, 30, 30));
-        background1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 540, 21));
+        jSeparator5.setForeground(new Color(30, 30, 30));
+        background1.add(jSeparator5, new AbsoluteConstraints(30, 200, 540, 21));
 
-        fecha_nacimiento.setBackground(new java.awt.Color(0, 0, 0));
-        fecha_nacimiento.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
-        fecha_nacimiento.setForeground(new java.awt.Color(0, 0, 0));
+        fecha_nacimiento.setBackground(new Color(0, 0, 0));
+        fecha_nacimiento.setFont(new Font("Roboto", Font.PLAIN, 12));
+        fecha_nacimiento.setForeground(new Color(0, 0, 0));
         fecha_nacimiento.setText("Fecha de nacimiento *");
-        background1.add(fecha_nacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
+        background1.add(fecha_nacimiento, new AbsoluteConstraints(30, 220, -1, -1));
 
-        jTextField_fechaNacimiento.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
         jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(19, "Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss"));
-        jTextField_fechaNacimiento.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
-        jTextField_fechaNacimiento.setForeground(java.awt.Color.gray);
+        jTextField_fechaNacimiento.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jTextField_fechaNacimiento.setForeground(Color.gray);
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
         jTextField_fechaNacimiento.setBorder(null);
-        jTextField_fechaNacimiento.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        jTextField_fechaNacimiento.setMaximumSize(new Dimension(2147483647, 50));
         RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
-        jTextField_fechaNacimiento.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
+        jTextField_fechaNacimiento.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
                 jTextField_fechaNacimientoFocusGained(evt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(FocusEvent evt) {
                 jTextField_fechaNacimientoFocusLost(evt);
             }
         });
-        jTextField_fechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTextField_fechaNacimiento.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jTextField_fechaNacimientoActionPerformed(evt);
             }
         });
-        background1.add(jTextField_fechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 540, -1));
+        background1.add(jTextField_fechaNacimiento, new AbsoluteConstraints(30, 240, 540, -1));
 
-        jSeparator9.setForeground(new java.awt.Color(30, 30, 30));
-        background1.add(jSeparator9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 540, 21));
+        jSeparator9.setForeground(new Color(30, 30, 30));
+        background1.add(jSeparator9, new AbsoluteConstraints(30, 260, 540, 21));
 
-        acceptTerms.setFont(new java.awt.Font("Microsoft YaHei Light", Font.PLAIN, 12));
-        acceptTerms.setForeground(new java.awt.Color(102, 102, 102));
+        acceptTerms.setFont(new Font("Microsoft YaHei Light", Font.PLAIN, 12));
+        acceptTerms.setForeground(new Color(102, 102, 102));
         acceptTerms.setText("Al usar este formulario usted declara estar autorizado y da su consentimiento para validar.");
         acceptTerms.setToolTipText("Aceptar términos y condiciones");
         acceptTerms.setBorder(null);
-        acceptTerms.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        acceptTerms.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        acceptTerms.setMaximumSize(new java.awt.Dimension(600, 20));
-        background1.add(acceptTerms, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, 540, 20));
+        acceptTerms.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        acceptTerms.setHorizontalAlignment(SwingConstants.LEFT);
+        acceptTerms.setMaximumSize(new Dimension(600, 20));
+        background1.add(acceptTerms, new AbsoluteConstraints(30, 270, 540, 20));
 
-        button_validar.setBackground(new java.awt.Color(0, 204, 51));
-        button_validar.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
-        button_validar.setForeground(new java.awt.Color(0, 0, 0));
-        button_validar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        button_validar.setBackground(new Color(0, 204, 51));
+        button_validar.setFont(new Font("Roboto", Font.PLAIN, 12));
+        button_validar.setForeground(new Color(0, 0, 0));
+        button_validar.setHorizontalAlignment(SwingConstants.CENTER);
         button_validar.setText("Validar sus datos");
-        button_validar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        button_validar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        button_validar.setMaximumSize(new java.awt.Dimension(600, 30));
+        button_validar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button_validar.setHorizontalTextPosition(SwingConstants.CENTER);
+        button_validar.setMaximumSize(new Dimension(600, 30));
         button_validar.setOpaque(true);
-        button_validar.setPreferredSize(new java.awt.Dimension(94, 20));
-        button_validar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        button_validar.setPreferredSize(new Dimension(94, 20));
+        button_validar.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 button_validarMouseClicked(evt);
             }
         });
-        background1.add(button_validar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 300, 300, -1));
+        background1.add(button_validar, new AbsoluteConstraints(140, 300, 300, -1));
 
-        mensaje_hola.setFont(new java.awt.Font("Roboto", Font.ITALIC, 14));
-        mensaje_hola.setForeground(new java.awt.Color(0, 0, 0));
+        mensaje_hola.setFont(new Font("Roboto", Font.ITALIC, 14));
+        mensaje_hola.setForeground(new Color(0, 0, 0));
         mensaje_hola.setText("Hola!");
         mensaje_hola.setVisible(false);
-        background1.add(mensaje_hola, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 140, -1));
+        background1.add(mensaje_hola, new AbsoluteConstraints(30, 330, 140, -1));
 
-        respuesta.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 12));
-        respuesta.setForeground(new java.awt.Color(0, 0, 0));
+        respuesta.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
+        respuesta.setForeground(new Color(0, 0, 0));
         respuesta.setText("Respuesta nombre - rol");
         respuesta.setVisible(false);
-        background1.add(respuesta, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, 540, -1));
+        background1.add(respuesta, new AbsoluteConstraints(30, 350, 540, -1));
 
-        usuario.setBackground(new java.awt.Color(0, 0, 0));
-        usuario.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
-        usuario.setForeground(new java.awt.Color(0, 0, 0));
+        usuario.setBackground(new Color(0, 0, 0));
+        usuario.setFont(new Font("Roboto", Font.PLAIN, 12));
+        usuario.setForeground(new Color(0, 0, 0));
         usuario.setText("Usuario *");
         usuario.setVisible(false);
-        background1.add(usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, -1, -1));
+        background1.add(usuario, new AbsoluteConstraints(30, 390, -1, -1));
 
-        jTextField_usuario.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField_usuario.setBackground(new Color(255, 255, 255));
         jTextField_usuario.setDocument(new LimitarCamposSeguro(50, "Ingrese un usuario"));
-        jTextField_usuario.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
-        jTextField_usuario.setForeground(java.awt.Color.gray);
+        jTextField_usuario.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jTextField_usuario.setForeground(Color.gray);
         jTextField_usuario.setText("Ingrese un usuario");
         jTextField_usuario.setActionCommand("<Not Set>");
         jTextField_usuario.setBorder(null);
-        jTextField_usuario.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        jTextField_usuario.setMaximumSize(new Dimension(2147483647, 50));
         RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese un usuario");
         jTextField_usuario.setVisible(false);
-        jTextField_usuario.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
+        jTextField_usuario.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
                 jTextField_usuarioFocusGained(evt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(FocusEvent evt) {
                 jTextField_usuarioFocusLost(evt);
             }
         });
-        jTextField_usuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTextField_usuario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jTextField_usuarioActionPerformed(evt);
             }
         });
-        background1.add(jTextField_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 540, -1));
+        background1.add(jTextField_usuario, new AbsoluteConstraints(30, 410, 540, -1));
 
-        jSeparator8.setForeground(new java.awt.Color(30, 30, 30));
+        jSeparator8.setForeground(new Color(30, 30, 30));
         jSeparator8.setVisible(false);
-        background1.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 540, 21));
+        background1.add(jSeparator8, new AbsoluteConstraints(30, 430, 540, 21));
 
-        contrasena.setBackground(new java.awt.Color(0, 0, 0));
-        contrasena.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
-        contrasena.setForeground(new java.awt.Color(0, 0, 0));
+        contrasena.setBackground(new Color(0, 0, 0));
+        contrasena.setFont(new Font("Roboto", Font.PLAIN, 12));
+        contrasena.setForeground(new Color(0, 0, 0));
         contrasena.setText("contraseña *");
         contrasena.setVisible(false);
-        background1.add(contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, -1, -1));
+        background1.add(contrasena, new AbsoluteConstraints(30, 440, -1, -1));
 
-        jPasswordField.setBackground(new java.awt.Color(255, 255, 255));
+        jPasswordField.setBackground(new Color(255, 255, 255));
         jPasswordField.setDocument(new LimitarCamposSeguro(20, "Ingrese una contraseña"));
-        jPasswordField.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
-        jPasswordField.setForeground(java.awt.Color.gray);
+        jPasswordField.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jPasswordField.setForeground(Color.gray);
         jPasswordField.setText("Ingrese una contraseña");
         jPasswordField.setBorder(null);
-        jPasswordField.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        jPasswordField.setMaximumSize(new Dimension(2147483647, 50));
         RegistrarUser.handleFocusGain(jPasswordField, "Ingrese una contraseña");
         jPasswordField.setVisible(false);
-        jPasswordField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
+        jPasswordField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
                 jPasswordFieldFocusGained(evt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(FocusEvent evt) {
                 jPasswordFieldFocusLost(evt);
             }
         });
-        jPasswordField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jPasswordField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jPasswordFieldActionPerformed(evt);
             }
         });
-        background1.add(jPasswordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 460, 540, -1));
+        background1.add(jPasswordField, new AbsoluteConstraints(30, 460, 540, -1));
 
-        jSeparator7.setForeground(new java.awt.Color(30, 30, 30));
+        jSeparator7.setForeground(new Color(30, 30, 30));
         jSeparator7.setVisible(false);
-        background1.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 540, 21));
+        background1.add(jSeparator7, new AbsoluteConstraints(30, 480, 540, 21));
 
-        errorMessage.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
-        errorMessage.setForeground(java.awt.Color.red);
-        errorMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        errorMessage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        errorMessage.setFont(new Font("Roboto", Font.BOLD, 14));
+        errorMessage.setForeground(Color.red);
+        errorMessage.setHorizontalAlignment(SwingConstants.CENTER);
+        errorMessage.setHorizontalTextPosition(SwingConstants.CENTER);
         errorMessage.setText("Error. ");
         errorMessage.setVisible(false);
-        background1.add(errorMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 370, 590, -1));
+        background1.add(errorMessage, new AbsoluteConstraints(2, 370, 590, -1));
 
-        mensaje3.setBackground(java.awt.Color.white);
-        mensaje3.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
-        mensaje3.setForeground(new java.awt.Color(0, 0, 102));
-        mensaje3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        mensaje3.setBackground(Color.white);
+        mensaje3.setFont(new Font("Roboto", Font.BOLD, 14));
+        mensaje3.setForeground(new Color(0, 0, 102));
+        mensaje3.setHorizontalAlignment(SwingConstants.LEFT);
         mensaje3.setText("Iniciar sesión");
-        mensaje3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        mensaje3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        mensaje3.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        mensaje3.setHorizontalTextPosition(SwingConstants.CENTER);
         mensaje3.setOpaque(true);
-        mensaje3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        mensaje3.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 mensaje3iniciarSesionMouseClicked(evt);
             }
         });
-        background1.add(mensaje3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 560, 110, 20));
+        background1.add(mensaje3, new AbsoluteConstraints(210, 560, 110, 20));
 
-        mensaje4.setBackground(java.awt.Color.white);
-        mensaje4.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
-        mensaje4.setForeground(new java.awt.Color(0, 0, 0));
-        mensaje4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        mensaje4.setBackground(Color.white);
+        mensaje4.setFont(new Font("Roboto", Font.BOLD, 14));
+        mensaje4.setForeground(new Color(0, 0, 0));
+        mensaje4.setHorizontalAlignment(SwingConstants.LEFT);
         mensaje4.setText("¿Ya estás registrado?");
-        mensaje4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        mensaje4.setHorizontalTextPosition(SwingConstants.CENTER);
         mensaje4.setOpaque(true);
-        background1.add(mensaje4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 560, 150, 20));
+        background1.add(mensaje4, new AbsoluteConstraints(50, 560, 150, 20));
 
-        jButton_cancelar5.setBackground(new java.awt.Color(153, 153, 153));
-        jButton_cancelar5.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12)); // NOI18N
-        jButton_cancelar5.setForeground(new java.awt.Color(0, 0, 0));
+        jButton_cancelar5.setBackground(new Color(153, 153, 153));
+        jButton_cancelar5.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12)); // NOI18N
+        jButton_cancelar5.setForeground(new Color(0, 0, 0));
         jButton_cancelar5.setText("Cancelar");
         jButton_cancelar5.setVisible(false);
-        jButton_cancelar5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        jButton_cancelar5.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 jButton_cancelar5MouseClicked(evt);
             }
         });
-        background1.add(jButton_cancelar5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 510, -1, -1));
+        background1.add(jButton_cancelar5, new AbsoluteConstraints(320, 510, -1, -1));
 
-        jButton_restaurar.setBackground(new java.awt.Color(0, 204, 0));
-        jButton_restaurar.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12)); // NOI18N
-        jButton_restaurar.setForeground(new java.awt.Color(0, 0, 0));
+        jButton_restaurar.setBackground(new Color(0, 204, 0));
+        jButton_restaurar.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12)); // NOI18N
+        jButton_restaurar.setForeground(new Color(0, 0, 0));
         jButton_restaurar.setText("Restaurar credenciales");
         jButton_restaurar.setVisible(false);
-        jButton_restaurar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        jButton_restaurar.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 jButton_restaurarMouseClicked(evt);
             }
         });
-        background1.add(jButton_restaurar, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 510, -1, -1));
+        background1.add(jButton_restaurar, new AbsoluteConstraints(410, 510, -1, -1));
 
         jScrollPane2.setViewportView(background1);
 
-        jFrame_restaurarAcceso.getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        jFrame_restaurarAcceso.getContentPane().add(jScrollPane2, new AbsoluteConstraints(0, 0, -1, -1));
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login - MINSA");
         setLocationByPlatform(true);
-        setSize(new java.awt.Dimension(900, 620));
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
+        setSize(new Dimension(900, 620));
+        addComponentListener(new ComponentAdapter() {
+            public void componentShown(ComponentEvent evt) {
                 formComponentShown(evt);
             }
         });
 
         jScrollPane1.setPreferredSize(getSize());
 
-        background.setBackground(new java.awt.Color(255, 255, 255));
-        background.setMinimumSize(new java.awt.Dimension(900, 600));
-        background.setPreferredSize(new java.awt.Dimension(894, 614));
-        background.setLayout(new java.awt.BorderLayout());
+        background.setBackground(new Color(255, 255, 255));
+        background.setMinimumSize(new Dimension(900, 600));
+        background.setPreferredSize(new Dimension(894, 614));
+        background.setLayout(new BorderLayout());
 
-        icon_project.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        icon_project.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/operacionVacunas_logo.png")));
-        icon_project.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        icon_project.setPreferredSize(new java.awt.Dimension(400, 600));
-        background.add(icon_project, java.awt.BorderLayout.CENTER);
+        icon_project.setHorizontalAlignment(SwingConstants.CENTER);
+        icon_project.setIcon(new ImageIcon(getClass().getResource("/images/operacionVacunas_logo.png")));
+        icon_project.setHorizontalTextPosition(SwingConstants.CENTER);
+        icon_project.setPreferredSize(new Dimension(400, 600));
+        background.add(icon_project, BorderLayout.CENTER);
 
-        jPanel_background_loginForm.setBackground(new java.awt.Color(153, 204, 255));
-        jPanel_background_loginForm.setPreferredSize(new java.awt.Dimension(400, 600));
-        jPanel_background_loginForm.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel_background_loginForm.setBackground(new Color(153, 204, 255));
+        jPanel_background_loginForm.setPreferredSize(new Dimension(400, 600));
+        jPanel_background_loginForm.setLayout(new AbsoluteLayout());
 
-        bienvenido.setBackground(new java.awt.Color(0, 0, 0));
-        bienvenido.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 24));
-        bienvenido.setForeground(new java.awt.Color(0, 0, 0));
+        bienvenido.setBackground(new Color(0, 0, 0));
+        bienvenido.setFont(new Font("Microsoft YaHei", Font.BOLD, 24));
+        bienvenido.setForeground(new Color(0, 0, 0));
         bienvenido.setText("!Bienvenido!");
-        jPanel_background_loginForm.add(bienvenido, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 20, -1, -1));
+        jPanel_background_loginForm.add(bienvenido, new AbsoluteConstraints(130, 20, -1, -1));
 
-        elija_su_rol.setBackground(new java.awt.Color(153, 153, 153));
-        elija_su_rol.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 14));
-        elija_su_rol.setForeground(new java.awt.Color(102, 102, 102));
+        elija_su_rol.setBackground(new Color(153, 153, 153));
+        elija_su_rol.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
+        elija_su_rol.setForeground(new Color(102, 102, 102));
         elija_su_rol.setText("Elija su rol");
-        jPanel_background_loginForm.add(elija_su_rol, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, -1, -1));
+        jPanel_background_loginForm.add(elija_su_rol, new AbsoluteConstraints(170, 70, -1, -1));
 
         userInput.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
-        userInput.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
-        userInput.setForeground(java.awt.Color.gray);
+        userInput.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        userInput.setForeground(Color.gray);
         userInput.setText("Ingrese su usuario");
-        userInput.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
+        userInput.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
                 userInputFocusGained(evt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(FocusEvent evt) {
                 userInputFocusLost(evt);
             }
         });
-        userInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        userInput.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 userInputActionPerformed(evt);
             }
         });
-        jPanel_background_loginForm.add(userInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 360, 240, -1));
+        jPanel_background_loginForm.add(userInput, new AbsoluteConstraints(80, 360, 240, -1));
         RegistrarUser.handleFocusGain(userInput, "Ingrese su usuario");
         userInput.setVisible(false);
 
         passwordInput.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
-        passwordInput.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
-        passwordInput.setForeground(java.awt.Color.gray);
+        passwordInput.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        passwordInput.setForeground(Color.gray);
         passwordInput.setText("Ingrese su contraseña");
         passwordInput.setToolTipText("");
-        passwordInput.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
+        passwordInput.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
                 passwordInputFocusGained(evt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(FocusEvent evt) {
                 passwordInputFocusLost(evt);
             }
         });
-        passwordInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        passwordInput.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 passwordInputActionPerformed(evt);
             }
         });
-        jPanel_background_loginForm.add(passwordInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 400, 240, -1));
+        jPanel_background_loginForm.add(passwordInput, new AbsoluteConstraints(80, 400, 240, -1));
         RegistrarUser.handleFocusGain(passwordInput, "Ingrese su contraseña");
         passwordInput.setVisible(false);
 
-        jPanel_pacienteBotton.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel_pacienteBotton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel_pacienteBotton.setPreferredSize(new java.awt.Dimension(130, 40));
+        jPanel_pacienteBotton.setBackground(new Color(255, 255, 255));
+        jPanel_pacienteBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        jPanel_pacienteBotton.setPreferredSize(new Dimension(130, 40));
 
-        paciente.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
-        paciente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        paciente.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        paciente.setHorizontalAlignment(SwingConstants.LEFT);
         paciente.setText("Paciente");
-        paciente.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        paciente.setPreferredSize(new java.awt.Dimension(83, 17));
+        paciente.setHorizontalTextPosition(SwingConstants.RIGHT);
+        paciente.setPreferredSize(new Dimension(83, 17));
 
-        paciente_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/patient_icon.png")));
+        paciente_icon.setIcon(new ImageIcon(getClass().getResource("/images/patient_icon.png")));
 
-        javax.swing.GroupLayout jPanel_pacienteBottonLayout = new javax.swing.GroupLayout(jPanel_pacienteBotton);
+        GroupLayout jPanel_pacienteBottonLayout = new GroupLayout(jPanel_pacienteBotton);
         jPanel_pacienteBotton.setLayout(jPanel_pacienteBottonLayout);
         jPanel_pacienteBottonLayout.setHorizontalGroup(
-                jPanel_pacienteBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_pacienteBottonLayout.createSequentialGroup()
+                jPanel_pacienteBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel_pacienteBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(paciente_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(paciente_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(paciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(paciente, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel_pacienteBottonLayout.setVerticalGroup(
-                jPanel_pacienteBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel_pacienteBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_pacienteBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel_pacienteBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(paciente_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(paciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanel_pacienteBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(paciente_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(paciente, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel_background_loginForm.add(jPanel_pacienteBotton, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 170, -1));
+        jPanel_background_loginForm.add(jPanel_pacienteBotton, new AbsoluteConstraints(110, 110, 170, -1));
 
-        jPanel_doctorBotton.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel_doctorBotton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel_doctorBotton.setPreferredSize(new java.awt.Dimension(130, 40));
+        jPanel_doctorBotton.setBackground(new Color(255, 255, 255));
+        jPanel_doctorBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        jPanel_doctorBotton.setPreferredSize(new Dimension(130, 40));
 
-        doctor.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
-        doctor.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        doctor.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        doctor.setHorizontalAlignment(SwingConstants.LEFT);
         doctor.setText("Doctor - Enfermera");
-        doctor.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        doctor.setPreferredSize(new java.awt.Dimension(83, 17));
+        doctor.setHorizontalTextPosition(SwingConstants.RIGHT);
+        doctor.setPreferredSize(new Dimension(83, 17));
 
-        doctor_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/patient_icon.png")));
+        doctor_icon.setIcon(new ImageIcon(getClass().getResource("/images/patient_icon.png")));
 
-        javax.swing.GroupLayout jPanel_doctorBottonLayout = new javax.swing.GroupLayout(jPanel_doctorBotton);
+        GroupLayout jPanel_doctorBottonLayout = new GroupLayout(jPanel_doctorBotton);
         jPanel_doctorBotton.setLayout(jPanel_doctorBottonLayout);
         jPanel_doctorBottonLayout.setHorizontalGroup(
-                jPanel_doctorBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel_doctorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_doctorBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(doctor_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(doctor_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(doctor, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(doctor, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel_doctorBottonLayout.setVerticalGroup(
-                jPanel_doctorBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel_doctorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_doctorBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel_doctorBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(doctor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(doctor_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel_doctorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(doctor, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(doctor_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
                                 .addGap(14, 14, 14))
         );
 
-        jPanel_background_loginForm.add(jPanel_doctorBotton, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, 170, -1));
+        jPanel_background_loginForm.add(jPanel_doctorBotton, new AbsoluteConstraints(110, 160, 170, -1));
 
-        jPanel_proveedorBotton.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel_proveedorBotton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel_proveedorBotton.setPreferredSize(new java.awt.Dimension(130, 40));
+        jPanel_proveedorBotton.setBackground(new Color(255, 255, 255));
+        jPanel_proveedorBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        jPanel_proveedorBotton.setPreferredSize(new Dimension(130, 40));
 
-        proveedor.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
-        proveedor.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        proveedor.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        proveedor.setHorizontalAlignment(SwingConstants.LEFT);
         proveedor.setText("Proveedor");
-        proveedor.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        proveedor.setPreferredSize(new java.awt.Dimension(83, 17));
+        proveedor.setHorizontalTextPosition(SwingConstants.RIGHT);
+        proveedor.setPreferredSize(new Dimension(83, 17));
 
-        proveedor_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/patient_icon.png")));
+        proveedor_icon.setIcon(new ImageIcon(getClass().getResource("/images/patient_icon.png")));
 
-        javax.swing.GroupLayout jPanel_proveedorBottonLayout = new javax.swing.GroupLayout(jPanel_proveedorBotton);
+        GroupLayout jPanel_proveedorBottonLayout = new GroupLayout(jPanel_proveedorBotton);
         jPanel_proveedorBotton.setLayout(jPanel_proveedorBottonLayout);
         jPanel_proveedorBottonLayout.setHorizontalGroup(
-                jPanel_proveedorBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_proveedorBottonLayout.createSequentialGroup()
+                jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel_proveedorBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(proveedor_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(proveedor_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(proveedor, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel_proveedorBottonLayout.setVerticalGroup(
-                jPanel_proveedorBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
                                 .addGap(5, 5, 5)
-                                .addGroup(jPanel_proveedorBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
-                                                .addComponent(proveedor_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(proveedor_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
                                                 .addGap(0, 0, Short.MAX_VALUE))
                                         .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
-                                                .addComponent(proveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(proveedor, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addContainerGap())))
         );
 
-        jPanel_background_loginForm.add(jPanel_proveedorBotton, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 210, 170, -1));
+        jPanel_background_loginForm.add(jPanel_proveedorBotton, new AbsoluteConstraints(110, 210, 170, -1));
 
-        jPanel_administrativoBotton.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel_administrativoBotton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel_administrativoBotton.setPreferredSize(new java.awt.Dimension(130, 40));
+        jPanel_administrativoBotton.setBackground(new Color(255, 255, 255));
+        jPanel_administrativoBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        jPanel_administrativoBotton.setPreferredSize(new Dimension(130, 40));
 
-        administrativo.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
-        administrativo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        administrativo.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        administrativo.setHorizontalAlignment(SwingConstants.LEFT);
         administrativo.setText("Administrativo");
-        administrativo.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        administrativo.setHorizontalTextPosition(SwingConstants.RIGHT);
 
-        administrativo_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/patient_icon.png")));
+        administrativo_icon.setIcon(new ImageIcon(getClass().getResource("/images/patient_icon.png")));
 
-        javax.swing.GroupLayout jPanel_administrativoBottonLayout = new javax.swing.GroupLayout(jPanel_administrativoBotton);
+        GroupLayout jPanel_administrativoBottonLayout = new GroupLayout(jPanel_administrativoBotton);
         jPanel_administrativoBotton.setLayout(jPanel_administrativoBottonLayout);
         jPanel_administrativoBottonLayout.setHorizontalGroup(
-                jPanel_administrativoBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_administrativoBottonLayout.createSequentialGroup()
+                jPanel_administrativoBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel_administrativoBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(administrativo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(administrativo_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(administrativo)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel_administrativoBottonLayout.setVerticalGroup(
-                jPanel_administrativoBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel_administrativoBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_administrativoBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel_administrativoBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(administrativo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(administrativo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanel_administrativoBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(administrativo_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(administrativo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
 
-        jPanel_background_loginForm.add(jPanel_administrativoBotton, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, 170, -1));
+        jPanel_background_loginForm.add(jPanel_administrativoBotton, new AbsoluteConstraints(110, 260, 170, -1));
 
-        jPanel_autoridadBotton.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel_autoridadBotton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel_autoridadBotton.setPreferredSize(new java.awt.Dimension(130, 40));
+        jPanel_autoridadBotton.setBackground(new Color(255, 255, 255));
+        jPanel_autoridadBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        jPanel_autoridadBotton.setPreferredSize(new Dimension(130, 40));
 
-        autoridad.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
-        autoridad.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        autoridad.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        autoridad.setHorizontalAlignment(SwingConstants.LEFT);
         autoridad.setText("Autoridad");
-        autoridad.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        autoridad.setPreferredSize(new java.awt.Dimension(83, 17));
+        autoridad.setHorizontalTextPosition(SwingConstants.RIGHT);
+        autoridad.setPreferredSize(new Dimension(83, 17));
 
-        autoridad_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/patient_icon.png")));
+        autoridad_icon.setIcon(new ImageIcon(getClass().getResource("/images/patient_icon.png")));
 
-        javax.swing.GroupLayout jPanel_autoridadBottonLayout = new javax.swing.GroupLayout(jPanel_autoridadBotton);
+        GroupLayout jPanel_autoridadBottonLayout = new GroupLayout(jPanel_autoridadBotton);
         jPanel_autoridadBotton.setLayout(jPanel_autoridadBottonLayout);
         jPanel_autoridadBottonLayout.setHorizontalGroup(
-                jPanel_autoridadBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_autoridadBottonLayout.createSequentialGroup()
+                jPanel_autoridadBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel_autoridadBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(autoridad_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(autoridad_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(autoridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(autoridad, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel_autoridadBottonLayout.setVerticalGroup(
-                jPanel_autoridadBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel_autoridadBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_autoridadBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel_autoridadBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel_autoridadBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel_autoridadBottonLayout.createSequentialGroup()
-                                                .addComponent(autoridad_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(autoridad_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
                                                 .addGap(0, 0, Short.MAX_VALUE))
-                                        .addComponent(autoridad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(autoridad, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
 
-        jPanel_background_loginForm.add(jPanel_autoridadBotton, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, 170, -1));
+        jPanel_background_loginForm.add(jPanel_autoridadBotton, new AbsoluteConstraints(110, 310, 170, -1));
 
         mensaje_error.setBackground(Color.red);
-        mensaje_error.setBorder(new javax.swing.border.LineBorder(Color.red, 10, true));
+        mensaje_error.setBorder(new LineBorder(Color.red, 10, true));
         mensaje_error.setOpaque(false);
         mensaje_error.setVisible(false);
-        mensaje_error.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        mensaje_error.setLayout(new AbsoluteLayout());
 
         mensaje.setBackground(Color.red);
-        mensaje.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
-        mensaje.setForeground(new java.awt.Color(57, 0, 0));
-        mensaje.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        mensaje.setFont(new Font("Roboto", Font.BOLD, 14));
+        mensaje.setForeground(new Color(57, 0, 0));
+        mensaje.setHorizontalAlignment(SwingConstants.CENTER);
         mensaje.setText("Acceso inválido. Intente nuevamente");
-        mensaje.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        mensaje.setHorizontalTextPosition(SwingConstants.LEFT);
         mensaje.setOpaque(true);
-        mensaje_error.add(mensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, 270, 20));
+        mensaje_error.add(mensaje, new AbsoluteConstraints(5, 5, 270, 20));
 
-        jPanel_background_loginForm.add(mensaje_error, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, 280, 30));
+        jPanel_background_loginForm.add(mensaje_error, new AbsoluteConstraints(60, 380, 280, 30));
 
-        jPanel_loginBotton.setBackground(new java.awt.Color(38, 70, 147));
-        jPanel_loginBotton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel_loginBotton.setBackground(new Color(38, 70, 147));
+        jPanel_loginBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         jPanel_loginBotton.setVisible(false);
-        jPanel_loginBotton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        jPanel_loginBotton.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 jPanel_loginBottonMouseClicked(evt);
             }
         });
 
-        iniciarSesion.setBackground(new java.awt.Color(255, 255, 255));
-        iniciarSesion.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
-        iniciarSesion.setForeground(new java.awt.Color(255, 255, 255));
-        iniciarSesion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        iniciarSesion.setBackground(new Color(255, 255, 255));
+        iniciarSesion.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        iniciarSesion.setForeground(new Color(255, 255, 255));
+        iniciarSesion.setHorizontalAlignment(SwingConstants.CENTER);
         iniciarSesion.setText("Iniciar Sesión");
 
-        javax.swing.GroupLayout jPanel_loginBottonLayout = new javax.swing.GroupLayout(jPanel_loginBotton);
+        GroupLayout jPanel_loginBottonLayout = new GroupLayout(jPanel_loginBotton);
         jPanel_loginBotton.setLayout(jPanel_loginBottonLayout);
         jPanel_loginBottonLayout.setHorizontalGroup(
-                jPanel_loginBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel_loginBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_loginBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(iniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(iniciarSesion, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         jPanel_loginBottonLayout.setVerticalGroup(
-                jPanel_loginBottonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanel_loginBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_loginBottonLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(iniciarSesion)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel_background_loginForm.add(jPanel_loginBotton, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 440, -1, -1));
+        jPanel_background_loginForm.add(jPanel_loginBotton, new AbsoluteConstraints(150, 440, -1, -1));
 
-        mensaje_restaurar.setBackground(new java.awt.Color(153, 204, 255));
-        mensaje_restaurar.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
-        mensaje_restaurar.setForeground(new java.awt.Color(0, 0, 204));
-        mensaje_restaurar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        mensaje_restaurar.setBackground(new Color(153, 204, 255));
+        mensaje_restaurar.setFont(new Font("Roboto", Font.BOLD, 14));
+        mensaje_restaurar.setForeground(new Color(0, 0, 204));
+        mensaje_restaurar.setHorizontalAlignment(SwingConstants.CENTER);
         mensaje_restaurar.setText("¿Ha olvidado sus credenciales?");
-        mensaje_restaurar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        mensaje_restaurar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        mensaje_restaurar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        mensaje_restaurar.setHorizontalTextPosition(SwingConstants.CENTER);
         mensaje_restaurar.setVisible(false);
-        mensaje_restaurar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        mensaje_restaurar.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 mensaje_restaurarMouseClicked(evt);
             }
         });
-        jPanel_background_loginForm.add(mensaje_restaurar, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 510, -1, 40));
+        jPanel_background_loginForm.add(mensaje_restaurar, new AbsoluteConstraints(90, 510, -1, 40));
 
-        mensaje2.setBackground(new java.awt.Color(153, 204, 255));
-        mensaje2.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
-        mensaje2.setForeground(new java.awt.Color(0, 0, 0));
-        mensaje2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        mensaje2.setBackground(new Color(153, 204, 255));
+        mensaje2.setFont(new Font("Roboto", Font.BOLD, 14));
+        mensaje2.setForeground(new Color(0, 0, 0));
+        mensaje2.setHorizontalAlignment(SwingConstants.LEFT);
         mensaje2.setText("¿No está registrado?");
-        mensaje2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        mensaje2.setHorizontalTextPosition(SwingConstants.CENTER);
         mensaje2.setVisible(false);
-        jPanel_background_loginForm.add(mensaje2, new org.netbeans.lib.awtextra.AbsoluteConstraints(85, 480, -1, 40));
+        jPanel_background_loginForm.add(mensaje2, new AbsoluteConstraints(85, 480, -1, 40));
 
-        mensaje1.setBackground(new java.awt.Color(153, 204, 255));
-        mensaje1.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
-        mensaje1.setForeground(new java.awt.Color(0, 0, 204));
-        mensaje1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        mensaje1.setBackground(new Color(153, 204, 255));
+        mensaje1.setFont(new Font("Roboto", Font.BOLD, 14));
+        mensaje1.setForeground(new Color(0, 0, 204));
+        mensaje1.setHorizontalAlignment(SwingConstants.LEFT);
         mensaje1.setText("Registrarse");
-        mensaje1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        mensaje1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        mensaje1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        mensaje1.setHorizontalTextPosition(SwingConstants.CENTER);
         mensaje1.setVisible(false);
-        mensaje1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        mensaje1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 mensaje1MouseClicked(evt);
             }
         });
-        jPanel_background_loginForm.add(mensaje1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 480, 190, 40));
+        jPanel_background_loginForm.add(mensaje1, new AbsoluteConstraints(230, 480, 190, 40));
 
-        jPanelOculto.setBackground(new java.awt.Color(153, 204, 255));
+        jPanelOculto.setBackground(new Color(153, 204, 255));
 
-        jLabel1.setBackground(new java.awt.Color(153, 204, 255));
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lupa_icon.png")));
-        jLabel1.setPreferredSize(new java.awt.Dimension(1, 1));
+        jLabel1.setBackground(new Color(153, 204, 255));
+        jLabel1.setIcon(new ImageIcon(getClass().getResource("/images/lupa_icon.png")));
+        jLabel1.setPreferredSize(new Dimension(1, 1));
 
         jLabel2.setText("Administrador");
         jLabel2.setForeground(new Color(153, 204, 255));
-        jLabel2.setBackground(new java.awt.Color(153, 204, 255));
+        jLabel2.setBackground(new Color(153, 204, 255));
 
-        javax.swing.GroupLayout jPanelOcultoLayout = new javax.swing.GroupLayout(jPanelOculto);
+        GroupLayout jPanelOcultoLayout = new GroupLayout(jPanelOculto);
         jPanelOculto.setLayout(jPanelOcultoLayout);
         jPanelOcultoLayout.setHorizontalGroup(
-                jPanelOcultoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 10, Short.MAX_VALUE)
-                        .addGroup(jPanelOcultoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanelOcultoLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGroup(jPanelOcultoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanelOcultoLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
                                         .addComponent(jLabel2)
                                         .addGap(0, 0, Short.MAX_VALUE)))
         );
         jPanelOcultoLayout.setVerticalGroup(
-                jPanelOcultoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 10, Short.MAX_VALUE)
-                        .addGroup(jPanelOcultoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanelOcultoLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGroup(jPanelOcultoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanelOcultoLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
                                         .addComponent(jLabel2)
                                         .addGap(0, 0, Short.MAX_VALUE)))
         );
 
-        jPanel_background_loginForm.add(jPanelOculto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 351, 10, 10));
+        jPanel_background_loginForm.add(jPanelOculto, new AbsoluteConstraints(180, 351, 10, 10));
 
-        background.add(jPanel_background_loginForm, java.awt.BorderLayout.WEST);
+        background.add(jPanel_background_loginForm, BorderLayout.WEST);
 
         jScrollPane1.setViewportView(background);
 
-        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jScrollPane1, BorderLayout.CENTER);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>
 
     /* eventos */
-    private void formComponentShown(java.awt.event.ComponentEvent evt) {
+    private void formComponentShown(ComponentEvent evt) {
         Login.setImageLabal(paciente_icon, "src/images/patient_icon.png");
         Login.setImageLabal(doctor_icon, "src/images/doctor_icon.png");
         Login.setImageLabal(proveedor_icon, "src/images/supplier_icon.png");
@@ -788,7 +799,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     /* eventos del jFrame login */
-    private void jPanel_loginBottonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void jPanel_loginBottonMouseClicked(MouseEvent evt) {
         String user = userInput.getText();
         JLabel rol = (JLabel) selectedButton.getComponent(1);
         String rolText = rol.getText();
@@ -809,14 +820,14 @@ public class Login extends javax.swing.JFrame {
                 switch (rolText) {
                     case ("Paciente"): {
                         pac = new PantallaPaciente(this);
-                        pac.setNombreBienvenida(nombreC);
+                        pac.setBienvenida(nombreC, usuario1.getCedula());
                         pac.setVisible(true);
                         this.dispose();
                         break;
                     }
                     case ("Doctor - Enfermera"): {
                         doc = new PantallaDoctor(this);
-                        doc.setNombreBienvenida(nombreC);
+                        doc.setBienvenida(nombreC, usuario1.getCedula());
                         doc.setVisible(true);
                         this.dispose();
                         break;
@@ -825,14 +836,14 @@ public class Login extends javax.swing.JFrame {
                     case ("Administrativo"):
                     case ("Autoridad"): {
                         construccion = new PantallaBlock(this);
-                        construccion.setNombreBienvenida(nombreC);
+                        construccion.setBienvenida(nombreC, usuario1.getCedula());
                         construccion.setVisible(true);
                         this.dispose();
                         break;
                     }
                     case ("Administrador"): {
                         admin = new PantallaAdmin();
-                        admin.setNombreBienvenida(nombreC);
+                        admin.setBienvenida(nombreC, usuario1.getCedula());
                         admin.setVisible(true);
                         this.dispose();
                         break;
@@ -840,7 +851,7 @@ public class Login extends javax.swing.JFrame {
                     default: {
                         /*
                         base = new PantallaBase(this);
-                        base.setNombreBienvenida(nombreC);
+                        base.setBienvenida(nombreC, usuario1.getCedula());
                         base.setVisible(true);
                         this.dispose();
                          */
@@ -859,21 +870,21 @@ public class Login extends javax.swing.JFrame {
         }
     }
 
-    private void userInputActionPerformed(java.awt.event.ActionEvent evt) {
+    private void userInputActionPerformed(ActionEvent evt) {
         passwordInput.requestFocus();
     }
 
-    private void passwordInputActionPerformed(java.awt.event.ActionEvent evt) {
+    private void passwordInputActionPerformed(ActionEvent evt) {
         jPanel_loginBottonMouseClicked(null);
     }
 
-    private void mensaje_restaurarMouseClicked(java.awt.event.MouseEvent evt) {
+    private void mensaje_restaurarMouseClicked(MouseEvent evt) {
         jFrame_restaurarAcceso.setVisible(true);
         jFrame_restaurarAcceso.setLocationRelativeTo(this);
         this.setVisible(false);
     }
 
-    private void mensaje1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void mensaje1MouseClicked(MouseEvent evt) {
         register = new RegistrarUser(this);
         JLabel rol = (JLabel) selectedButton.getComponent(1);
         register.setRol(rol.getText());
@@ -886,33 +897,33 @@ public class Login extends javax.swing.JFrame {
     }
 
     /* eventos de jFrame restaurar acceso */
-    private void jTextField_cedulaFocusGained(java.awt.event.FocusEvent evt) {
+    private void jTextField_cedulaFocusGained(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_cedula, "Ingrese su cédula");
     }
 
-    private void jTextField_cedulaFocusLost(java.awt.event.FocusEvent evt) {
+    private void jTextField_cedulaFocusLost(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_cedula, "Ingrese su cédula");
     }
 
-    private void jTextField_cedulaActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jTextField_cedulaActionPerformed(ActionEvent evt) {
         jTextField_fechaNacimiento.requestFocus();
     }
 
-    private void jTextField_fechaNacimientoFocusGained(java.awt.event.FocusEvent evt) {
+    private void jTextField_fechaNacimientoFocusGained(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
     }
 
-    private void jTextField_fechaNacimientoFocusLost(java.awt.event.FocusEvent evt) {
+    private void jTextField_fechaNacimientoFocusLost(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
     }
 
-    private void jTextField_fechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jTextField_fechaNacimientoActionPerformed(ActionEvent evt) {
         acceptTerms.setSelected(true);
         acceptTerms.requestFocus();
         button_validarMouseClicked(null);
     }
 
-    private void button_validarMouseClicked(java.awt.event.MouseEvent evt) {
+    private void button_validarMouseClicked(MouseEvent evt) {
         String rolM = jComboBox_rol.getSelectedItem().toString();
         String cedulaM = jTextField_cedula.getText();
         String fechaNacimientoM = jTextField_fechaNacimiento.getText();
@@ -977,39 +988,36 @@ public class Login extends javax.swing.JFrame {
         }
     }
 
-    private void jTextField_usuarioFocusGained(java.awt.event.FocusEvent evt) {
+    private void jTextField_usuarioFocusGained(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese un usuario");
     }
 
-    private void jTextField_usuarioFocusLost(java.awt.event.FocusEvent evt) {
+    private void jTextField_usuarioFocusLost(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese un usuario");
     }
 
-    private void jTextField_usuarioActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jTextField_usuarioActionPerformed(ActionEvent evt) {
         jPasswordField.requestFocus();
     }
 
-    private void jPasswordFieldFocusGained(java.awt.event.FocusEvent evt) {
+    private void jPasswordFieldFocusGained(FocusEvent evt) {
         RegistrarUser.handleFocusPassword(jPasswordField, "Ingrese una contraseña");
     }
 
-    private void jPasswordFieldFocusLost(java.awt.event.FocusEvent evt) {
+    private void jPasswordFieldFocusLost(FocusEvent evt) {
         RegistrarUser.handleFocusPassword(jPasswordField, "Ingrese una contraseña");
     }
 
-    private void jPasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        button_registrarse1MouseClicked(null);
+    private void jPasswordFieldActionPerformed(ActionEvent evt) {
+        jButton_restaurarMouseClicked(null);
     }
 
-    private void button_registrarse1MouseClicked(java.awt.event.MouseEvent evt) {
-    }
-
-    private void mensaje3iniciarSesionMouseClicked(java.awt.event.MouseEvent evt) {
+    private void mensaje3iniciarSesionMouseClicked(MouseEvent evt) {
         this.setVisible(true);
         jFrame_restaurarAcceso.setVisible(false);
     }
 
-    private void jFrame_restaurarAccesoWindowClosing(java.awt.event.WindowEvent evt) {
+    private void jFrame_restaurarAccesoWindowClosing(WindowEvent evt) {
         if (jTextField_cedula.getText().isBlank() || jTextField_fechaNacimiento.getText().isBlank()
                 || !jTextField_cedula.getText().equals("Ingrese su cédula") || !jTextField_fechaNacimiento.getText().equals("Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss")
                 || jTextField_usuario.getText().isBlank() || String.valueOf(jPasswordField.getPassword()).isBlank()
@@ -1019,36 +1027,37 @@ public class Login extends javax.swing.JFrame {
                 return;
             }
         }
-        this.setVisible(true);
         jFrame_restaurarAcceso.setVisible(false);
+        // TODO limpiar campos
+        this.setVisible(true);
     }
 
-    private void icon_project1AncestorAdded(javax.swing.event.AncestorEvent evt) {
+    private void icon_project1AncestorAdded(AncestorEvent evt) {
         Login.setImageLabal(icon_project1, "src/images/operacionVacunas_logo.png");
     }
 
-    private void userInputFocusGained(java.awt.event.FocusEvent evt) {
+    private void userInputFocusGained(FocusEvent evt) {
         RegistrarUser.handleFocusGain(userInput, "Ingrese su usuario");
     }
 
-    private void userInputFocusLost(java.awt.event.FocusEvent evt) {
+    private void userInputFocusLost(FocusEvent evt) {
         RegistrarUser.handleFocusGain(userInput, "Ingrese su usuario");
     }
 
-    private void passwordInputFocusGained(java.awt.event.FocusEvent evt) {
+    private void passwordInputFocusGained(FocusEvent evt) {
         RegistrarUser.handleFocusPassword(passwordInput, "Ingrese su contraseña");
     }
 
-    private void passwordInputFocusLost(java.awt.event.FocusEvent evt) {
+    private void passwordInputFocusLost(FocusEvent evt) {
         RegistrarUser.handleFocusPassword(passwordInput, "Ingrese su contraseña");
     }
 
-    private void jButton_cancelar5MouseClicked(java.awt.event.MouseEvent evt) {
+    private void jButton_cancelar5MouseClicked(MouseEvent evt) {
         // TODO limpiar los campos
         jFrame_restaurarAcceso.setVisible(false);
     }
 
-    private void jButton_restaurarMouseClicked(java.awt.event.MouseEvent evt) {
+    private void jButton_restaurarMouseClicked(MouseEvent evt) {
         String user = jTextField_usuario.getText();
 
         errorMessage.setVisible(false);
@@ -1094,9 +1103,9 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void addRoleButtonListener(JPanel roleButton) {
-        roleButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        roleButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(MouseEvent evt) {
                 roleButtonMouseClicked(roleButton);
             }
         });
@@ -1144,18 +1153,18 @@ public class Login extends javax.swing.JFrame {
     /* método main principal del proyecto */
     public static void main(String[] args) {
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 javax.swing.UnsupportedLookAndFeelException ex) {
+                 UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 new Login().setVisible(true);
@@ -1172,67 +1181,67 @@ public class Login extends javax.swing.JFrame {
     private static PantallaAdmin admin;
 
     // Variables declaration
-    private javax.swing.JCheckBox acceptTerms;
-    private javax.swing.JLabel administrativo;
-    private javax.swing.JLabel administrativo_icon;
-    private javax.swing.JLabel autoridad;
-    private javax.swing.JLabel autoridad_icon;
-    private javax.swing.JPanel background;
-    private javax.swing.JPanel background1;
-    private javax.swing.JLabel bienvenido;
-    private javax.swing.JLabel button_validar;
-    private javax.swing.JLabel cedula;
-    private javax.swing.JLabel contrasena;
-    private javax.swing.JLabel doctor;
-    private javax.swing.JLabel doctor_icon;
-    private javax.swing.JLabel elija_su_rol;
-    private javax.swing.JLabel errorMessage;
-    private javax.swing.JLabel fecha_nacimiento;
-    private javax.swing.JLabel icon_project;
-    private javax.swing.JLabel icon_project1;
-    private javax.swing.JLabel iniciarSesion;
-    private javax.swing.JComboBox<String> jComboBox_rol;
-    private javax.swing.JFrame jFrame_restaurarAcceso;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanelOculto;
-    private javax.swing.JPanel jPanel_administrativoBotton;
-    private javax.swing.JPanel jPanel_autoridadBotton;
-    private javax.swing.JPanel jPanel_background_loginForm;
-    private javax.swing.JPanel jPanel_doctorBotton;
-    private javax.swing.JPanel jPanel_loginBotton;
-    private javax.swing.JPanel jPanel_pacienteBotton;
-    private javax.swing.JPanel jPanel_proveedorBotton;
-    private javax.swing.JPasswordField jPasswordField;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JSeparator jSeparator7;
-    private javax.swing.JSeparator jSeparator8;
-    private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JTextField jTextField_cedula;
-    private javax.swing.JTextField jTextField_fechaNacimiento;
-    private javax.swing.JTextField jTextField_usuario;
-    private javax.swing.JLabel mensaje;
-    private javax.swing.JLabel mensaje1;
-    private javax.swing.JLabel mensaje2;
-    private javax.swing.JLabel mensaje3;
-    private javax.swing.JLabel mensaje4;
-    private javax.swing.JPanel mensaje_error;
-    private javax.swing.JLabel mensaje_hola;
-    private javax.swing.JLabel mensaje_restaurar;
-    private javax.swing.JLabel mensaje_validar;
-    private javax.swing.JLabel paciente;
-    private javax.swing.JLabel paciente_icon;
-    private javax.swing.JPasswordField passwordInput;
-    private javax.swing.JLabel proveedor;
-    private javax.swing.JLabel proveedor_icon;
-    private javax.swing.JLabel respuesta;
-    private javax.swing.JLabel rolRestaurar;
-    private javax.swing.JLabel titulo;
-    private javax.swing.JTextField userInput;
-    private javax.swing.JLabel usuario;
-    private javax.swing.JButton jButton_restaurar;
-    private javax.swing.JButton jButton_cancelar5;
+    private JCheckBox acceptTerms;
+    private JLabel administrativo;
+    private JLabel administrativo_icon;
+    private JLabel autoridad;
+    private JLabel autoridad_icon;
+    private JPanel background;
+    private JPanel background1;
+    private JLabel bienvenido;
+    private JLabel button_validar;
+    private JLabel cedula;
+    private JLabel contrasena;
+    private JLabel doctor;
+    private JLabel doctor_icon;
+    private JLabel elija_su_rol;
+    private JLabel errorMessage;
+    private JLabel fecha_nacimiento;
+    private JLabel icon_project;
+    private JLabel icon_project1;
+    private JLabel iniciarSesion;
+    private JComboBox<String> jComboBox_rol;
+    private JFrame jFrame_restaurarAcceso;
+    private JLabel jLabel1;
+    private JLabel jLabel2;
+    private JPanel jPanelOculto;
+    private JPanel jPanel_administrativoBotton;
+    private JPanel jPanel_autoridadBotton;
+    private JPanel jPanel_background_loginForm;
+    private JPanel jPanel_doctorBotton;
+    private JPanel jPanel_loginBotton;
+    private JPanel jPanel_pacienteBotton;
+    private JPanel jPanel_proveedorBotton;
+    private JPasswordField jPasswordField;
+    private JScrollPane jScrollPane1;
+    private JScrollPane jScrollPane2;
+    private JSeparator jSeparator5;
+    private JSeparator jSeparator7;
+    private JSeparator jSeparator8;
+    private JSeparator jSeparator9;
+    private JTextField jTextField_cedula;
+    private JTextField jTextField_fechaNacimiento;
+    private JTextField jTextField_usuario;
+    private JLabel mensaje;
+    private JLabel mensaje1;
+    private JLabel mensaje2;
+    private JLabel mensaje3;
+    private JLabel mensaje4;
+    private JPanel mensaje_error;
+    private JLabel mensaje_hola;
+    private JLabel mensaje_restaurar;
+    private JLabel mensaje_validar;
+    private JLabel paciente;
+    private JLabel paciente_icon;
+    private JPasswordField passwordInput;
+    private JLabel proveedor;
+    private JLabel proveedor_icon;
+    private JLabel respuesta;
+    private JLabel rolRestaurar;
+    private JLabel titulo;
+    private JTextField userInput;
+    private JLabel usuario;
+    private JButton jButton_restaurar;
+    private JButton jButton_cancelar5;
     // End of variables declaration
 }

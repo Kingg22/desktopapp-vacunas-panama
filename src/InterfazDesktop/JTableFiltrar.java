@@ -5,8 +5,13 @@ import Logica.Validations.LimitarCamposSeguro;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
-public class JTableFiltrar extends javax.swing.JPanel {
+public class JTableFiltrar extends JPanel {
 
     public JTableFiltrar(JTable table) {
         jTable_Content = table;
@@ -16,24 +21,24 @@ public class JTableFiltrar extends javax.swing.JPanel {
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-        jSeparator1 = new javax.swing.JSeparator();
-        jSeparator2 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
-        jComboBox_filterColumn = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField_buscarColumn = new javax.swing.JTextField();
+        jSeparator1 = new JSeparator();
+        jSeparator2 = new JSeparator();
+        jLabel2 = new JLabel();
+        jComboBox_filterColumn = new JComboBox<>();
+        jLabel3 = new JLabel();
+        jTextField_buscarColumn = new JTextField();
 
-        setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setPreferredSize(new java.awt.Dimension(306, 98));
-        setLayout(new java.awt.GridLayout(3, 2));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setPreferredSize(new Dimension(306, 98));
+        setLayout(new GridLayout(3, 2));
         add(jSeparator1);
         add(jSeparator2);
 
         jLabel2.setText("Filtro de columnas");
         add(jLabel2);
 
-        jComboBox_filterColumn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jComboBox_filterColumn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jComboBox_filterColumnActionPerformed(evt);
             }
         });
@@ -45,36 +50,36 @@ public class JTableFiltrar extends javax.swing.JPanel {
         jTextField_buscarColumn.setDocument(new LimitarCamposSeguro(15, "Buscar en..."));
         jTextField_buscarColumn.setText("Buscar en...");
         RegistrarUser.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
-        jTextField_buscarColumn.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
+        jTextField_buscarColumn.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent evt) {
                 jTextField_buscarColumnFocusGained(evt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(FocusEvent evt) {
                 jTextField_buscarColumnFocusLost(evt);
             }
         });
-        jTextField_buscarColumn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTextField_buscarColumn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jTextField_buscarColumnActionPerformed(evt);
             }
         });
         add(jTextField_buscarColumn);
     }// </editor-fold>
 
-    private void jComboBox_filterColumnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jComboBox_filterColumnActionPerformed(ActionEvent evt) {
         filterActionPerformed();
     }
 
-    private void jTextField_buscarColumnFocusGained(java.awt.event.FocusEvent evt) {
+    private void jTextField_buscarColumnFocusGained(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
     }
 
-    private void jTextField_buscarColumnFocusLost(java.awt.event.FocusEvent evt) {
+    private void jTextField_buscarColumnFocusLost(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
     }
 
-    private void jTextField_buscarColumnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jTextField_buscarColumnActionPerformed(ActionEvent evt) {
         filterActionPerformed();
     }
 
@@ -98,14 +103,14 @@ public class JTableFiltrar extends javax.swing.JPanel {
     }
 
     // variables propias
-    private JTable jTable_Content = null;
+    private JTable jTable_Content;
 
     // Variables declaration - do not modify
-    private javax.swing.JComboBox<String> jComboBox_filterColumn;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField jTextField_buscarColumn;
+    private JComboBox<String> jComboBox_filterColumn;
+    private JLabel jLabel2;
+    private JLabel jLabel3;
+    private JSeparator jSeparator1;
+    private JSeparator jSeparator2;
+    private JTextField jTextField_buscarColumn;
     // End of variables declaration
 }

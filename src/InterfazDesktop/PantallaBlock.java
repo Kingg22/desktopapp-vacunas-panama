@@ -346,8 +346,9 @@ public class PantallaBlock extends JFrame {
     }
 
     /* método para colocar el nombre al iniciar sesión */
-    public void setNombreBienvenida(String nombre) {
+    public void setBienvenida(String nombre, String cedula) {
         this.nombreBienvenida.setText(nombre);
+        cedulaUsuarioActual = cedula;
     }
 
     /* método main para pruebas unitarias */
@@ -374,6 +375,7 @@ public class PantallaBlock extends JFrame {
 
     /* variables propias */
     private static JFrame parentFrame;
+    private String cedulaUsuarioActual;
 
     // Variables declaration - do not modify
     private JPanel background;

@@ -861,6 +861,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
 
         jDialog_modificarCred.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jDialog_modificarCred.setTitle("Programa Vacunas Panamá - Modificar credenciales");
+        jDialog_modificarCred.setModal(true);
         jDialog_modificarCred.setResizable(false);
         jDialog_modificarCred.setSize(new java.awt.Dimension(450, 550));
 
@@ -963,13 +964,13 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, -1, -1));
 
         jPasswordField_nueva1.setBackground(new java.awt.Color(255, 255, 255));
-        jPasswordField_nueva1.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
+        jPasswordField_nueva1.setDocument(new LimitarCamposSeguro(20, "Ingrese una contraseña nueva"));
         jPasswordField_nueva1.setFont(new java.awt.Font("Roboto", 0, 14));
         jPasswordField_nueva1.setForeground(java.awt.Color.gray);
-        jPasswordField_nueva1.setText("Ingrese su contraseña");
+        jPasswordField_nueva1.setText("Ingrese una contraseña nueva");
         jPasswordField_nueva1.setBorder(null);
         jPasswordField_nueva1.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jPasswordField_nueva1, "Ingrese su contraseña");
+        RegistrarUser.handleFocusGain(jPasswordField_nueva1, "Ingrese una contraseña nueva");
         jPasswordField_nueva1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jPasswordField_nueva1FocusGained(evt);
@@ -996,13 +997,13 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(repetir_contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, -1));
 
         jPasswordField_nueva2.setBackground(new java.awt.Color(255, 255, 255));
-        jPasswordField_nueva2.setDocument(new LimitarCamposSeguro(20, "Repita su contraseña"));
+        jPasswordField_nueva2.setDocument(new LimitarCamposSeguro(20, "Ingrese una contraseña nueva"));
         jPasswordField_nueva2.setFont(new java.awt.Font("Roboto", 0, 14));
         jPasswordField_nueva2.setForeground(java.awt.Color.gray);
-        jPasswordField_nueva2.setText("Repita su contraseña");
+        jPasswordField_nueva2.setText("Ingrese una contraseña nueva");
         jPasswordField_nueva2.setBorder(null);
         jPasswordField_nueva2.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jPasswordField_nueva2, "Repita su contraseña");
+        RegistrarUser.handleFocusGain(jPasswordField_nueva2, "Ingrese una contraseña nueva");
         jPasswordField_nueva2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jPasswordField_nueva2FocusGained(evt);
@@ -1750,11 +1751,11 @@ public class PantallaPaciente extends javax.swing.JFrame {
     }
 
     private void jPasswordField_nueva1FocusGained(java.awt.event.FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_nueva1, "Ingrese su contraseña");
+        RegistrarUser.handleFocusPassword(jPasswordField_nueva1, "Ingrese una contraseña nueva");
     }
 
     private void jPasswordField_nueva1FocusLost(java.awt.event.FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_nueva1, "Ingrese su contraseña");
+        RegistrarUser.handleFocusPassword(jPasswordField_nueva1, "Ingrese una contraseña nueva");
     }
 
     private void jPasswordField_nueva1ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1762,11 +1763,11 @@ public class PantallaPaciente extends javax.swing.JFrame {
     }
 
     private void jPasswordField_nueva2FocusGained(java.awt.event.FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_nueva2, "Repita su contraseña");
+        RegistrarUser.handleFocusPassword(jPasswordField_nueva2, "Ingrese una contraseña nueva");
     }
 
     private void jPasswordField_nueva2FocusLost(java.awt.event.FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_nueva2, "Repita su contraseña");
+        RegistrarUser.handleFocusPassword(jPasswordField_nueva2, "Ingrese una contraseña nueva");
     }
 
     private void jPasswordField_nueva2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1786,46 +1787,79 @@ public class PantallaPaciente extends javax.swing.JFrame {
     }
 
     private void jButton_modificar2MouseClicked(java.awt.event.MouseEvent evt) {
+        boolean cambiado = false;
+        String usuario = jTextField_usuario.getText();
+        String usuarioNuevo = jTextField_usuarioNuevo.getText();
+        boolean condicion1 = usuario.isBlank() || usuario.equals("Ingrese su usuario");
+        boolean condicion2 = usuarioNuevo.isBlank() || usuarioNuevo.equals("Ingrese un usuario nuevo");
+        boolean condicion3 = String.valueOf(jPasswordField_vieja.getPassword()).isBlank() || String.valueOf(jPasswordField_vieja.getPassword()).equals("Ingrese su contraseña");
+        boolean condicion4 = String.valueOf(jPasswordField_nueva1.getPassword()).isBlank() || String.valueOf(jPasswordField_nueva1.getPassword()).equals("Ingrese una contraseña nueva");
+        boolean condicion5 = String.valueOf(jPasswordField_nueva2.getPassword()).isBlank() || String.valueOf(jPasswordField_nueva2.getPassword()).equals("Ingrese una contraseña nueva");
+
         errorMessage2.setVisible(false);
-        if (jTextField_usuario.getText().isBlank()
-                || String.valueOf(jPasswordField_vieja.getPassword()).isBlank()
-                || jTextField_usuario.getText().equals("Ingrese su usuario")
-                || String.valueOf(jPasswordField_vieja.getPassword()).equals("Ingrese su contraseña")) {
+        repetir_contrasena.setForeground(Color.black);
+        jPasswordField_nueva2.setForeground(Color.gray);
+        contrasena.setForeground(Color.black);
+        jPasswordField_nueva1.setForeground(Color.gray);
+        contrasena_anterior.setForeground(Color.black);
+        jPasswordField_vieja.setForeground(Color.gray);
+        if (condicion1 || condicion3) {
             errorMessage2.setText("Error. Los campos usuario y contraseña anterior son obligatorios.");
             errorMessage2.setVisible(true);
-        } else if ((!String.valueOf(jPasswordField_nueva1.getPassword()).isBlank()
-                || !String.valueOf(jPasswordField_nueva1.getPassword()).equals("Ingrese su contraseña"))
-                && (!String.valueOf(jPasswordField_nueva2.getPassword()).isBlank()
-                || !String.valueOf(jPasswordField_nueva2.getPassword()).equals("Repita su contraseña"))) {
-            if (!String.valueOf(jPasswordField_nueva1.getPassword()).equals(String.valueOf(jPasswordField_nueva2.getPassword()))) {
-                repetir_contrasena.setForeground(Color.red);
-                jPasswordField_nueva2.setForeground(Color.red);
-                contrasena.setForeground(Color.red);
-                jPasswordField_nueva1.setForeground(Color.red);
-                errorMessage2.setText("Error. Las contraseñas nuevas no son iguales.");
-                errorMessage2.setVisible(true);
-            }
-            /* else if (! verificar anterior jPasswordField4.getPassword()) {
+            return;
+        } else if (!InicioSesion.autentificar(usuario, String.valueOf(jPasswordField_vieja.getPassword()), "Paciente")) {
             contrasena_anterior.setForeground(Color.red);
-            jPasswordField4.setForeground(Color.red);
+            jPasswordField_vieja.setForeground(Color.red);
             errorMessage2.setText("Error. La contraseña anterior no coincide. Cambios cancelado");
             errorMessage2.setVisible(true);
-        } */
+            return;
         } else {
-            /* TODO IMPLEMENTAR LÓGICA DE VERIFICACIÓN DE CONTRASEÑA ANTERIOR Y MODIFICACIÓN DE CRDEENCIALES CAMBIADOS */
-            if (true) {
-                JOptionPane.showMessageDialog(null, "Para confirmar los cambios de credenciales se cerrará el programa y debe iniciar sesión nuevamente.",
-                        "Modificando datos...", JOptionPane.INFORMATION_MESSAGE);
-                parentFrame.setVisible(true);
-                parentFrame.requestFocus();
-                this.dispose();
-                jDialog_modificarDatos.dispose();
+            if (!condicion2) {
+                if (!condicion4 && !condicion5) {
+                    if (!String.valueOf(jPasswordField_nueva1.getPassword()).equals(String.valueOf(jPasswordField_nueva2.getPassword()))) {
+                        repetir_contrasena.setForeground(Color.red);
+                        jPasswordField_nueva2.setForeground(Color.red);
+                        contrasena.setForeground(Color.red);
+                        jPasswordField_nueva1.setForeground(Color.red);
+                        errorMessage2.setText("Error. Las contraseñas nuevas no son iguales.");
+                        errorMessage2.setVisible(true);
+                        return;
+                    } else {
+                        cambiado = InicioSesion.modificarCredenciales(cedulaUsuarioActual, usuarioNuevo, String.valueOf(jPasswordField_nueva1.getPassword()), "Paciente");
+                    }
+                } else {
+                    cambiado = InicioSesion.modificarCredenciales(cedulaUsuarioActual, usuarioNuevo, String.valueOf(jPasswordField_vieja.getPassword()), "Paciente");
+                }
+            } else if (!condicion4 && !condicion5) {
+                if (!String.valueOf(jPasswordField_nueva1.getPassword()).equals(String.valueOf(jPasswordField_nueva2.getPassword()))) {
+                    repetir_contrasena.setForeground(Color.red);
+                    jPasswordField_nueva2.setForeground(Color.red);
+                    contrasena.setForeground(Color.red);
+                    jPasswordField_nueva1.setForeground(Color.red);
+                    errorMessage2.setText("Error. Las contraseñas nuevas no son iguales.");
+                    errorMessage2.setVisible(true);
+                    return;
+                } else {
+                    cambiado = InicioSesion.modificarCredenciales(cedulaUsuarioActual, usuario, String.valueOf(jPasswordField_nueva1.getPassword()), "Paciente");
+                }
             } else {
-                errorMessage2.setText("Error al modificar los datos personales.");
-                errorMessage2.getParent().revalidate();
-                errorMessage2.getParent().repaint();
+                errorMessage2.setText("Error: ninguna credencial fue cambiada, debe modificar el usuario o la contraseña");
                 errorMessage2.setVisible(true);
+                return;
             }
+        }
+
+        if (cambiado) {
+            JOptionPane.showMessageDialog(null, "Para confirmar los cambios de credenciales se cerrará el programa y debe iniciar sesión nuevamente.",
+                    "Modificando datos...", JOptionPane.INFORMATION_MESSAGE);
+            parentFrame.setVisible(true);
+            parentFrame.requestFocus();
+            this.dispose();
+            jDialog_modificarCred.dispose();
+            System.gc();
+        } else {
+            errorMessage2.setText("Error al modificar los datos personales. Intente nuevamente o cierre esta ventana.");
+            errorMessage2.setVisible(true);
         }
     }
 
@@ -1834,8 +1868,9 @@ public class PantallaPaciente extends javax.swing.JFrame {
     }
 
     /* método para colocar el nombre al iniciar sesión */
-    public void setNombreBienvenida(String nombre) {
+    public void setBienvenida(String nombre, String cedula) {
         this.nombreBienvenida.setText(nombre);
+        cedulaUsuarioActual = cedula;
     }
 
     /* método main para pruebas unitarias */
@@ -1865,6 +1900,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
     private static CardLayout layout = null;
     private Component mostrando = null;
     private JTableFiltrar jPanel_filtrar;
+    private String cedulaUsuarioActual;
 
     // Variables declaration - do not modify
     private javax.swing.JLabel apellido;
@@ -1986,5 +2022,5 @@ public class PantallaPaciente extends javax.swing.JFrame {
     private javax.swing.JLabel titulo_contenido;
     private javax.swing.JLabel usuario;
     private javax.swing.JLabel usuario_nuevo;
-    // End of variables declaration
+// End of variables declaration
 }

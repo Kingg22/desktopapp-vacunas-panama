@@ -84,10 +84,10 @@ public class InicioSesion {
         }
     }
 
-    public static boolean modificarCredenciales(String cedula, String usuario, String password, String rol) {
+    public static boolean modificarCredenciales(String cedula, String usuarioNuevo, String passwordNuevo, String rol) {
         Usuario usuarioF = buscar(cedula, rol);
         if (usuarioF != null) {
-            usuarioF.modificarCredenciales(usuario, password);
+            usuarioF.modificarCredenciales(usuarioNuevo, passwordNuevo);
             return true;
         } else {
             return false;

@@ -2,16 +2,18 @@ package Logica.Validations;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.sql.Timestamp;
+
 public class Usuario {
     private String nombre;
     private String apellido;
     private String cedula;
-    private String fechaNacimiento;
+    private Timestamp fechaNacimiento;
     private String usuario;
     private String passwordHash;
     private Preferencias prefs;
 
-    public Usuario(String nombre, String apellido, String cedula, String fechaNacimiento, String usuario, String password) {
+    public Usuario(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String usuario, String password) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -20,11 +22,18 @@ public class Usuario {
         this.passwordHash = hashpassword(password);
     }
 
-    public void modificarDatos(String nombre, String apellido, String cedula, String correo) {
+    public Usuario(String cedula, String usuario, String passwordHash, Timestamp fechaNacimiento) {
+        this.cedula = cedula;
+        this.usuario = usuario;
+        this.passwordHash = passwordHash;
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public void modificarDatos(String nombre, String apellido, String cedula, Timestamp fechaNacimiento) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
-        this.fechaNacimiento = correo;
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public void modificarCredenciales(String usuario, String password) {
@@ -32,12 +41,32 @@ public class Usuario {
         this.passwordHash = hashpassword(password);
     }
 
-    private String hashpassword(String password) {
+    public void modificarUsuario(String cedula, String usuario, String passwordHash, Timestamp fechaNacimiento) {
+        this.cedula = cedula;
+        this.usuario = usuario;
+        this.passwordHash = passwordHash;
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public void modificarCompleto(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String usuario, String password) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.cedula = cedula;
+        this.fechaNacimiento = fechaNacimiento;
+        this.usuario = usuario;
+        this.passwordHash = hashpassword(password);
+    }
+
+    public static String hashpassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     public boolean checkPassword(String password) {
         return BCrypt.checkpw(password, this.passwordHash);
+    }
+
+    public static boolean check2Password(String password, String passwordHash) {
+        return BCrypt.checkpw(password, passwordHash);
     }
 
     public String getNombre() {
@@ -52,7 +81,7 @@ public class Usuario {
         return cedula;
     }
 
-    public String getFechaNacimiento() {
+    public Timestamp getFechaNacimiento() {
         return fechaNacimiento;
     }
 
@@ -70,5 +99,9 @@ public class Usuario {
 
     public Preferencias getPrefs() {
         return prefs;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
     }
 }

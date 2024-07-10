@@ -30,12 +30,12 @@ public class JPanelJoin extends JPanel {
         setPreferredSize(new Dimension(794, 25));
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        jComboBox_innerTyp.setFont(new Font("Microsoft YaHei", 0, 12));
+        jComboBox_innerTyp.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_innerTyp.setModel(new DefaultComboBoxModel<>(new String[]{"INNER", "FULL", "LEFT", "RIGHT", "CROSS"}));
         jComboBox_innerTyp.setPreferredSize(new Dimension(80, 27));
         add(jComboBox_innerTyp);
 
-        join.setFont(new Font("Microsoft YaHei", 0, 12));
+        join.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         join.setForeground(new Color(0, 0, 0));
         join.setHorizontalAlignment(SwingConstants.CENTER);
         join.setText("JOIN");
@@ -43,7 +43,7 @@ public class JPanelJoin extends JPanel {
         join.setPreferredSize(new Dimension(45, 33));
         add(join);
 
-        jComboBox_tabla2.setFont(new Font("Microsoft YaHei", 0, 12));
+        jComboBox_tabla2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla2"}));
         jComboBox_tabla2.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla2.addActionListener(new ActionListener() {
@@ -53,7 +53,7 @@ public class JPanelJoin extends JPanel {
         });
         add(jComboBox_tabla2);
 
-        punto2.setFont(new Font("Microsoft YaHei", 0, 12));
+        punto2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         punto2.setForeground(new Color(0, 0, 0));
         punto2.setHorizontalAlignment(SwingConstants.CENTER);
         punto2.setText("ON");
@@ -61,7 +61,7 @@ public class JPanelJoin extends JPanel {
         punto2.setPreferredSize(new Dimension(25, 33));
         add(punto2);
 
-        jComboBox_tabla3.setFont(new Font("Microsoft YaHei", 0, 12));
+        jComboBox_tabla3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_tabla3.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla3.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla3.addActionListener(new ActionListener() {
@@ -71,7 +71,7 @@ public class JPanelJoin extends JPanel {
         });
         add(jComboBox_tabla3);
 
-        punto.setFont(new Font("Microsoft YaHei", 0, 12));
+        punto.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         punto.setForeground(new Color(0, 0, 0));
         punto.setHorizontalAlignment(SwingConstants.CENTER);
         punto.setText(".");
@@ -79,12 +79,12 @@ public class JPanelJoin extends JPanel {
         punto.setPreferredSize(new Dimension(10, 33));
         add(punto);
 
-        jComboBox_columna1.setFont(new Font("Microsoft YaHei", 0, 12));
+        jComboBox_columna1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_columna1.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
         jComboBox_columna1.setPreferredSize(new Dimension(150, 27));
         add(jComboBox_columna1);
 
-        punto4.setFont(new Font("Microsoft YaHei", 0, 12));
+        punto4.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         punto4.setForeground(new Color(0, 0, 0));
         punto4.setHorizontalAlignment(SwingConstants.CENTER);
         punto4.setText("  =  ");
@@ -92,7 +92,7 @@ public class JPanelJoin extends JPanel {
         punto4.setPreferredSize(new Dimension(25, 33));
         add(punto4);
 
-        jComboBox_tabla4.setFont(new Font("Microsoft YaHei", 0, 12));
+        jComboBox_tabla4.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_tabla4.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla2"}));
         jComboBox_tabla4.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla4.addActionListener(new ActionListener() {
@@ -102,7 +102,7 @@ public class JPanelJoin extends JPanel {
         });
         add(jComboBox_tabla4);
 
-        punto3.setFont(new Font("Microsoft YaHei", 0, 12));
+        punto3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         punto3.setForeground(new Color(0, 0, 0));
         punto3.setHorizontalAlignment(SwingConstants.CENTER);
         punto3.setText(".");
@@ -110,7 +110,7 @@ public class JPanelJoin extends JPanel {
         punto3.setPreferredSize(new Dimension(10, 33));
         add(punto3);
 
-        jComboBox_columna3.setFont(new Font("Microsoft YaHei", 0, 12));
+        jComboBox_columna3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_columna3.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
         jComboBox_columna3.setPreferredSize(new Dimension(150, 27));
         add(jComboBox_columna3);

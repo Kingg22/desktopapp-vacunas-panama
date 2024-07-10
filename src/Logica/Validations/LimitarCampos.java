@@ -5,8 +5,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
 public class LimitarCampos extends PlainDocument {
-    int limit;
-    String placeholder;
+    final int limit;
+    final String placeholder;
     String pattern = ".*";
 
     public LimitarCampos(int limit, String placeholder) {

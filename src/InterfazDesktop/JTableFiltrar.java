@@ -103,7 +103,7 @@ public class JTableFiltrar extends JPanel {
     }
 
     // variables propias
-    private JTable jTable_Content;
+    private final JTable jTable_Content;
 
     // Variables declaration - do not modify
     private JComboBox<String> jComboBox_filterColumn;

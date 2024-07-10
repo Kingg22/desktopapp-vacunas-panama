@@ -8,14 +8,25 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Login extends JFrame {
 
     public Login() {
         initComponents();
-        InicioSesion is = new InicioSesion();
+        try {
+            InicioSesion is = new InicioSesion();
+        } catch (Exception e) {
+            System.err.println(e);
+            JOptionPane.showMessageDialog(null, "A ocurrido un error al iniciar operaciones. Contacte a soporte. Recomendamos cerrar el programa.", "FATAL ERROR", JOptionPane.ERROR_MESSAGE);
+        }
 
         addRoleButtonListeners();
     }
@@ -32,20 +43,20 @@ public class Login extends JFrame {
         jComboBox_rol = new JComboBox<>();
         jTextField_cedula = new JTextField();
         cedula = new JLabel();
-        jSeparator5 = new JSeparator();
+        jSeparator1 = new JSeparator();
         fecha_nacimiento = new JLabel();
         jTextField_fechaNacimiento = new JTextField();
-        jSeparator9 = new JSeparator();
+        jSeparator4 = new JSeparator();
         acceptTerms = new JCheckBox();
         button_validar = new JLabel();
         mensaje_hola = new JLabel();
         respuesta = new JLabel();
         usuario = new JLabel();
         jTextField_usuario = new JTextField();
-        jSeparator8 = new JSeparator();
+        jSeparator3 = new JSeparator();
         contrasena = new JLabel();
         jPasswordField = new JPasswordField();
-        jSeparator7 = new JSeparator();
+        jSeparator2 = new JSeparator();
         errorMessage = new JLabel();
         mensaje3 = new JLabel();
         mensaje4 = new JLabel();
@@ -55,8 +66,8 @@ public class Login extends JFrame {
         jPanel_background_loginForm = new JPanel();
         bienvenido = new JLabel();
         elija_su_rol = new JLabel();
-        userInput = new JTextField();
-        passwordInput = new JPasswordField();
+        jTextField_usuario_login = new JTextField();
+        jPasswordField_login = new JPasswordField();
         jPanel_pacienteBotton = new JPanel();
         paciente = new JLabel();
         paciente_icon = new JLabel();
@@ -64,8 +75,8 @@ public class Login extends JFrame {
         doctor = new JLabel();
         doctor_icon = new JLabel();
         jPanel_proveedorBotton = new JPanel();
-        proveedor = new JLabel();
-        proveedor_icon = new JLabel();
+        fabricante = new JLabel();
+        fabricante_icon = new JLabel();
         jPanel_administrativoBotton = new JPanel();
         administrativo = new JLabel();
         administrativo_icon = new JLabel();
@@ -74,8 +85,6 @@ public class Login extends JFrame {
         autoridad_icon = new JLabel();
         mensaje_error = new JPanel();
         mensaje = new JLabel();
-        jPanel_loginBotton = new JPanel();
-        iniciarSesion = new JLabel();
         mensaje_restaurar = new JLabel();
         mensaje2 = new JLabel();
         mensaje1 = new JLabel();
@@ -84,6 +93,7 @@ public class Login extends JFrame {
         jLabel2 = new JLabel();
         jButton_restaurar = new JButton();
         jButton_cancelar5 = new JButton();
+        jButton_login = new javax.swing.JButton();
 
         jFrame_restaurarAcceso.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         jFrame_restaurarAcceso.setTitle("Programa Vacunas Panamá - Restaurar acceso");
@@ -141,7 +151,7 @@ public class Login extends JFrame {
         jComboBox_rol.setBackground(Color.gray);
         jComboBox_rol.setFont(new Font("Roboto", Font.PLAIN, 14));
         jComboBox_rol.setForeground(Color.black);
-        jComboBox_rol.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Paciente", "Doctor - Enfermera", "Proveedor", "Administrativo", "Autoridad"}));
+        jComboBox_rol.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Paciente", "Doctor - Enfermera", "Fabricante", "Administrativo", "Autoridad"}));
         background1.add(jComboBox_rol, new AbsoluteConstraints(30, 120, 170, -1));
 
         jTextField_cedula.setBackground(new Color(255, 255, 255));
@@ -174,8 +184,8 @@ public class Login extends JFrame {
         cedula.setText("Cédula *");
         background1.add(cedula, new AbsoluteConstraints(30, 160, -1, -1));
 
-        jSeparator5.setForeground(new Color(30, 30, 30));
-        background1.add(jSeparator5, new AbsoluteConstraints(30, 200, 540, 21));
+        jSeparator1.setForeground(new Color(30, 30, 30));
+        background1.add(jSeparator1, new AbsoluteConstraints(30, 200, 540, 21));
 
         fecha_nacimiento.setBackground(new Color(0, 0, 0));
         fecha_nacimiento.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -184,13 +194,13 @@ public class Login extends JFrame {
         background1.add(fecha_nacimiento, new AbsoluteConstraints(30, 220, -1, -1));
 
         jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
-        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(19, "Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss"));
+        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(19, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
         jTextField_fechaNacimiento.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_fechaNacimiento.setForeground(Color.gray);
-        jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
+        jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
         jTextField_fechaNacimiento.setBorder(null);
         jTextField_fechaNacimiento.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
+        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
         jTextField_fechaNacimiento.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 jTextField_fechaNacimientoFocusGained(evt);
@@ -207,8 +217,8 @@ public class Login extends JFrame {
         });
         background1.add(jTextField_fechaNacimiento, new AbsoluteConstraints(30, 240, 540, -1));
 
-        jSeparator9.setForeground(new Color(30, 30, 30));
-        background1.add(jSeparator9, new AbsoluteConstraints(30, 260, 540, 21));
+        jSeparator4.setForeground(new Color(30, 30, 30));
+        background1.add(jSeparator4, new AbsoluteConstraints(30, 260, 540, 21));
 
         acceptTerms.setFont(new Font("Microsoft YaHei Light", Font.PLAIN, 12));
         acceptTerms.setForeground(new Color(102, 102, 102));
@@ -282,9 +292,9 @@ public class Login extends JFrame {
         });
         background1.add(jTextField_usuario, new AbsoluteConstraints(30, 410, 540, -1));
 
-        jSeparator8.setForeground(new Color(30, 30, 30));
-        jSeparator8.setVisible(false);
-        background1.add(jSeparator8, new AbsoluteConstraints(30, 430, 540, 21));
+        jSeparator3.setForeground(new Color(30, 30, 30));
+        jSeparator3.setVisible(false);
+        background1.add(jSeparator3, new AbsoluteConstraints(30, 430, 540, 21));
 
         contrasena.setBackground(new Color(0, 0, 0));
         contrasena.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -318,9 +328,9 @@ public class Login extends JFrame {
         });
         background1.add(jPasswordField, new AbsoluteConstraints(30, 460, 540, -1));
 
-        jSeparator7.setForeground(new Color(30, 30, 30));
-        jSeparator7.setVisible(false);
-        background1.add(jSeparator7, new AbsoluteConstraints(30, 480, 540, 21));
+        jSeparator2.setForeground(new Color(30, 30, 30));
+        jSeparator2.setVisible(false);
+        background1.add(jSeparator2, new AbsoluteConstraints(30, 480, 540, 21));
 
         errorMessage.setFont(new Font("Roboto", Font.BOLD, 14));
         errorMessage.setForeground(Color.red);
@@ -421,11 +431,11 @@ public class Login extends JFrame {
         elija_su_rol.setText("Elija su rol");
         jPanel_background_loginForm.add(elija_su_rol, new AbsoluteConstraints(170, 70, -1, -1));
 
-        userInput.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
-        userInput.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        userInput.setForeground(Color.gray);
-        userInput.setText("Ingrese su usuario");
-        userInput.addFocusListener(new FocusAdapter() {
+        jTextField_usuario_login.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
+        jTextField_usuario_login.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        jTextField_usuario_login.setForeground(Color.gray);
+        jTextField_usuario_login.setText("Ingrese su usuario");
+        jTextField_usuario_login.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 userInputFocusGained(evt);
             }
@@ -434,21 +444,21 @@ public class Login extends JFrame {
                 userInputFocusLost(evt);
             }
         });
-        userInput.addActionListener(new ActionListener() {
+        jTextField_usuario_login.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 userInputActionPerformed(evt);
             }
         });
-        jPanel_background_loginForm.add(userInput, new AbsoluteConstraints(80, 360, 240, -1));
-        RegistrarUser.handleFocusGain(userInput, "Ingrese su usuario");
-        userInput.setVisible(false);
+        jPanel_background_loginForm.add(jTextField_usuario_login, new AbsoluteConstraints(80, 360, 240, -1));
+        RegistrarUser.handleFocusGain(jTextField_usuario_login, "Ingrese su usuario");
+        jTextField_usuario_login.setVisible(false);
 
-        passwordInput.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
-        passwordInput.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        passwordInput.setForeground(Color.gray);
-        passwordInput.setText("Ingrese su contraseña");
-        passwordInput.setToolTipText("");
-        passwordInput.addFocusListener(new FocusAdapter() {
+        jPasswordField_login.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
+        jPasswordField_login.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        jPasswordField_login.setForeground(Color.gray);
+        jPasswordField_login.setText("Ingrese su contraseña");
+        jPasswordField_login.setToolTipText("");
+        jPasswordField_login.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 passwordInputFocusGained(evt);
             }
@@ -457,14 +467,14 @@ public class Login extends JFrame {
                 passwordInputFocusLost(evt);
             }
         });
-        passwordInput.addActionListener(new ActionListener() {
+        jPasswordField_login.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 passwordInputActionPerformed(evt);
             }
         });
-        jPanel_background_loginForm.add(passwordInput, new AbsoluteConstraints(80, 400, 240, -1));
-        RegistrarUser.handleFocusGain(passwordInput, "Ingrese su contraseña");
-        passwordInput.setVisible(false);
+        jPanel_background_loginForm.add(jPasswordField_login, new AbsoluteConstraints(80, 400, 240, -1));
+        RegistrarUser.handleFocusGain(jPasswordField_login, "Ingrese su contraseña");
+        jPasswordField_login.setVisible(false);
 
         jPanel_pacienteBotton.setBackground(new Color(255, 255, 255));
         jPanel_pacienteBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -540,13 +550,13 @@ public class Login extends JFrame {
         jPanel_proveedorBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         jPanel_proveedorBotton.setPreferredSize(new Dimension(130, 40));
 
-        proveedor.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        proveedor.setHorizontalAlignment(SwingConstants.LEFT);
-        proveedor.setText("Proveedor");
-        proveedor.setHorizontalTextPosition(SwingConstants.RIGHT);
-        proveedor.setPreferredSize(new Dimension(83, 17));
+        fabricante.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        fabricante.setHorizontalAlignment(SwingConstants.LEFT);
+        fabricante.setText("Fabricante");
+        fabricante.setHorizontalTextPosition(SwingConstants.RIGHT);
+        fabricante.setPreferredSize(new Dimension(83, 17));
 
-        proveedor_icon.setIcon(new ImageIcon(getClass().getResource("/images/patient_icon.png")));
+        fabricante_icon.setIcon(new ImageIcon(getClass().getResource("/images/patient_icon.png")));
 
         GroupLayout jPanel_proveedorBottonLayout = new GroupLayout(jPanel_proveedorBotton);
         jPanel_proveedorBotton.setLayout(jPanel_proveedorBottonLayout);
@@ -554,9 +564,9 @@ public class Login extends JFrame {
                 jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(GroupLayout.Alignment.TRAILING, jPanel_proveedorBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(proveedor_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(fabricante_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(proveedor, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(fabricante, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel_proveedorBottonLayout.setVerticalGroup(
@@ -565,10 +575,10 @@ public class Login extends JFrame {
                                 .addGap(5, 5, 5)
                                 .addGroup(jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
-                                                .addComponent(proveedor_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(fabricante_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
                                                 .addGap(0, 0, Short.MAX_VALUE))
                                         .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
-                                                .addComponent(proveedor, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(fabricante, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addContainerGap())))
         );
 
@@ -662,39 +672,20 @@ public class Login extends JFrame {
 
         jPanel_background_loginForm.add(mensaje_error, new AbsoluteConstraints(60, 380, 280, 30));
 
-        jPanel_loginBotton.setBackground(new Color(38, 70, 147));
-        jPanel_loginBotton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        jPanel_loginBotton.setVisible(false);
-        jPanel_loginBotton.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-                jPanel_loginBottonMouseClicked(evt);
+        jButton_login.setBackground(new Color(38, 70, 147));
+        jButton_login.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        jButton_login.setForeground(new Color(255, 255, 255));
+        jButton_login.setText("Iniciar sesión");
+        jButton_login.setCursor(new Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_login.setUI(new BasicButtonUI());
+        jButton_login.setVisible(false);
+        jButton_login.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton_loginMouseClicked(evt);
             }
         });
 
-        iniciarSesion.setBackground(new Color(255, 255, 255));
-        iniciarSesion.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        iniciarSesion.setForeground(new Color(255, 255, 255));
-        iniciarSesion.setHorizontalAlignment(SwingConstants.CENTER);
-        iniciarSesion.setText("Iniciar Sesión");
-
-        GroupLayout jPanel_loginBottonLayout = new GroupLayout(jPanel_loginBotton);
-        jPanel_loginBotton.setLayout(jPanel_loginBottonLayout);
-        jPanel_loginBottonLayout.setHorizontalGroup(
-                jPanel_loginBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel_loginBottonLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(iniciarSesion, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
-        );
-        jPanel_loginBottonLayout.setVerticalGroup(
-                jPanel_loginBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel_loginBottonLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(iniciarSesion)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel_background_loginForm.add(jPanel_loginBotton, new AbsoluteConstraints(150, 440, -1, -1));
+        jPanel_background_loginForm.add(jButton_login, new AbsoluteConstraints(140, 440, 120, 30));
 
         mensaje_restaurar.setBackground(new Color(153, 204, 255));
         mensaje_restaurar.setFont(new Font("Roboto", Font.BOLD, 14));
@@ -792,60 +783,130 @@ public class Login extends JFrame {
     private void formComponentShown(ComponentEvent evt) {
         Login.setImageLabal(paciente_icon, "src/images/patient_icon.png");
         Login.setImageLabal(doctor_icon, "src/images/doctor_icon.png");
-        Login.setImageLabal(proveedor_icon, "src/images/supplier_icon.png");
+        Login.setImageLabal(fabricante_icon, "src/images/supplier_icon.png");
         Login.setImageLabal(administrativo_icon, "src/images/administrative_icon.png");
         Login.setImageLabal(autoridad_icon, "src/images/authority_icon.png");
         Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
     }
 
     /* eventos del jFrame login */
-    private void jPanel_loginBottonMouseClicked(MouseEvent evt) {
-        String user = userInput.getText();
+    private void jButton_loginMouseClicked(MouseEvent evt) {
+        if (!jButton_login.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        jButton_login.setEnabled(false);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                jButton_login.setEnabled(true);
+            }
+        }, loginDisableTime);
+
+        String user = jTextField_usuario_login.getText();
         JLabel rol = (JLabel) selectedButton.getComponent(1);
         String rolText = rol.getText();
 
         mensaje_error.setVisible(false);
         if (user.isBlank()
                 || user.equals("Ingrese su usuario")
-                || String.valueOf(passwordInput.getPassword()).equals("Ingrese su contraseña")
-                || String.valueOf(passwordInput.getPassword()).isBlank()) {
+                || String.valueOf(jPasswordField_login.getPassword()).equals("Ingrese su contraseña")
+                || String.valueOf(jPasswordField_login.getPassword()).isBlank()) {
             this.roleButtonMouseClicked(selectedButton);
             toggleLogin(false);
             mensaje.setText("Error. Todos los campos son obligatorios.");
             mensaje_error.setVisible(true);
         } else {
-            if (InicioSesion.autentificar(user, String.valueOf(passwordInput.getPassword()), rolText)) {
+            if (InicioSesion.autentificar(user, String.valueOf(jPasswordField_login.getPassword()), rolText)) {
                 Usuario usuario1 = InicioSesion.obtener(user, rolText);
                 String nombreC = usuario1.getNombre() + " " + usuario1.getApellido();
                 switch (rolText) {
                     case ("Paciente"): {
+                        SwingUtilities.invokeLater(() -> this.setVisible(false));
+
+                        SwingWorker<Void, String> worker = new SwingWorker<>() {
+                            @Override
+                            protected Void doInBackground() throws Exception {
+                                try {
+                                    ProcessBuilder builder = new ProcessBuilder("python", "src\\InterfazDesktop\\Paciente.py", usuario1.getCedula(), nombreC);
+                                    Process process = builder.start();
+
+                                    System.out.println("Ha empezado el script Python. Esperando...");
+
+                                    // Capturar la salida estándar (stdout)
+                                    BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                    // Capturar la salida de error (stderr)
+                                    BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+                                    String s;
+                                    System.out.println("Salida estándar del script Python:\n");
+                                    while ((s = stdInput.readLine()) != null) {
+                                        publish(s);
+                                    }
+
+                                    System.out.println("Salida de error del script Python:\n");
+                                    while ((s = stdError.readLine()) != null) {
+                                        publish("ERROR: " + s);
+                                    }
+
+                                    // Esperar a que el proceso termine
+                                    int exitCode = process.waitFor();
+                                    // Verificar si el proceso terminó exitosamente
+                                    if (exitCode == 0) {
+                                        System.out.println("El script Python ha terminado correctamente.");
+                                    } else {
+                                        System.err.println("El script Python ha terminado con error. Código de salida: " + exitCode);
+                                    }
+                                } catch (IOException | InterruptedException e) {
+                                    System.err.println(e);
+                                    JOptionPane.showMessageDialog(null, "Error al abrir la ventana Paciente. Disculpe, contacte a soporte", "FATAL ERROR Paciente", JOptionPane.ERROR_MESSAGE);
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            protected void process(java.util.List<String> chunks) {
+                                for (String line : chunks) {
+                                    System.out.println(line);
+                                }
+                            }
+
+                            @Override
+                            protected void done() {
+                                SwingUtilities.invokeLater(() -> setVisible(true));
+                            }
+                        };
+                        worker.execute();
+                        /*
                         pac = new PantallaPaciente(this);
                         pac.setBienvenida(nombreC, usuario1.getCedula());
-                        pac.setVisible(true);
-                        this.dispose();
+                        pac.setVisible(true); */
+                        this.setVisible(true);
                         break;
                     }
                     case ("Doctor - Enfermera"): {
-                        doc = new PantallaDoctor(this);
+                        //private static PantallaPaciente pac;
+                        PantallaDoctor doc = new PantallaDoctor(this);
                         doc.setBienvenida(nombreC, usuario1.getCedula());
                         doc.setVisible(true);
-                        this.dispose();
+                        this.setVisible(false);
                         break;
                     }
-                    case ("Proveedor"):
+                    case ("Fabricante"):
                     case ("Administrativo"):
                     case ("Autoridad"): {
-                        construccion = new PantallaBlock(this);
+                        PantallaBlock construccion = new PantallaBlock(this);
                         construccion.setBienvenida(nombreC, usuario1.getCedula());
                         construccion.setVisible(true);
-                        this.dispose();
+                        this.setVisible(false);
                         break;
                     }
                     case ("Administrador"): {
-                        admin = new PantallaAdmin();
+                        PantallaAdmin admin = new PantallaAdmin();
                         admin.setBienvenida(nombreC, usuario1.getCedula());
                         admin.setVisible(true);
-                        this.dispose();
+                        this.setVisible(false);
                         break;
                     }
                     default: {
@@ -871,21 +932,46 @@ public class Login extends JFrame {
     }
 
     private void userInputActionPerformed(ActionEvent evt) {
-        passwordInput.requestFocus();
+        jPasswordField_login.requestFocus();
     }
 
     private void passwordInputActionPerformed(ActionEvent evt) {
-        jPanel_loginBottonMouseClicked(null);
+        jButton_loginMouseClicked(null);
     }
 
     private void mensaje_restaurarMouseClicked(MouseEvent evt) {
+        if (!mensaje_restaurar.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        mensaje_restaurar.setEnabled(false); // deshabilitar el botón
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mensaje_restaurar.setEnabled(true);
+            }
+        }, restoreDisableTime);
         jFrame_restaurarAcceso.setVisible(true);
         jFrame_restaurarAcceso.setLocationRelativeTo(this);
         this.setVisible(false);
     }
 
     private void mensaje1MouseClicked(MouseEvent evt) {
-        register = new RegistrarUser(this);
+        if (!mensaje1.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        mensaje1.setEnabled(false); // deshabilitar el botón
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mensaje1.setEnabled(true);
+            }
+        }, registerDisableTime);
+
+        RegistrarUser register = new RegistrarUser(this);
         JLabel rol = (JLabel) selectedButton.getComponent(1);
         register.setRol(rol.getText());
         if (selectedButton != jPanel_pacienteBotton) {
@@ -910,11 +996,11 @@ public class Login extends JFrame {
     }
 
     private void jTextField_fechaNacimientoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
+        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
     }
 
     private void jTextField_fechaNacimientoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
+        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
     }
 
     private void jTextField_fechaNacimientoActionPerformed(ActionEvent evt) {
@@ -924,6 +1010,19 @@ public class Login extends JFrame {
     }
 
     private void button_validarMouseClicked(MouseEvent evt) {
+        if (!button_validar.isEnabled()) {
+            return;
+        }
+
+        button_validar.setEnabled(false); // deshabilitar el botón
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                button_validar.setEnabled(true);
+            }
+        }, validateDisableTime);
+
         String rolM = jComboBox_rol.getSelectedItem().toString();
         String cedulaM = jTextField_cedula.getText();
         String fechaNacimientoM = jTextField_fechaNacimiento.getText();
@@ -934,7 +1033,7 @@ public class Login extends JFrame {
             errorMessage.setVisible(true);
         } else if (acceptTerms.getSelectedObjects() == null) {
             acceptTerms.setForeground(Color.red);
-        } else if (cedulaM.isBlank() || fechaNacimientoM.isBlank() || cedulaM.equals("Ingrese su cédula") || fechaNacimientoM.equals("Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss")) {
+        } else if (cedulaM.isBlank() || fechaNacimientoM.isBlank() || cedulaM.equals("Ingrese su cédula") || fechaNacimientoM.equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss")) {
             errorMessage.setText("Error. Todos los campos son obligatorios.");
             errorMessage.setVisible(true);
         } else if (!cedulaM.matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$")) {
@@ -970,10 +1069,10 @@ public class Login extends JFrame {
                 respuesta.setVisible(true);
                 jButton_cancelar5.setVisible(true);
                 jButton_restaurar.setVisible(true);
-                jSeparator7.setVisible(true);
+                jSeparator2.setVisible(true);
                 jPasswordField.setVisible(true);
                 contrasena.setVisible(true);
-                jSeparator8.setVisible(true);
+                jSeparator3.setVisible(true);
                 jTextField_usuario.setVisible(true);
                 usuario.setVisible(true);
 
@@ -1019,7 +1118,7 @@ public class Login extends JFrame {
 
     private void jFrame_restaurarAccesoWindowClosing(WindowEvent evt) {
         if (jTextField_cedula.getText().isBlank() || jTextField_fechaNacimiento.getText().isBlank()
-                || !jTextField_cedula.getText().equals("Ingrese su cédula") || !jTextField_fechaNacimiento.getText().equals("Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss")
+                || !jTextField_cedula.getText().equals("Ingrese su cédula") || !jTextField_fechaNacimiento.getText().equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss")
                 || jTextField_usuario.getText().isBlank() || String.valueOf(jPasswordField.getPassword()).isBlank()
                 || !jTextField_usuario.getText().equals("Ingrese un usuario") || !String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña")) {
             int confirm = JOptionPane.showConfirmDialog(null, "¿Esta seguro de cerra esta ventana? Se perderán los datos que ingresó.", "Cerrando ventana...", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -1037,19 +1136,19 @@ public class Login extends JFrame {
     }
 
     private void userInputFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(userInput, "Ingrese su usuario");
+        RegistrarUser.handleFocusGain(jTextField_usuario_login, "Ingrese su usuario");
     }
 
     private void userInputFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(userInput, "Ingrese su usuario");
+        RegistrarUser.handleFocusGain(jTextField_usuario_login, "Ingrese su usuario");
     }
 
     private void passwordInputFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(passwordInput, "Ingrese su contraseña");
+        RegistrarUser.handleFocusPassword(jPasswordField_login, "Ingrese su contraseña");
     }
 
     private void passwordInputFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(passwordInput, "Ingrese su contraseña");
+        RegistrarUser.handleFocusPassword(jPasswordField_login, "Ingrese su contraseña");
     }
 
     private void jButton_cancelar5MouseClicked(MouseEvent evt) {
@@ -1058,6 +1157,19 @@ public class Login extends JFrame {
     }
 
     private void jButton_restaurarMouseClicked(MouseEvent evt) {
+        if (!jButton_restaurar.isEnabled()) {
+            return;
+        }
+
+        jButton_restaurar.setEnabled(false); // deshabilitar el botón
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                jButton_restaurar.setEnabled(true);
+            }
+        }, restoreDisableTime);
+
         String user = jTextField_usuario.getText();
 
         errorMessage.setVisible(false);
@@ -1070,7 +1182,7 @@ public class Login extends JFrame {
         } else {
             String cedulaB = jTextField_cedula.getText();
             String rolB = jComboBox_rol.getSelectedItem().toString();
-            if (InicioSesion.restaurar(user, cedulaB, rolB)) {
+            if (InicioSesion.modificarCredenciales(cedulaB, user, String.valueOf(jPasswordField.getPassword()), rolB)) {
                 this.setVisible(true);
                 jFrame_restaurarAcceso.dispose();
             } else {
@@ -1082,15 +1194,12 @@ public class Login extends JFrame {
 
     /* métodos propios */
     private void toggleLogin(boolean show) {
-        userInput.setVisible(show);
-        passwordInput.setVisible(show);
-        jPanel_loginBotton.setVisible(show);
+        jTextField_usuario_login.setVisible(show);
+        jPasswordField_login.setVisible(show);
+        jButton_login.setVisible(show);
         mensaje_restaurar.setVisible(show);
         mensaje1.setVisible(show);
         mensaje2.setVisible(show);
-        /*if (show == false) {
-            clearFieldsLogin();
-        }*/
     }
 
     private void addRoleButtonListeners() {
@@ -1137,6 +1246,7 @@ public class Login extends JFrame {
             toggleLogin(true);
             selectedButton = roleButton;
             selectedButton.setBackground(new Color(204, 0, 0));
+            jTextField_usuario_login.requestFocus();
             if (roleButton != jPanel_pacienteBotton) {
                 mensaje1.setText("Solicitar acceso");
             }
@@ -1174,11 +1284,10 @@ public class Login extends JFrame {
 
     /* mis variables */
     private JPanel selectedButton = null;
-    private static PantallaPaciente pac;
-    private static PantallaDoctor doc;
-    private static PantallaBlock construccion;
-    private static RegistrarUser register;
-    private static PantallaAdmin admin;
+    private final long loginDisableTime = 30000;
+    private final long registerDisableTime = 120000;
+    private final long validateDisableTime = 30000;
+    private final long restoreDisableTime = 300000;
 
     // Variables declaration
     private JCheckBox acceptTerms;
@@ -1199,7 +1308,6 @@ public class Login extends JFrame {
     private JLabel fecha_nacimiento;
     private JLabel icon_project;
     private JLabel icon_project1;
-    private JLabel iniciarSesion;
     private JComboBox<String> jComboBox_rol;
     private JFrame jFrame_restaurarAcceso;
     private JLabel jLabel1;
@@ -1209,16 +1317,15 @@ public class Login extends JFrame {
     private JPanel jPanel_autoridadBotton;
     private JPanel jPanel_background_loginForm;
     private JPanel jPanel_doctorBotton;
-    private JPanel jPanel_loginBotton;
     private JPanel jPanel_pacienteBotton;
     private JPanel jPanel_proveedorBotton;
     private JPasswordField jPasswordField;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
-    private JSeparator jSeparator5;
-    private JSeparator jSeparator7;
-    private JSeparator jSeparator8;
-    private JSeparator jSeparator9;
+    private JSeparator jSeparator1;
+    private JSeparator jSeparator2;
+    private JSeparator jSeparator3;
+    private JSeparator jSeparator4;
     private JTextField jTextField_cedula;
     private JTextField jTextField_fechaNacimiento;
     private JTextField jTextField_usuario;
@@ -1233,15 +1340,16 @@ public class Login extends JFrame {
     private JLabel mensaje_validar;
     private JLabel paciente;
     private JLabel paciente_icon;
-    private JPasswordField passwordInput;
-    private JLabel proveedor;
-    private JLabel proveedor_icon;
+    private JPasswordField jPasswordField_login;
+    private JLabel fabricante;
+    private JLabel fabricante_icon;
     private JLabel respuesta;
     private JLabel rolRestaurar;
     private JLabel titulo;
-    private JTextField userInput;
+    private JTextField jTextField_usuario_login;
     private JLabel usuario;
     private JButton jButton_restaurar;
     private JButton jButton_cancelar5;
+    private JButton jButton_login;
     // End of variables declaration
 }

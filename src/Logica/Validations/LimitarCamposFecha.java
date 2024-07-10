@@ -5,8 +5,8 @@ import javax.swing.text.BadLocationException;
 
 public class LimitarCamposFecha extends LimitarCampos {
 
-    private static final String DATE_PATTERN = "^\\d{0,4}(-\\d{0,2})?(-\\d{0,2})?$";
-    private static final String DATETIME_PATTERN = "^\\d{0,4}(-\\d{0,2})?(-\\d{0,2})?( \\d{0,2})?(:\\d{0,2})?(:\\d{0,2})?$";
+    private static final String DATE_PATTERN = "^\\d{0,4}(-\\d{0,2}){0,2}$";
+    private static final String DATETIME_PATTERN = "^\\d{0,4}(-\\d{0,2}){0,2}( \\d{0,2}(:\\d{0,2}){0,2})?$";
 
     public LimitarCamposFecha(int limit, String placeholder) {
         super(limit, placeholder);

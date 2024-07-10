@@ -32,6 +32,7 @@ public class PantallaAdmin extends JFrame {
             boton.setBackground(new Color(86, 86, 86));
         }
     }
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
         jComboBox_columna3 = new JComboBox<>();

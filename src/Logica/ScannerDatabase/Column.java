@@ -1,8 +1,8 @@
 package Logica.ScannerDatabase;
 
 public class Column {
-    private String name;
-    private String type;
+    private final String name;
+    private final String type;
     private int size;
     private boolean isNullable;
 
@@ -11,6 +11,11 @@ public class Column {
         this.type = type;
         this.size = size;
         this.isNullable = isNullable;
+    }
+
+    public Column(String name, String type) {
+        this.name = name;
+        this.type = type;
     }
 
     // Getters

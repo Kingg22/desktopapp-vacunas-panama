@@ -3,7 +3,7 @@ package Logica.Validations;
 import java.util.prefs.Preferences;
 
 public class Preferencias {
-    private Preferences prefs = Preferences.userNodeForPackage(Usuario.class);
+    private final Preferences prefs = Preferences.userNodeForPackage(Usuario.class);
 
     public void setPrefInputs(boolean valor) {
         prefs.putBoolean("prefInput", valor);

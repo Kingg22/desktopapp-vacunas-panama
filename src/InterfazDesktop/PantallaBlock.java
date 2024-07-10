@@ -124,7 +124,7 @@ public class PantallaBlock extends JFrame {
 
         jPanel_menuOpciones.add(separador3);
 
-        rolName.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        rolName.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         rolName.setForeground(new Color(255, 255, 255));
         rolName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         rolName.setText("¡ Hola Rol !");
@@ -133,7 +133,7 @@ public class PantallaBlock extends JFrame {
         rolName.setPreferredSize(new java.awt.Dimension(170, 30));
         jPanel_menuOpciones.add(rolName);
 
-        nombreBienvenida.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        nombreBienvenida.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         nombreBienvenida.setForeground(new Color(255, 255, 255));
         nombreBienvenida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nombreBienvenida.setText("Nombre");
@@ -278,11 +278,11 @@ public class PantallaBlock extends JFrame {
         jPanel1.setBackground(new Color(227, 218, 201));
         jPanel1.setPreferredSize(new java.awt.Dimension(794, 0));
 
-        jLabel6.setFont(new java.awt.Font("Microsoft YaHei", 1, 20));
+        jLabel6.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 20));
         jLabel6.setForeground(new Color(102, 102, 102));
         jLabel6.setText("Bienvenido al Programa Vacunas Panamá");
 
-        jLabel9.setFont(new java.awt.Font("Microsoft YaHei", 3, 24));
+        jLabel9.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD | Font.ITALIC, 24));
         jLabel9.setForeground(new Color(0, 204, 0));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Módulo en construcción...");
@@ -333,7 +333,6 @@ public class PantallaBlock extends JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
         int confirm = JOptionPane.showConfirmDialog(null, "¿Esta seguro de cerrar sesión?", "Cerrando sesión y ventana...", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirm == 0) {
-            parentFrame = new Login();
             parentFrame.setVisible(true);
             parentFrame.requestFocus();
             this.dispose();

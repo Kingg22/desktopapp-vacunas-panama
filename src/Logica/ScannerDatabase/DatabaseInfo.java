@@ -35,11 +35,11 @@ public class DatabaseInfo {
         DatabaseMetaData meta = conexion.getMetaData();
         for (String tabla : tablasNames) {
             try (ResultSet rs = meta.getTables(null, null, tabla, new String[]{"TABLE"})) {
-                while (rs.next()) {
-                    String tableName = rs.getString("TABLE_NAME");
-                    tablasColumnas.put(tableName, getColumnsDynamic(conexion, tableName));
-                }
+                rs.next();
+                String tableName = rs.getString("TABLE_NAME");
+                tablasColumnas.put(tableName, getColumnsDynamic(conexion, tableName));
             }
+
         }
     }
 
@@ -56,10 +56,10 @@ public class DatabaseInfo {
         DatabaseMetaData meta = conexion.getMetaData();
         for (String vista : vistasNames) {
             try (ResultSet rs = meta.getTables(null, null, vista, new String[]{"VIEW"})) {
-                while (rs.next()) {
-                    String viewName = rs.getString("TABLE_NAME");
-                    vistasColumnas.put(viewName, getColumnsDynamic(conexion, viewName));
-                }
+                rs.next();
+                String viewName = rs.getString("TABLE_NAME");
+                vistasColumnas.put(viewName, getColumnsDynamic(conexion, viewName));
+
             }
         }
     }
@@ -77,10 +77,10 @@ public class DatabaseInfo {
         DatabaseMetaData meta = conexion.getMetaData();
         for (String procedimiento : procedimientosNames) {
             try (ResultSet rs = meta.getProcedures(null, null, procedimiento)) {
-                while (rs.next()) {
-                    String procedureName = rs.getString("PROCEDURE_NAME");
-                    procedimientosColumnas.put(procedureName, getProcedureColumnsDynamic(conexion, procedureName));
-                }
+                rs.next();
+                String procedureName = rs.getString("PROCEDURE_NAME");
+                procedimientosColumnas.put(procedureName, getProcedureColumnsDynamic(conexion, procedureName));
+
             }
         }
     }

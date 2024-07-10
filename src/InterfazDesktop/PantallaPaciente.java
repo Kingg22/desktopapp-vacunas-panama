@@ -157,7 +157,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jPanel_mostrarTabla.setLayout(new java.awt.BorderLayout());
 
         titulo_contenido.setBackground(new java.awt.Color(255, 255, 255));
-        titulo_contenido.setFont(new java.awt.Font("Roboto", 3, 14));
+        titulo_contenido.setFont(new java.awt.Font("Roboto", Font.BOLD | Font.ITALIC, 14));
         titulo_contenido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titulo_contenido.setText("Resultados Obtenidos");
         titulo_contenido.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -172,7 +172,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jScrollPane_Table.setViewportView(null);
 
         jTable_Content.setBackground(new java.awt.Color(227, 218, 201));
-        jTable_Content.setFont(new java.awt.Font("Roboto", 0, 12));
+        jTable_Content.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         jTable_Content.setForeground(new java.awt.Color(227, 218, 201));
         jTable_Content.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jTable_Content.setMinimumSize(new java.awt.Dimension(50, 50));
@@ -272,19 +272,19 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jPanel_informarProblm.setRequestFocusEnabled(false);
         jPanel_informarProblm.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel7.setFont(new java.awt.Font("Microsoft YaHei", 1, 18));
+        jLabel7.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 18));
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("Informar un problema");
         jPanel_informarProblm.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, 270, 50));
 
-        jLabel8.setFont(new java.awt.Font("Microsoft YaHei", 0, 14));
+        jLabel8.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 14));
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("¿Qué tipo de problema presenta?");
         jPanel_informarProblm.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 130, 270, 74));
 
-        jComboBox_problema.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jComboBox_problema.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_problema.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir...", "No veo una vacuna aplicada", "No veo una dosis aplicada", "No veo ningúna dato y si tengo vacunas registradas", "Los datos son incorrectos (Sede/vacuna/dosis/fecha)", "Mis datos personal estan mal escritos", "No veo mi problema"}));
         jComboBox_problema.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel_informarProblm.add(jComboBox_problema, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 210, 330, 40));
@@ -298,20 +298,20 @@ public class PantallaPaciente extends javax.swing.JFrame {
         });
         jPanel_informarProblm.add(jButton_enviarProblema, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 450, 210, 40));
 
-        jLabel_errorProblema.setFont(new java.awt.Font("Microsoft YaHei", 1, 14));
+        jLabel_errorProblema.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 14));
         jLabel_errorProblema.setForeground(new java.awt.Color(204, 0, 51));
         jLabel_errorProblema.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel_errorProblema.setText("ERROR");
         jLabel_errorProblema.setVisible(false);
         jPanel_informarProblm.add(jLabel_errorProblema, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, 790, 40));
 
-        jLabel10.setFont(new java.awt.Font("Microsoft YaHei", 3, 14));
+        jLabel10.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD | Font.ITALIC, 14));
         jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setText("Estado: ");
         jLabel10.setVisible(false);
         jPanel_informarProblm.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 608, -1, -1));
 
-        jLabel_estadoProblema.setFont(new java.awt.Font("Microsoft YaHei", 1, 12));
+        jLabel_estadoProblema.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 12));
         jLabel_estadoProblema.setForeground(new java.awt.Color(0, 0, 0));
         jLabel_estadoProblema.setText("Esperando...");
         jLabel_estadoProblema.setVisible(false);
@@ -322,7 +322,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jPanel_pedirCita.setRequestFocusEnabled(false);
         jPanel_pedirCita.setLayout(new java.awt.BorderLayout());
 
-        jLabel9.setFont(new java.awt.Font("Microsoft YaHei", 3, 24));
+        jLabel9.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD | Font.ITALIC, 24));
         jLabel9.setForeground(new java.awt.Color(0, 204, 0));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Módulo en construcción...");
@@ -332,7 +332,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jPanel_soporte.setPreferredSize(new java.awt.Dimension(794, 794));
         jPanel_soporte.setLayout(new java.awt.BorderLayout());
 
-        jLabel12.setFont(new java.awt.Font("Microsoft YaHei", 1, 18));
+        jLabel12.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 18));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Preguntas frecuentes ");
         jPanel_soporte.add(jLabel12, java.awt.BorderLayout.NORTH);
@@ -341,34 +341,37 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jPanel5.setLayout(new java.awt.GridLayout(3, 10));
         jPanel_soporte.add(jPanel5, java.awt.BorderLayout.CENTER);
         jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo informo un problema con mis vacunas?",
-                "1. Dar click al botón \'Informar un problema\' y escoja una opción para enviar un informe al sistema. Si no ve la situación que presenta, contacte a su médico o visite una sede."));
+                "1. Dar click al botón 'Informar un problema' y escoja una opción para enviar un informe al sistema. Si no ve la situación que presenta, contacte a su médico o visite una sede."));
         jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo pido una cita para vacunarme?",
-                "1. Dar click al botón \'Pedir cita de vacuna\' y escoja la vacuna que necesita aplicarse. Se enviará una petición al sistema y se evaluará si la necesita, se le agendará una cita en su sede preferida y/o con su doctor de cabecera."));
+                "1. Dar click al botón 'Pedir cita de vacuna' y escoja la vacuna que necesita aplicarse. Se enviará una petición al sistema y se evaluará si la necesita, se le agendará una cita en su sede preferida y/o con su doctor de cabecera."));
         jPanel5.add(PantallaBase.createQuestionPanel("No veo ningún dato al consultar",
-                "Esto significa que usted puede o no estar registrado y/o no tiene ninguna vacuna aplicada.\n"
-                        + "Para verificar que este registrado con sus datos correctamente:\n"
-                        + "1. De click en el botón \'Modificar datos personales\' y observe si algún dato como su cédula de identidad personal esta mal escrito, si es así, debe modificar para corregir.\n"
-                        + "Si a pesar de esto, no ve ningún dato, significa que no tiene ninguna vacuna registrada en el sistema. Puede acudir a su médico para registrar su cartilla de vacunación."));
+                """
+                        Esto significa que usted puede o no estar registrado y/o no tiene ninguna vacuna aplicada.
+                        Para verificar que este registrado con sus datos correctamente:
+                        1. De click en el botón 'Modificar datos personales' y observe si algún dato como su cédula de identidad personal esta mal escrito, si es así, debe modificar para corregir.
+                        Si a pesar de esto, no ve ningún dato, significa que no tiene ninguna vacuna registrada en el sistema. Puede acudir a su médico para registrar su cartilla de vacunación."""));
         jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo cambiar mis preferencias de usuario?",
-                "1. Dar click en el botón \'Preferencias\' y actualizamos las preferencias, de manera inicial, el sistema define la sede y el distrito en la primera.\n"
-                        + "Para el distrito no puede definir una preferencia.\n"
-                        + "Si selecciona que las campos de insertar algún dato sean en una ventana emergente siempre será así, excepto en Modificar datos personales y Modificar credenciales que son ventanas emergentes y no se puede cambiar.\n"
-                        + "Si tiene activada editar directo en tabla podrá editar las dosis de vacuna, datos del paciente y agregar datos en las opciones de consulta sin necesidad de usar el otro botón.\n"
-                        + "Si desea modificar sus datos personales o su credencial de acceso (usuario y contraseña)\n"
-                        + "Refiérase a la siguiente pregunta \'¿Cómo cambio mis datos personales o credenciales de acceso?\'"));
+                """
+                        1. Dar click en el botón 'Preferencias' y actualizamos las preferencias, de manera inicial, el sistema define la sede y el distrito en la primera.
+                        Para el distrito no puede definir una preferencia.
+                        Si selecciona que las campos de insertar algún dato sean en una ventana emergente siempre será así, excepto en Modificar datos personales y Modificar credenciales que son ventanas emergentes y no se puede cambiar.
+                        Si tiene activada editar directo en tabla podrá editar las dosis de vacuna, datos del paciente y agregar datos en las opciones de consulta sin necesidad de usar el otro botón.
+                        Si desea modificar sus datos personales o su credencial de acceso (usuario y contraseña)
+                        Refiérase a la siguiente pregunta '¿Cómo cambio mis datos personales o credenciales de acceso?'"""));
         jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo cambio mis datos personales o credenciales de acceso?",
-                "Nota: Se cambia sus datos doctor o enfermera, no los del paciente\n"
-                        + "1. Dar click en el botón \'Modificar datos personales\' o \'Modificar credenciales\' y editar solamente los datos que deseamos modificar.\n"
-                        + "Consejos: La cédula de identidad personal debe estar escrito tal cual su documento.\n"
-                        + "La fecha de nacimiento debe estar en el formato año - mes - día hora : minutos (la hora y minutos es opcional).\n"
-                        + "Si su distrito no se encuentra, puede significar que es nuevo y debe utilizar \'Distrito por registrar\'. Debe informar su distrito y provincia correcta a su médico o sede para corregir.\n"
-                        + "El teléfono puede ser celular o fijo y debe estar los números pegados. Si es extranjero o diferente de 507 debe colocar su prefijo y códigos necesarios al inicio.\n"
-                        + "Al dar click en el botón \'Actualizar\' se cerrará su sesión y debe ingresar nuevamente con sus credenciales correctas.\n"
-                        + "Si olvido su contraseña, deberá cerrar sesión y dar click en \'¿Olvidó su contraseña?\'"));
+                """
+                        Nota: Se cambia sus datos doctor o enfermera, no los del paciente
+                        1. Dar click en el botón 'Modificar datos personales' o 'Modificar credenciales' y editar solamente los datos que deseamos modificar.
+                        Consejos: La cédula de identidad personal debe estar escrito tal cual su documento.
+                        La fecha de nacimiento debe estar en el formato año - mes - día hora : minutos (la hora y minutos es opcional).
+                        Si su distrito no se encuentra, puede significar que es nuevo y debe utilizar 'Distrito por registrar'. Debe informar su distrito y provincia correcta a su médico o sede para corregir.
+                        El teléfono puede ser celular o fijo y debe estar los números pegados. Si es extranjero o diferente de 507 debe colocar su prefijo y códigos necesarios al inicio.
+                        Al dar click en el botón 'Actualizar' se cerrará su sesión y debe ingresar nuevamente con sus credenciales correctas.
+                        Si olvido su contraseña, deberá cerrar sesión y dar click en '¿Olvidó su contraseña?'"""));
         jPanel5.revalidate();
         jPanel5.repaint();
 
-        jLabel11.setFont(new java.awt.Font("Microsoft YaHei", 0, 14));
+        jLabel11.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 14));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("Si su duda no fue resuelta. Contacte al soporte técnico de una sede hospitalaria pública o pregunte a su doctor.");
         jPanel_soporte.add(jLabel11, java.awt.BorderLayout.SOUTH);
@@ -382,7 +385,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         icon_preferencias.setPreferredSize(new java.awt.Dimension(130, 120));
         jPanel_preferencias.add(icon_preferencias);
 
-        titulo3.setFont(new java.awt.Font("Microsoft YaHei", 1, 24));
+        titulo3.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 24));
         titulo3.setForeground(new java.awt.Color(0, 0, 0));
         titulo3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titulo3.setText("Preferencias");
@@ -405,7 +408,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
 
         jPanel_preferencias.add(jPanel_separador1);
 
-        jLabel4.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel4.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Tamaño y Fuente preferida");
         jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -435,26 +438,26 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jPanel_preferencias.add(jPanel_fontChooser);
         // Familia de la fuente
         JLabel familyLabel = new JLabel("Familia:");
-        familyLabel.setFont(new Font("Roboto", 0, 14));
+        familyLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
         JComboBox<String> familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
-        familyComboBox.setFont(new Font("Roboto", 0, 14));
+        familyComboBox.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(familyLabel);
         jPanel_fontChooser.add(familyComboBox);
 
         // Estilo de la fuente
         JLabel styleLabel = new JLabel("Estilo:");
-        styleLabel.setFont(new Font("Roboto", 0, 14));
+        styleLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
         String[] styles = {"Regular", "Negrita", "Cursiva", "Negrita Cursiva"};
         JComboBox<String> styleComboBox = new JComboBox<>(styles);
-        styleComboBox.setFont(new Font("Roboto", 0, 14));
+        styleComboBox.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(styleLabel);
         jPanel_fontChooser.add(styleComboBox);
 
         // Tamaño de la fuente
         JLabel sizeLabel = new JLabel("Tamaño:");
-        sizeLabel.setFont(new Font("Roboto", 0, 14));
+        sizeLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
         JSpinner sizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
-        sizeSpinner.setFont(new Font("Roboto", 0, 14));
+        sizeSpinner.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(sizeLabel);
         jPanel_fontChooser.add(sizeSpinner);
 
@@ -474,13 +477,13 @@ public class PantallaPaciente extends javax.swing.JFrame {
 
         jPanel_preferencias.add(jPanel_separador3);
 
-        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel1.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Tipo de archivo exportar preferido");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel_preferencias.add(jLabel1);
 
-        jComboBox_exportarType.setFont(new java.awt.Font("Roboto", 0, 14));
+        jComboBox_exportarType.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jComboBox_exportarType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir...", "CSV", "TXT", "PDF", "Excel"}));
         jComboBox_exportarType.setMaximumSize(new java.awt.Dimension(367, 40));
         jComboBox_exportarType.setPreferredSize(new java.awt.Dimension(190, 37));
@@ -502,13 +505,13 @@ public class PantallaPaciente extends javax.swing.JFrame {
 
         jPanel_preferencias.add(jPanel_separador4);
 
-        jLabel5.setFont(new java.awt.Font("Roboto", 0, 14));
+        jLabel5.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Sede de salud preferida");
         jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel_preferencias.add(jLabel5);
 
-        jComboBox_exportarType1.setFont(new java.awt.Font("Roboto", 0, 14));
+        jComboBox_exportarType1.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jComboBox_exportarType1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir..."}));
         jComboBox_exportarType1.setMaximumSize(new java.awt.Dimension(567, 40));
         jComboBox_exportarType1.setPreferredSize(new java.awt.Dimension(450, 37));
@@ -530,7 +533,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
 
         jPanel_preferencias.add(jPanel_separador5);
 
-        jButton_savePreferences.setFont(new java.awt.Font("Roboto", 0, 14));
+        jButton_savePreferences.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jButton_savePreferences.setForeground(new java.awt.Color(255, 255, 255));
         jButton_savePreferences.setText("Guardar preferencias");
         jButton_savePreferences.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -556,7 +559,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.setPreferredSize(new java.awt.Dimension(444, 544));
         background_dialog1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        titulo.setFont(new java.awt.Font("Microsoft YaHei", 1, 14));
+        titulo.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 14));
         titulo.setForeground(new java.awt.Color(0, 0, 0));
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titulo.setText("Modificar datos personales");
@@ -564,7 +567,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
 
         indicaciones.setEditable(false);
         indicaciones.setBackground(new java.awt.Color(255, 255, 255));
-        indicaciones.setFont(new java.awt.Font("Microsoft YaHei", 2, 11));
+        indicaciones.setFont(new java.awt.Font("Microsoft YaHei", Font.ITALIC, 11));
         indicaciones.setForeground(new java.awt.Color(102, 102, 102));
         indicaciones.setLineWrap(true);
         indicaciones.setRows(5);
@@ -576,14 +579,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(indicaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 390, 50));
 
         nombre.setBackground(new java.awt.Color(0, 0, 0));
-        nombre.setFont(new java.awt.Font("Roboto", 0, 12));
+        nombre.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         nombre.setForeground(new java.awt.Color(0, 0, 0));
         nombre.setText("Nombre *");
         background_dialog1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
 
         jTextField_nombre.setBackground(new java.awt.Color(255, 255, 255));
         jTextField_nombre.setDocument(new LimitarCamposString(50, "Ingrese su nombre"));
-        jTextField_nombre.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_nombre.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_nombre.setForeground(java.awt.Color.gray);
         jTextField_nombre.setText("Ingrese su nombre");
         jTextField_nombre.setBorder(null);
@@ -609,14 +612,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 390, 21));
 
         apellido.setBackground(new java.awt.Color(0, 0, 0));
-        apellido.setFont(new java.awt.Font("Roboto", 0, 12));
+        apellido.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         apellido.setForeground(new java.awt.Color(0, 0, 0));
         apellido.setText("Apellido *");
         background_dialog1.add(apellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, -1));
 
         jTextField_apellido.setBackground(new java.awt.Color(255, 255, 255));
         jTextField_apellido.setDocument(new LimitarCamposString(50, "Ingrese su apellido"));
-        jTextField_apellido.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_apellido.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_apellido.setForeground(java.awt.Color.gray);
         jTextField_apellido.setText("Ingrese su apellido");
         jTextField_apellido.setBorder(null);
@@ -642,14 +645,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 390, 21));
 
         cedula.setBackground(new java.awt.Color(0, 0, 0));
-        cedula.setFont(new java.awt.Font("Roboto", 0, 12));
+        cedula.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         cedula.setForeground(new java.awt.Color(0, 0, 0));
         cedula.setText("Cédula *");
         background_dialog1.add(cedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, -1, -1));
 
         jTextField_cedula.setEditable(false);
         jTextField_cedula.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField_cedula.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_cedula.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_cedula.setForeground(java.awt.Color.gray);
         jTextField_cedula.setText("Ingrese su cédula");
         jTextField_cedula.setBorder(null);
@@ -668,14 +671,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 390, 21));
 
         fecha_nacimiento.setBackground(new java.awt.Color(0, 0, 0));
-        fecha_nacimiento.setFont(new java.awt.Font("Roboto", 0, 12));
+        fecha_nacimiento.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         fecha_nacimiento.setForeground(new java.awt.Color(0, 0, 0));
         fecha_nacimiento.setText("Fecha de nacimiento *");
         background_dialog1.add(fecha_nacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, -1, -1));
 
         jTextField_fechaNacimiento.setEditable(false);
         jTextField_fechaNacimiento.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField_fechaNacimiento.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_fechaNacimiento.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_fechaNacimiento.setForeground(java.awt.Color.gray);
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
         jTextField_fechaNacimiento.setBorder(null);
@@ -694,26 +697,26 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jSeparator9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 390, 21));
 
         sexo.setBackground(new java.awt.Color(0, 0, 0));
-        sexo.setFont(new java.awt.Font("Roboto", 0, 12));
+        sexo.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         sexo.setForeground(new java.awt.Color(0, 0, 0));
-        sexo.setText("sexo *");
+        sexo.setText("Sexo *");
         background_dialog1.add(sexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, -1, -1));
 
         jComboBox_sexo.setBackground(java.awt.Color.gray);
-        jComboBox_sexo.setFont(new java.awt.Font("Roboto", 0, 14));
+        jComboBox_sexo.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jComboBox_sexo.setForeground(java.awt.Color.black);
         jComboBox_sexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Masculino", "Feminino"}));
         background_dialog1.add(jComboBox_sexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 308, 170, -1));
 
         direccion.setBackground(new java.awt.Color(0, 0, 0));
-        direccion.setFont(new java.awt.Font("Roboto", 0, 12));
+        direccion.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         direccion.setForeground(new java.awt.Color(0, 0, 0));
         direccion.setText("Dirección");
         background_dialog1.add(direccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, -1, -1));
 
         jTextField_direccion.setBackground(new java.awt.Color(255, 255, 255));
         jTextField_direccion.setDocument(new LimitarCamposAlpha(100, "Ingrese su dirección"));
-        jTextField_direccion.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_direccion.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_direccion.setForeground(java.awt.Color.gray);
         jTextField_direccion.setText("Ingrese su dirección");
         jTextField_direccion.setBorder(null);
@@ -735,13 +738,13 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jTextField_direccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 190, -1));
 
         distrito.setBackground(new java.awt.Color(0, 0, 0));
-        distrito.setFont(new java.awt.Font("Roboto", 0, 12));
+        distrito.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         distrito.setForeground(new java.awt.Color(0, 0, 0));
         distrito.setText("Distrito");
         background_dialog1.add(distrito, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 340, 50, -1));
 
         jComboBox_distrito.setBackground(java.awt.Color.gray);
-        jComboBox_distrito.setFont(new java.awt.Font("Roboto", 0, 14));
+        jComboBox_distrito.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jComboBox_distrito.setForeground(java.awt.Color.black);
         jComboBox_distrito.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Elegir", "Distrito por registrar"}));
         background_dialog1.add(jComboBox_distrito, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 356, 190, -1));
@@ -750,14 +753,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jSeparator10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 190, 21));
 
         correo.setBackground(new java.awt.Color(0, 0, 0));
-        correo.setFont(new java.awt.Font("Roboto", 0, 12));
+        correo.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         correo.setForeground(new java.awt.Color(0, 0, 0));
         correo.setText("Correo electrónico");
         background_dialog1.add(correo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, -1, -1));
 
         jTextField_correo.setBackground(new java.awt.Color(255, 255, 255));
         jTextField_correo.setDocument(new LimitarCamposEmail(50, "Ingrese su correo electrónico"));
-        jTextField_correo.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_correo.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_correo.setForeground(java.awt.Color.gray);
         jTextField_correo.setText("Ingrese su correo electrónico");
         jTextField_correo.setBorder(null);
@@ -783,13 +786,13 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 390, 21));
 
         jTextField_telefono.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField_telefono.setDocument(new LimitarCamposNumeric(15, "Ingrese su teléfono"));
-        jTextField_telefono.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_telefono.setDocument(new LimitarCamposPhone(15, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio"));
+        jTextField_telefono.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_telefono.setForeground(java.awt.Color.gray);
-        jTextField_telefono.setText("Ingrese su teléfono");
+        jTextField_telefono.setText("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
         jTextField_telefono.setBorder(null);
         jTextField_telefono.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono");
+        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
         jTextField_telefono.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField_telefonoFocusGained(evt);
@@ -807,7 +810,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jTextField_telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 460, 390, -1));
 
         telefono.setBackground(new java.awt.Color(0, 0, 0));
-        telefono.setFont(new java.awt.Font("Roboto", 0, 12));
+        telefono.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         telefono.setForeground(new java.awt.Color(0, 0, 0));
         telefono.setText("Teléfono ");
         background_dialog1.add(telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, -1, -1));
@@ -815,7 +818,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jSeparator12.setForeground(new java.awt.Color(30, 30, 30));
         background_dialog1.add(jSeparator12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 390, 21));
 
-        errorMessage.setFont(new java.awt.Font("Roboto", 1, 14));
+        errorMessage.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
         errorMessage.setForeground(java.awt.Color.red);
         errorMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         errorMessage.setText("ERROR.");
@@ -823,7 +826,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(errorMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 390, -1));
 
         jButton_cancelar.setBackground(new java.awt.Color(153, 153, 153));
-        jButton_cancelar.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jButton_cancelar.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         jButton_cancelar.setForeground(new java.awt.Color(0, 0, 0));
         jButton_cancelar.setText("Cancelar");
         jButton_cancelar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -834,7 +837,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog1.add(jButton_cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 510, -1, -1));
 
         jButton_modificar.setBackground(new java.awt.Color(0, 204, 0));
-        jButton_modificar.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jButton_modificar.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         jButton_modificar.setForeground(new java.awt.Color(0, 0, 0));
         jButton_modificar.setText("Modificar");
         jButton_modificar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -871,7 +874,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.setPreferredSize(new java.awt.Dimension(444, 494));
         background_dialog2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        titulo2.setFont(new java.awt.Font("Microsoft YaHei", 1, 14));
+        titulo2.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 14));
         titulo2.setForeground(new java.awt.Color(0, 0, 0));
         titulo2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titulo2.setText("Modificar credenciales de acceso");
@@ -879,7 +882,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
 
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextArea1.setFont(new java.awt.Font("Microsoft YaHei", 2, 11));
+        jTextArea1.setFont(new java.awt.Font("Microsoft YaHei", Font.ITALIC, 11));
         jTextArea1.setForeground(new java.awt.Color(102, 102, 102));
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
@@ -890,14 +893,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(jTextArea1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 380, 100));
 
         usuario.setBackground(new java.awt.Color(0, 0, 0));
-        usuario.setFont(new java.awt.Font("Roboto", 0, 12));
+        usuario.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         usuario.setForeground(new java.awt.Color(0, 0, 0));
         usuario.setText("Usuario anterior *");
         background_dialog2.add(usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
 
         jTextField_usuario.setBackground(new java.awt.Color(255, 255, 255));
         jTextField_usuario.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
-        jTextField_usuario.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_usuario.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_usuario.setForeground(java.awt.Color.gray);
         jTextField_usuario.setText("Ingrese su usuario");
         jTextField_usuario.setActionCommand("<Not Set>");
@@ -924,14 +927,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 380, 21));
 
         usuario_nuevo.setBackground(new java.awt.Color(0, 0, 0));
-        usuario_nuevo.setFont(new java.awt.Font("Roboto", 0, 12));
+        usuario_nuevo.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         usuario_nuevo.setForeground(new java.awt.Color(0, 0, 0));
         usuario_nuevo.setText("Usuario nuevo");
         background_dialog2.add(usuario_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
 
         jTextField_usuarioNuevo.setBackground(new java.awt.Color(255, 255, 255));
         jTextField_usuarioNuevo.setDocument(new LimitarCamposSeguro(50, "Ingrese un usuario nuevo"));
-        jTextField_usuarioNuevo.setFont(new java.awt.Font("Roboto", 0, 14));
+        jTextField_usuarioNuevo.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jTextField_usuarioNuevo.setForeground(java.awt.Color.gray);
         jTextField_usuarioNuevo.setText("Ingrese un usuario nuevo");
         jTextField_usuarioNuevo.setActionCommand("<Not Set>");
@@ -958,14 +961,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(jSeparator14, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 380, 21));
 
         contrasena.setBackground(new java.awt.Color(0, 0, 0));
-        contrasena.setFont(new java.awt.Font("Roboto", 0, 12));
+        contrasena.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         contrasena.setForeground(new java.awt.Color(0, 0, 0));
         contrasena.setText("Contraseña nueva");
         background_dialog2.add(contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, -1, -1));
 
         jPasswordField_nueva1.setBackground(new java.awt.Color(255, 255, 255));
         jPasswordField_nueva1.setDocument(new LimitarCamposSeguro(20, "Ingrese una contraseña nueva"));
-        jPasswordField_nueva1.setFont(new java.awt.Font("Roboto", 0, 14));
+        jPasswordField_nueva1.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jPasswordField_nueva1.setForeground(java.awt.Color.gray);
         jPasswordField_nueva1.setText("Ingrese una contraseña nueva");
         jPasswordField_nueva1.setBorder(null);
@@ -991,14 +994,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 380, 21));
 
         repetir_contrasena.setBackground(new java.awt.Color(0, 0, 0));
-        repetir_contrasena.setFont(new java.awt.Font("Roboto", 0, 12));
+        repetir_contrasena.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         repetir_contrasena.setForeground(new java.awt.Color(0, 0, 0));
         repetir_contrasena.setText("Repetir contraseña nueva *");
         background_dialog2.add(repetir_contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, -1));
 
         jPasswordField_nueva2.setBackground(new java.awt.Color(255, 255, 255));
         jPasswordField_nueva2.setDocument(new LimitarCamposSeguro(20, "Ingrese una contraseña nueva"));
-        jPasswordField_nueva2.setFont(new java.awt.Font("Roboto", 0, 14));
+        jPasswordField_nueva2.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jPasswordField_nueva2.setForeground(java.awt.Color.gray);
         jPasswordField_nueva2.setText("Ingrese una contraseña nueva");
         jPasswordField_nueva2.setBorder(null);
@@ -1023,7 +1026,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jSeparator7.setForeground(new java.awt.Color(30, 30, 30));
         background_dialog2.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 380, 21));
 
-        errorMessage2.setFont(new java.awt.Font("Roboto", 1, 14));
+        errorMessage2.setFont(new java.awt.Font("Roboto", Font.BOLD, 14));
         errorMessage2.setForeground(java.awt.Color.red);
         errorMessage2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         errorMessage2.setText("Error. ");
@@ -1032,7 +1035,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(errorMessage2, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 430, 440, -1));
 
         jButton_modificar2.setBackground(new java.awt.Color(0, 204, 0));
-        jButton_modificar2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jButton_modificar2.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         jButton_modificar2.setForeground(new java.awt.Color(0, 0, 0));
         jButton_modificar2.setText("Modificar");
         jButton_modificar2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1043,7 +1046,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(jButton_modificar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 450, -1, -1));
 
         jButton_cancelar2.setBackground(new java.awt.Color(153, 153, 153));
-        jButton_cancelar2.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        jButton_cancelar2.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         jButton_cancelar2.setForeground(new java.awt.Color(0, 0, 0));
         jButton_cancelar2.setText("Cancelar");
         jButton_cancelar2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1054,14 +1057,14 @@ public class PantallaPaciente extends javax.swing.JFrame {
         background_dialog2.add(jButton_cancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 450, -1, -1));
 
         contrasena_anterior.setBackground(new java.awt.Color(0, 0, 0));
-        contrasena_anterior.setFont(new java.awt.Font("Roboto", 0, 12));
+        contrasena_anterior.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
         contrasena_anterior.setForeground(new java.awt.Color(0, 0, 0));
         contrasena_anterior.setText("Contraseña anterior *");
         background_dialog2.add(contrasena_anterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, -1));
 
         jPasswordField_vieja.setBackground(new java.awt.Color(255, 255, 255));
         jPasswordField_vieja.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
-        jPasswordField_vieja.setFont(new java.awt.Font("Roboto", 0, 14));
+        jPasswordField_vieja.setFont(new java.awt.Font("Roboto", Font.PLAIN, 14));
         jPasswordField_vieja.setForeground(java.awt.Color.gray);
         jPasswordField_vieja.setText("Ingrese su contraseña");
         jPasswordField_vieja.setBorder(null);
@@ -1173,7 +1176,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
 
         jPanel_menuOpciones.add(separador3);
 
-        rolName.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        rolName.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         rolName.setForeground(new java.awt.Color(255, 255, 255));
         rolName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         rolName.setText("¡ Hola Paciente !");
@@ -1182,7 +1185,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         rolName.setPreferredSize(new java.awt.Dimension(150, 30));
         jPanel_menuOpciones.add(rolName);
 
-        nombreBienvenida.setFont(new java.awt.Font("Microsoft YaHei", 0, 12));
+        nombreBienvenida.setFont(new java.awt.Font("Microsoft YaHei", Font.PLAIN, 12));
         nombreBienvenida.setForeground(new java.awt.Color(255, 255, 255));
         nombreBienvenida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nombreBienvenida.setText("Nombre");
@@ -1324,7 +1327,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(794, 0));
         mostrando = jPanel1;
 
-        jLabel6.setFont(new java.awt.Font("Microsoft YaHei", 1, 20));
+        jLabel6.setFont(new java.awt.Font("Microsoft YaHei", Font.BOLD, 20));
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
         jLabel6.setText("Bienvenido al Programa Vacunas Panamá");
 
@@ -1361,7 +1364,6 @@ public class PantallaPaciente extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
         int confirm = JOptionPane.showConfirmDialog(null, "¿Esta seguro de cerrar sesión?", "Cerrando sesión y ventana...", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirm == 0) {
-            parentFrame = new Login();
             parentFrame.setVisible(true);
             parentFrame.requestFocus();
             this.dispose();
@@ -1418,6 +1420,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
     }
 
     private void button_opcion1MouseClicked(java.awt.event.MouseEvent evt) {
+        //PantallaBase.agregarDatosATabla(jTable_Content,);
         if (!jPanel_derecho.isAncestorOf(jPanel_mostrarTabla)) {
             jPanel_derecho.add(jPanel_mostrarTabla, "option 1");
         }
@@ -1628,11 +1631,11 @@ public class PantallaPaciente extends javax.swing.JFrame {
     }
 
     private void jTextField_telefonoFocusGained(java.awt.event.FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono");
+        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
     }
 
     private void jTextField_telefonoFocusLost(java.awt.event.FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono");
+        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
     }
 
     private void jTextField_telefonoActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1664,7 +1667,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         boolean condicionOp2 = distritoM.equals("Elegir");
         boolean condicionOp3 = direccionM.isBlank() || direccionM.equals("Ingrese la dirección");
         boolean condicionOp4 = correoM.isBlank() || correoM.equals("Ingrese el correo electrónico");
-        boolean condicionOp5 = telefonoM.isBlank() || telefonoM.equals("Ingrese el teléfono");
+        boolean condicionOp5 = telefonoM.isBlank() || telefonoM.equals("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
 
         boolean verificacion1 = !cedulaM.matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$");
         boolean verificacion2 = !fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\\\d|3[01])$");
@@ -1899,7 +1902,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
     private static JFrame parentFrame;
     private static CardLayout layout = null;
     private Component mostrando = null;
-    private JTableFiltrar jPanel_filtrar;
+    private final JTableFiltrar jPanel_filtrar;
     private String cedulaUsuarioActual;
 
     // Variables declaration - do not modify

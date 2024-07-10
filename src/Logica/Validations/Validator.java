@@ -20,7 +20,7 @@ public class Validator {
         if (cedula == null) {
             return false;
         }
-        cedula.trim();
+        cedula = cedula.trim();
         Matcher matcher = COMPLETE_CEDULA_PATTERN.matcher(cedula);
         return matcher.matches();
     }
@@ -30,7 +30,7 @@ public class Validator {
         if (email == null) {
             return false;
         }
-        email.trim();
+        email = email.trim();
         Matcher matcher = EMAIL_PATTERN.matcher(email);
         return matcher.matches();
     }

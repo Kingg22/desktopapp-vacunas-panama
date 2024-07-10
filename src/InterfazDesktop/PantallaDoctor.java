@@ -80,7 +80,7 @@ public class PantallaDoctor extends JFrame {
         cedula2 = new JLabel();
         jTextField_cedula2 = new JTextField();
         jSeparator20 = new JSeparator();
-        jButton3 = new JButton();
+        jButton_buscarPacienteEditar = new JButton();
         nombre1 = new JLabel();
         jTextField_nombre1 = new JTextField();
         jSeparator13 = new JSeparator();
@@ -95,10 +95,8 @@ public class PantallaDoctor extends JFrame {
         jSeparator16 = new JSeparator();
         sexo1 = new JLabel();
         jComboBox_sexo1 = new JComboBox<>();
-        jPanel3 = new JPanel();
         distrito1 = new JLabel();
         jComboBox_distrito1 = new JComboBox<>();
-        jPanel4 = new JPanel();
         direccion1 = new JLabel();
         jTextField_direccion1 = new JTextField();
         jSeparator17 = new JSeparator();
@@ -213,7 +211,7 @@ public class PantallaDoctor extends JFrame {
         jButton_exportar5 = new JButton();
         jPanel_preferencias = new JPanel();
         icon_preferencias = new JLabel();
-        titulo3 = new JLabel();
+        titulo2 = new JLabel();
         jPanel_separador1 = new JPanel();
         jLabel4 = new JLabel();
         jPanel_separador2 = new JPanel();
@@ -228,11 +226,11 @@ public class PantallaDoctor extends JFrame {
         jButton_savePreferences = new JButton();
         jDialog_modificarCred = new JDialog();
         jScrollPane4 = new JScrollPane();
-        background_dialog3 = new JPanel();
-        titulo4 = new JLabel();
-        jTextArea4 = new JTextArea();
-        usuario1 = new JLabel();
-        jTextField_usuario1 = new JTextField();
+        background_dialog2 = new JPanel();
+        titulo3 = new JLabel();
+        jTextArea2 = new JTextArea();
+        usuario = new JLabel();
+        jTextField_usuario = new JTextField();
         jSeparator8 = new JSeparator();
         usuario_nuevo = new JLabel();
         jTextField_usuarioNuevo = new JTextField();
@@ -249,7 +247,7 @@ public class PantallaDoctor extends JFrame {
         contrasena_anterior = new JLabel();
         jPasswordField_vieja = new JPasswordField();
         jSeparator26 = new JSeparator();
-        jScrollPane3 = new JScrollPane();
+        jScrollPane2 = new JScrollPane();
         background = new JPanel();
         jPanel_menuOpciones = new JPanel();
         separador1 = new JPanel();
@@ -325,11 +323,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_buscarTablaFocusLost(evt);
             }
         });
-        jTextField_buscarTabla.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_buscarTablaActionPerformed(evt);
-            }
-        });
+        jTextField_buscarTabla.addActionListener(this::jTextField_buscarTablaActionPerformed);
         opcionesTabla.add(jTextField_buscarTabla);
 
         jButton_buscar.setBackground(new Color(204, 204, 204));
@@ -448,11 +442,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField1FocusLost(evt);
             }
         });
-        jTextField1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
+        jTextField1.addActionListener(this::jTextField1ActionPerformed);
         jPanel2.add(jTextField1, BorderLayout.CENTER);
 
         jButton1.setIcon(new ImageIcon(getClass().getResource("/images/lupa_icon.png")));
@@ -502,11 +492,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_buscarTabla1FocusLost(evt);
             }
         });
-        jTextField_buscarTabla1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_buscarTabla1ActionPerformed(evt);
-            }
-        });
+        jTextField_buscarTabla1.addActionListener(this::jTextField_buscarTabla1ActionPerformed);
         opcionesTabla1.add(jTextField_buscarTabla1);
 
         jButton_buscar1.setBackground(new Color(204, 204, 204));
@@ -569,9 +555,9 @@ public class PantallaDoctor extends JFrame {
         jPanel_buscarPaciente.add(opcionesTabla1);
 
         jPanel_manipularPaciente.setBackground(new Color(227, 218, 201));
-        jPanel_manipularPaciente.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
+        jPanel_manipularPaciente.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100));
         jPanel_manipularPaciente.setPreferredSize(new Dimension(794, 794));
-        jPanel_manipularPaciente.setLayout(new GridLayout(35, 1));
+        jPanel_manipularPaciente.setLayout(new GridLayout(33, 1));
 
         titulo1.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
         titulo1.setForeground(new Color(0, 0, 0));
@@ -616,24 +602,20 @@ public class PantallaDoctor extends JFrame {
                 jTextField_cedula2FocusLost(evt);
             }
         });
-        jTextField_cedula2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_cedula2ActionPerformed(evt);
-            }
-        });
+        jTextField_cedula2.addActionListener(this::jTextField_cedula2ActionPerformed);
         jPanel_manipularPaciente.add(jTextField_cedula2);
 
         jSeparator20.setBackground(new Color(0, 0, 0));
         jSeparator20.setForeground(new Color(30, 30, 30));
         jPanel_manipularPaciente.add(jSeparator20);
 
-        jButton3.setText("Buscar paciente a editar...");
-        jButton3.addMouseListener(new MouseAdapter() {
+        jButton_buscarPacienteEditar.setText("Buscar paciente a editar...");
+        jButton_buscarPacienteEditar.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                jButton3MouseClicked(evt);
+                jButton_buscarPacienteEditarMouseClicked(evt);
             }
         });
-        jPanel_manipularPaciente.add(jButton3);
+        jPanel_manipularPaciente.add(jButton_buscarPacienteEditar);
 
         nombre1.setBackground(new Color(0, 0, 0));
         nombre1.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -658,11 +640,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_nombre1FocusLost(evt);
             }
         });
-        jTextField_nombre1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_nombre1ActionPerformed(evt);
-            }
-        });
+        jTextField_nombre1.addActionListener(this::jTextField_nombre1ActionPerformed);
         jPanel_manipularPaciente.add(jTextField_nombre1);
 
         jSeparator13.setBackground(new Color(0, 0, 0));
@@ -692,11 +670,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_apellido1FocusLost(evt);
             }
         });
-        jTextField_apellido1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_apellido1ActionPerformed(evt);
-            }
-        });
+        jTextField_apellido1.addActionListener(this::jTextField_apellido1ActionPerformed);
         jPanel_manipularPaciente.add(jTextField_apellido1);
 
         jSeparator14.setBackground(new Color(0, 0, 0));
@@ -726,11 +700,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_cedula1FocusLost(evt);
             }
         });
-        jTextField_cedula1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_cedula1ActionPerformed(evt);
-            }
-        });
+        jTextField_cedula1.addActionListener(this::jTextField_cedula1ActionPerformed);
         jPanel_manipularPaciente.add(jTextField_cedula1);
 
         jSeparator15.setBackground(new Color(0, 0, 0));
@@ -760,11 +730,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_fechaNacimiento1FocusLost(evt);
             }
         });
-        jTextField_fechaNacimiento1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_fechaNacimiento1ActionPerformed(evt);
-            }
-        });
+        jTextField_fechaNacimiento1.addActionListener(this::jTextField_fechaNacimiento1ActionPerformed);
         jPanel_manipularPaciente.add(jTextField_fechaNacimiento1);
 
         jSeparator16.setBackground(new Color(0, 0, 0));
@@ -783,22 +749,6 @@ public class PantallaDoctor extends JFrame {
         jComboBox_sexo1.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Masculino", "Feminino"}));
         jPanel_manipularPaciente.add(jComboBox_sexo1);
 
-        jPanel3.setBackground(new Color(227, 218, 201));
-        jPanel3.setPreferredSize(new Dimension(0, 3));
-
-        GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-                jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 616, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-                jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 55, Short.MAX_VALUE)
-        );
-
-        jPanel_manipularPaciente.add(jPanel3);
-
         distrito1.setBackground(new Color(0, 0, 0));
         distrito1.setFont(new Font("Roboto", Font.PLAIN, 12));
         distrito1.setForeground(new Color(0, 0, 0));
@@ -810,22 +760,6 @@ public class PantallaDoctor extends JFrame {
         jComboBox_distrito1.setForeground(Color.black);
         jComboBox_distrito1.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Distrito por registrar"}));
         jPanel_manipularPaciente.add(jComboBox_distrito1);
-
-        jPanel4.setBackground(new Color(227, 218, 201));
-        jPanel4.setPreferredSize(new Dimension(0, 3));
-
-        GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-                jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 616, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-                jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 55, Short.MAX_VALUE)
-        );
-
-        jPanel_manipularPaciente.add(jPanel4);
 
         direccion1.setBackground(new Color(0, 0, 0));
         direccion1.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -849,11 +783,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_direccion1FocusLost(evt);
             }
         });
-        jTextField_direccion1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_direccion1ActionPerformed(evt);
-            }
-        });
+        jTextField_direccion1.addActionListener(this::jTextField_direccion1ActionPerformed);
         jPanel_manipularPaciente.add(jTextField_direccion1);
 
         jSeparator17.setBackground(new Color(0, 0, 0));
@@ -883,11 +813,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_correo1FocusLost(evt);
             }
         });
-        jTextField_correo1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_correo1ActionPerformed(evt);
-            }
-        });
+        jTextField_correo1.addActionListener(this::jTextField_correo1ActionPerformed);
         jPanel_manipularPaciente.add(jTextField_correo1);
 
         jSeparator18.setBackground(new Color(0, 0, 0));
@@ -901,13 +827,13 @@ public class PantallaDoctor extends JFrame {
         jPanel_manipularPaciente.add(telefono1);
 
         jTextField_telefono1.setBackground(new Color(227, 218, 201));
-        jTextField_telefono1.setDocument(new LimitarCamposPhone(15, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio"));
+        jTextField_telefono1.setDocument(new LimitarCamposPhone(15, "Ingrese el teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio"));
         jTextField_telefono1.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_telefono1.setForeground(Color.gray);
-        jTextField_telefono1.setText("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        jTextField_telefono1.setText("Ingrese el teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
         jTextField_telefono1.setBorder(null);
         jTextField_telefono1.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_telefono1, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        RegistrarUser.handleFocusGain(jTextField_telefono1, "Ingrese el teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
         jTextField_telefono1.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 jTextField_telefono1FocusGained(evt);
@@ -917,11 +843,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_telefono1FocusLost(evt);
             }
         });
-        jTextField_telefono1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_telefono1ActionPerformed(evt);
-            }
-        });
+        jTextField_telefono1.addActionListener(this::jTextField_telefono1ActionPerformed);
         jPanel_manipularPaciente.add(jTextField_telefono1);
 
         jSeparator19.setBackground(new Color(0, 0, 0));
@@ -1000,11 +922,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_nombreFocusLost(evt);
             }
         });
-        jTextField_nombre.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_nombreActionPerformed(evt);
-            }
-        });
+        jTextField_nombre.addActionListener(this::jTextField_nombreActionPerformed);
         background_dialog1.add(jTextField_nombre, new AbsoluteConstraints(30, 110, 390, -1));
 
         jSeparator3.setForeground(new Color(30, 30, 30));
@@ -1033,11 +951,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_apellidoFocusLost(evt);
             }
         });
-        jTextField_apellido.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_apellidoActionPerformed(evt);
-            }
-        });
+        jTextField_apellido.addActionListener(this::jTextField_apellidoActionPerformed);
         background_dialog1.add(jTextField_apellido, new AbsoluteConstraints(30, 160, 390, -1));
 
         jSeparator4.setForeground(new Color(30, 30, 30));
@@ -1056,11 +970,7 @@ public class PantallaDoctor extends JFrame {
         jTextField_cedula.setText("Ingrese su cédula");
         jTextField_cedula.setBorder(null);
         jTextField_cedula.setMaximumSize(new Dimension(2147483647, 50));
-        jTextField_cedula.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_cedulaActionPerformed(evt);
-            }
-        });
+        jTextField_cedula.addActionListener(this::jTextField_cedulaActionPerformed);
         background_dialog1.add(jTextField_cedula, new AbsoluteConstraints(30, 210, 390, -1));
 
         jSeparator5.setForeground(new Color(30, 30, 30));
@@ -1079,11 +989,7 @@ public class PantallaDoctor extends JFrame {
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
         jTextField_fechaNacimiento.setBorder(null);
         jTextField_fechaNacimiento.setMaximumSize(new Dimension(2147483647, 50));
-        jTextField_fechaNacimiento.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_fechaNacimientoActionPerformed(evt);
-            }
-        });
+        jTextField_fechaNacimiento.addActionListener(this::jTextField_fechaNacimientoActionPerformed);
         background_dialog1.add(jTextField_fechaNacimiento, new AbsoluteConstraints(30, 260, 390, -1));
 
         jSeparator9.setForeground(new Color(30, 30, 30));
@@ -1123,11 +1029,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_direccionFocusLost(evt);
             }
         });
-        jTextField_direccion.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_direccionActionPerformed(evt);
-            }
-        });
+        jTextField_direccion.addActionListener(this::jTextField_direccionActionPerformed);
         background_dialog1.add(jTextField_direccion, new AbsoluteConstraints(30, 360, 190, -1));
 
         distrito.setBackground(new Color(0, 0, 0));
@@ -1168,11 +1070,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_correoFocusLost(evt);
             }
         });
-        jTextField_correo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_correoActionPerformed(evt);
-            }
-        });
+        jTextField_correo.addActionListener(this::jTextField_correoActionPerformed);
         background_dialog1.add(jTextField_correo, new AbsoluteConstraints(30, 410, 390, -1));
 
         jSeparator6.setForeground(new Color(30, 30, 30));
@@ -1195,11 +1093,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_telefonoFocusLost(evt);
             }
         });
-        jTextField_telefono.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_telefonoActionPerformed(evt);
-            }
-        });
+        jTextField_telefono.addActionListener(this::jTextField_telefonoActionPerformed);
         background_dialog1.add(jTextField_telefono, new AbsoluteConstraints(30, 460, 390, -1));
 
         telefono.setBackground(new Color(0, 0, 0));
@@ -1303,11 +1197,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_buscarTabla3FocusLost(evt);
             }
         });
-        jTextField_buscarTabla3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_buscarTabla3ActionPerformed(evt);
-            }
-        });
+        jTextField_buscarTabla3.addActionListener(this::jTextField_buscarTabla3ActionPerformed);
         opcionesTabla3.add(jTextField_buscarTabla3);
 
         jButton_buscar3.setBackground(new Color(204, 204, 204));
@@ -1418,11 +1308,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_buscarTabla4FocusLost(evt);
             }
         });
-        jTextField_buscarTabla4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_buscarTabla4ActionPerformed(evt);
-            }
-        });
+        jTextField_buscarTabla4.addActionListener(this::jTextField_buscarTabla4ActionPerformed);
         opcionesTabla4.add(jTextField_buscarTabla4);
 
         jButton_buscar4.setBackground(new Color(204, 204, 204));
@@ -1496,11 +1382,7 @@ public class PantallaDoctor extends JFrame {
         jPanel_filtrarEstadistica.add(jLabel7);
 
         jComboBox_filterColumn1.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir...", "Día", "Mes", "Año", "Sede"}));
-        jComboBox_filterColumn1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_filterColumn1ActionPerformed(evt);
-            }
-        });
+        jComboBox_filterColumn1.addActionListener(this::jComboBox_filterColumn1ActionPerformed);
         jPanel_filtrarEstadistica.add(jComboBox_filterColumn1);
 
         jPanel_soporte.setBackground(new Color(227, 218, 201));
@@ -1594,21 +1476,13 @@ public class PantallaDoctor extends JFrame {
         jLabel8.setText("Filtrar por sede");
         jPanel_filtrarInventario.add(jLabel8);
 
-        jComboBox_filterColumn2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_filterColumn2ActionPerformed(evt);
-            }
-        });
+        jComboBox_filterColumn2.addActionListener(this::jComboBox_filterColumn2ActionPerformed);
         jPanel_filtrarInventario.add(jComboBox_filterColumn2);
 
         jLabel12.setText("Filtrar por vacuna");
         jPanel_filtrarInventario.add(jLabel12);
 
-        jComboBox_filterColumn3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_filterColumn3ActionPerformed(evt);
-            }
-        });
+        jComboBox_filterColumn3.addActionListener(this::jComboBox_filterColumn3ActionPerformed);
         jPanel_filtrarInventario.add(jComboBox_filterColumn3);
 
         jPanel_buscarDosis.setBackground(new Color(227, 218, 201));
@@ -1663,11 +1537,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField3FocusLost(evt);
             }
         });
-        jTextField3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
-            }
-        });
+        jTextField3.addActionListener(this::jTextField3ActionPerformed);
         jPanel6.add(jTextField3);
 
         jLabel14.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -1688,11 +1558,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField4FocusLost(evt);
             }
         });
-        jTextField4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
-            }
-        });
+        jTextField4.addActionListener(this::jTextField4ActionPerformed);
         jPanel6.add(jTextField4);
 
         jLabel15.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -1713,11 +1579,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField5FocusLost(evt);
             }
         });
-        jTextField5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
-            }
-        });
+        jTextField5.addActionListener(this::jTextField5ActionPerformed);
         jPanel6.add(jTextField5);
 
         jLabel16.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -1726,11 +1588,7 @@ public class PantallaDoctor extends JFrame {
         jPanel6.add(jLabel16);
 
         jComboBox3.setPreferredSize(new Dimension(150, 26));
-        jComboBox3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox3ActionPerformed(evt);
-            }
-        });
+        jComboBox3.addActionListener(this::jComboBox3ActionPerformed);
         jPanel6.add(jComboBox3);
 
         jLabel17.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -1740,11 +1598,7 @@ public class PantallaDoctor extends JFrame {
 
         jComboBox4.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir...", "Primera dosis", "Segunda dosis", "Tercera dosis", "Refuerzo", "Primer refuerzo", "Segundo refuerzo", "Dosis previa"}));
         jComboBox4.setPreferredSize(new Dimension(150, 26));
-        jComboBox4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox4ActionPerformed(evt);
-            }
-        });
+        jComboBox4.addActionListener(this::jComboBox4ActionPerformed);
         jPanel6.add(jComboBox4);
 
         jPanel7.add(jPanel6, BorderLayout.CENTER);
@@ -1798,11 +1652,7 @@ public class PantallaDoctor extends JFrame {
                 jTextField_buscarTabla5FocusLost(evt);
             }
         });
-        jTextField_buscarTabla5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_buscarTabla5ActionPerformed(evt);
-            }
-        });
+        jTextField_buscarTabla5.addActionListener(this::jTextField_buscarTabla5ActionPerformed);
         opcionesTabla5.add(jTextField_buscarTabla5);
 
         jButton_buscar5.setBackground(new Color(204, 204, 204));
@@ -1873,12 +1723,12 @@ public class PantallaDoctor extends JFrame {
         icon_preferencias.setPreferredSize(new Dimension(130, 120));
         jPanel_preferencias.add(icon_preferencias);
 
-        titulo3.setFont(new Font("Microsoft YaHei", Font.BOLD, 24));
-        titulo3.setForeground(new Color(0, 0, 0));
-        titulo3.setHorizontalAlignment(SwingConstants.CENTER);
-        titulo3.setText("Preferencias");
-        titulo3.setHorizontalTextPosition(SwingConstants.CENTER);
-        jPanel_preferencias.add(titulo3);
+        titulo2.setFont(new Font("Microsoft YaHei", Font.BOLD, 24));
+        titulo2.setForeground(new Color(0, 0, 0));
+        titulo2.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo2.setText("Preferencias");
+        titulo2.setHorizontalTextPosition(SwingConstants.CENTER);
+        jPanel_preferencias.add(titulo2);
 
         jPanel_separador1.setBackground(new Color(227, 218, 201));
         jPanel_separador1.setMaximumSize(new Dimension(32767, 25));
@@ -2043,44 +1893,44 @@ public class PantallaDoctor extends JFrame {
 
         jScrollPane4.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        background_dialog3.setBackground(new Color(255, 255, 255));
-        background_dialog3.setPreferredSize(new Dimension(444, 494));
-        background_dialog3.setLayout(new AbsoluteLayout());
+        background_dialog2.setBackground(new Color(255, 255, 255));
+        background_dialog2.setPreferredSize(new Dimension(444, 494));
+        background_dialog2.setLayout(new AbsoluteLayout());
 
-        titulo4.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
-        titulo4.setForeground(new Color(0, 0, 0));
-        titulo4.setHorizontalAlignment(SwingConstants.CENTER);
-        titulo4.setText("Modificar credenciales de acceso");
-        background_dialog3.add(titulo4, new AbsoluteConstraints(88, 25, 269, -1));
+        titulo3.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
+        titulo3.setForeground(new Color(0, 0, 0));
+        titulo3.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo3.setText("Modificar credenciales de acceso");
+        background_dialog2.add(titulo3, new AbsoluteConstraints(88, 25, 269, -1));
 
-        jTextArea4.setEditable(false);
-        jTextArea4.setBackground(new Color(255, 255, 255));
-        jTextArea4.setFont(new Font("Microsoft YaHei", Font.ITALIC, 11));
-        jTextArea4.setForeground(new Color(102, 102, 102));
-        jTextArea4.setLineWrap(true);
-        jTextArea4.setRows(5);
-        jTextArea4.setText("Indicaciones: Para modificar las credenciales debe ingresar su usuario y contraseña anterior, si solo desea cambiar el usuario debe dejar en blanco los campos de nueva contraseña.\nDebe repetir la contraseña nueva si desea modificarla, sino no se cambiará la misma.\nSi desea modificar otro dato personal, utilice el otro botón.");
-        jTextArea4.setWrapStyleWord(true);
-        jTextArea4.setBorder(null);
-        jTextArea4.setFocusable(false);
-        background_dialog3.add(jTextArea4, new AbsoluteConstraints(30, 60, 380, 100));
+        jTextArea2.setEditable(false);
+        jTextArea2.setBackground(new Color(255, 255, 255));
+        jTextArea2.setFont(new Font("Microsoft YaHei", Font.ITALIC, 11));
+        jTextArea2.setForeground(new Color(102, 102, 102));
+        jTextArea2.setLineWrap(true);
+        jTextArea2.setRows(5);
+        jTextArea2.setText("Indicaciones: Para modificar las credenciales debe ingresar su usuario y contraseña anterior, si solo desea cambiar el usuario debe dejar en blanco los campos de nueva contraseña.\nDebe repetir la contraseña nueva si desea modificarla, sino no se cambiará la misma.\nSi desea modificar otro dato personal, utilice el otro botón.");
+        jTextArea2.setWrapStyleWord(true);
+        jTextArea2.setBorder(null);
+        jTextArea2.setFocusable(false);
+        background_dialog2.add(jTextArea2, new AbsoluteConstraints(30, 60, 380, 100));
 
-        usuario1.setBackground(new Color(0, 0, 0));
-        usuario1.setFont(new Font("Roboto", Font.PLAIN, 12));
-        usuario1.setForeground(new Color(0, 0, 0));
-        usuario1.setText("Usuario anterior *");
-        background_dialog3.add(usuario1, new AbsoluteConstraints(30, 170, -1, -1));
+        usuario.setBackground(new Color(0, 0, 0));
+        usuario.setFont(new Font("Roboto", Font.PLAIN, 12));
+        usuario.setForeground(new Color(0, 0, 0));
+        usuario.setText("Usuario anterior *");
+        background_dialog2.add(usuario, new AbsoluteConstraints(30, 170, -1, -1));
 
-        jTextField_usuario1.setBackground(new Color(255, 255, 255));
-        jTextField_usuario1.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
-        jTextField_usuario1.setFont(new Font("Roboto", Font.PLAIN, 14));
-        jTextField_usuario1.setForeground(Color.gray);
-        jTextField_usuario1.setText("Ingrese su usuario");
-        jTextField_usuario1.setActionCommand("<Not Set>");
-        jTextField_usuario1.setBorder(null);
-        jTextField_usuario1.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_usuario1, "Ingrese su usuario");
-        jTextField_usuario1.addFocusListener(new FocusAdapter() {
+        jTextField_usuario.setBackground(new Color(255, 255, 255));
+        jTextField_usuario.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
+        jTextField_usuario.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jTextField_usuario.setForeground(Color.gray);
+        jTextField_usuario.setText("Ingrese su usuario");
+        jTextField_usuario.setActionCommand("<Not Set>");
+        jTextField_usuario.setBorder(null);
+        jTextField_usuario.setMaximumSize(new Dimension(2147483647, 50));
+        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese su usuario");
+        jTextField_usuario.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 jTextField_usuario1FocusGained(evt);
             }
@@ -2089,21 +1939,17 @@ public class PantallaDoctor extends JFrame {
                 jTextField_usuario1FocusLost(evt);
             }
         });
-        jTextField_usuario1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_usuario1ActionPerformed(evt);
-            }
-        });
-        background_dialog3.add(jTextField_usuario1, new AbsoluteConstraints(30, 190, 380, -1));
+        jTextField_usuario.addActionListener(this::jTextField_usuario1ActionPerformed);
+        background_dialog2.add(jTextField_usuario, new AbsoluteConstraints(30, 190, 380, -1));
 
         jSeparator8.setForeground(new Color(30, 30, 30));
-        background_dialog3.add(jSeparator8, new AbsoluteConstraints(30, 210, 380, 21));
+        background_dialog2.add(jSeparator8, new AbsoluteConstraints(30, 210, 380, 21));
 
         usuario_nuevo.setBackground(new Color(0, 0, 0));
         usuario_nuevo.setFont(new Font("Roboto", Font.PLAIN, 12));
         usuario_nuevo.setForeground(new Color(0, 0, 0));
         usuario_nuevo.setText("Usuario nuevo");
-        background_dialog3.add(usuario_nuevo, new AbsoluteConstraints(30, 220, -1, -1));
+        background_dialog2.add(usuario_nuevo, new AbsoluteConstraints(30, 220, -1, -1));
 
         jTextField_usuarioNuevo.setBackground(new Color(255, 255, 255));
         jTextField_usuarioNuevo.setDocument(new LimitarCamposSeguro(50, "Ingrese un usuario nuevo"));
@@ -2123,21 +1969,17 @@ public class PantallaDoctor extends JFrame {
                 jTextField_usuarioNuevoFocusLost(evt);
             }
         });
-        jTextField_usuarioNuevo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_usuarioNuevoActionPerformed(evt);
-            }
-        });
-        background_dialog3.add(jTextField_usuarioNuevo, new AbsoluteConstraints(30, 240, 380, -1));
+        jTextField_usuarioNuevo.addActionListener(this::jTextField_usuarioNuevoActionPerformed);
+        background_dialog2.add(jTextField_usuarioNuevo, new AbsoluteConstraints(30, 240, 380, -1));
 
         jSeparator21.setForeground(new Color(30, 30, 30));
-        background_dialog3.add(jSeparator21, new AbsoluteConstraints(30, 260, 380, 21));
+        background_dialog2.add(jSeparator21, new AbsoluteConstraints(30, 260, 380, 21));
 
         contrasena.setBackground(new Color(0, 0, 0));
         contrasena.setFont(new Font("Roboto", Font.PLAIN, 12));
         contrasena.setForeground(new Color(0, 0, 0));
         contrasena.setText("Contraseña nueva");
-        background_dialog3.add(contrasena, new AbsoluteConstraints(30, 320, -1, -1));
+        background_dialog2.add(contrasena, new AbsoluteConstraints(30, 320, -1, -1));
 
         jPasswordField_nueva1.setBackground(new Color(255, 255, 255));
         jPasswordField_nueva1.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
@@ -2156,21 +1998,17 @@ public class PantallaDoctor extends JFrame {
                 jPasswordField_nueva1FocusLost(evt);
             }
         });
-        jPasswordField_nueva1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jPasswordField_nueva1ActionPerformed(evt);
-            }
-        });
-        background_dialog3.add(jPasswordField_nueva1, new AbsoluteConstraints(30, 340, 380, -1));
+        jPasswordField_nueva1.addActionListener(this::jPasswordField_nueva1ActionPerformed);
+        background_dialog2.add(jPasswordField_nueva1, new AbsoluteConstraints(30, 340, 380, -1));
 
         jSeparator11.setForeground(new Color(30, 30, 30));
-        background_dialog3.add(jSeparator11, new AbsoluteConstraints(30, 360, 380, 21));
+        background_dialog2.add(jSeparator11, new AbsoluteConstraints(30, 360, 380, 21));
 
         repetir_contrasena.setBackground(new Color(0, 0, 0));
         repetir_contrasena.setFont(new Font("Roboto", Font.PLAIN, 12));
         repetir_contrasena.setForeground(new Color(0, 0, 0));
         repetir_contrasena.setText("Repetir contraseña nueva *");
-        background_dialog3.add(repetir_contrasena, new AbsoluteConstraints(30, 370, -1, -1));
+        background_dialog2.add(repetir_contrasena, new AbsoluteConstraints(30, 370, -1, -1));
 
         jPasswordField_nueva2.setBackground(new Color(255, 255, 255));
         jPasswordField_nueva2.setDocument(new LimitarCamposSeguro(20, "Repita su contraseña"));
@@ -2189,15 +2027,11 @@ public class PantallaDoctor extends JFrame {
                 jPasswordField_nueva2FocusLost(evt);
             }
         });
-        jPasswordField_nueva2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jPasswordField_nueva2ActionPerformed(evt);
-            }
-        });
-        background_dialog3.add(jPasswordField_nueva2, new AbsoluteConstraints(30, 390, 380, -1));
+        jPasswordField_nueva2.addActionListener(this::jPasswordField_nueva2ActionPerformed);
+        background_dialog2.add(jPasswordField_nueva2, new AbsoluteConstraints(30, 390, 380, -1));
 
         jSeparator7.setForeground(new Color(30, 30, 30));
-        background_dialog3.add(jSeparator7, new AbsoluteConstraints(30, 410, 380, 21));
+        background_dialog2.add(jSeparator7, new AbsoluteConstraints(30, 410, 380, 21));
 
         errorMessage2.setFont(new Font("Roboto", Font.BOLD, 14));
         errorMessage2.setForeground(Color.red);
@@ -2205,7 +2039,7 @@ public class PantallaDoctor extends JFrame {
         errorMessage2.setText("Error. ");
         errorMessage2.setHorizontalTextPosition(SwingConstants.CENTER);
         errorMessage2.setVisible(false);
-        background_dialog3.add(errorMessage2, new AbsoluteConstraints(2, 430, 440, -1));
+        background_dialog2.add(errorMessage2, new AbsoluteConstraints(2, 430, 440, -1));
 
         jButton_modificar2.setBackground(new Color(0, 204, 0));
         jButton_modificar2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -2216,7 +2050,7 @@ public class PantallaDoctor extends JFrame {
                 jButton_modificar2MouseClicked(evt);
             }
         });
-        background_dialog3.add(jButton_modificar2, new AbsoluteConstraints(320, 450, -1, -1));
+        background_dialog2.add(jButton_modificar2, new AbsoluteConstraints(320, 450, -1, -1));
 
         jButton_cancelar2.setBackground(new Color(153, 153, 153));
         jButton_cancelar2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -2227,13 +2061,13 @@ public class PantallaDoctor extends JFrame {
                 jButton_cancelar2MouseClicked(evt);
             }
         });
-        background_dialog3.add(jButton_cancelar2, new AbsoluteConstraints(230, 450, -1, -1));
+        background_dialog2.add(jButton_cancelar2, new AbsoluteConstraints(230, 450, -1, -1));
 
         contrasena_anterior.setBackground(new Color(0, 0, 0));
         contrasena_anterior.setFont(new Font("Roboto", Font.PLAIN, 12));
         contrasena_anterior.setForeground(new Color(0, 0, 0));
         contrasena_anterior.setText("Contraseña anterior *");
-        background_dialog3.add(contrasena_anterior, new AbsoluteConstraints(30, 270, -1, -1));
+        background_dialog2.add(contrasena_anterior, new AbsoluteConstraints(30, 270, -1, -1));
 
         jPasswordField_vieja.setBackground(new Color(255, 255, 255));
         jPasswordField_vieja.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
@@ -2252,17 +2086,13 @@ public class PantallaDoctor extends JFrame {
                 jPasswordField_viejaFocusLost(evt);
             }
         });
-        jPasswordField_vieja.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jPasswordField_viejaActionPerformed(evt);
-            }
-        });
-        background_dialog3.add(jPasswordField_vieja, new AbsoluteConstraints(30, 290, 380, -1));
+        jPasswordField_vieja.addActionListener(this::jPasswordField_viejaActionPerformed);
+        background_dialog2.add(jPasswordField_vieja, new AbsoluteConstraints(30, 290, 380, -1));
 
         jSeparator26.setForeground(new Color(30, 30, 30));
-        background_dialog3.add(jSeparator26, new AbsoluteConstraints(30, 310, 380, 21));
+        background_dialog2.add(jSeparator26, new AbsoluteConstraints(30, 310, 380, 21));
 
-        jScrollPane4.setViewportView(background_dialog3);
+        jScrollPane4.setViewportView(background_dialog2);
 
         GroupLayout jDialog_modificarCredLayout = new GroupLayout(jDialog_modificarCred.getContentPane());
         jDialog_modificarCred.getContentPane().setLayout(jDialog_modificarCredLayout);
@@ -2289,7 +2119,7 @@ public class PantallaDoctor extends JFrame {
             }
         });
 
-        jScrollPane3.setPreferredSize(getSize());
+        jScrollPane2.setPreferredSize(getSize());
 
         background.setBackground(new Color(227, 218, 201));
         background.setForeground(new Color(227, 218, 201));
@@ -2546,9 +2376,9 @@ public class PantallaDoctor extends JFrame {
 
         background.add(jPanel_derecho, BorderLayout.CENTER);
 
-        jScrollPane3.setViewportView(background);
+        jScrollPane2.setViewportView(background);
 
-        getContentPane().add(jScrollPane3, BorderLayout.CENTER);
+        getContentPane().add(jScrollPane2, BorderLayout.CENTER);
 
         pack();
         setLocationRelativeTo(null);
@@ -2565,34 +2395,6 @@ public class PantallaDoctor extends JFrame {
 
     private void formComponentShown(ComponentEvent evt) {
         Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
-    }
-
-    private void jButton_acercarMouseClicked(MouseEvent evt) {
-        Font currentFont = jTable_Content.getFont();
-        jTable_Content.setFont(currentFont.deriveFont(currentFont.getSize() + 2f));
-        /* TODO por mover eventos de jPanel mostrarTabla en doctor es Mis Pacientes */
-    }
-
-    private void jButton_alejarMouseClicked(MouseEvent evt) {
-        Font currentFont = jTable_Content.getFont();
-        jTable_Content.setFont(currentFont.deriveFont(currentFont.getSize() - 2f));
-        /* TODO por mover eventos de jPanel mostrarTabla en doctor es Mis Pacientes */
-    }
-
-    private void jButton_fuenteMouseClicked(MouseEvent evt) {
-        JFontChooser fontChooser = new JFontChooser(this);
-        boolean result = fontChooser.showDialog(this);
-        if (result) {
-            Font font = fontChooser.getSelectedFont();
-            jTable_Content.setFont(font);
-            jTable_Content.repaint();
-        }
-        /* TODO por mover eventos de jPanel mostrarTabla en doctor es Mis Pacientes */
-    }
-
-    private void jButton_exportarMouseClicked(MouseEvent evt) {
-        /* TODO llamada al método exportar en csv o excel o pdf */
-        /* TODO por mover eventos de jPanel mostrarTabla en doctor es Mis Pacientes */
     }
 
     /* eventos de jPanel mostrarTabla en doctor es Mis Pacientes */
@@ -2637,7 +2439,61 @@ public class PantallaDoctor extends JFrame {
         jTable_Content.setAutoCreateRowSorter(true);
     }
 
+    private void jButton_acercarMouseClicked(MouseEvent evt) {
+        Font currentFont = jTable_Content.getFont();
+        jTable_Content.setFont(currentFont.deriveFont(currentFont.getSize() + 2f));
+    }
+
+    private void jButton_alejarMouseClicked(MouseEvent evt) {
+        Font currentFont = jTable_Content.getFont();
+        jTable_Content.setFont(currentFont.deriveFont(currentFont.getSize() - 2f));
+    }
+
+    private void jButton_fuenteMouseClicked(MouseEvent evt) {
+        JFontChooser fontChooser = new JFontChooser(this);
+        boolean result = fontChooser.showDialog(this);
+        if (result) {
+            Font font = fontChooser.getSelectedFont();
+            jTable_Content.setFont(font);
+            jTable_Content.repaint();
+        }
+    }
+
+    private void jButton_exportarMouseClicked(MouseEvent evt) {
+        /* TODO llamada al método exportar en csv o excel o pdf */
+    }
+
     /* eventos de jPanel manipular paciente */
+    private void jButton_buscarPacienteEditarMouseClicked(MouseEvent evt) {
+        if (!jButton_buscarPacienteEditar.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        jButton_buscarPacienteEditar.setEnabled(false);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                jButton_buscarPacienteEditar.setEnabled(true);
+            }
+        }, searchPacienteDisableTime);
+
+        /* TODO por mover a panel manipular usuarios */
+        String cedulaB = jTextField_cedula2.getText();
+        if (cedulaB.isBlank() || cedulaB.equals("Ingrese cédula a buscar")) {
+            JOptionPane.showMessageDialog(null, "Error. Debe introducir la cédula del paciente para buscar y editar.", "Error al buscar un paciente...", JOptionPane.ERROR_MESSAGE);
+        } else if (!cedulaB.matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$")) {
+            JOptionPane.showMessageDialog(null, "Error. La cédula no tiene el formato correcto.", "Error al buscar un paciente...", JOptionPane.ERROR_MESSAGE);
+        } else {
+            /* TODO buscar paciente con sus credenciales */
+            if (false) {
+                /* mostrar información del usuario en los campos */
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontraron resultados de pacientes con dicha cédula. Debe crearlo o si es un error, puede buscar al paciente con otros parámetros en 'Buscar paciente'.", "Error al buscar un paciente...", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
     private void jButton_modificar1MouseClicked(MouseEvent evt) {
         if (!jButton_modificar1.isEnabled()) {
             return;
@@ -2738,11 +2594,11 @@ public class PantallaDoctor extends JFrame {
     }
 
     private void jTextField_telefono1FocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono1, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        RegistrarUser.handleFocusGain(jTextField_telefono1, "Ingrese el teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
     }
 
     private void jTextField_telefono1FocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono1, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        RegistrarUser.handleFocusGain(jTextField_telefono1, "Ingrese el teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
     }
 
     private void jTextField_correo1ActionPerformed(ActionEvent evt) {
@@ -2750,11 +2606,11 @@ public class PantallaDoctor extends JFrame {
     }
 
     private void jTextField_correo1FocusLost(FocusEvent evt) {
-        // TODO add your handling code here:
+        RegistrarUser.handleFocusGain(jTextField_correo1, "Ingrese el correo electrónico");
     }
 
     private void jTextField_correo1FocusGained(FocusEvent evt) {
-        // TODO add your handling code here:
+        RegistrarUser.handleFocusGain(jTextField_correo1, "Ingrese el correo electrónico");
     }
 
     private void jTextField_direccion1ActionPerformed(ActionEvent evt) {
@@ -2762,11 +2618,11 @@ public class PantallaDoctor extends JFrame {
     }
 
     private void jTextField_direccion1FocusLost(FocusEvent evt) {
-        // TODO add your handling code here:
+        RegistrarUser.handleFocusGain(jTextField_direccion1, "Ingrese la dirección");
     }
 
     private void jTextField_direccion1FocusGained(FocusEvent evt) {
-        // TODO add your handling code here:
+        RegistrarUser.handleFocusGain(jTextField_direccion1, "Ingrese la dirección");
     }
 
     private void jTextField_fechaNacimiento1ActionPerformed(ActionEvent evt) {
@@ -2824,7 +2680,7 @@ public class PantallaDoctor extends JFrame {
     }
 
     private void jTextField_cedula2ActionPerformed(ActionEvent evt) {
-        jButton3MouseClicked(null);
+        jButton_buscarPacienteEditarMouseClicked(null);
     }
 
     private void jTextField_cedula2FocusLost(FocusEvent evt) {
@@ -2836,8 +2692,168 @@ public class PantallaDoctor extends JFrame {
     }
 
     /* eventos del menú lateral */
-    private void button_logOutMouseClicked(MouseEvent evt) {
-        formWindowClosing(null);
+    private void button_opcion1MouseClicked(MouseEvent evt) {
+        if (!button_opcion1.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        button_opcion1.setEnabled(false);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                button_opcion1.setEnabled(true);
+            }
+        }, optionsDisableTime);
+
+
+        /* TODO IMPLEMENTAR LÓGICA DE CONSULTAR MIS PACIENTES SEGÚN SEDE PREFERIDA */
+        if (!jPanel_derecho.isAncestorOf(jPanel_mostrarTabla)) {
+            jPanel_derecho.add(jPanel_mostrarTabla, "option 1");
+        }
+        if (mostrando == jPanel_mostrarTabla) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 1");
+            mostrando = jPanel_mostrarTabla;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_opcion2MouseClicked(MouseEvent evt) {
+        if (!jPanel_derecho.isAncestorOf(jPanel_buscarPaciente)) {
+            jPanel_derecho.add(jPanel_buscarPaciente, "option 2");
+        }
+        if (mostrando == jPanel_buscarPaciente) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 2");
+            mostrando = jPanel_buscarPaciente;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_opcion3MouseClicked(MouseEvent evt) {
+        if (!jPanel_derecho.isAncestorOf(jPanel_buscarDosis)) {
+            jPanel_derecho.add(jPanel_buscarDosis, "option 3");
+        }
+        if (mostrando == jPanel_buscarDosis) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 3");
+            mostrando = jPanel_buscarDosis;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_opcion4MouseClicked(MouseEvent evt) {
+        // TODO implementar jPanel registrar dosis para paciente
+    }
+
+    private void button_opcion5MouseClicked(MouseEvent evt) {
+        /* TODO implementar lógica de pedir cita en una sede o doctor */
+        if (!jPanel_derecho.isAncestorOf(jPanel_agendarCita)) {
+            jPanel_derecho.add(jPanel_agendarCita, "option 5");
+        }
+        if (mostrando == jPanel_agendarCita) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 5");
+            mostrando = jPanel_agendarCita;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_opcion6MouseClicked(MouseEvent evt) {
+        /* TODO implementar lógica de crear o editar a paciente siendo doctor */
+        if (!jPanel_derecho.isAncestorOf(jPanel_manipularPaciente)) {
+            jPanel_derecho.add(jPanel_manipularPaciente, "option 6");
+        }
+        if (mostrando == jPanel_manipularPaciente) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 6");
+            mostrando = jPanel_manipularPaciente;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+
+    private void button_opcion7MouseClicked(MouseEvent evt) {
+        if (!button_opcion7.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        button_opcion7.setEnabled(false);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                button_opcion7.setEnabled(true);
+            }
+        }, optionsDisableTime);
+        /* TODO implementar lógica de ver inventario sede preferida */
+        if (!jPanel_derecho.isAncestorOf(jPanel_inventario)) {
+            jPanel_derecho.add(jPanel_inventario, "option 7");
+        }
+        if (mostrando == jPanel_inventario) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 7");
+            mostrando = jPanel_inventario;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_opcion8MouseClicked(MouseEvent evt) {
+        if (!button_opcion8.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        button_opcion8.setEnabled(false);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                button_opcion8.setEnabled(true);
+            }
+        }, optionsDisableTime);
+
+        /* TODO impletar lógica de ver reporte y estadísticas por defecto en sede y día */
+        if (!jPanel_derecho.isAncestorOf(jPanel_estadisticas)) {
+            jPanel_derecho.add(jPanel_estadisticas, "option 8");
+        }
+        if (mostrando == jPanel_estadisticas) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 8");
+            mostrando = jPanel_estadisticas;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_modificarCredMouseClicked(MouseEvent evt) {
+        jDialog_modificarCred.setLocationRelativeTo(this);
+        jDialog_modificarCred.setVisible(true);
+    }
+
+    private void button_modificarDatosMouseClicked(MouseEvent evt) {
+        jDialog_modificarDatos.setLocationRelativeTo(this);
+        jDialog_modificarDatos.setVisible(true);
     }
 
     private void button_soporteMouseClicked(MouseEvent evt) {
@@ -2870,133 +2886,11 @@ public class PantallaDoctor extends JFrame {
         jPanel_derecho.repaint();
     }
 
-    private void button_modificarCredMouseClicked(MouseEvent evt) {
-        jDialog_modificarCred.setLocationRelativeTo(this);
-        jDialog_modificarCred.setVisible(true);
+    private void button_logOutMouseClicked(MouseEvent evt) {
+        formWindowClosing(null);
     }
 
-    private void button_modificarDatosMouseClicked(MouseEvent evt) {
-        jDialog_modificarDatos.setLocationRelativeTo(this);
-        jDialog_modificarDatos.setVisible(true);
-    }
-
-    private void button_opcion8MouseClicked(MouseEvent evt) {
-        /* TODO impletar lógica de ver reporte y estadísticas por defecto en sede y día */
-        if (!jPanel_derecho.isAncestorOf(jPanel_estadisticas)) {
-            jPanel_derecho.add(jPanel_estadisticas, "option 8");
-        }
-        if (mostrando == jPanel_estadisticas) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 8");
-            mostrando = jPanel_estadisticas;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion7MouseClicked(MouseEvent evt) {
-        /* TODO implementar lógica de ver inventario sede preferida */
-        if (!jPanel_derecho.isAncestorOf(jPanel_inventario)) {
-            jPanel_derecho.add(jPanel_inventario, "option 7");
-        }
-        if (mostrando == jPanel_inventario) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 7");
-            mostrando = jPanel_inventario;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion6MouseClicked(MouseEvent evt) {
-        /* TODO implementar lógica de crear o editar a paciente siendo doctor */
-        if (!jPanel_derecho.isAncestorOf(jPanel_manipularPaciente)) {
-            jPanel_derecho.add(jPanel_manipularPaciente, "option 6");
-        }
-        if (mostrando == jPanel_manipularPaciente) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 6");
-            mostrando = jPanel_manipularPaciente;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion5MouseClicked(MouseEvent evt) {
-        /* TODO implementar lógica de pedir cita en una sede o doctor */
-        if (!jPanel_derecho.isAncestorOf(jPanel_agendarCita)) {
-            jPanel_derecho.add(jPanel_agendarCita, "option 5");
-        }
-        if (mostrando == jPanel_agendarCita) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 5");
-            mostrando = jPanel_agendarCita;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion4MouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void button_opcion3MouseClicked(MouseEvent evt) {
-
-
-        if (!jPanel_derecho.isAncestorOf(jPanel_buscarDosis)) {
-            jPanel_derecho.add(jPanel_buscarDosis, "option 3");
-        }
-        if (mostrando == jPanel_buscarDosis) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 3");
-            mostrando = jPanel_buscarDosis;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion2MouseClicked(MouseEvent evt) {
-        if (!jPanel_derecho.isAncestorOf(jPanel_buscarPaciente)) {
-            jPanel_derecho.add(jPanel_buscarPaciente, "option 2");
-        }
-        if (mostrando == jPanel_buscarPaciente) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 2");
-            mostrando = jPanel_buscarPaciente;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion1MouseClicked(MouseEvent evt) {
-        /* TODO IMPLEMENTAR LÓGICA DE CONSULTAR MIS PACIENTES SEGÚN SEDE PREFERIDA */
-        if (!jPanel_derecho.isAncestorOf(jPanel_mostrarTabla)) {
-            jPanel_derecho.add(jPanel_mostrarTabla, "option 1");
-        }
-        if (mostrando == jPanel_mostrarTabla) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 1");
-            mostrando = jPanel_mostrarTabla;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    /* eventos de jDialog modificar datos personales del usuario */
+    /* eventos de jDialog modificar datos personales del usuario doctor */
     private void jTextField_nombreFocusGained(FocusEvent evt) {
         RegistrarUser.handleFocusGain(jTextField_nombre, "Ingrese su nombre");
     }
@@ -3073,6 +2967,20 @@ public class PantallaDoctor extends JFrame {
     }
 
     private void jButton_modificarMouseClicked(MouseEvent evt) {
+        if (!jButton_modificar.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        jButton_modificar.setEnabled(false);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                jButton_modificar.setEnabled(true);
+            }
+        }, modifyUserDisableTime);
+
+
         boolean modificado = false;
         String nombreM = jTextField_nombre.getText();
         String apellidoM = jTextField_apellido.getText();
@@ -3155,6 +3063,18 @@ public class PantallaDoctor extends JFrame {
         }
     }
 
+    private void jPasswordField_viejaFocusGained(FocusEvent evt) {
+        RegistrarUser.handleFocusPassword(jPasswordField_vieja, "Ingrese su contraseña");
+    }
+
+    private void jPasswordField_viejaFocusLost(FocusEvent evt) {
+        RegistrarUser.handleFocusPassword(jPasswordField_vieja, "Ingrese su contraseña");
+    }
+
+    private void jPasswordField_viejaActionPerformed(ActionEvent evt) {
+        jPasswordField_nueva1.requestFocus();
+    }
+
     /* eventos de jPanel inventario */
     private void jTextField_buscarTabla3FocusGained(FocusEvent evt) {
         // TODO add your handling code here:
@@ -3199,7 +3119,7 @@ public class PantallaDoctor extends JFrame {
     }
 
     private void jButton_exportar3MouseClicked(MouseEvent evt) {
-        // TODO add your handling code here:
+        // TODO llamada al método exportar en csv o excel o pdf del jPanel inventario
     }
 
     /* eventos de jPanel reporte y estadísticas */
@@ -3532,29 +3452,12 @@ public class PantallaDoctor extends JFrame {
         /* TODO implementar lógica de guardar preferencias del usuario*/
     }
 
-    private void jButton3MouseClicked(MouseEvent evt) {
-        /* TODO por mover a panel manipular usuarios */
-        String cedulaB = jTextField_cedula2.getText();
-        if (cedulaB.isBlank() || cedulaB.equals("Ingrese cédula a buscar")) {
-            JOptionPane.showMessageDialog(null, "Error. Debe introducir la cédula del paciente para buscar y editar.", "Error al buscar un paciente...", JOptionPane.ERROR_MESSAGE);
-        } else if (!cedulaB.matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$")) {
-            JOptionPane.showMessageDialog(null, "Error. La cédula no tiene el formato correcto.", "Error al buscar un paciente...", JOptionPane.ERROR_MESSAGE);
-        } else {
-            /* TODO buscar paciente con sus credenciales */
-            if (false) {
-                /* mostrar información del usuario en los campos */
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encontraron resultados de pacientes con dicha cédula. Debe crearlo o si es un error, puede buscar al paciente con otros parámetros en 'Buscar paciente'.", "Error al buscar un paciente...", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
     private void jTextField_usuario1FocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_usuario1, "Ingrese su usuario");
+        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese su usuario");
     }
 
     private void jTextField_usuario1FocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_usuario1, "Ingrese su usuario");
+        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese su usuario");
     }
 
     private void jTextField_usuario1ActionPerformed(ActionEvent evt) {
@@ -3598,8 +3501,22 @@ public class PantallaDoctor extends JFrame {
     }
 
     private void jButton_modificar2MouseClicked(MouseEvent evt) {
+        if (!jButton_modificar2.isEnabled()) {
+            return; // Si el botón está deshabilitado, no hacer nada.
+        }
+
+        jButton_modificar2.setEnabled(false);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                jButton_modificar2.setEnabled(true);
+            }
+        }, modifyUserDisableTime);
+
+
         boolean cambiado;
-        String usuario = jTextField_usuario1.getText();
+        String usuario = jTextField_usuario.getText();
         String usuarioNuevo = jTextField_usuarioNuevo.getText();
         boolean condicion1 = usuario.isBlank() || usuario.equals("Ingrese su usuario");
         boolean condicion2 = usuarioNuevo.isBlank() || usuarioNuevo.equals("Ingrese un usuario nuevo");
@@ -3678,21 +3595,6 @@ public class PantallaDoctor extends JFrame {
         jDialog_modificarCred.dispose();
     }
 
-    private void jPasswordField_viejaFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_vieja, "Ingrese su contraseña");
-        /* TODO por mover al jDialog modificar credenciales del usuario */
-    }
-
-    private void jPasswordField_viejaFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_vieja, "Ingrese su contraseña");
-        /* TODO por mover al jDialog modificar credenciales del usuario */
-    }
-
-    private void jPasswordField_viejaActionPerformed(ActionEvent evt) {
-        jPasswordField_nueva1.requestFocus();
-        /* TODO por mover al jDialog modificar credenciales del usuario */
-    }
-
     /* método para colocar el nombre al iniciar sesión */
     public void setBienvenida(String nombre, String cedula) {
         this.nombreBienvenida.setText(nombre);
@@ -3713,12 +3615,7 @@ public class PantallaDoctor extends JFrame {
             java.util.logging.Logger.getLogger(PantallaDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new PantallaDoctor(new Login()).setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new PantallaDoctor(new Login()).setVisible(true));
     }
 
     /* variables propias */
@@ -3730,6 +3627,9 @@ public class PantallaDoctor extends JFrame {
     private final JTableFiltrar jPanel_filtrar3;
     private String cedulaUsuarioActual;
     private final long manipulatePacienteDisableTime = 15000;
+    private final long modifyUserDisableTime = 100000;
+    private final long optionsDisableTime = 10000;
+    private final long searchPacienteDisableTime = 5000;
 
     // Variables declaration - do not modify
     private JLabel apellido;
@@ -3737,7 +3637,6 @@ public class PantallaDoctor extends JFrame {
     private JPanel background;
     private JPanel background_dialog1;
     private JPanel background_dialog2;
-    private JPanel background_dialog3;
     private JButton button_logOut;
     private JButton button_modificarCred;
     private JButton button_modificarDatos;
@@ -3772,7 +3671,7 @@ public class PantallaDoctor extends JFrame {
     private JTextArea indicaciones;
     private JButton jButton1;
     private JButton jButton2;
-    private JButton jButton3;
+    private JButton jButton_buscarPacienteEditar;
     private JButton jButton_acercar;
     private JButton jButton_acercar1;
     private JButton jButton_acercar3;
@@ -3845,8 +3744,6 @@ public class PantallaDoctor extends JFrame {
     private JLabel jLabel9;
     private JPanel jPanel1;
     private JPanel jPanel2;
-    private JPanel jPanel3;
-    private JPanel jPanel4;
     private JPanel jPanel5;
     private JPanel jPanel6;
     private JPanel jPanel7;
@@ -3874,7 +3771,6 @@ public class PantallaDoctor extends JFrame {
     private JPasswordField jPasswordField_vieja;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
-    private JScrollPane jScrollPane3;
     private JScrollPane jScrollPane4;
     private JScrollPane jScrollPane_Table;
     private JScrollPane jScrollPane_Table1;
@@ -3911,8 +3807,7 @@ public class PantallaDoctor extends JFrame {
     private JTable jTable_Content4;
     private JTable jTable_Content5;
     private JTextArea jTextArea1;
-    private JTextArea jTextArea3;
-    private JTextArea jTextArea4;
+    private JTextArea jTextArea2;
     private JTextField jTextField1;
     private JTextField jTextField3;
     private JTextField jTextField4;
@@ -3938,7 +3833,6 @@ public class PantallaDoctor extends JFrame {
     private JTextField jTextField_telefono;
     private JTextField jTextField_telefono1;
     private JTextField jTextField_usuario;
-    private JTextField jTextField_usuario1;
     private JTextField jTextField_usuarioNuevo;
     private JLabel nombre;
     private JLabel nombre1;
@@ -3960,14 +3854,12 @@ public class PantallaDoctor extends JFrame {
     private JLabel titulo1;
     private JLabel titulo2;
     private JLabel titulo3;
-    private JLabel titulo4;
     private JLabel titulo_contenido;
     private JLabel titulo_contenido1;
     private JLabel titulo_contenido3;
     private JLabel titulo_contenido4;
     private JLabel titulo_contenido5;
     private JLabel usuario;
-    private JLabel usuario1;
     private JLabel usuario_nuevo;
     // End of variables declaration
 }

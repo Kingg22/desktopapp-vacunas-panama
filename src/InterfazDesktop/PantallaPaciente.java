@@ -201,11 +201,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jTextField_buscarTablaFocusLost(evt);
             }
         });
-        jTextField_buscarTabla.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_buscarTablaActionPerformed(evt);
-            }
-        });
+        jTextField_buscarTabla.addActionListener(this::jTextField_buscarTablaActionPerformed);
         opcionesTabla.add(jTextField_buscarTabla);
 
         jButton_buscar.setBackground(new java.awt.Color(204, 204, 204));
@@ -601,11 +597,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jTextField_nombreFocusLost(evt);
             }
         });
-        jTextField_nombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_nombreActionPerformed(evt);
-            }
-        });
+        jTextField_nombre.addActionListener(this::jTextField_nombreActionPerformed);
         background_dialog1.add(jTextField_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 390, -1));
 
         jSeparator3.setForeground(new java.awt.Color(30, 30, 30));
@@ -634,11 +626,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jTextField_apellidoFocusLost(evt);
             }
         });
-        jTextField_apellido.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_apellidoActionPerformed(evt);
-            }
-        });
+        jTextField_apellido.addActionListener(this::jTextField_apellidoActionPerformed);
         background_dialog1.add(jTextField_apellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 390, -1));
 
         jSeparator4.setForeground(new java.awt.Color(30, 30, 30));
@@ -660,11 +648,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jTextField_cedula.setFocusable(false);
         jTextField_cedula.setRequestFocusEnabled(false);
         jTextField_cedula.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-        jTextField_cedula.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_cedulaActionPerformed(evt);
-            }
-        });
+        jTextField_cedula.addActionListener(this::jTextField_cedulaActionPerformed);
         background_dialog1.add(jTextField_cedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 390, -1));
 
         jSeparator5.setForeground(new java.awt.Color(30, 30, 30));
@@ -686,11 +670,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
         jTextField_fechaNacimiento.setFocusable(false);
         jTextField_fechaNacimiento.setRequestFocusEnabled(false);
         jTextField_fechaNacimiento.setMaximumSize(new java.awt.Dimension(2147483647, 50));
-        jTextField_fechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_fechaNacimientoActionPerformed(evt);
-            }
-        });
+        jTextField_fechaNacimiento.addActionListener(this::jTextField_fechaNacimientoActionPerformed);
         background_dialog1.add(jTextField_fechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 390, -1));
 
         jSeparator9.setForeground(new java.awt.Color(30, 30, 30));
@@ -730,11 +710,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jTextField_direccionFocusLost(evt);
             }
         });
-        jTextField_direccion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_direccionActionPerformed(evt);
-            }
-        });
+        jTextField_direccion.addActionListener(this::jTextField_direccionActionPerformed);
         background_dialog1.add(jTextField_direccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 190, -1));
 
         distrito.setBackground(new java.awt.Color(0, 0, 0));
@@ -775,11 +751,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jTextField_correoFocusLost(evt);
             }
         });
-        jTextField_correo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_correoActionPerformed(evt);
-            }
-        });
+        jTextField_correo.addActionListener(this::jTextField_correoActionPerformed);
         background_dialog1.add(jTextField_correo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 390, -1));
 
         jSeparator6.setForeground(new java.awt.Color(30, 30, 30));
@@ -802,11 +774,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jTextField_telefonoFocusLost(evt);
             }
         });
-        jTextField_telefono.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_telefonoActionPerformed(evt);
-            }
-        });
+        jTextField_telefono.addActionListener(this::jTextField_telefonoActionPerformed);
         background_dialog1.add(jTextField_telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 460, 390, -1));
 
         telefono.setBackground(new java.awt.Color(0, 0, 0));
@@ -916,11 +884,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jTextField_usuarioFocusLost(evt);
             }
         });
-        jTextField_usuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_usuarioActionPerformed(evt);
-            }
-        });
+        jTextField_usuario.addActionListener(this::jTextField_usuarioActionPerformed);
         background_dialog2.add(jTextField_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 380, -1));
 
         jSeparator8.setForeground(new java.awt.Color(30, 30, 30));
@@ -950,11 +914,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jTextField_usuarioNuevoFocusLost(evt);
             }
         });
-        jTextField_usuarioNuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_usuarioNuevoActionPerformed(evt);
-            }
-        });
+        jTextField_usuarioNuevo.addActionListener(this::jTextField_usuarioNuevoActionPerformed);
         background_dialog2.add(jTextField_usuarioNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 380, -1));
 
         jSeparator14.setForeground(new java.awt.Color(30, 30, 30));
@@ -983,11 +943,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jPasswordField_nueva1FocusLost(evt);
             }
         });
-        jPasswordField_nueva1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField_nueva1ActionPerformed(evt);
-            }
-        });
+        jPasswordField_nueva1.addActionListener(this::jPasswordField_nueva1ActionPerformed);
         background_dialog2.add(jPasswordField_nueva1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 380, -1));
 
         jSeparator11.setForeground(new java.awt.Color(30, 30, 30));
@@ -1016,11 +972,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jPasswordField_nueva2FocusLost(evt);
             }
         });
-        jPasswordField_nueva2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField_nueva2ActionPerformed(evt);
-            }
-        });
+        jPasswordField_nueva2.addActionListener(this::jPasswordField_nueva2ActionPerformed);
         background_dialog2.add(jPasswordField_nueva2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 380, -1));
 
         jSeparator7.setForeground(new java.awt.Color(30, 30, 30));
@@ -1079,11 +1031,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
                 jPasswordField_viejaFocusLost(evt);
             }
         });
-        jPasswordField_vieja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField_viejaActionPerformed(evt);
-            }
-        });
+        jPasswordField_vieja.addActionListener(this::jPasswordField_viejaActionPerformed);
         background_dialog2.add(jPasswordField_vieja, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 380, -1));
 
         jSeparator13.setForeground(new java.awt.Color(30, 30, 30));
@@ -1790,7 +1738,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
     }
 
     private void jButton_modificar2MouseClicked(java.awt.event.MouseEvent evt) {
-        boolean cambiado = false;
+        boolean cambiado;
         String usuario = jTextField_usuario.getText();
         String usuarioNuevo = jTextField_usuarioNuevo.getText();
         boolean condicion1 = usuario.isBlank() || usuario.equals("Ingrese su usuario");
@@ -1890,12 +1838,7 @@ public class PantallaPaciente extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(PantallaPaciente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new PantallaPaciente(new Login()).setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new PantallaPaciente(new Login()).setVisible(true));
     }
 
     /* variables propias */

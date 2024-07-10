@@ -364,12 +364,7 @@ public class PantallaBlock extends JFrame {
             java.util.logging.Logger.getLogger(PantallaBlock.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new PantallaBlock(new Login()).setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new PantallaBlock(new Login()).setVisible(true));
     }
 
     /* variables propias */

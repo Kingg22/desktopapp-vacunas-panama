@@ -225,20 +225,12 @@ public class PantallaAdmin extends JFrame {
                 jTextField_selectComplejoFocusLost(evt);
             }
         });
-        jTextField_selectComplejo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_selectComplejoActionPerformed(evt);
-            }
-        });
+        jTextField_selectComplejo.addActionListener(this::jTextField_selectComplejoActionPerformed);
         jPanel3.add(jTextField_selectComplejo);
 
         jToggleButton1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jToggleButton1.setText("¿Complejo?");
-        jToggleButton1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
-            }
-        });
+        jToggleButton1.addActionListener(this::jToggleButton1ActionPerformed);
         jPanel3.add(jToggleButton1);
 
         jPanel2.add(jPanel3);
@@ -274,11 +266,7 @@ public class PantallaAdmin extends JFrame {
         jComboBox_joins.setModel(new DefaultComboBoxModel<>(new String[]{"0", "1", "2", "3", "4", "5"}));
         jComboBox_joins.setMaximumSize(new Dimension(80, 32767));
         jComboBox_joins.setPreferredSize(new Dimension(80, 27));
-        jComboBox_joins.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_joinsActionPerformed(evt);
-            }
-        });
+        jComboBox_joins.addActionListener(this::jComboBox_joinsActionPerformed);
         jPanel4.add(jComboBox_joins);
 
         jPanel2.add(jPanel4);
@@ -298,11 +286,7 @@ public class PantallaAdmin extends JFrame {
         jTextField_where.setDocument(new LimitarCamposSQL(100, "Condición o condiciones"));
         jTextField_where.setText("Condición o condiciones");
         RegistrarUser.handleFocusGain(jTextField_where, "Condición o condiciones");
-        jTextField_where.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_whereActionPerformed(evt);
-            }
-        });
+        jTextField_where.addActionListener(this::jTextField_whereActionPerformed);
         jPanel5.add(jTextField_where);
 
         jPanel2.add(jPanel5);
@@ -322,11 +306,7 @@ public class PantallaAdmin extends JFrame {
         jTextField_order.setDocument(new LimitarCamposSQL(50, "Condición o condiciones"));
         jTextField_order.setText("Condición o condiciones");
         RegistrarUser.handleFocusGain(jTextField_order, "Condición o condiciones");
-        jTextField_order.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_orderActionPerformed(evt);
-            }
-        });
+        jTextField_order.addActionListener(this::jTextField_orderActionPerformed);
         jPanel6.add(jTextField_order);
 
         jPanel2.add(jPanel6);
@@ -346,11 +326,7 @@ public class PantallaAdmin extends JFrame {
         jTextField_group.setDocument(new LimitarCamposSQL(50, "Condición o condiciones"));
         jTextField_group.setText("Condición o condiciones");
         RegistrarUser.handleFocusGain(jTextField_group, "Condición o condiciones");
-        jTextField_group.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_groupActionPerformed(evt);
-            }
-        });
+        jTextField_group.addActionListener(this::jTextField_groupActionPerformed);
         jPanel7.add(jTextField_group);
 
         jPanel2.add(jPanel7);
@@ -370,11 +346,7 @@ public class PantallaAdmin extends JFrame {
         jTextField_having.setDocument(new LimitarCamposSQL(50, "Condición o condiciones"));
         jTextField_having.setText("Condición o condiciones");
         RegistrarUser.handleFocusGain(jTextField_having, "Condición o condiciones");
-        jTextField_having.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_havingActionPerformed(evt);
-            }
-        });
+        jTextField_having.addActionListener(this::jTextField_havingActionPerformed);
         jPanel8.add(jTextField_having);
 
         jPanel2.add(jPanel8);
@@ -433,11 +405,7 @@ public class PantallaAdmin extends JFrame {
                 jTextField_buscarTablaFocusLost(evt);
             }
         });
-        jTextField_buscarTabla.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_buscarTablaActionPerformed(evt);
-            }
-        });
+        jTextField_buscarTabla.addActionListener(this::jTextField_buscarTablaActionPerformed);
         opcionesTabla.add(jTextField_buscarTabla);
 
         jButton_buscar.setBackground(new Color(204, 204, 204));
@@ -705,11 +673,7 @@ public class PantallaAdmin extends JFrame {
         jComboBox_tabla1.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla1.setMaximumSize(new Dimension(367, 32767));
         jComboBox_tabla1.setPreferredSize(new Dimension(150, 27));
-        jComboBox_tabla1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_tabla1ActionPerformed(evt);
-            }
-        });
+        jComboBox_tabla1.addActionListener(this::jComboBox_tabla1ActionPerformed);
         jPanel10.add(jComboBox_tabla1);
 
         set1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -747,11 +711,7 @@ public class PantallaAdmin extends JFrame {
                 jTextField_valorUpdateFocusLost(evt);
             }
         });
-        jTextField_valorUpdate.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_valorUpdateActionPerformed(evt);
-            }
-        });
+        jTextField_valorUpdate.addActionListener(this::jTextField_valorUpdateActionPerformed);
         jPanel10.add(jTextField_valorUpdate);
 
         cantColumn1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -766,11 +726,7 @@ public class PantallaAdmin extends JFrame {
         jComboBox_cantColumn1.setModel(new DefaultComboBoxModel<>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"}));
         jComboBox_cantColumn1.setMaximumSize(new Dimension(80, 32767));
         jComboBox_cantColumn1.setPreferredSize(new Dimension(80, 27));
-        jComboBox_cantColumn1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_cantColumn1ActionPerformed(evt);
-            }
-        });
+        jComboBox_cantColumn1.addActionListener(this::jComboBox_cantColumn1ActionPerformed);
         jPanel10.add(jComboBox_cantColumn1);
 
         jTextField_updateComplejo.setDocument(new LimitarCamposSQL(200, "Campos y/o función"));
@@ -788,20 +744,12 @@ public class PantallaAdmin extends JFrame {
                 jTextField_updateComplejoFocusLost(evt);
             }
         });
-        jTextField_updateComplejo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_updateComplejoActionPerformed(evt);
-            }
-        });
+        jTextField_updateComplejo.addActionListener(this::jTextField_updateComplejoActionPerformed);
         jPanel10.add(jTextField_updateComplejo);
 
         jToggleButton2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jToggleButton2.setText("¿Complejo?");
-        jToggleButton2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
-            }
-        });
+        jToggleButton2.addActionListener(this::jToggleButton2ActionPerformed);
         jPanel10.add(jToggleButton2);
 
         jPanel9.add(jPanel10);
@@ -830,11 +778,7 @@ public class PantallaAdmin extends JFrame {
                 jTextField_where1FocusLost(evt);
             }
         });
-        jTextField_where1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_where1ActionPerformed(evt);
-            }
-        });
+        jTextField_where1.addActionListener(this::jTextField_where1ActionPerformed);
         jPanel11.add(jTextField_where1);
 
         jPanel9.add(jPanel11);
@@ -869,11 +813,7 @@ public class PantallaAdmin extends JFrame {
         jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla2.setMaximumSize(new Dimension(367, 32767));
         jComboBox_tabla2.setPreferredSize(new Dimension(150, 27));
-        jComboBox_tabla2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_tabla2ActionPerformed(evt);
-            }
-        });
+        jComboBox_tabla2.addActionListener(this::jComboBox_tabla2ActionPerformed);
         jPanel12.add(jComboBox_tabla2);
 
         punto2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -927,11 +867,7 @@ public class PantallaAdmin extends JFrame {
                 jTextField_valorInsertFocusLost(evt);
             }
         });
-        jTextField_valorInsert.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_valorInsertActionPerformed(evt);
-            }
-        });
+        jTextField_valorInsert.addActionListener(this::jTextField_valorInsertActionPerformed);
         jPanel12.add(jTextField_valorInsert);
 
         cantColumn.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -946,11 +882,7 @@ public class PantallaAdmin extends JFrame {
         jComboBox_cantColumn2.setModel(new DefaultComboBoxModel<>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"}));
         jComboBox_cantColumn2.setMaximumSize(new Dimension(80, 32767));
         jComboBox_cantColumn2.setPreferredSize(new Dimension(80, 27));
-        jComboBox_cantColumn2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_cantColumn2ActionPerformed(evt);
-            }
-        });
+        jComboBox_cantColumn2.addActionListener(this::jComboBox_cantColumn2ActionPerformed);
         jPanel12.add(jComboBox_cantColumn2);
 
         jTextField_insertComplejo.setDocument(new LimitarCamposSQL(200, "Campos y/o función"));
@@ -968,20 +900,12 @@ public class PantallaAdmin extends JFrame {
                 jTextField_insertComplejoFocusLost(evt);
             }
         });
-        jTextField_insertComplejo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_insertComplejoActionPerformed(evt);
-            }
-        });
+        jTextField_insertComplejo.addActionListener(this::jTextField_insertComplejoActionPerformed);
         jPanel12.add(jTextField_insertComplejo);
 
         jToggleButton3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jToggleButton3.setText("¿Complejo?");
-        jToggleButton3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jToggleButton3ActionPerformed(evt);
-            }
-        });
+        jToggleButton3.addActionListener(this::jToggleButton3ActionPerformed);
         jPanel12.add(jToggleButton3);
 
         jPanel9.add(jPanel12);
@@ -1031,20 +955,12 @@ public class PantallaAdmin extends JFrame {
                 jTextField_deleteComplejoFocusLost(evt);
             }
         });
-        jTextField_deleteComplejo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_deleteComplejoActionPerformed(evt);
-            }
-        });
+        jTextField_deleteComplejo.addActionListener(this::jTextField_deleteComplejoActionPerformed);
         jPanel13.add(jTextField_deleteComplejo);
 
         jToggleButton4.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jToggleButton4.setText("¿Complejo?");
-        jToggleButton4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jToggleButton4ActionPerformed(evt);
-            }
-        });
+        jToggleButton4.addActionListener(this::jToggleButton4ActionPerformed);
         jPanel13.add(jToggleButton4);
 
         jPanel9.add(jPanel13);
@@ -1074,11 +990,7 @@ public class PantallaAdmin extends JFrame {
                 jTextField_where2FocusLost(evt);
             }
         });
-        jTextField_where2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_where2ActionPerformed(evt);
-            }
-        });
+        jTextField_where2.addActionListener(this::jTextField_where2ActionPerformed);
         jPanel14.add(jTextField_where2);
 
         jPanel9.add(jPanel14);
@@ -1987,12 +1899,7 @@ public class PantallaAdmin extends JFrame {
             java.util.logging.Logger.getLogger(PantallaAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new PantallaAdmin().setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new PantallaAdmin().setVisible(true));
     }
 
     /* variables propias */

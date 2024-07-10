@@ -171,11 +171,7 @@ public class Login extends JFrame {
                 jTextField_cedulaFocusLost(evt);
             }
         });
-        jTextField_cedula.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_cedulaActionPerformed(evt);
-            }
-        });
+        jTextField_cedula.addActionListener(this::jTextField_cedulaActionPerformed);
         background1.add(jTextField_cedula, new AbsoluteConstraints(30, 180, 540, -1));
 
         cedula.setBackground(new Color(0, 0, 0));
@@ -210,11 +206,7 @@ public class Login extends JFrame {
                 jTextField_fechaNacimientoFocusLost(evt);
             }
         });
-        jTextField_fechaNacimiento.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_fechaNacimientoActionPerformed(evt);
-            }
-        });
+        jTextField_fechaNacimiento.addActionListener(this::jTextField_fechaNacimientoActionPerformed);
         background1.add(jTextField_fechaNacimiento, new AbsoluteConstraints(30, 240, 540, -1));
 
         jSeparator4.setForeground(new Color(30, 30, 30));
@@ -285,11 +277,7 @@ public class Login extends JFrame {
                 jTextField_usuarioFocusLost(evt);
             }
         });
-        jTextField_usuario.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_usuarioActionPerformed(evt);
-            }
-        });
+        jTextField_usuario.addActionListener(this::jTextField_usuarioActionPerformed);
         background1.add(jTextField_usuario, new AbsoluteConstraints(30, 410, 540, -1));
 
         jSeparator3.setForeground(new Color(30, 30, 30));
@@ -321,11 +309,7 @@ public class Login extends JFrame {
                 jPasswordFieldFocusLost(evt);
             }
         });
-        jPasswordField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jPasswordFieldActionPerformed(evt);
-            }
-        });
+        jPasswordField.addActionListener(this::jPasswordFieldActionPerformed);
         background1.add(jPasswordField, new AbsoluteConstraints(30, 460, 540, -1));
 
         jSeparator2.setForeground(new Color(30, 30, 30));
@@ -444,11 +428,7 @@ public class Login extends JFrame {
                 userInputFocusLost(evt);
             }
         });
-        jTextField_usuario_login.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                userInputActionPerformed(evt);
-            }
-        });
+        jTextField_usuario_login.addActionListener(this::userInputActionPerformed);
         jPanel_background_loginForm.add(jTextField_usuario_login, new AbsoluteConstraints(80, 360, 240, -1));
         RegistrarUser.handleFocusGain(jTextField_usuario_login, "Ingrese su usuario");
         jTextField_usuario_login.setVisible(false);
@@ -467,11 +447,7 @@ public class Login extends JFrame {
                 passwordInputFocusLost(evt);
             }
         });
-        jPasswordField_login.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                passwordInputActionPerformed(evt);
-            }
-        });
+        jPasswordField_login.addActionListener(this::passwordInputActionPerformed);
         jPanel_background_loginForm.add(jPasswordField_login, new AbsoluteConstraints(80, 400, 240, -1));
         RegistrarUser.handleFocusGain(jPasswordField_login, "Ingrese su contraseña");
         jPasswordField_login.setVisible(false);
@@ -1274,12 +1250,7 @@ public class Login extends JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new Login().setVisible(true));
     }
 
     /* mis variables */

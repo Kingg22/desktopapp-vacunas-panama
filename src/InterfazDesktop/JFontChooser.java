@@ -2,8 +2,6 @@ package InterfazDesktop;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class JFontChooser extends JDialog {
 
@@ -48,24 +46,16 @@ public class JFontChooser extends JDialog {
         buttonPanel.add(cancelButton);
         this.add(buttonPanel, BorderLayout.SOUTH);
 
-        okButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String family = (String) familyComboBox.getSelectedItem();
-                int style = styleComboBox.getSelectedIndex();
-                int size = (int) sizeSpinner.getValue();
-                selectedFont = new Font(family, style, size);
-                okPressed = true;
-                setVisible(false);
-            }
+        okButton.addActionListener(e -> {
+            String family = (String) familyComboBox.getSelectedItem();
+            int style = styleComboBox.getSelectedIndex();
+            int size = (int) sizeSpinner.getValue();
+            selectedFont = new Font(family, style, size);
+            okPressed = true;
+            setVisible(false);
         });
 
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-            }
-        });
+        cancelButton.addActionListener(e -> setVisible(false));
         this.pack();
     }
 

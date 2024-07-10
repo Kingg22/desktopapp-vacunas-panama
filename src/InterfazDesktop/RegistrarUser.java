@@ -146,11 +146,7 @@ public class RegistrarUser extends JFrame {
                 jTextField_nombreFocusLost(evt);
             }
         });
-        jTextField_nombre.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_nombreActionPerformed(evt);
-            }
-        });
+        jTextField_nombre.addActionListener(this::jTextField_nombreActionPerformed);
         background.add(jTextField_nombre, new AbsoluteConstraints(30, 100, 550, -1));
 
         jSeparator3.setForeground(new Color(30, 30, 30));
@@ -179,11 +175,7 @@ public class RegistrarUser extends JFrame {
                 jTextField_apellidoFocusLost(evt);
             }
         });
-        jTextField_apellido.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_apellidoActionPerformed(evt);
-            }
-        });
+        jTextField_apellido.addActionListener(this::jTextField_apellidoActionPerformed);
         background.add(jTextField_apellido, new AbsoluteConstraints(30, 150, 550, -1));
 
         jSeparator4.setForeground(new Color(30, 30, 30));
@@ -212,11 +204,7 @@ public class RegistrarUser extends JFrame {
                 jTextField_cedulaFocusLost(evt);
             }
         });
-        jTextField_cedula.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_cedulaActionPerformed(evt);
-            }
-        });
+        jTextField_cedula.addActionListener(this::jTextField_cedulaActionPerformed);
         background.add(jTextField_cedula, new AbsoluteConstraints(30, 200, 550, -1));
 
         jSeparator5.setForeground(new Color(30, 30, 30));
@@ -245,11 +233,7 @@ public class RegistrarUser extends JFrame {
                 jTextField_fechaNacimientoFocusLost(evt);
             }
         });
-        jTextField_fechaNacimiento.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_fechaNacimientoActionPerformed(evt);
-            }
-        });
+        jTextField_fechaNacimiento.addActionListener(this::jTextField_fechaNacimientoActionPerformed);
         background.add(jTextField_fechaNacimiento, new AbsoluteConstraints(30, 250, 550, -1));
 
         jSeparator9.setForeground(new Color(30, 30, 30));
@@ -289,11 +273,7 @@ public class RegistrarUser extends JFrame {
                 jTextField_direccionFocusLost(evt);
             }
         });
-        jTextField_direccion.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_direccionActionPerformed(evt);
-            }
-        });
+        jTextField_direccion.addActionListener(this::jTextField_direccionActionPerformed);
         background.add(jTextField_direccion, new AbsoluteConstraints(30, 350, 250, -1));
 
         distrito.setBackground(new Color(0, 0, 0));
@@ -334,11 +314,7 @@ public class RegistrarUser extends JFrame {
                 jTextField_correoFocusLost(evt);
             }
         });
-        jTextField_correo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_correoActionPerformed(evt);
-            }
-        });
+        jTextField_correo.addActionListener(this::jTextField_correoActionPerformed);
         background.add(jTextField_correo, new AbsoluteConstraints(30, 400, 550, -1));
 
         jSeparator6.setForeground(new Color(30, 30, 30));
@@ -367,11 +343,7 @@ public class RegistrarUser extends JFrame {
                 jTextField_telefonoFocusLost(evt);
             }
         });
-        jTextField_telefono.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_telefonoActionPerformed(evt);
-            }
-        });
+        jTextField_telefono.addActionListener(this::jTextField_telefonoActionPerformed);
         background.add(jTextField_telefono, new AbsoluteConstraints(30, 450, 550, -1));
 
         jSeparator12.setForeground(new Color(30, 30, 30));
@@ -401,11 +373,7 @@ public class RegistrarUser extends JFrame {
                 jTextField_usuarioFocusLost(evt);
             }
         });
-        jTextField_usuario.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_usuarioActionPerformed(evt);
-            }
-        });
+        jTextField_usuario.addActionListener(this::jTextField_usuarioActionPerformed);
         background.add(jTextField_usuario, new AbsoluteConstraints(30, 500, 550, -1));
 
         jSeparator8.setForeground(new Color(30, 30, 30));
@@ -434,11 +402,7 @@ public class RegistrarUser extends JFrame {
                 jPasswordFieldFocusLost(evt);
             }
         });
-        jPasswordField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jPasswordFieldActionPerformed(evt);
-            }
-        });
+        jPasswordField.addActionListener(this::jPasswordFieldActionPerformed);
         background.add(jPasswordField, new AbsoluteConstraints(30, 550, 550, -1));
 
         jSeparator7.setForeground(new Color(30, 30, 30));
@@ -837,11 +801,7 @@ public class RegistrarUser extends JFrame {
             java.util.logging.Logger.getLogger(RegistrarUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new RegistrarUser(new Login()).setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new RegistrarUser(new Login()).setVisible(true));
     }
 
     /* variables propias */

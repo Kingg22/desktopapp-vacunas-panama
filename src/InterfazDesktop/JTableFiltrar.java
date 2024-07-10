@@ -7,7 +7,6 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -37,11 +36,7 @@ public class JTableFiltrar extends JPanel {
         jLabel2.setText("Filtro de columnas");
         add(jLabel2);
 
-        jComboBox_filterColumn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_filterColumnActionPerformed(evt);
-            }
-        });
+        jComboBox_filterColumn.addActionListener(this::jComboBox_filterColumnActionPerformed);
         add(jComboBox_filterColumn);
 
         jLabel3.setText("Filtro de valor por columna");
@@ -59,11 +54,7 @@ public class JTableFiltrar extends JPanel {
                 jTextField_buscarColumnFocusLost(evt);
             }
         });
-        jTextField_buscarColumn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jTextField_buscarColumnActionPerformed(evt);
-            }
-        });
+        jTextField_buscarColumn.addActionListener(this::jTextField_buscarColumnActionPerformed);
         add(jTextField_buscarColumn);
     }// </editor-fold>
 
@@ -94,7 +85,7 @@ public class JTableFiltrar extends JPanel {
             sorter.setRowFilter(RowFilter.regexFilter(".*", columnIndex));
         } else {
             sorter.setRowFilter(new RowFilter<TableModel, Object>() {
-                public boolean include(RowFilter.Entry<? extends TableModel, ? extends Object> entry) {
+                public boolean include(RowFilter.Entry<? extends TableModel, ?> entry) {
                     return entry.getStringValue(columnIndex).contains(filterText);
                 }
             });

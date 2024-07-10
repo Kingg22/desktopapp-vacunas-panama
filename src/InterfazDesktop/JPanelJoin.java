@@ -3,7 +3,6 @@ package InterfazDesktop;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class JPanelJoin extends JPanel {
 
@@ -46,11 +45,7 @@ public class JPanelJoin extends JPanel {
         jComboBox_tabla2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla2"}));
         jComboBox_tabla2.setPreferredSize(new Dimension(150, 27));
-        jComboBox_tabla2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_tabla2ActionPerformed(evt);
-            }
-        });
+        jComboBox_tabla2.addActionListener(this::jComboBox_tabla2ActionPerformed);
         add(jComboBox_tabla2);
 
         punto2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -64,11 +59,7 @@ public class JPanelJoin extends JPanel {
         jComboBox_tabla3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_tabla3.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
         jComboBox_tabla3.setPreferredSize(new Dimension(150, 27));
-        jComboBox_tabla3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_tabla3ActionPerformed(evt);
-            }
-        });
+        jComboBox_tabla3.addActionListener(this::jComboBox_tabla3ActionPerformed);
         add(jComboBox_tabla3);
 
         punto.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -95,11 +86,7 @@ public class JPanelJoin extends JPanel {
         jComboBox_tabla4.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jComboBox_tabla4.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla2"}));
         jComboBox_tabla4.setPreferredSize(new Dimension(150, 27));
-        jComboBox_tabla4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jComboBox_tabla4ActionPerformed(evt);
-            }
-        });
+        jComboBox_tabla4.addActionListener(this::jComboBox_tabla4ActionPerformed);
         add(jComboBox_tabla4);
 
         punto3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));

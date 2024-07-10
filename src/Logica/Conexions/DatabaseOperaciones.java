@@ -390,7 +390,7 @@ public class DatabaseOperaciones {
     }
 
     private String searchName(int type, String pattern) {
-        List<String> names = null;
+        List<String> names;
         if (pattern == null || pattern.trim().isEmpty()) {
             return null;
         }

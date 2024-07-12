@@ -21,6 +21,7 @@ public class PantallaBlock extends JFrame {
         button_logOut.setUI(new BasicButtonUI());
 
         this.setExtendedState(MAXIMIZED_BOTH);
+        this.requestFocusInWindow();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">

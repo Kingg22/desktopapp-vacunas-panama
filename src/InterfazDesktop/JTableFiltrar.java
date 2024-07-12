@@ -76,9 +76,13 @@ public class JTableFiltrar extends JPanel {
 
     /* método propio */
     private void filterActionPerformed() {
-        /* TODO editar según el panel que llama y limpiar en cada llamada */
         int columnIndex = jComboBox_filterColumn.getSelectedIndex();
         String filterText = jTextField_buscarColumn.getText();
+
+        // Verifica si el índice es válido antes de proceder
+        if (columnIndex < 0) {
+            return; // Si no es válido, no hacer nada
+        }
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable_Content.getModel());
         if (filterText.isEmpty() || filterText.equals("Buscar en...")) {
@@ -91,6 +95,13 @@ public class JTableFiltrar extends JPanel {
             });
         }
         jTable_Content.setRowSorter(sorter);
+    }
+
+    public void setPreferences(String[] columna) {
+        jComboBox_filterColumn.removeAllItems();
+        for (int i = 0; i < columna.length; i++) {
+            jComboBox_filterColumn.addItem(columna[i]);
+        }
     }
 
     // variables propias

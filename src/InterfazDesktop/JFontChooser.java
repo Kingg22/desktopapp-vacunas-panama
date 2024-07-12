@@ -7,6 +7,9 @@ public class JFontChooser extends JDialog {
 
     private Font selectedFont;
     private boolean okPressed;
+    private JComboBox<String> familyComboBox;
+    private JComboBox<String> styleComboBox;
+    private JSpinner sizeSpinner;
 
     public JFontChooser(Frame parent) {
         super(parent, "Elige una fuente", true);
@@ -19,20 +22,20 @@ public class JFontChooser extends JDialog {
 
         // Familia de la fuente
         JLabel familyLabel = new JLabel("Familia:");
-        JComboBox<String> familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+        familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
         fontPanel.add(familyLabel);
         fontPanel.add(familyComboBox);
 
         // Estilo de la fuente
         JLabel styleLabel = new JLabel("Estilo:");
         String[] styles = {"Regular", "Negrita", "Cursiva", "Negrita Cursiva"};
-        JComboBox<String> styleComboBox = new JComboBox<>(styles);
+        styleComboBox = new JComboBox<>(styles);
         fontPanel.add(styleLabel);
         fontPanel.add(styleComboBox);
 
         // Tamaño de la fuente
         JLabel sizeLabel = new JLabel("Tamaño:");
-        JSpinner sizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
+        sizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
         fontPanel.add(sizeLabel);
         fontPanel.add(sizeSpinner);
 
@@ -57,6 +60,7 @@ public class JFontChooser extends JDialog {
 
         cancelButton.addActionListener(e -> setVisible(false));
         this.pack();
+        this.requestFocusInWindow();
     }
 
     public boolean showDialog(Component parent) {
@@ -67,5 +71,11 @@ public class JFontChooser extends JDialog {
 
     public Font getSelectedFont() {
         return selectedFont;
+    }
+
+    public void setPreferences(String font, int style, int size) {
+        familyComboBox.setSelectedItem(font);
+        styleComboBox.setSelectedIndex(style);
+        sizeSpinner.setValue(size);
     }
 }

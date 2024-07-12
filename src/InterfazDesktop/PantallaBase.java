@@ -4,7 +4,6 @@ import Logica.Validations.*;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -1688,16 +1687,6 @@ public class PantallaBase extends JFrame {
     public void setBienvenida(String nombre, String cedula) {
         this.nombreBienvenida.setText(nombre);
         cedulaUsuarioActual = cedula;
-    }
-
-    public static void agregarDatosATabla(JTable tabla, Object[][] data, Object[] columnas) {
-        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
-
-        model.setColumnIdentifiers(columnas);
-
-        for (Object[] row : data) {
-            model.addRow(row);
-        }
     }
 
     /* método static para crear FAQ con estilo moderno */

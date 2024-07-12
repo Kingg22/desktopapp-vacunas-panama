@@ -2,6 +2,8 @@ package InterfazDesktop;
 
 import Logica.Validations.LimitarCamposSQL;
 import Logica.Validations.LimitarCamposSeguro;
+import Logica.Validations.Preferencias;
+import Logica.Validations.Usuario;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -31,6 +33,7 @@ public class PantallaAdmin extends JFrame {
             boton.setUI(new BasicButtonUI());
             boton.setBackground(new Color(86, 86, 86));
         }
+        this.requestFocusInWindow();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
@@ -1330,6 +1333,71 @@ public class PantallaAdmin extends JFrame {
         Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
     }
 
+    /* eventos del menú lateral */
+    private void button_logOutMouseClicked(MouseEvent evt) {
+        this.dispose();
+    }
+
+    private void button_preferenciasMouseClicked(MouseEvent evt) {
+        if (!jPanel_derecho.isAncestorOf(jPanel_preferencias)) {
+            jPanel_derecho.add(jPanel_preferencias, "preferences");
+        }
+        if (mostrando == jPanel_preferencias) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "preferences");
+            mostrando = jPanel_preferencias;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_opcion1MouseClicked(MouseEvent evt) {
+        if (!jPanel_derecho.isAncestorOf(jPanel_select)) {
+            jPanel_derecho.add(jPanel_select, "option 1");
+        }
+        if (mostrando == jPanel_select) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 1");
+            mostrando = jPanel_select;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_opcion2MouseClicked(MouseEvent evt) {
+        if (!jPanel_derecho.isAncestorOf(jPanel_insert_update_delete)) {
+            jPanel_derecho.add(jPanel_insert_update_delete, "option 2");
+        }
+        if (mostrando == jPanel_insert_update_delete) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 2");
+            mostrando = jPanel_insert_update_delete;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
+    private void button_opcion5MouseClicked(MouseEvent evt) {
+        if (!jPanel_derecho.isAncestorOf(jPanel_backup)) {
+            jPanel_derecho.add(jPanel_backup, "option 5");
+        }
+        if (mostrando == jPanel_backup) {
+            layout.show(jPanel_derecho, "vacio");
+            mostrando = jPanel1;
+        } else {
+            layout.show(jPanel_derecho, "option 5");
+            mostrando = jPanel_backup;
+        }
+        jPanel_derecho.revalidate();
+        jPanel_derecho.repaint();
+    }
+
     /* eventos del jPanel mostrar tabla option 1*/
     private void jButton_acercarMouseClicked(MouseEvent evt) {
         Font currentFont = jTable_Content.getFont();
@@ -1399,71 +1467,6 @@ public class PantallaAdmin extends JFrame {
 
     private void jButton_savePreferencesMouseClicked(MouseEvent evt) {
         /* TODO implementar lógica de guardar preferencias del usuario*/
-    }
-
-    /* eventos del menú lateral */
-    private void button_logOutMouseClicked(MouseEvent evt) {
-        this.dispose();
-    }
-
-    private void button_preferenciasMouseClicked(MouseEvent evt) {
-        if (!jPanel_derecho.isAncestorOf(jPanel_preferencias)) {
-            jPanel_derecho.add(jPanel_preferencias, "preferences");
-        }
-        if (mostrando == jPanel_preferencias) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "preferences");
-            mostrando = jPanel_preferencias;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion1MouseClicked(MouseEvent evt) {
-        if (!jPanel_derecho.isAncestorOf(jPanel_select)) {
-            jPanel_derecho.add(jPanel_select, "option 1");
-        }
-        if (mostrando == jPanel_select) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 1");
-            mostrando = jPanel_select;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion2MouseClicked(MouseEvent evt) {
-        if (!jPanel_derecho.isAncestorOf(jPanel_insert_update_delete)) {
-            jPanel_derecho.add(jPanel_insert_update_delete, "option 2");
-        }
-        if (mostrando == jPanel_insert_update_delete) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 2");
-            mostrando = jPanel_insert_update_delete;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
-    }
-
-    private void button_opcion5MouseClicked(MouseEvent evt) {
-        if (!jPanel_derecho.isAncestorOf(jPanel_backup)) {
-            jPanel_derecho.add(jPanel_backup, "option 5");
-        }
-        if (mostrando == jPanel_backup) {
-            layout.show(jPanel_derecho, "vacio");
-            mostrando = jPanel1;
-        } else {
-            layout.show(jPanel_derecho, "option 5");
-            mostrando = jPanel_backup;
-        }
-        jPanel_derecho.revalidate();
-        jPanel_derecho.repaint();
     }
 
     /* eventos del panel SELECT */
@@ -1834,9 +1837,18 @@ public class PantallaAdmin extends JFrame {
     }
 
     /* métodos propios */
-    public void setBienvenida(String nombre, String cedula) {
-        this.nombreBienvenida.setText(nombre);
-        cedulaUsuarioActual = cedula;
+    public void personalizarVentana(Usuario userActual) {
+        this.userActual = userActual;
+        this.nombreBienvenida.setText(userActual.getNombre() + " " + userActual.getApellido());
+        cedulaUsuarioActual = userActual.getCedula();
+        actualizarPreferencias(userActual.getPrefs());
+    }
+
+    private void actualizarPreferencias(Preferencias pref) {
+        String font = pref.getFontName();
+        int style = pref.getFontStyle(), size = pref.getFontSize();
+        Font f = new Font(font, style, size);
+        // cambiar para las tablas content
     }
 
     private void addFocusListenerCondicion(JTextField field) {
@@ -1906,6 +1918,7 @@ public class PantallaAdmin extends JFrame {
     private CardLayout layout = null;
     private Component mostrando = null;
     private String cedulaUsuarioActual;
+    private Usuario userActual;
     private final JTableFiltrar jPanel_filtrar;
     private final JPanelJoin join1;
     private final JPanelJoin join2;

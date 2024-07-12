@@ -8,6 +8,7 @@ import org.netbeans.lib.awtextra.AbsoluteLayout;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
@@ -20,6 +21,7 @@ public class RegistrarUser extends JFrame {
         RegistrarUser.parentFrame = parent;
         initComponents();
 
+        this.requestFocusInWindow();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
@@ -217,7 +219,7 @@ public class RegistrarUser extends JFrame {
         background.add(fecha_nacimiento, new AbsoluteConstraints(30, 230, -1, -1));
 
         jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
-        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(19, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
+        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(25, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
         jTextField_fechaNacimiento.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_fechaNacimiento.setForeground(Color.gray);
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
@@ -327,13 +329,13 @@ public class RegistrarUser extends JFrame {
         background.add(telefono, new AbsoluteConstraints(30, 430, -1, -1));
 
         jTextField_telefono.setBackground(new Color(255, 255, 255));
-        jTextField_telefono.setDocument(new LimitarCamposPhone(15, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio"));
+        jTextField_telefono.setDocument(new LimitarCamposPhone(15, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)"));
         jTextField_telefono.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_telefono.setForeground(Color.gray);
-        jTextField_telefono.setText("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        jTextField_telefono.setText("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
         jTextField_telefono.setBorder(null);
         jTextField_telefono.setMaximumSize(new Dimension(2147483647, 50));
-        handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
         jTextField_telefono.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 jTextField_telefonoFocusGained(evt);
@@ -485,19 +487,18 @@ public class RegistrarUser extends JFrame {
         getContentPane().add(jScrollPane1, new AbsoluteConstraints(0, 0, -1, -1));
 
         setSize(new Dimension(616, 738));
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parentFrame);
     }// </editor-fold>
 
     /* eventos */
     private void formComponentShown(ComponentEvent evt) {
         Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
         try {
-            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(new DatabaseOperaciones().getDistritos("admin", "admin1234", "Administrador")));
+            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(PantallaDoctor.transformMatrizToArray(new DatabaseOperaciones().getDistritos("admin", "admin1234", "Administrador"), 0)));
         } catch (Exception e) {
             System.out.println(e);
             JOptionPane.showMessageDialog(null, "Ha ocurrido un problema encontrando las distritos. Reinicie la aplicación o contacte a soporte");
         }
-        jComboBox_distrito.insertItemAt("Elegir", 0);
     }
 
     private void formWindowClosing(WindowEvent evt) {
@@ -557,7 +558,7 @@ public class RegistrarUser extends JFrame {
             errorMessage.setVisible(true);
         } else if (!fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$") &&
                 !fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$")) {
-            errorMessage.setText("Error. La fecha de nacimiento no tiene el formato correcto. Mínimo fecha sin hora");
+            errorMessage.setText("Error. La fecha de nacimiento no tiene el formato correcto. Mínimo YYYY-MM-DD");
             errorMessage.setVisible(true);
         } else if (correoM.isBlank() || (!correoM.equals("Ingrese su correo electrónico") && !correoM.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$"))) {
             errorMessage.setText("Error. El correo electrónico no tiene el formato correcto.");
@@ -679,11 +680,11 @@ public class RegistrarUser extends JFrame {
     }
 
     private void jTextField_telefonoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
     }
 
     private void jTextField_telefonoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
     }
 
     private void jTextField_usuarioFocusGained(FocusEvent evt) {
@@ -769,12 +770,24 @@ public class RegistrarUser extends JFrame {
                 } catch (BadLocationException e) {
                     System.err.println(e);
                 }
+            } else if (document instanceof PlainDocument) {
+                try {
+                    document.remove(0, document.getLength());
+                } catch (BadLocationException e) {
+                    System.err.println(e);
+                }
             } else {
                 field.setText(defaultText);
             }
             field.setForeground(Color.gray);
         } else if (text.equals(defaultText)) {
             if (document instanceof LimitarCampos) {
+                try {
+                    document.remove(0, document.getLength());
+                } catch (BadLocationException e) {
+                    System.err.println(e);
+                }
+            } else if (document instanceof PlainDocument) {
                 try {
                     document.remove(0, document.getLength());
                 } catch (BadLocationException e) {
@@ -801,7 +814,11 @@ public class RegistrarUser extends JFrame {
             java.util.logging.Logger.getLogger(RegistrarUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        EventQueue.invokeLater(() -> new RegistrarUser(new Login()).setVisible(true));
+        EventQueue.invokeLater(() -> {
+            RegistrarUser r = new RegistrarUser(new Login());
+            r.setVisible(true);
+            r.requestFocusInWindow();
+        });
     }
 
     /* variables propias */

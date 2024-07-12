@@ -17,6 +17,7 @@ public class InicioSesion {
     public InicioSesion() {
         inicializarRoles();
         inicializarUsuariosLocales();
+        System.out.println();
         sincronizarUsuariosBD();
         System.out.println();
     }
@@ -29,8 +30,8 @@ public class InicioSesion {
     }
 
     private void inicializarUsuariosLocales() {
-        usuariosRole.get("Administrador").add(new Usuario("8-1024-1653", "admin", Usuario.hashpassword("admin1234"), Timestamp.valueOf("2005-07-22 00:00:00")));
-        System.out.println("Administrador insertado local");
+        usuariosRole.get("Administrador").add(new Usuario("8-1024-1653", "admin", Usuario.hashPassword("admin1234"), Timestamp.valueOf("2005-07-22 00:00:00")));
+        System.out.println("Administrador insertado local. 8-1024-1653 admin");
     }
 
     private void sincronizarUsuariosBD() {
@@ -41,10 +42,12 @@ public class InicioSesion {
             Object[][] da = result.getDatos();
             if (result != null && da.length != 0) {
                 System.out.println("Se han encontrado usuarios en la base de datos! Count: " + result.getDatos().length);
+                System.out.println();
                 sincronizarUsuarios(result);
             } else {
                 System.out.println("NO se encontraron usuarios en la base de datos.");
             }
+            System.out.println();
             insertarUsuariosPredeterminados(db);
         } catch (Exception e) {
             System.err.println(e);
@@ -62,8 +65,8 @@ public class InicioSesion {
             String rol = DatabaseOperaciones.getTipo((Integer) dato[4]);
             Usuario userLocal = buscar(cedula, rol);
             if (userLocal == null) {
-                usuariosRole.get(rol).add(new Usuario((String) dato[1], (String) dato[2], (String) dato[3], (Timestamp) dato[5]));
-                System.out.println("Se ha insertado USUARIO local encontrado en la base de datos.");
+                usuariosRole.get(rol).add(new Usuario(cedula, (String) dato[2], (String) dato[3], (Timestamp) dato[5]));
+                System.out.println("Se ha insertado USUARIO local encontrado en la base de datos. CIP:" + cedula + " user: " + dato[2] + " Rol: " + rol);
             } else {
                 actualizarUsuarioLocal(userLocal, dato, rol);
             }
@@ -77,7 +80,7 @@ public class InicioSesion {
         if (needsUpdate) {
             boolean statusBDLocal = modificarUsuario((String) dato[1], (String) dato[2], (String) dato[3], (Timestamp) dato[5], rol);
             if (statusBDLocal) {
-                System.out.println("Se ha actualizado localmente un usuario encontrado en la base de datos.");
+                System.out.println("Se ha actualizado localmente un usuario encontrado en la base de datos. CIP:" + dato[1] + " user: " + dato[2] + " Rol: " + rol);
             }
         }
     }
@@ -99,7 +102,7 @@ public class InicioSesion {
             if (buscar((String) datos[2], rol) == null) {
                 insertar((String) datos[0], (String) datos[1], (String) datos[2], Timestamp.valueOf((String) datos[3]), (char) datos[4], (String) datos[5], (String) datos[6], (String) datos[7], (String) datos[8], (String) datos[9], (String) datos[10], rol);
             } else {
-                modificarCompleto((String) datos[2], (String) datos[0], (String) datos[1], Timestamp.valueOf((String) datos[3]), (String) datos[9], (String) datos[10], rol);
+                modificarObligatorias((String) datos[2], (String) datos[0], (String) datos[1], Timestamp.valueOf((String) datos[3]), (String) datos[9], (String) datos[10], rol);
                 System.out.println("Se ha actualizado USUARIO LOCAL de usuarios predeterminados.");
             }
         }
@@ -150,10 +153,9 @@ public class InicioSesion {
 
     public static boolean insertar(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, char sexo, String distrito, String direccion, String correo, String telefono, String usuario, String password, String rol) throws SQLException, ClassNotFoundException {
         DatabaseOperaciones db = new DatabaseOperaciones();
-
         if (rol.equals("Paciente")) {
             // Verificar si el paciente ya existe en la base de datos
-            Resultados result = db.searchPaciente("admin", "admin1234", "Administrador", cedula);
+            Resultados result = db.searchPaciente("admin", "admin1234", "Administrador", cedula, null, null);
             Object[][] datos = result.getDatos();
             if (result != null && datos.length != 0) {
                 boolean needsUpdate = !datos[0][1].equals(nombre) ||
@@ -198,62 +200,72 @@ public class InicioSesion {
 
         // Verificar si el usuario ya existe de forma local
         if (buscar(cedula, rol) == null) {
-            boolean insertado = usuariosRole.get(rol).add(new Usuario(nombre, apellido, cedula, fechaNacimiento, usuario, password));
+            boolean insertado = usuariosRole.get(rol).add(new Usuario(nombre, apellido, cedula, fechaNacimiento, correo, telefono, direccion, distrito, usuario, password));
             // Verificar si el usuario ya existe en la base de datos
             Resultados result2 = db.searchUsuario("admin", "admin1234", "Administrador", cedula, rol);
 
             if (result2 != null && result2.getDatos().length != 0) {
-                Object[][] datos = result2.getDatos();
-                Timestamp fechaBD = Timestamp.valueOf(datos[0][3].toString().replace(" ", "T"));
+                Object[][] datos2 = result2.getDatos();
+                Timestamp fechaBD = Timestamp.valueOf(datos2[0][3].toString().replace(" ", "T"));
 
-                boolean needsUpdate = !datos[0][2].equals(usuario) ||
-                        !Usuario.check2Password(password, datos[0][3].toString()) ||
+                boolean needsUpdate = !datos2[0][2].equals(usuario) ||
+                        !Usuario.check2Password(password, datos2[0][3].toString()) ||
                         !fechaNacimiento.equals(fechaBD);
 
                 if (needsUpdate) {
                     // Crear el usuario en la base de datos
                     try {
-                        int usuarioCreado = db.manipulateUsuario("admin", "admin1234", "Administrador", cedula, usuario, Usuario.hashpassword(password), rol, fechaNacimiento);
+                        int usuarioCreado = db.manipulateUsuario("admin", "admin1234", "Administrador", cedula, usuario, Usuario.hashPassword(password), rol, fechaNacimiento);
                         if (usuarioCreado > 0) {
-                            System.out.println("Actualizado USUARIO en la base de datos. " + usuario + " " + cedula);
+                            System.out.println("Actualizado USUARIO en la base de datos. " + usuario + " " + cedula + " " + rol);
                         } else {
-                            System.out.println("Se necesita actualizar el USUARIO en la base de datos y no se ha podido. " + usuario + " " + cedula);
+                            System.out.println("Se necesita actualizar el USUARIO en la base de datos y no se ha podido. " + usuario + " " + cedula + " " + rol);
                             return false;
                         }
                     } catch (Exception e) {
-                        System.err.println("ERROR al actualizar el USUARIO en la base de datos. " + usuario + " " + cedula + "\n" + e);
+                        System.err.println("ERROR al actualizar el USUARIO en la base de datos. " + usuario + " " + cedula + " " + rol + "\n" + e);
                         return false;
                     }
                     return insertado;
                 } else {
-                    System.out.println("NO actualizar el USUARIO en la base de datos. " + usuario + " " + cedula);
+                    System.out.println("NO actualizar el USUARIO en la base de datos. " + usuario + " " + cedula + " " + rol);
                 }
             } else {
                 // Insertar en la base de datos
                 try {
-                    int usuarioCreado = db.manipulateUsuario("admin", "admin1234", "Administrador", cedula, usuario, Usuario.hashpassword(password), rol, fechaNacimiento);
+                    int usuarioCreado = db.manipulateUsuario("admin", "admin1234", "Administrador", cedula, usuario, Usuario.hashPassword(password), rol, fechaNacimiento);
                     if (usuarioCreado > 0) {
-                        System.out.println("Insertado el USUARIO en la base de datos. " + usuario + " " + cedula);
+                        System.out.println("Insertado el USUARIO en la base de datos. " + usuario + " " + cedula + " " + rol);
                     } else {
-                        System.err.println("Se necesita insertar el USUARIO en la base de datos. " + usuario + " " + cedula);
+                        System.err.println("Se necesita insertar el USUARIO en la base de datos. " + usuario + " " + cedula + " " + rol);
                         return false;
                     }
                 } catch (Exception e) {
-                    System.err.println("ERROR al insertar el USUARIO en la base de datos. " + usuario + " " + cedula + "\n" + e);
+                    System.err.println("ERROR al insertar el USUARIO en la base de datos. " + usuario + " " + cedula + " " + rol + "\n" + e);
                     return false;
                 }
                 return true;
             }
         } else {
-            System.out.println("NO insertado USUARIO de forma local porque ya existe y no requiere actualizar. " + usuario + " " + cedula);
+            System.out.println("NO insertado USUARIO de forma local porque ya existe y no requiere actualizar. " + usuario + " " + cedula + " " + rol);
         }
         return false;
     }
 
-    public static boolean modificarCompleto(String cedula, String nombre, String apellido, Timestamp fechaNacimiento, String usuario, String password, String rol) {
+    public static boolean modificarCompleto(String cedula, String nombre, String apellido, Timestamp fechaNacimiento, String correo, String telefono, String direccion, String distrito, String usuario, String password, String rol) {
         Usuario user = buscar(cedula, rol);
         if (user != null) {
-            user.modificarCompleto(nombre, apellido, cedula, fechaNacimiento, usuario, password);
+            user.modificarCompleto(nombre, apellido, cedula, fechaNacimiento, correo, telefono, direccion, distrito, usuario, password);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean modificarObligatorias(String cedula, String nombre, String apellido, Timestamp fechaNacimiento, String usuario, String password, String rol) {
+        Usuario user = buscar(cedula, rol);
+        if (user != null) {
+            user.modificarObligatorias(nombre, apellido, cedula, fechaNacimiento, usuario, password);
             return true;
         } else {
             return false;

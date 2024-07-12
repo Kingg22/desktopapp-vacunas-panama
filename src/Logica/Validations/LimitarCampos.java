@@ -7,13 +7,7 @@ import javax.swing.text.PlainDocument;
 public class LimitarCampos extends PlainDocument {
     final int limit;
     final String placeholder;
-    String pattern = ".*";
-
-    public LimitarCampos(int limit, String placeholder) {
-        super();
-        this.limit = limit;
-        this.placeholder = placeholder;
-    }
+    String pattern;
 
     public LimitarCampos(int limit, String placeholder, String pattern) {
         super();

@@ -29,6 +29,8 @@ public class Login extends JFrame {
         }
 
         addRoleButtonListeners();
+        // TODO añadir los demás focus y action listener al método anterior
+        this.requestFocusInWindow();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
@@ -190,7 +192,7 @@ public class Login extends JFrame {
         background1.add(fecha_nacimiento, new AbsoluteConstraints(30, 220, -1, -1));
 
         jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
-        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(19, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
+        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(25, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
         jTextField_fechaNacimiento.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_fechaNacimiento.setForeground(Color.gray);
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
@@ -799,6 +801,7 @@ public class Login extends JFrame {
                 String nombreC = usuario1.getNombre() + " " + usuario1.getApellido();
                 switch (rolText) {
                     case ("Paciente"): {
+                        //PantallaPaciente pac = new PantallaPaciente(this);
                         SwingUtilities.invokeLater(() -> this.setVisible(false));
 
                         SwingWorker<Void, String> worker = new SwingWorker<>() {
@@ -862,9 +865,7 @@ public class Login extends JFrame {
                         break;
                     }
                     case ("Doctor - Enfermera"): {
-                        //private static PantallaPaciente pac;
-                        PantallaDoctor doc = new PantallaDoctor(this);
-                        doc.setBienvenida(nombreC, usuario1.getCedula());
+                        PantallaDoctor doc = new PantallaDoctor(this, usuario1);
                         doc.setVisible(true);
                         this.setVisible(false);
                         break;
@@ -880,8 +881,9 @@ public class Login extends JFrame {
                     }
                     case ("Administrador"): {
                         PantallaAdmin admin = new PantallaAdmin();
-                        admin.setBienvenida(nombreC, usuario1.getCedula());
+                        admin.personalizarVentana(usuario1);
                         admin.setVisible(true);
+                        admin.requestFocusInWindow();
                         this.setVisible(false);
                         break;
                     }

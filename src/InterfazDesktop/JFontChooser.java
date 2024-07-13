@@ -59,6 +59,7 @@ public class JFontChooser extends JDialog {
         });
 
         cancelButton.addActionListener(e -> setVisible(false));
+        setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
         this.pack();
         this.requestFocusInWindow();
     }

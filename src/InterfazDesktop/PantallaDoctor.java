@@ -911,6 +911,7 @@ public class PantallaDoctor extends JFrame {
         jDialog_modificarDatos.setTitle("Programa Vacunas Panamá - Modificar datos personales");
         jDialog_modificarDatos.setModal(true);
         jDialog_modificarDatos.setResizable(false);
+        jDialog_modificarDatos.setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
         jDialog_modificarDatos.setSize(new Dimension(450, 600));
 
         jScrollPane1_modificarDatos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -2086,6 +2087,7 @@ public class PantallaDoctor extends JFrame {
         jDialog_modificarCred.setTitle("Programa Vacunas Panamá - Modificar credenciales");
         jDialog_modificarCred.setModal(true);
         jDialog_modificarCred.setResizable(false);
+        jDialog_modificarCred.setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
         jDialog_modificarCred.setSize(new Dimension(450, 550));
 
         jScrollPane2_modificarCred.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -3054,24 +3056,24 @@ public class PantallaDoctor extends JFrame {
             JOptionPane.showMessageDialog(this, "Error. La cédula no tiene el formato correcto.", "Error al buscar un paciente...", JOptionPane.ERROR_MESSAGE);
         } else {
             try {
-                Resultados rPaciente = dbDoctor.searchPaciente("admin", "admin1234", "Administrador", cedulaB, null, null);
+                Resultados rPaciente = dbDoctor.searchTablePaciente("admin", "admin1234", "Administrador", cedulaB, null, null);
                 if (rPaciente != null && rPaciente.getDatos().length > 0) {
                     datosEncontrados = rPaciente.getDatos();
                     jTextField_cedula1.setText((String) datosEncontrados[0][0]);
                     jTextField_nombre1.setText((String) datosEncontrados[0][1]);
                     jTextField_apellido1.setText((String) datosEncontrados[0][2]);
-                    jTextField_fechaNacimiento1.setText(datosEncontrados[0][4].toString());
-                    if (datosEncontrados[0][6].equals("M")) {
+                    jTextField_fechaNacimiento1.setText(datosEncontrados[0][3].toString());
+                    if (datosEncontrados[0][5].equals("M")) {
                         jComboBox_sexo1.setSelectedItem("Masculino");
-                    } else if (datosEncontrados[0][6].equals("F")) {
+                    } else if (datosEncontrados[0][5].equals("F")) {
                         jComboBox_sexo1.setSelectedItem("Femenino");
                     } else {
                         jComboBox_sexo1.setSelectedItem(null);
                     }
-                    jTextField_telefono1.setText((String) datosEncontrados[0][7]);
-                    jTextField_correo1.setText((String) datosEncontrados[0][8]);
-                    jTextField_direccion1.setText((String) datosEncontrados[0][9]);
-                    jComboBox_distrito1.setSelectedItem(datosEncontrados[0][10]);
+                    jTextField_telefono1.setText((String) datosEncontrados[0][6]);
+                    jTextField_correo1.setText((String) datosEncontrados[0][7]);
+                    jTextField_direccion1.setText((String) datosEncontrados[0][8]);
+                    jComboBox_distrito1.setSelectedItem(datosEncontrados[0][9]);
 
                     jTextField_cedula1.setForeground(Color.black);
                     jTextField_nombre1.setForeground(Color.black);
@@ -4193,7 +4195,8 @@ public class PantallaDoctor extends JFrame {
                     Timestamp fechaAplicacionTimestamp;
                     if (fechaAplicacionM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$")) {
                         fechaAplicacionTimestamp = Timestamp.valueOf(LocalDate.parse(fechaAplicacionM).atStartOfDay());
-                        JOptionPane.showMessageDialog(this, "Recomendación: Debe ingresar las fechas con hora, se registrará de todas formas.");
+                        jTextArea6_lote.setVisible(true);
+                        jTextArea6_lote.setText("Recomendación: Debe ingresar las fechas con hora, se registrará de todas formas.");
                     } else {
                         fechaAplicacionTimestamp = Timestamp.valueOf(fechaAplicacionM);
                     }
@@ -4203,6 +4206,9 @@ public class PantallaDoctor extends JFrame {
                             modificado = true;
                         }
                     } else {
+                        jTextArea6_lote.setVisible(true);
+                        jTextArea6_lote.setText("No se pudo obtener la información de los lotes. Recomendamos tener un inventario de la sede. " +
+                                "\nPuede seguir registrando, si ocurre un error se le avisará.");
                         if (dbDoctor.insertarDosis("admin", "admin1234", "Administrador", cedulaM, fechaAplicacionTimestamp, numero_dosis, idVacuna, idSede, null) > 0) {
                             modificado = true;
                         }

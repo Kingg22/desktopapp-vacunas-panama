@@ -1323,6 +1323,7 @@ public class PantallaAdmin extends JFrame {
         jScrollPane3.setViewportView(background);
 
         getContentPane().add(jScrollPane3, BorderLayout.CENTER);
+        setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
 
         pack();
         setLocationRelativeTo(null);

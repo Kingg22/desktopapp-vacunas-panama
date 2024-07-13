@@ -151,6 +151,7 @@ public class PantallaBase extends JFrame {
         jDialog_modificarCred.setModal(true);
         jDialog_modificarCred.setResizable(false);
         jDialog_modificarCred.setSize(new Dimension(450, 550));
+        jDialog_modificarCred.setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
 
         jScrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 

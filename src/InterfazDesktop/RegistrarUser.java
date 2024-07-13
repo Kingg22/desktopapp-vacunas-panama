@@ -486,6 +486,7 @@ public class RegistrarUser extends JFrame {
         jScrollPane1.setViewportView(background);
 
         getContentPane().add(jScrollPane1, new AbsoluteConstraints(0, 0, -1, -1));
+        setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
 
         setSize(new Dimension(616, 738));
         setLocationRelativeTo(parentFrame);
@@ -532,7 +533,7 @@ public class RegistrarUser extends JFrame {
             }
         }, registerDisableTime);
 
-
+        boolean insertado = false;
         String nombreM = jTextField_nombre.getText();
         String apellidoM = jTextField_apellido.getText();
         String cedulaM = jTextField_cedula.getText();
@@ -559,60 +560,115 @@ public class RegistrarUser extends JFrame {
             }, 5);
         }
 
+        boolean condicion1 = nombreM.isBlank() || nombreM.equals("Ingrese su nombre");
+        boolean condicion2 = apellidoM.isBlank() || apellidoM.equals("Ingrese su apellido");
+        boolean condicion3 = cedulaM.isBlank() || cedulaM.equals("Ingrese su cédula");
+        boolean condicion4 = fechaNacimientoM.isBlank() || fechaNacimientoM.equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
+        boolean condicion5 = sexoM == 'E';
+        boolean condicion6 = usuarioM.isBlank() || usuarioM.equals("Ingrese un usuario");
+        boolean condicion7 = String.valueOf(jPasswordField.getPassword()).isBlank() || String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña");
+        boolean condicionesObligatorias = !condicion1 && !condicion2 && !condicion3 && !condicion4 && !condicion5 && !condicion6 && !condicion7;
+
+        boolean condicionOp1 = distritoM == null || distritoM.equals("Elegir");
+        boolean condicionOp2 = direccionM.isBlank() || direccionM.equals("Ingrese su dirección");
+        boolean condicionOp3 = correoM.isBlank() || correoM.equals("Ingrese su correo electrónico");
+        boolean condicionOp4 = telefonoM.isBlank() || telefonoM.equals("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
+
+        boolean verificacion1 = !cedulaM.matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$");
+        boolean verificacion2 = (!fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$") && !fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.\\d{1,9})?$"));
+        boolean verificacion3 = !correoM.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
+        boolean verificacion4 = (condicionOp1 && !condicionOp2) || (!condicionOp1 && condicionOp2);
+
+        errorMessage.setVisible(false);
+        errorMessage.setForeground(Color.gray);
+
         if (acceptTerms.getSelectedObjects() == null) {
             acceptTerms.setForeground(Color.red);
             extendTerms.setForeground(Color.red);
-        } else if (isAnyFieldEmpty() || isPlaceHolder()) {
+        } else if (!condicionesObligatorias) {
             errorMessage.setText("Error. Algunos campos son obligatorios*. Revisar");
             errorMessage.setVisible(true);
-        } else if (!cedulaM.matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$")) {
-            errorMessage.setText("Error. La cédula no tiene el formato correcto.");
-            errorMessage.setVisible(true);
-        } else if (!fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$") &&
-                !fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$")) {
-            errorMessage.setText("Error. La fecha de nacimiento no tiene el formato correcto. Mínimo YYYY-MM-DD");
-            errorMessage.setVisible(true);
-        } else if (correoM.isBlank() || (!correoM.equals("Ingrese su correo electrónico") && !correoM.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$"))) {
-            errorMessage.setText("Error. El correo electrónico no tiene el formato correcto.");
-            errorMessage.setVisible(true);
+            errorMessage.setForeground(Color.red);
+            button_registrarse.setEnabled(true);
+            return;
         } else {
-            if (InicioSesion.buscar(cedulaM, rolM) == null) {
-                System.out.println("Creando un usuario local");
-                boolean insertado = false;
-                Timestamp fechaNacimientoTimestamp;
-                if (fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$")) {
-                    fechaNacimientoTimestamp = Timestamp.valueOf(LocalDate.parse(fechaNacimientoM).atStartOfDay());
-                    JOptionPane.showMessageDialog(this, "Recomendación: Debe ingresar las fechas con hora, se registrará de todas formas.");
-                } else {
-                    fechaNacimientoTimestamp = Timestamp.valueOf(fechaNacimientoM);
-                }
-                try {
-                    insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, distritoM,
-                            direccionM, correoM, telefonoM, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
-                } catch (Exception e) {
-                    System.err.println(e);
-                    JOptionPane.showMessageDialog(null,
-                            "Ha ocurrido un fatal error. Cerrar el programa y contacte a soporte", "ERROR REGISTRAR",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-                if (insertado) {
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            JOptionPane.showMessageDialog(null, "Se ha registrado con éxito. En unos momentos se cerrará esta ventana y podrá iniciar sesión.");
-                            parentFrame.setVisible(true);
-                            dispose();
-                        }
-                    }, 5);
-                } else
-                    JOptionPane.showMessageDialog(null,
-                            "Ha ocurrido error al registrarse. Intentar más tarde o contacte a soporte", "ERROR REGISTRAR",
-                            JOptionPane.ERROR_MESSAGE);
-            } else {
-                errorMessage.setText("Error. Esta cédula ya está registrada para este rol. Acceda para modificar.");
+            if (verificacion1) {
+                errorMessage.setText("Error. La cédula no tiene el formato correcto.");
+                errorMessage.setForeground(Color.red);
                 errorMessage.setVisible(true);
+                return;
+            } else if (verificacion2) {
+                errorMessage.setText("Error. La fecha de nacimiento no tiene el formato correcto. La fecha sin hora es obligatorio. YYYY-MM-DD");
+                errorMessage.setForeground(Color.red);
+                errorMessage.setVisible(true);
+                return;
+            } else if (!condicionOp3 && verificacion3) {
+                errorMessage.setText("Error. El correo electrónico no tiene el formato correcto.");
+                errorMessage.setForeground(Color.red);
+                errorMessage.setVisible(true);
+                return;
+            } else if (verificacion4) {
+                errorMessage.setText("Error. La dirección o el distrito están incompletos. Debe llenar ambos campos o ninguno.");
+                errorMessage.setForeground(Color.red);
+                errorMessage.setVisible(true);
+                return;
+            } else {
+                if (InicioSesion.buscar(cedulaM, rolM) == null) {
+                    try {
+                        Timestamp fechaNacimientoTimestamp;
+                        if (fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$")) {
+                            fechaNacimientoTimestamp = Timestamp.valueOf(LocalDate.parse(fechaNacimientoM).atStartOfDay());
+                        } else {
+                            fechaNacimientoTimestamp = Timestamp.valueOf(fechaNacimientoM);
+
+                        }
+
+                        if (!condicionOp1 && !condicionOp2) {
+                            if (!condicionOp3 && !condicionOp4) {
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, distritoM, direccionM, correoM, telefonoM, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                            } else if (!condicionOp3) {
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, distritoM, direccionM, correoM, null, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                            } else {
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, distritoM, direccionM, null, null, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                            }
+                        } else if (!condicionOp3) {
+                            if (!condicionOp4) {
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, null, null, correoM, telefonoM, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                            } else {
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, null, null, correoM, null, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                            }
+                        } else if (!condicionOp4) {
+                            insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, null, null, null, telefonoM, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                        } else {
+                            insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, null, null, null, null, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
+                        JOptionPane.showMessageDialog(this,
+                                "Ha ocurrido un problema registrando al paciente y su usuario. No hay certeza si los datos fueron manipulados. " +
+                                        "\nGuarde los datos para futuro registro. Reinicie la aplicación o contacte a soporte");
+                    }
+                } else {
+                    errorMessage.setText("La cédula ya está registrada para este rol. Acceda para modificar sus datos o click olvidó su contraseña.");
+                    errorMessage.setForeground(Color.red);
+                    errorMessage.setVisible(true);
+                    return;
+                }
             }
         }
+
+        if (insertado) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    JOptionPane.showMessageDialog(null, "Se ha registrado con éxito. En unos momentos se cerrará esta ventana y podrá iniciar sesión.");
+                    parentFrame.setVisible(true);
+                    dispose();
+                }
+            }, 5);
+        } else
+            JOptionPane.showMessageDialog(null,
+                    "Ha ocurrido error al registrarse. Intentar más tarde o contacte a soporte", "ERROR REGISTRAR", JOptionPane.ERROR_MESSAGE);
     }
 
     private void jTextField_nombreActionPerformed(ActionEvent evt) {

@@ -390,6 +390,9 @@ public class DatabaseOperaciones {
                 throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
             }
             List<Column> columns = databaseInfo.getColumnsForTable("Paciente");
+            columns.removeLast();
+            columns.add(new Column("direccion", "varchar", 255));
+            columns.add(new Column("distrito", "varchar", 100));
             String[] columnas = new String[columns.size()];
             int[] columnasWidth = new int[columns.size()];
             for (int i = 0; i < columns.size(); i++) {
@@ -397,7 +400,7 @@ public class DatabaseOperaciones {
                 columnasWidth[i] = columns.get(i).getSize();
             }
             // Construcción de la consulta SQL dinámica
-            StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM Paciente WHERE 1=1");
+            StringBuilder sqlBuilder = new StringBuilder("SELECT cedula, nombre_paciente, apellido_paciente, fecha_nacimiento, edad_calculada, sexo, telefono_paciente, correo_electronico_paciente, direccion, distrito FROM Paciente LEFT JOIN Direccion d ON idDireccion = d.ID_direccion LEFT JOIN Distrito dd ON d.idDistrito = dd.ID_distrito WHERE 1=1");
 
             if (cedula != null && !cedula.trim().isEmpty()) {
                 sqlBuilder.append(" AND cedula = '" + cedula + "'");

@@ -13,9 +13,10 @@ public class Column {
         this.isNullable = isNullable;
     }
 
-    public Column(String name, String type) {
+    public Column(String name, String type, int size) {
         this.name = name;
         this.type = type;
+        this.size = size;
     }
 
     // Getters
@@ -34,9 +35,4 @@ public class Column {
     public boolean isNullable() {
         return isNullable;
     }
-    /*
-    @Override
-    public String toString() {
-        return "Column{name='" + name + "', type='" + type + "', size=" + size + ", isNullable=" + isNullable + '}';
-    } */
 }

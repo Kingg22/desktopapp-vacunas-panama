@@ -99,7 +99,9 @@ def main(page: Page, cedula, nombre):
         if conn is not None:
             try:
                 cursor = conn.cursor()
-                cursor.execute("SELECT * FROM [Vista Paciente] WHERE Cédula=?", cedula)
+                cursor.execute(
+                    "SELECT [Nombre vacuna], [Número de dosis], [Enfermedad previene], [Fecha de aplicación], Sede, Dependencia "
+                    "FROM [Vista Paciente] WHERE Cédula=?", cedula)
                 data = cursor.fetchall()
                 cursor.close()
                 return data
@@ -119,7 +121,7 @@ def main(page: Page, cedula, nombre):
             locked = True
             page.update()
 
-            delay_seconds = random.uniform(2, 10)
+            delay_seconds = random.uniform(2, 7)
             time.sleep(delay_seconds)
 
             data = fetch_data()
@@ -180,12 +182,12 @@ def main(page: Page, cedula, nombre):
             return ft.Text("No se encontraron vacunas colocadas para este paciente.", color=ft.colors.RED, size=20)
 
         rows = [ft.DataRow(cells=[
-            ft.DataCell(ft.Text(row[11], color="black")),
-            ft.DataCell(ft.Text(row[12], color="black")),
-            ft.DataCell(ft.Text(row[13], color="black")),
-            ft.DataCell(ft.Text(row[14], color="black")),
-            ft.DataCell(ft.Text(row[15], color="black")),
-            ft.DataCell(ft.Text(row[16], color="black"))
+            ft.DataCell(ft.Text(row[0], color="black")),
+            ft.DataCell(ft.Text(row[1], color="black")),
+            ft.DataCell(ft.Text(row[2], color="black")),
+            ft.DataCell(ft.Text(row[3], color="black")),
+            ft.DataCell(ft.Text(row[4], color="black")),
+            ft.DataCell(ft.Text(row[5], color="black"))
         ]) for row in data]
 
         return ft.DataTable(

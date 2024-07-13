@@ -13,7 +13,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="MINSA@DESKTOP" uuid="f94906ad-1605-45af-a65c-b23dd5e4fe76">
+    <data-source source="LOCAL" name="MINSA@DESKTOP" read-only="true" uuid="f94906ad-1605-45af-a65c-b23dd5e4fe76">
       <driver-ref>sqlserver.ms</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>

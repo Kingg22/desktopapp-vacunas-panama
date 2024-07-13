@@ -12,6 +12,7 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -219,7 +220,7 @@ public class RegistrarUser extends JFrame {
         background.add(fecha_nacimiento, new AbsoluteConstraints(30, 230, -1, -1));
 
         jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
-        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(25, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
+        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(30, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
         jTextField_fechaNacimiento.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_fechaNacimiento.setForeground(Color.gray);
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
@@ -250,7 +251,7 @@ public class RegistrarUser extends JFrame {
         jComboBox_sexo.setBackground(Color.gray);
         jComboBox_sexo.setFont(new Font("Roboto", Font.PLAIN, 14));
         jComboBox_sexo.setForeground(Color.black);
-        jComboBox_sexo.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Masculino", "Feminino"}));
+        jComboBox_sexo.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Masculino", "Femenino"}));
         background.add(jComboBox_sexo, new AbsoluteConstraints(30, 300, 170, -1));
 
         direccion.setBackground(new Color(0, 0, 0));
@@ -547,6 +548,17 @@ public class RegistrarUser extends JFrame {
         acceptTerms.setForeground(new Color(102, 102, 102));
         extendTerms.setForeground(new Color(102, 102, 102));
 
+        if (!rolM.equals("Paciente")) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    JOptionPane.showMessageDialog(null, "Registrarse con otro rol diferente a paciente no implementando. Lo sentimos. Se cerrará esta ventana.");
+                    parentFrame.setVisible(true);
+                    dispose();
+                }
+            }, 5);
+        }
+
         if (acceptTerms.getSelectedObjects() == null) {
             acceptTerms.setForeground(Color.red);
             extendTerms.setForeground(Color.red);
@@ -567,8 +579,15 @@ public class RegistrarUser extends JFrame {
             if (InicioSesion.buscar(cedulaM, rolM) == null) {
                 System.out.println("Creando un usuario local");
                 boolean insertado = false;
+                Timestamp fechaNacimientoTimestamp;
+                if (fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$")) {
+                    fechaNacimientoTimestamp = Timestamp.valueOf(LocalDate.parse(fechaNacimientoM).atStartOfDay());
+                    JOptionPane.showMessageDialog(this, "Recomendación: Debe ingresar las fechas con hora, se registrará de todas formas.");
+                } else {
+                    fechaNacimientoTimestamp = Timestamp.valueOf(fechaNacimientoM);
+                }
                 try {
-                    insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, Timestamp.valueOf(fechaNacimientoM), sexoM, distritoM,
+                    insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, distritoM,
                             direccionM, correoM, telefonoM, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
                 } catch (Exception e) {
                     System.err.println(e);
@@ -577,8 +596,14 @@ public class RegistrarUser extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 }
                 if (insertado) {
-                    parentFrame.setVisible(true);
-                    this.dispose();
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            JOptionPane.showMessageDialog(null, "Se ha registrado con éxito. En unos momentos se cerrará esta ventana y podrá iniciar sesión.");
+                            parentFrame.setVisible(true);
+                            dispose();
+                        }
+                    }, 5);
                 } else
                     JOptionPane.showMessageDialog(null,
                             "Ha ocurrido error al registrarse. Intentar más tarde o contacte a soporte", "ERROR REGISTRAR",

@@ -192,7 +192,7 @@ public class Login extends JFrame {
         background1.add(fecha_nacimiento, new AbsoluteConstraints(30, 220, -1, -1));
 
         jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
-        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(25, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
+        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(19, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
         jTextField_fechaNacimiento.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_fechaNacimiento.setForeground(Color.gray);
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
@@ -752,6 +752,7 @@ public class Login extends JFrame {
         jScrollPane1.setViewportView(background);
 
         getContentPane().add(jScrollPane1, BorderLayout.CENTER);
+        setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
 
         pack();
         setLocationRelativeTo(null);
@@ -1224,7 +1225,6 @@ public class Login extends JFrame {
             toggleLogin(true);
             selectedButton = roleButton;
             selectedButton.setBackground(new Color(204, 0, 0));
-            jTextField_usuario_login.requestFocus();
             if (roleButton != jPanel_pacienteBotton) {
                 mensaje1.setText("Solicitar acceso");
             }

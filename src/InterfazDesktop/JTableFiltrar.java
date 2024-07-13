@@ -36,6 +36,7 @@ public class JTableFiltrar extends JPanel {
         jLabel2.setText("Filtro de columnas");
         add(jLabel2);
 
+        jComboBox_filterColumn.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir"}));
         jComboBox_filterColumn.addActionListener(this::jComboBox_filterColumnActionPerformed);
         add(jComboBox_filterColumn);
 
@@ -99,8 +100,8 @@ public class JTableFiltrar extends JPanel {
 
     public void setPreferences(String[] columna) {
         jComboBox_filterColumn.removeAllItems();
-        for (int i = 0; i < columna.length; i++) {
-            jComboBox_filterColumn.addItem(columna[i]);
+        for (String s : columna) {
+            jComboBox_filterColumn.addItem(s);
         }
     }
 

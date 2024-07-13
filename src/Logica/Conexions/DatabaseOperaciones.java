@@ -4,6 +4,7 @@ import Logica.ScannerDatabase.Column;
 import Logica.ScannerDatabase.DatabaseInfo;
 import Logica.Validations.InicioSesion;
 import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
+import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerResultSet;
 
 import java.sql.*;
@@ -18,11 +19,38 @@ public class DatabaseOperaciones {
     private DatabaseInfo databaseInfo = null;
     private boolean adminCreateBD = false;
 
+    public int insertarDosis(String user, String password, String rol, String cedulaPaciente, Timestamp fechaAplicacion, String numero_dosis, int idVacuna, int idSede, String lote) throws SQLException, ClassNotFoundException {
+        if (!InicioSesion.autentificar(user, password, rol)) {
+            throw new SQLException("NO estas registrado para ejecutar un comando. TIMEOUT");
+        } else {
+            if (!rol.equals("Fabricante") && !rol.equals("Paciente")) {
+                switchUser(rol, user);
+                if (connection == null) {
+                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
+                }
+            } else {
+                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
+            }
+            try {
+                SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection.prepareCall("{call dbo.InsertarDosis(?, ?, ?, ?, ?, ?)}");
+                callstmt.setString(1, cedulaPaciente);
+                callstmt.setDateTime(2, fechaAplicacion);
+                callstmt.setString(3, getNumDosis(numero_dosis));
+                callstmt.setInt(4, idVacuna);
+                callstmt.setInt(5, idSede);
+                callstmt.setString(6, lote);
+                return countRowSQLUpdate(callstmt);
+            } finally {
+                closeConnection();
+            }
+        }
+    }
+
     public Resultados showReporteVacunacionFiltrado(String user, String password, String rol, int idSede) throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
-            if (!rol.equals("Paciente") && !rol.equals("Proveedor")) {
+            if (!rol.equals("Paciente") && !rol.equals("Fabricante")) {
                 switchUser(rol, user);
                 if (connection == null) {
                     throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
@@ -33,28 +61,78 @@ public class DatabaseOperaciones {
             List<Object[]> resultList = new ArrayList<>();
             List<Column> columns = new ArrayList<>();
             String[] columnas = new String[7];
+            int[] columnasWidth = new int[7];
             try {
-                PreparedStatement callStmt = connection.prepareStatement("SELECT CedulaPaciente, NombrePaciente, ApellidoPaciente, FechaNacimiento, Sexo, NombreVacuna, NumeroDosis \nFROM [Reporte Vacunas Completo] \nWHERE CONVERT(date, FechaAplicacion) = CONVERT(date, GETDATE()) AND IDSede = ?");
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                        "SELECT CedulaPaciente, NombrePaciente, ApellidoPaciente, FechaNacimiento, Sexo, NombreVacuna, NumeroDosis \n" +
+                                "FROM [Reporte Vacunas Completo] \n" +
+                                "WHERE CONVERT(date, FechaAplicacion) = CONVERT(date, GETDATE()) AND IDSede = ?");
                 callStmt.setInt(1, idSede);
-                ResultSet resultSet = callStmt.executeQuery();
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    columns.add(new Column(metaData.getColumnName(i), metaData.getColumnTypeName(i)));
-                }
-                for (int i = 0; i < columns.size(); i++)
-                    columnas[i] = columns.get(i).getName();
-                while (resultSet.next()) {
-                    Object[] row = new Object[columns.size()];
-                    for (int i = 0; i < columns.size(); i++) {
-                        row[i] = getColumnValueDynamic((SQLServerResultSet) resultSet, columns.get(i));
-                    }
-                    resultList.add(row);
-                }
+                processResult(callStmt, columns, columnas, columnasWidth, resultList);
             } finally {
                 closeConnection();
             }
-            return new Resultados(columnas, resultList.toArray(new Object[0][]));
+            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+        }
+    }
+
+    public Resultados showLoteSedeVacuna(String user, String password, String rol, String lote) throws SQLException, ClassNotFoundException {
+        if (!InicioSesion.autentificar(user, password, rol)) {
+            return null;
+        } else {
+            if (!rol.equals("Paciente")) {
+                switchUser(rol, user);
+                if (connection == null) {
+                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
+                }
+            } else {
+                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
+            }
+            List<Object[]> resultList = new ArrayList<>();
+            List<Column> columns = new ArrayList<>();
+            String[] columnas = new String[6];
+            int[] columnasWidth = new int[6];
+            try {
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                        "SELECT [Nombre sede], [Depedencia sede], Vacuna, Cantidad, Lote, [Fecha Lote]  " +
+                                "FROM [Sede - Inventario] \n" +
+                                "WHERE Lote = ?");
+                callStmt.setString(1, lote);
+                processResult(callStmt, columns, columnas, columnasWidth, resultList);
+            } finally {
+                closeConnection();
+            }
+            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+        }
+    }
+
+    public Resultados showSedeInventarioVacuna(String user, String password, String rol, int idSede, int idVacuna) throws SQLException, ClassNotFoundException {
+        if (!InicioSesion.autentificar(user, password, rol)) {
+            return null;
+        } else {
+            if (!rol.equals("Paciente")) {
+                switchUser(rol, user);
+                if (connection == null) {
+                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
+                }
+            } else {
+                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
+            }
+            List<Object[]> resultList = new ArrayList<>();
+            List<Column> columns = new ArrayList<>();
+            String[] columnas = new String[8];
+            int[] columnasWidth = new int[8];
+            try {
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                        "SELECT *  FROM [Sede - Inventario] \n" +
+                                "WHERE ID_Sede = ? AND [ID Vacuna] = ?");
+                callStmt.setInt(1, idSede);
+                callStmt.setInt(2, idVacuna);
+                processResult(callStmt, columns, columnas, columnasWidth, resultList);
+            } finally {
+                closeConnection();
+            }
+            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
         }
     }
 
@@ -73,28 +151,17 @@ public class DatabaseOperaciones {
             List<Object[]> resultList = new ArrayList<>();
             List<Column> columns = new ArrayList<>();
             String[] columnas = new String[4];
+            int[] columnasWidth = new int[4];
             try {
-                PreparedStatement callStmt = connection.prepareStatement("SELECT Vacuna, Cantidad, Lote, [Fecha Lote]  FROM [Sede - Inventario] \nWHERE ID_Sede = ?");
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                        "SELECT Vacuna, Cantidad, Lote, [Fecha Lote]  FROM [Sede - Inventario] \n" +
+                                "WHERE ID_Sede = ?");
                 callStmt.setInt(1, idSede);
-                ResultSet resultSet = callStmt.executeQuery();
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    columns.add(new Column(metaData.getColumnName(i), metaData.getColumnTypeName(i)));
-                }
-                for (int i = 0; i < columns.size(); i++)
-                    columnas[i] = columns.get(i).getName();
-                while (resultSet.next()) {
-                    Object[] row = new Object[columns.size()];
-                    for (int i = 0; i < columns.size(); i++) {
-                        row[i] = getColumnValueDynamic((SQLServerResultSet) resultSet, columns.get(i));
-                    }
-                    resultList.add(row);
-                }
+                processResult(callStmt, columns, columnas, columnasWidth, resultList);
             } finally {
                 closeConnection();
             }
-            return new Resultados(columnas, resultList.toArray(new Object[0][]));
+            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
         }
     }
 
@@ -150,7 +217,7 @@ public class DatabaseOperaciones {
         if (!InicioSesion.autentificar(user, password, rol)) {
             throw new SQLException("NO estas registrado para ejecutar un comando. TIMEOUT");
         } else {
-            if (!rol.equals("Proveedor") && !rol.equals("Paciente")) {
+            if (!rol.equals("Fabricante") && !rol.equals("Paciente")) {
                 switchUser(rol, user);
                 if (connection == null) {
                     throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
@@ -169,42 +236,7 @@ public class DatabaseOperaciones {
                 callstmt.setString(7, correo);
                 callstmt.setString(8, direccion);
                 callstmt.setString(9, distrito);
-                int count = callstmt.executeUpdate();
-                count += callstmt.getUpdateCount();
-                while (!callstmt.getMoreResults()) {
-                    if (callstmt.getUpdateCount() == -1) {
-                        break;
-                    }
-                    count += callstmt.getUpdateCount();
-                }
-                return count;
-                //return callstmt.executeUpdate();
-            } finally {
-                closeConnection();
-            }
-        }
-    }
-
-    public boolean insertDosis(String user, String password, String rol, String cedula, Timestamp fechaAplicacion, int ID_Sede, int ID_Vacuna, char numero_dosis) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return false;
-        } else {
-            if (rol.equals("Doctor - Enfermera") || rol.equals("Administrador")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            try {
-                SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection.prepareCall("{call dbo.CrearDosis (?, ?, ?, ?, ?)}");
-                callstmt.setString(1, cedula);
-                callstmt.setDateTime(2, fechaAplicacion);
-                callstmt.setString(3, String.valueOf(numero_dosis));
-                callstmt.setInt(4, ID_Vacuna);
-                callstmt.setInt(5, ID_Sede);
-                return callstmt.execute();
+                return countRowSQLUpdate(callstmt);
             } finally {
                 closeConnection();
             }
@@ -277,38 +309,16 @@ public class DatabaseOperaciones {
             List<Object[]> resultList = new ArrayList<>();
             List<Column> columns = new ArrayList<>();
             String[] columnas = new String[5];
+            int[] columnasWidth = new int[5];
             try {
-                PreparedStatement callStmt = connection.prepareStatement("SELECT * FROM dbo.BuscarUsuario(?, ?)");
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement("SELECT * FROM dbo.BuscarUsuario(?, ?)");
                 callStmt.setString(1, cedulaUsuario);
                 callStmt.setInt(2, tipo);
-                boolean ejecutado = callStmt.execute();
-                if (ejecutado) {
-                    SQLServerResultSet resultSet = (SQLServerResultSet) callStmt.getResultSet();
-                    ResultSetMetaData metaData = resultSet.getMetaData();
-                    int columnCount = metaData.getColumnCount();
-                    for (int i = 1; i <= columnCount; i++) {
-                        columns.add(new Column(metaData.getColumnName(i), metaData.getColumnTypeName(i)));
-                    }
-                    while (resultSet.next()) {
-                        Object[] row = new Object[columns.size()];
-                        for (int i = 0; i < columns.size(); i++) {
-                            columnas[i] = columns.get(i).getName();
-                            row[i] = getColumnValueDynamic(resultSet, columns.get(i));
-                        }
-                        resultList.add(row);
-                    }
-                } else {
-                    throw new SQLException("Hubo un error al buscar el usuario en la base de datos.");
-                }
+                processResult(callStmt, columns, columnas, columnasWidth, resultList);
             } finally {
                 closeConnection();
             }
-            /*
-            String[][] result = new String[resultList.size()][columnas.length];
-            for (int i = 0; i < resultList.size(); i++) {
-                result[i] = resultList.get(i);
-            }*/
-            return new Resultados(columnas, resultList.toArray(new Object[0][]));
+            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
         }
     }
 
@@ -325,7 +335,11 @@ public class DatabaseOperaciones {
                 throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
             }
             List<Column> columns = databaseInfo.getColumnsForTable("Usuarios");
-            return new Resultados(new String[columns.size()], executeQuery(("SELECT * FROM [Usuarios]"), columns));
+            int[] columnasWidth = new int[columns.size()];
+            for (int i = 0; i < columns.size(); i++) {
+                columnasWidth[i] = columns.get(i).getSize();
+            }
+            return new Resultados(new String[columns.size()], columnasWidth, executeQuery(("SELECT * FROM [Usuarios]"), columns));
         }
     }
 
@@ -351,7 +365,7 @@ public class DatabaseOperaciones {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
-            if (!rol.equals("Proveedor")) {
+            if (!rol.equals("Fabricante")) {
                 switchUser(rol, user);
                 if (connection == null) {
                     throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
@@ -363,11 +377,47 @@ public class DatabaseOperaciones {
         }
     }
 
+    public Resultados searchTablePaciente(String user, String password, String rol, String cedula, String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
+        if (!InicioSesion.autentificar(user, password, rol)) {
+            return null;
+        } else {
+            if (!rol.equals("Fabricante")) {
+                switchUser(rol, user);
+                if (connection == null) {
+                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
+                }
+            } else {
+                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
+            }
+            List<Column> columns = databaseInfo.getColumnsForTable("Paciente");
+            String[] columnas = new String[columns.size()];
+            int[] columnasWidth = new int[columns.size()];
+            for (int i = 0; i < columns.size(); i++) {
+                columnas[i] = columns.get(i).getName();
+                columnasWidth[i] = columns.get(i).getSize();
+            }
+            // Construcción de la consulta SQL dinámica
+            StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM Paciente WHERE 1=1");
+
+            if (cedula != null && !cedula.trim().isEmpty()) {
+                sqlBuilder.append(" AND cedula = '" + cedula + "'");
+            }
+            if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
+                sqlBuilder.append(" AND CONCAT(nombre_paciente, ' ', apellido_paciente) LIKE '%" + nombreCompleto + "%'");
+            }
+            if (fechaNacimiento != null && !fechaNacimiento.trim().isEmpty()) {
+                fechaNacimiento = String.valueOf(Date.valueOf(fechaNacimiento));
+                sqlBuilder.append(" AND CAST(fecha_nacimiento AS DATE) = '" + fechaNacimiento + "'");
+            }
+            return new Resultados(columnas, columnasWidth, executeQuery(sqlBuilder.toString(), columns));
+        }
+    }
+
     public Resultados searchPaciente(String user, String password, String rol, String cedula, String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
-            if (!rol.equals("Proveedor")) {
+            if (!rol.equals("Fabricante")) {
                 switchUser(rol, user);
                 if (connection == null) {
                     throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
@@ -377,10 +427,10 @@ public class DatabaseOperaciones {
             }
             List<Column> columns = databaseInfo.getColumnsForView("Vista Doctor");
             String[] columnas = new String[columns.size()];
-            int i = -1;
-            for (Column columna : columns) {
-                i++;
-                columnas[i] = columna.getName();
+            int[] columnasWidth = new int[columns.size()];
+            for (int i = 0; i < columns.size(); i++) {
+                columnas[i] = columns.get(i).getName();
+                columnasWidth[i] = columns.get(i).getSize();
             }
             // Construcción de la consulta SQL dinámica
             StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM [Vista Doctor] WHERE 1=1");
@@ -389,13 +439,13 @@ public class DatabaseOperaciones {
                 sqlBuilder.append(" AND Cédula = '" + cedula + "'");
             }
             if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
-                sqlBuilder.append(" AND [Nombre Completo] LIKE '" + nombreCompleto + "'");
+                sqlBuilder.append(" AND CONCAT(Nombre, ' ', Apellido) LIKE '%" + nombreCompleto + "%'");
             }
             if (fechaNacimiento != null && !fechaNacimiento.trim().isEmpty()) {
                 fechaNacimiento = String.valueOf(Date.valueOf(fechaNacimiento));
                 sqlBuilder.append(" AND CAST([Fecha de Nacimiento] AS DATE) = '" + fechaNacimiento + "'");
             }
-            return new Resultados(columnas, executeQuery(sqlBuilder.toString(), columns));
+            return new Resultados(columnas, columnasWidth, executeQuery(sqlBuilder.toString(), columns));
         }
     }
 
@@ -414,28 +464,15 @@ public class DatabaseOperaciones {
             List<Object[]> resultList = new ArrayList<>();
             List<Column> columns = new ArrayList<>();
             String[] columnas = new String[6];
+            int[] columnasWidth = new int[6];
             try {
-                PreparedStatement callStmt = connection.prepareStatement("SELECT [Nombre Vacuna], [Número de dosis], [Enfermedad previene], [Fecha de aplicación], Sede, Dependencia \nFROM [Vista Paciente] \nWHERE Cédula = ?");
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement("SELECT [Nombre Vacuna], [Número de dosis], [Enfermedad previene], [Fecha de aplicación], Sede, Dependencia \nFROM [Vista Paciente] \nWHERE Cédula = ?");
                 callStmt.setString(1, cedula);
-                ResultSet resultSet = callStmt.executeQuery();
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    columns.add(new Column(metaData.getColumnName(i), metaData.getColumnTypeName(i)));
-                }
-                for (int i = 0; i < columns.size(); i++)
-                    columnas[i] = columns.get(i).getName();
-                while (resultSet.next()) {
-                    Object[] row = new Object[columns.size()];
-                    for (int i = 0; i < columns.size(); i++) {
-                        row[i] = getColumnValueDynamic((SQLServerResultSet) resultSet, columns.get(i));
-                    }
-                    resultList.add(row);
-                }
+                processResult(callStmt, columns, columnas, columnasWidth, resultList);
             } finally {
                 closeConnection();
             }
-            return new Resultados(columnas, resultList.toArray(new Object[0][]));
+            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
         }
     }
 
@@ -453,29 +490,21 @@ public class DatabaseOperaciones {
             }
             List<Object[]> resultList = new ArrayList<>();
             List<Column> columns = new ArrayList<>();
-            String[] columnas = new String[17];
+            String[] columnas = new String[20];
+            int[] columnasWidth = new int[20];
             try {
-                PreparedStatement callStmt = connection.prepareStatement("SELECT Cédula, Nombre, Apellido, [Fecha de Nacimiento], [Edad calculada], Sexo, Teléfono, [Correo electrónico], [Dirección residencia actual], Distrito, Provincia, [Nombre vacuna], Fabricante, [Fecha de aplicación], [Número de dosis], [Intervalo dosis 1 y 2 recomendado en meses], [Intervalo real en días] \nFROM [Vista Doctor] \nWHERE [ID Sede] = ?");
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                        "SELECT Cédula, Nombre, Apellido, [Fecha de Nacimiento], [Edad], Sexo, Teléfono, " +
+                                "[Correo electrónico], [Dirección residencia actual], Distrito, Provincia, [Nombre vacuna], " +
+                                "Fabricante, [Fecha de aplicación], Sede, Dependencia, [Número de dosis], " +
+                                "[Intervalo dosis 1 y 2 recomendado en meses], [Intervalo real en días], [Edad mínima recomendada en meses] \n" +
+                                "FROM [Vista Doctor] \nWHERE [ID Sede] = ?");
                 callStmt.setInt(1, idSede);
-                ResultSet resultSet = callStmt.executeQuery();
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    columns.add(new Column(metaData.getColumnName(i), metaData.getColumnTypeName(i)));
-                }
-                for (int i = 0; i < columns.size(); i++)
-                    columnas[i] = columns.get(i).getName();
-                while (resultSet.next()) {
-                    Object[] row = new Object[columns.size()];
-                    for (int i = 0; i < columns.size(); i++) {
-                        row[i] = getColumnValueDynamic((SQLServerResultSet) resultSet, columns.get(i));
-                    }
-                    resultList.add(row);
-                }
+                processResult(callStmt, columns, columnas, columnasWidth, resultList);
             } finally {
                 closeConnection();
             }
-            return new Resultados(columnas, resultList.toArray(new Object[0][]));
+            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
         }
     }
 
@@ -483,7 +512,7 @@ public class DatabaseOperaciones {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
-            if (!rol.equals("Proveedor")) {
+            if (!rol.equals("Fabricante")) {
                 switchUser(rol, user);
                 if (connection == null) {
                     throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
@@ -493,10 +522,10 @@ public class DatabaseOperaciones {
             }
             List<Column> columns = databaseInfo.getColumnsForView("Vista Doctor");
             String[] columnas = new String[columns.size()];
-            int i = -1;
-            for (Column columna : columns) {
-                i++;
-                columnas[i] = columna.getName();
+            int[] columnasWidth = new int[columns.size()];
+            for (int i = 0; i < columns.size(); i++) {
+                columnas[i] = columns.get(i).getName();
+                columnasWidth[i] = columns.get(i).getSize();
             }
 
             StringBuilder query = new StringBuilder("SELECT * FROM [Vista Doctor] WHERE 1=1");
@@ -518,7 +547,7 @@ public class DatabaseOperaciones {
             if (numDosis != null && numDosis.length() <= 2 && !numDosis.isBlank()) {
                 query.append(" AND [Número de dosis] = '" + numDosis + "'");
             }
-            return new Resultados(columnas, executeQuery(query.toString(), columns));
+            return new Resultados(columnas, columnasWidth, executeQuery(query.toString(), columns));
         }
     }
 
@@ -621,12 +650,12 @@ public class DatabaseOperaciones {
             };
             if (columnasLista != null && query != null || query.isBlank()) {
                 String[] column = new String[columnasLista.size()];
-                int i = -1;
-                for (Column columnas : columnasLista) {
-                    i++;
-                    column[i] = columnas.getName();
+                int[] columnasWidth = new int[columnasLista.size()];
+                for (int i = 0; i < columnasLista.size(); i++) {
+                    column[i] = columnasLista.get(i).getName();
+                    columnasWidth[i] = columnasLista.get(i).getSize();
                 }
-                resultados = new Resultados(column, executeQuery(query, columnasLista));
+                resultados = new Resultados(column, columnasWidth, executeQuery(query, columnasLista));
             } else
                 throw new SQLException("No se encontró objeto que coincida.");
         }
@@ -734,6 +763,38 @@ public class DatabaseOperaciones {
             throw new SQLException("Número de dosis no expected. TIMEOUT");
         }
         return numDosis;
+    }
+
+    private int countRowSQLUpdate(SQLServerCallableStatement callableStatement) throws SQLException {
+        int count = callableStatement.executeUpdate();
+        count += callableStatement.getUpdateCount();
+        while (!callableStatement.getMoreResults()) {
+            if (callableStatement.getUpdateCount() == -1) {
+                break;
+            }
+            count += callableStatement.getUpdateCount();
+        }
+        return count;
+    }
+
+    private void processResult(SQLServerPreparedStatement statement, List<Column> columns, String[] columnas, int[] columnasWidth, List<Object[]> resultList) throws SQLException {
+        ResultSet resultSet = statement.executeQuery();
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        for (int i = 1; i <= columnCount; i++) {
+            columns.add(new Column(metaData.getColumnName(i), metaData.getColumnTypeName(i), metaData.getColumnDisplaySize(i)));
+        }
+        for (int i = 0; i < columns.size(); i++) {
+            columnasWidth[i] = columns.get(i).getSize();
+            columnas[i] = columns.get(i).getName();
+        }
+        while (resultSet.next()) {
+            Object[] row = new Object[columns.size()];
+            for (int i = 0; i < columns.size(); i++) {
+                row[i] = getColumnValueDynamic((SQLServerResultSet) resultSet, columns.get(i));
+            }
+            resultList.add(row);
+        }
     }
 
     // getters

@@ -2,7 +2,7 @@
 
 Proyecto de Gestión de Información sobre Vacunación en Panamá
 
-![Imagen logo del proyecto](https://github.com/Kingg22/ProyectoApp-MINSA-2.0/blob/master/src/images/operacionVacunaslogopequeno.png)
+![Imagen logo del proyecto](https://github.com/Kingg22/Proyecto_App-MINSA-2.0/blob/558997ac0ca507279a87c716cf0c4a89aaf71eb0/src/images/operacionVacunas_logo_pequeno.png)
 
 ## Descripción
 

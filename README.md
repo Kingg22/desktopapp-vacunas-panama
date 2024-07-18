@@ -55,8 +55,8 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 
 ### Recolección de Datos:
 
-Capturar información detallada sobre las vacunas, eventos supuestamente atribuibles a la vacunación e inmunización (
-ESAVI), y datos demográficos de los pacientes.
+Capturar información detallada sobre las vacunas, eventos supuestamente atribuibles a la vacunación e inmunización
+(ESAVI), y datos demográficos de los pacientes.
 
 ### Gestión de Información:
 

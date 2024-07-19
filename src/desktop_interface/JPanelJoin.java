@@ -1,5 +1,7 @@
 package desktop_interface;
 
+import logic.scanner_database.DatabaseInfo;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +24,7 @@ public class JPanelJoin extends JPanel {
         punto4 = new JLabel();
         jComboBox_tabla4 = new JComboBox<>();
         punto3 = new JLabel();
-        jComboBox_columna3 = new JComboBox<>();
+        jComboBox_columna2 = new JComboBox<>();
 
         setBackground(new Color(227, 218, 201));
         setMinimumSize(new Dimension(0, 0));
@@ -43,7 +45,7 @@ public class JPanelJoin extends JPanel {
         add(join);
 
         jComboBox_tabla2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla2"}));
+        jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir Tabla"}));
         jComboBox_tabla2.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla2.addActionListener(this::jComboBox_tabla2ActionPerformed);
         add(jComboBox_tabla2);
@@ -57,7 +59,7 @@ public class JPanelJoin extends JPanel {
         add(punto2);
 
         jComboBox_tabla3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla3.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
+        jComboBox_tabla3.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir Tabla"}));
         jComboBox_tabla3.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla3.addActionListener(this::jComboBox_tabla3ActionPerformed);
         add(jComboBox_tabla3);
@@ -71,7 +73,7 @@ public class JPanelJoin extends JPanel {
         add(punto);
 
         jComboBox_columna1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_columna1.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
+        jComboBox_columna1.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir"}));
         jComboBox_columna1.setPreferredSize(new Dimension(150, 27));
         add(jComboBox_columna1);
 
@@ -84,7 +86,7 @@ public class JPanelJoin extends JPanel {
         add(punto4);
 
         jComboBox_tabla4.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla4.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla2"}));
+        jComboBox_tabla4.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir Tabla"}));
         jComboBox_tabla4.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla4.addActionListener(this::jComboBox_tabla4ActionPerformed);
         add(jComboBox_tabla4);
@@ -97,27 +99,53 @@ public class JPanelJoin extends JPanel {
         punto3.setPreferredSize(new Dimension(10, 33));
         add(punto3);
 
-        jComboBox_columna3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_columna3.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
-        jComboBox_columna3.setPreferredSize(new Dimension(150, 27));
-        add(jComboBox_columna3);
+        jComboBox_columna2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
+        jComboBox_columna2.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir"}));
+        jComboBox_columna2.setPreferredSize(new Dimension(150, 27));
+        add(jComboBox_columna2);
     }// </editor-fold>
 
     private void jComboBox_tabla2ActionPerformed(ActionEvent evt) {
-        /* TODO buscar y colocar las columnas de dicha tabla */
+        jComboBox_tabla3.setSelectedItem(jComboBox_tabla2.getSelectedItem());
+        jComboBox_tabla3ActionPerformed(null);
     }
 
     private void jComboBox_tabla3ActionPerformed(ActionEvent evt) {
-        /* TODO buscar y colocar las columnas de dicha tabla */
+        if (jComboBox_tabla3.getSelectedIndex() == jComboBox_tabla2.getSelectedIndex()) {
+            DefaultComboBoxModel model = new DefaultComboBoxModel<>(new String[]{"Elegir"});
+            model.addAll(infoDB.getColumnsNombres((String) jComboBox_tabla3.getSelectedItem()));
+            jComboBox_columna1.setModel(model);
+        } else {
+            jComboBox_tabla3.setSelectedItem(jComboBox_tabla2.getSelectedItem());
+            JOptionPane.showMessageDialog(null, "La tabla seleccionada debe ser igual a la tabla del combo box anterior.");
+        }
     }
 
     private void jComboBox_tabla4ActionPerformed(ActionEvent evt) {
-        /* TODO buscar y colocar las columnas de dicha tabla */
+        if (jComboBox_tabla4.getSelectedIndex() != 0) {
+            DefaultComboBoxModel model = new DefaultComboBoxModel<>(new String[]{"Elegir"});
+            model.addAll(infoDB.getColumnsNombres((String) jComboBox_tabla4.getSelectedItem()));
+            jComboBox_columna2.setModel(model);
+        }
     }
+
+    public void setTables(DatabaseInfo infoDB) {
+        this.infoDB = infoDB;
+        JComboBox[] tablas = {jComboBox_tabla2, jComboBox_tabla3, jComboBox_tabla4};
+        for (JComboBox tabla : tablas) {
+            DefaultComboBoxModel model = new DefaultComboBoxModel(new String[]{"Elegir Tabla"});
+            model.addAll(this.infoDB.getTablasNombres());
+            model.addAll(this.infoDB.getVistasNombres());
+            tabla.setModel(model);
+        }
+    }
+
+    // variable propia
+    private DatabaseInfo infoDB;
 
     // Variables declaration - do not modify
     private JComboBox<String> jComboBox_columna1;
-    private JComboBox<String> jComboBox_columna3;
+    private JComboBox<String> jComboBox_columna2;
     private JComboBox<String> jComboBox_innerTyp;
     private JComboBox<String> jComboBox_tabla2;
     private JComboBox<String> jComboBox_tabla3;

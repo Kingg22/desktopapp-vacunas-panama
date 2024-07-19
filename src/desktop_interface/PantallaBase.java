@@ -13,10 +13,10 @@ import java.awt.event.*;
 public class PantallaBase extends JFrame {
 
     public PantallaBase(JFrame parent) {
-        PantallaBase.parentFrame = parent;
         initComponents();
         this.JPANEL_FILTRAR = new JTableFiltrar(jTable_Content);
-        layout = (CardLayout) jPanel_derecho.getLayout();
+        LAYOUT = (CardLayout) jPanel_derecho.getLayout();
+        PARENT_FRAME = parent;
         addListeners();
 
         JButton[] botones = {button_opcion1, button_opcion2, button_opcion3, button_opcion4, button_opcion5, button_modificarDatos, button_modificarCred, button_preferencias, jButton_savePreferences, button_soporte};
@@ -1140,8 +1140,8 @@ public class PantallaBase extends JFrame {
     private void formWindowClosing(WindowEvent evt) {
         int confirm = JOptionPane.showConfirmDialog(null, "¿Esta seguro de cerrar sesión?", "Cerrando sesión y ventana...", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirm == 0) {
-            parentFrame.setVisible(true);
-            parentFrame.requestFocus();
+            PARENT_FRAME.setVisible(true);
+            PARENT_FRAME.requestFocus();
             this.dispose();
         }
     }
@@ -1166,10 +1166,10 @@ public class PantallaBase extends JFrame {
             jPanel_derecho.add(jPanel_preferencias, "preferences");
         }
         if (mostrando == jPanel_preferencias) {
-            layout.show(jPanel_derecho, "vacio");
+            LAYOUT.show(jPanel_derecho, "vacio");
             mostrando = jPanel1;
         } else {
-            layout.show(jPanel_derecho, "preferences");
+            LAYOUT.show(jPanel_derecho, "preferences");
             mostrando = jPanel_preferencias;
         }
         jPanel_derecho.revalidate();
@@ -1181,10 +1181,10 @@ public class PantallaBase extends JFrame {
             jPanel_derecho.add(jPanel_mostrarTabla, "option 1");
         }
         if (mostrando == jPanel_mostrarTabla) {
-            layout.show(jPanel_derecho, "vacio");
+            LAYOUT.show(jPanel_derecho, "vacio");
             mostrando = jPanel1;
         } else {
-            layout.show(jPanel_derecho, "option 1");
+            LAYOUT.show(jPanel_derecho, "option 1");
             mostrando = jPanel_mostrarTabla;
         }
         jPanel_derecho.revalidate();
@@ -1196,10 +1196,10 @@ public class PantallaBase extends JFrame {
             jPanel_derecho.add(jPanel_soporte, "soporte");
         }
         if (mostrando == jPanel_soporte) {
-            layout.show(jPanel_derecho, "vacio");
+            LAYOUT.show(jPanel_derecho, "vacio");
             mostrando = jPanel1;
         } else {
-            layout.show(jPanel_derecho, "soporte");
+            LAYOUT.show(jPanel_derecho, "soporte");
             mostrando = jPanel_soporte;
         }
         jPanel_derecho.revalidate();
@@ -1302,8 +1302,8 @@ public class PantallaBase extends JFrame {
         if (cambiado) {
             JOptionPane.showMessageDialog(null, "Para confirmar los cambios de credenciales se cerrará el programa y debe iniciar sesión nuevamente.",
                     "Modificando datos...", JOptionPane.INFORMATION_MESSAGE);
-            parentFrame.setVisible(true);
-            parentFrame.requestFocus();
+            PARENT_FRAME.setVisible(true);
+            PARENT_FRAME.requestFocus();
             this.dispose();
             jDialog_modificarCred.dispose();
             System.gc();
@@ -1604,8 +1604,8 @@ public class PantallaBase extends JFrame {
     }
 
     /* variables propias */
-    private static JFrame parentFrame;
-    private static CardLayout layout = null;
+    private final CardLayout LAYOUT;
+    private final JFrame PARENT_FRAME;
     private final JTableFiltrar JPANEL_FILTRAR;
     private Component mostrando = null;
     private String cedulaUsuarioActual;

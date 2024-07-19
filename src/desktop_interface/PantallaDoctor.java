@@ -27,8 +27,6 @@ import java.util.logging.Logger;
 public class PantallaDoctor extends JFrame {
 
     public PantallaDoctor(JFrame parent, Usuario usuario) {
-        PARENT_FRAME = parent;
-        DB_DOCTOR = new DatabaseOperaciones();
         initComponents();
         this.JPANEL_FILTRAR1 = new JTableFiltrar(jTable_Content_MisPacientes);
         this.JPANEL_FILTRAR2 = new JTableFiltrar(jTable_Content_BuscarPacientes);
@@ -39,8 +37,11 @@ public class PantallaDoctor extends JFrame {
         this.FONTCHOOSER_BUSCAR_PACIENTE = new JFontChooser(this);
         this.FONTCHOOSER_BUSCAR_DOSIS = new JFontChooser(this);
         LAYOUT = (CardLayout) jPanel_contenidos_derecha.getLayout();
+        PARENT_FRAME = parent;
+        DB_DOCTOR = new DatabaseOperaciones();
         editarPaciente = false;
         editar = false;
+
         addListeners();
 
         JButton[] botones = {button_opcion1, button_opcion2, button_opcion3,
@@ -1673,9 +1674,9 @@ public class PantallaDoctor extends JFrame {
 
         jTextArea6_lote.setVisible(false);
         jTextArea6_lote.setEditable(false);
-        jTextArea6_lote.setBackground(new java.awt.Color(227, 218, 201));
-        jTextArea6_lote.setFont(new java.awt.Font("Roboto", Font.PLAIN, 12));
-        jTextArea6_lote.setForeground(new java.awt.Color(0, 0, 0));
+        jTextArea6_lote.setBackground(new Color(227, 218, 201));
+        jTextArea6_lote.setFont(new Font("Roboto", Font.PLAIN, 12));
+        jTextArea6_lote.setForeground(new Color(0, 0, 0));
         jTextArea6_lote.setLineWrap(true);
         jTextArea6_lote.setText("Confirmar datos del lote.");
         jTextArea6_lote.setWrapStyleWord(true);
@@ -3607,7 +3608,7 @@ public class PantallaDoctor extends JFrame {
         jTextField_fechaAplicacion1.requestFocus();
     }
 
-    private void jComboBox_vacuna2ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jComboBox_vacuna2ActionPerformed(ActionEvent evt) {
         int sede = jComboBox_sede2.getSelectedIndex();
         int vacuna = jComboBox_sede2.getSelectedIndex();
 
@@ -3630,7 +3631,7 @@ public class PantallaDoctor extends JFrame {
         }
     }
 
-    private void jComboBox_loteActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jComboBox_loteActionPerformed(ActionEvent evt) {
         try {
             Resultados rLotes = DB_DOCTOR.showLoteSedeVacuna("admin", "admin1234", "Administrador", (String) jComboBox_lote.getSelectedItem());
             if (rLotes != null && rLotes.getDatos().length > 0) {
@@ -3647,7 +3648,7 @@ public class PantallaDoctor extends JFrame {
         }
     }
 
-    private void jButton_insertarDosisMouseClicked(java.awt.event.MouseEvent evt) {
+    private void jButton_insertarDosisMouseClicked(MouseEvent evt) {
         if (!jButton_insertarDosis.isEnabled()) {
             return;
         }
@@ -3897,13 +3898,6 @@ public class PantallaDoctor extends JFrame {
         for (JTextField field : fieldsBuscar) {
             PantallaBase.addFocusListeners(field, "Buscar...");
         }
-        // modificar datos usuario doctor
-        PantallaBase.addFocusListeners(jTextField_nombre, "Ingrese su nombre");
-        PantallaBase.addFocusListeners(jTextField_apellido, "Ingrese su apellido");
-        PantallaBase.addFocusListeners(jTextField_direccion, "Ingrese su dirección");
-        PantallaBase.addFocusListeners(jTextField_correo, "Ingrese su correo electrónico");
-        PantallaBase.addFocusListeners(jTextField_telefono, "Ingrese el código de país, el código de ciudad y el número local");
-
         // manipular paciente
         PantallaBase.addFocusListeners(jTextField_cedula2, "Ingrese cédula a buscar");
         PantallaBase.addFocusListeners(jTextField_nombre1, "Ingrese el nombre");
@@ -3913,6 +3907,13 @@ public class PantallaDoctor extends JFrame {
         PantallaBase.addFocusListeners(jTextField_direccion1, "Ingrese la dirección");
         PantallaBase.addFocusListeners(jTextField_correo1, "Ingrese el correo electrónico");
         PantallaBase.addFocusListeners(jTextField_telefono1, "Ingrese el código de país, el código de ciudad y el número de teléfono local");
+
+        // modificar datos usuario doctor
+        PantallaBase.addFocusListeners(jTextField_nombre, "Ingrese su nombre");
+        PantallaBase.addFocusListeners(jTextField_apellido, "Ingrese su apellido");
+        PantallaBase.addFocusListeners(jTextField_direccion, "Ingrese su dirección");
+        PantallaBase.addFocusListeners(jTextField_correo, "Ingrese su correo electrónico");
+        PantallaBase.addFocusListeners(jTextField_telefono, "Ingrese el código de país, el código de ciudad y el número local");
 
         // modificar credenciales
         PantallaBase.addFocusListeners(jTextField_usuario_Viejo, "Ingrese su usuario");
@@ -3931,12 +3932,6 @@ public class PantallaDoctor extends JFrame {
         PantallaBase.addFocusListeners(jTextField_fechaAplicacion1, "Ingrese la fecha de aplicación YYYY-MM-DD hh:mm:ss*");
 
         // Action Listener
-        // modificar credenciales
-        PantallaBase.addActionListeners(jTextField_usuario_Viejo, jTextField_usuarioNuevo);
-        PantallaBase.addActionListeners(jTextField_usuarioNuevo, jPasswordField_vieja);
-        PantallaBase.addActionListeners(jPasswordField_vieja, jPasswordField_nueva1);
-        PantallaBase.addActionListeners(jPasswordField_nueva1, jPasswordField_nueva2);
-
         // buscar dosis
         PantallaBase.addActionListeners(jTextField_fecha_inicio, jTextField_fecha_fin);
         PantallaBase.addActionListeners(jTextField_fecha_fin, jComboBox_vacuna1);
@@ -3948,6 +3943,12 @@ public class PantallaDoctor extends JFrame {
         PantallaBase.addActionListeners(jTextField_cedula, jTextField_fechaNacimiento);
         PantallaBase.addActionListeners(jTextField_fechaNacimiento, jTextField_direccion);
         PantallaBase.addActionListeners(jTextField_correo, jTextField_telefono);
+
+        // modificar credenciales
+        PantallaBase.addActionListeners(jTextField_usuario_Viejo, jTextField_usuarioNuevo);
+        PantallaBase.addActionListeners(jTextField_usuarioNuevo, jPasswordField_vieja);
+        PantallaBase.addActionListeners(jPasswordField_vieja, jPasswordField_nueva1);
+        PantallaBase.addActionListeners(jPasswordField_nueva1, jPasswordField_nueva2);
 
         // manipular pacientes
         PantallaBase.addActionListeners(jTextField_nombre1, jTextField_apellido1);
@@ -3988,11 +3989,11 @@ public class PantallaDoctor extends JFrame {
     private final JTableFiltrar JPANEL_FILTRAR1;
     private final JTableFiltrar JPANEL_FILTRAR2;
     private final JTableFiltrar JPANEL_FILTRAR3;
+    private final long INSERTAR_DOSIS_DISABLE_TIME = 5000;
     private final long MANIPULATE_PACIENTE_DISABLE_TIME = 15000;
     private final long MODIFY_USER_DISABLE_TIME = 100000;
     private final long OPTIONS_DISABLE_TIME = 10000;
     private final long SEARCH_PACIENTE_DISABLE_TIME = 5000;
-    private final long INSERTAR_DOSIS_DISABLE_TIME = 5000;
     private boolean editar;
     private boolean editarPaciente;
     private Component mostrando = null;

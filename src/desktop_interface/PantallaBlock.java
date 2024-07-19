@@ -8,8 +8,8 @@ import java.awt.event.*;
 public class PantallaBlock extends JFrame {
 
     public PantallaBlock(JFrame parent) {
-        PantallaBlock.parentFrame = parent;
         initComponents();
+        PARENT_FRAME = parent;
 
         JButton[] botones = {button_opcion1, button_opcion2, button_opcion3, button_opcion4, button_opcion5, button_modificarDatos, button_modificarCred, button_preferencias, button_soporte};
         for (JButton boton : botones) {
@@ -333,8 +333,8 @@ public class PantallaBlock extends JFrame {
     private void formWindowClosing(WindowEvent evt) {
         int confirm = JOptionPane.showConfirmDialog(null, "¿Esta seguro de cerrar sesión?", "Cerrando sesión y ventana...", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirm == 0) {
-            parentFrame.setVisible(true);
-            parentFrame.requestFocus();
+            PARENT_FRAME.setVisible(true);
+            PARENT_FRAME.requestFocus();
             this.dispose();
         }
     }
@@ -367,7 +367,7 @@ public class PantallaBlock extends JFrame {
     }
 
     /* variables propias */
-    private static JFrame parentFrame;
+    private final JFrame PARENT_FRAME;
 
     // Variables declaration - do not modify
     private JPanel background;

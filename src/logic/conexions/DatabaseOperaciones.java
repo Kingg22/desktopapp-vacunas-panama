@@ -15,7 +15,23 @@ public class DatabaseOperaciones {
     private Connection connection = null;
     private String usuarioActual = null;
     private DatabaseInfo databaseInfo = null;
-    private boolean adminCreateBD = false;
+
+    public DatabaseInfo getDB(String user, String password, String rol) throws SQLException, ClassNotFoundException {
+        if (!InicioSesion.autentificar(user, password, rol)) {
+            throw new SQLException("NO estas registrado para ejecutar este comando. TIMEOUT");
+        } else {
+            if (rol.equals("Administrador")) {
+                switchUser(rol, user);
+                if (connection == null) {
+                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
+                }
+            } else {
+                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
+            }
+            closeConnection();
+            return databaseInfo;
+        }
+    }
 
     public int insertarDosis(String user, String password, String rol, String cedulaPaciente, Timestamp fechaAplicacion, String numero_dosis, int idVacuna, int idSede, String lote) throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
@@ -266,29 +282,6 @@ public class DatabaseOperaciones {
             } finally {
                 closeConnection();
             }
-        }
-    }
-
-    public int createAdminBD(String cedulaAdmin, String userAdmin, String passwordAdminHash, Timestamp fechaNacimientoAdmin) throws SQLException, ClassNotFoundException {
-        if (!adminCreateBD) {
-            switchToAdmin();
-            if (connection == null) {
-                throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-            }
-            try {
-                SQLServerCallableStatement callableStatement = (SQLServerCallableStatement) connection.prepareCall("{call dbo.CrearUsuario(?, ?, ?, ?, ?)}");
-                callableStatement.setString(1, cedulaAdmin);
-                callableStatement.setString(2, userAdmin);
-                callableStatement.setString(3, passwordAdminHash);
-                callableStatement.setInt(4, 5);
-                callableStatement.setDateTime(5, fechaNacimientoAdmin);
-                return callableStatement.executeUpdate();
-            } finally {
-                closeConnection();
-                adminCreateBD = true;
-            }
-        } else {
-            throw new SQLException("NO se puede ejecutar este comando más de 1 vez. TIMEOUT - BAN USER");
         }
     }
 
@@ -567,19 +560,6 @@ public class DatabaseOperaciones {
         executeUpdate("UPDATE Usuarios \nSET last_used = CURRENT_TIMESTAMP \nWHERE usuario = '" + user + "' AND tipo = " + getTipo(rol));
     }
 
-    private void switchToAdmin() throws SQLException, ClassNotFoundException {
-        if (adminCreateBD) {
-            throw new SQLException("NO se puede ejecutar este método más de 1 vez y fuera de esta clase. TIMEOUT - BAN USER");
-        }
-        // Cerrar la conexión actual si existe
-        if (connection != null) {
-            Conexion.closeConnection(connection);
-        }
-        this.connection = Conexion.getConnection("administrador");
-        databaseInfo = new DatabaseInfo(connection);
-        this.usuarioActual = "administrador";
-    }
-
     private void closeConnection() throws SQLException {
         if (connection != null) {
             Conexion.closeConnection(connection);
@@ -673,13 +653,13 @@ public class DatabaseOperaciones {
         }
         switch (type) {
             case 1:
-                names = new ArrayList<>(databaseInfo.getTablasNames());
+                names = new ArrayList<>(databaseInfo.getTablasNombres());
                 break;
             case 2:
-                names = new ArrayList<>(databaseInfo.getVistasNames());
+                names = new ArrayList<>(databaseInfo.getVistasNombres());
                 break;
             case 3:
-                names = new ArrayList<>(databaseInfo.getProcedimientosNames());
+                names = new ArrayList<>(databaseInfo.getProcedimientosNombres());
                 break;
             default:
                 return null;

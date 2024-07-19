@@ -19,9 +19,9 @@ import java.util.TimerTask;
 public class RegistrarUser extends JFrame {
 
     public RegistrarUser(JFrame parent) {
-        RegistrarUser.parentFrame = parent;
         initComponents();
         addListeners();
+        PARENT_FRAME = parent;
 
         this.requestFocusInWindow();
     }
@@ -402,7 +402,7 @@ public class RegistrarUser extends JFrame {
         setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
 
         setSize(new Dimension(616, 738));
-        setLocationRelativeTo(parentFrame);
+        setLocationRelativeTo(PARENT_FRAME);
     }// </editor-fold>
 
     /* eventos */
@@ -428,7 +428,7 @@ public class RegistrarUser extends JFrame {
     }
 
     private void iniciarSesionMouseClicked(MouseEvent evt) {
-        parentFrame.setVisible(true);
+        PARENT_FRAME.setVisible(true);
         this.dispose();
     }
 
@@ -444,7 +444,7 @@ public class RegistrarUser extends JFrame {
             public void run() {
                 button_registrarse.setEnabled(true);
             }
-        }, registerDisableTime);
+        }, REGISTER_DISABLE_TIME);
 
         boolean insertado = false;
         String nombreM = jTextField_nombre.getText();
@@ -467,7 +467,7 @@ public class RegistrarUser extends JFrame {
                 @Override
                 public void run() {
                     JOptionPane.showMessageDialog(null, "Registrarse con otro rol diferente a paciente no implementando. Lo sentimos. Se cerrará esta ventana.");
-                    parentFrame.setVisible(true);
+                    PARENT_FRAME.setVisible(true);
                     dispose();
                 }
             }, 5);
@@ -575,7 +575,7 @@ public class RegistrarUser extends JFrame {
                 @Override
                 public void run() {
                     JOptionPane.showMessageDialog(null, "Se ha registrado con éxito. En unos momentos se cerrará esta ventana y podrá iniciar sesión.");
-                    parentFrame.setVisible(true);
+                    PARENT_FRAME.setVisible(true);
                     dispose();
                 }
             }, 5);
@@ -740,8 +740,8 @@ public class RegistrarUser extends JFrame {
     }
 
     /* variables propias */
-    private static JFrame parentFrame;
-    private final long registerDisableTime = 30000;
+    private final JFrame PARENT_FRAME;
+    private final long REGISTER_DISABLE_TIME = 30000;
 
     // Variables declaration - do not modify
     private JCheckBox acceptTerms;

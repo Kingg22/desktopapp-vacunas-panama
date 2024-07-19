@@ -725,7 +725,7 @@ public class Login extends JFrame {
             public void run() {
                 jButton_login.setEnabled(true);
             }
-        }, loginDisableTime);
+        }, LOGIN_DISABLE_TIME);
 
         String user = jTextField_usuario_login.getText();
         JLabel rol = (JLabel) selectedButton.getComponent(1);
@@ -869,7 +869,7 @@ public class Login extends JFrame {
             public void run() {
                 mensaje_restaurar.setEnabled(true);
             }
-        }, restoreDisableTime);
+        }, RESTORE_DISABLE_TIME);
         jFrame_restaurarAcceso.setVisible(true);
         jFrame_restaurarAcceso.setLocationRelativeTo(this);
         this.setVisible(false);
@@ -887,7 +887,7 @@ public class Login extends JFrame {
             public void run() {
                 mensaje1.setEnabled(true);
             }
-        }, registerDisableTime);
+        }, REGISTER_DISABLE_TIME);
 
         RegistrarUser register = new RegistrarUser(this);
         JLabel rol = (JLabel) selectedButton.getComponent(1);
@@ -919,7 +919,7 @@ public class Login extends JFrame {
             public void run() {
                 button_validar.setEnabled(true);
             }
-        }, validateDisableTime);
+        }, VALIDATE_DISABLE_TIME);
 
         String rolM = jComboBox_rol.getSelectedItem().toString();
         String cedulaM = jTextField_cedula.getText();
@@ -1030,7 +1030,7 @@ public class Login extends JFrame {
             public void run() {
                 jButton_restaurar.setEnabled(true);
             }
-        }, restoreDisableTime);
+        }, RESTORE_DISABLE_TIME);
 
         String user = jTextField_usuario.getText();
 
@@ -1152,11 +1152,11 @@ public class Login extends JFrame {
     }
 
     /* mis variables */
+    private final long LOGIN_DISABLE_TIME = 30000;
+    private final long REGISTER_DISABLE_TIME = 120000;
+    private final long RESTORE_DISABLE_TIME = 300000;
+    private final long VALIDATE_DISABLE_TIME = 30000;
     private JPanel selectedButton = null;
-    private final long loginDisableTime = 30000;
-    private final long registerDisableTime = 120000;
-    private final long validateDisableTime = 30000;
-    private final long restoreDisableTime = 300000;
 
     // Variables declaration
     private JCheckBox acceptTerms;

@@ -167,7 +167,7 @@ public class InicioSesion {
                     try {
                         int actualizado = db.manipulatePaciente("admin", "admin1234", "Administrador", cedula, nombre, apellido, fechaNacimiento, sexo, telefono, correo, direccion, distrito);
                         if (actualizado > 0) {
-                            System.out.println("Actualizado PACIENTE en la base de datos." + usuario + " " + cedula);
+                            System.out.println("Actualizado PACIENTE en la base de datos. " + usuario + " " + cedula);
                         } else {
                             System.err.println("Se necesita actualizar al PACIENTE en la base de datos y no se ha podido " + usuario + " " + cedula);
                         }

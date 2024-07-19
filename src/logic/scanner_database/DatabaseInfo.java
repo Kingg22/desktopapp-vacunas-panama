@@ -10,9 +10,11 @@ public class DatabaseInfo {
     Map<String, List<Column>> tablasColumnas = new HashMap<>();
     Map<String, List<Column>> vistasColumnas = new HashMap<>();
     Map<String, List<Column>> procedimientosColumnas = new HashMap<>();
-    List<String> tablasNames = new ArrayList<>();
-    List<String> vistasNames = new ArrayList<>();
-    List<String> procedimientosNames = new ArrayList<>();
+    Map<String, List<String>> tablasVistasColumnasNombres = new HashMap<>();
+    Map<String, List<String>> procedimientosColumnasNombres = new HashMap<>();
+    List<String> tablasNombres = new ArrayList<>();
+    List<String> vistasNombres = new ArrayList<>();
+    List<String> procedimientosNombres = new ArrayList<>();
 
     //  que realiza todas las operaciones de escanear la base de datos
     public DatabaseInfo(Connection conexion) throws SQLException {
@@ -28,12 +30,12 @@ public class DatabaseInfo {
         try (PreparedStatement preparedStatement = conexion.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                tablasNames.add(resultSet.getString("name"));
+                tablasNombres.add(resultSet.getString("name"));
             }
         }
 
         DatabaseMetaData meta = conexion.getMetaData();
-        for (String tabla : tablasNames) {
+        for (String tabla : tablasNombres) {
             try (ResultSet rs = meta.getTables(null, null, tabla, new String[]{"TABLE"})) {
                 rs.next();
                 String tableName = rs.getString("TABLE_NAME");
@@ -49,12 +51,12 @@ public class DatabaseInfo {
         try (PreparedStatement preparedStatement = conexion.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                vistasNames.add(resultSet.getString("name"));
+                vistasNombres.add(resultSet.getString("name"));
             }
         }
         // buscar el resto de información de las vistas
         DatabaseMetaData meta = conexion.getMetaData();
-        for (String vista : vistasNames) {
+        for (String vista : vistasNombres) {
             try (ResultSet rs = meta.getTables(null, null, vista, new String[]{"VIEW"})) {
                 rs.next();
                 String viewName = rs.getString("TABLE_NAME");
@@ -70,12 +72,12 @@ public class DatabaseInfo {
         try (PreparedStatement preparedStatement = conexion.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                procedimientosNames.add(resultSet.getString("name"));
+                procedimientosNombres.add(resultSet.getString("name"));
             }
         }
         // buscar la información de los procedimientos personalizados
         DatabaseMetaData meta = conexion.getMetaData();
-        for (String procedimiento : procedimientosNames) {
+        for (String procedimiento : procedimientosNombres) {
             try (ResultSet rs = meta.getProcedures(null, null, procedimiento)) {
                 rs.next();
                 String procedureName = rs.getString("PROCEDURE_NAME");
@@ -88,6 +90,7 @@ public class DatabaseInfo {
     // método para recorrer de manera dinámica las tablas y vistas personalizadas
     private List<Column> getColumnsDynamic(Connection conexion, String tableName) throws SQLException {
         List<Column> columnas = new ArrayList<>();
+        List<String> columnasNames = new ArrayList<>();
 
         ResultSet rs = conexion.getMetaData().getColumns(null, null, tableName, "%");
         while (rs.next()) {
@@ -95,14 +98,18 @@ public class DatabaseInfo {
             String columnType = rs.getString("TYPE_NAME");
             int columnSize = rs.getInt("COLUMN_SIZE");
             boolean isNullable = rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable;
+            columnasNames.add(columnName);
             columnas.add(new Column(columnName, columnType, columnSize, isNullable));
         }
+        tablasVistasColumnasNombres.put(tableName, columnasNames);
+        tablasColumnas.put(tableName, columnas);
         return columnas;
     }
 
     // método para recorrer de manera dinámica los procedimientos almacenados personalizados
     private List<Column> getProcedureColumnsDynamic(Connection conexion, String tableName) throws SQLException {
         List<Column> columnas = new ArrayList<>();
+        List<String> columnasNames = new ArrayList<>();
 
         ResultSet rs = conexion.getMetaData().getProcedureColumns(null, null, tableName, "%");
         while (rs.next()) {
@@ -110,12 +117,22 @@ public class DatabaseInfo {
             String columnType = rs.getString("TYPE_NAME");
             int columnSize = rs.getInt("PRECISION");
             boolean isNullable = rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable;
+            columnasNames.add(columnName);
             columnas.add(new Column(columnName, columnType, columnSize, isNullable));
         }
+        procedimientosColumnasNombres.put(tableName, columnasNames);
         return columnas;
     }
 
     // getters
+    public Map<String, List<String>> getTablasVistasColumnasNombres() {
+        return tablasVistasColumnasNombres;
+    }
+
+    public Map<String, List<String>> getProcedimientosColumnasNombres() {
+        return procedimientosColumnasNombres;
+    }
+
     public Map<String, List<Column>> getTablasColumnas() {
         return tablasColumnas;
     }
@@ -140,19 +157,24 @@ public class DatabaseInfo {
         return procedimientosColumnas.get(procedureName);
     }
 
-    public List<String> getTablasNames() {
-        return tablasNames;
+    public List<String> getTablasNombres() {
+        return tablasNombres;
     }
 
-    public List<String> getVistasNames() {
-        return vistasNames;
+    public List<String> getVistasNombres() {
+        return vistasNombres;
     }
 
-    public List<String> getProcedimientosNames() {
-        return procedimientosNames;
+    public List<String> getProcedimientosNombres() {
+        return procedimientosNombres;
     }
 
-    /*
+    public List<String> getColumnsNombres(String object) {
+        Map<String, List<String>> columnasTotal = new HashMap<>(tablasVistasColumnasNombres);
+        columnasTotal.putAll(procedimientosColumnasNombres);
+        return columnasTotal.get(object);
+    }
+/*
     public String toString() {
         return "DatabaseInfo{" +
                 "tableColumns=" + tablasColumnas +

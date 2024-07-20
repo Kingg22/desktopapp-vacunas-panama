@@ -1,6 +1,10 @@
 package desktop_interface;
 
-import logic.validations.*;
+import logic.user_management.InicioSesion;
+import logic.user_management.Usuario;
+import logic.validations.LimitarCamposCedula;
+import logic.validations.LimitarCamposFecha;
+import logic.validations.LimitarCamposSeguro;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -21,17 +25,29 @@ public class Login extends JFrame {
 
     public Login() {
         initComponents();
-        try {
-            new InicioSesion();
-        } catch (Exception e) {
-            System.err.println(e);
-            JOptionPane.showMessageDialog(null,
-                    "A ocurrido un error al iniciar operaciones. Contacte a soporte. Recomendamos cerrar el programa.",
-                    "FATAL BOOT ERROR", JOptionPane.ERROR_MESSAGE);
-        }
 
         addListeners();
-        this.requestFocusInWindow();
+
+        // Mostrar el JDialog en el EDT
+        SwingUtilities.invokeLater(() -> {
+            dialogCargar.setLocationRelativeTo(null);
+            dialogCargar.setVisible(true);
+            dialogCargar.requestFocusInWindow();
+        });
+        // Ejecutar tarea en segundo plano con SwingWorker
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                InicioSesion.buscar("1-1-1", "a");
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                dialogCargar.dispose();
+                requestFocusInWindow();
+            }
+        }.execute();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
@@ -97,6 +113,21 @@ public class Login extends JFrame {
         jButton_restaurar = new JButton();
         jButton_cancelar5 = new JButton();
         jButton_login = new javax.swing.JButton();
+        dialogCargar = new JDialog();
+        JLabel label = new JLabel();
+
+        dialogCargar.setTitle("Inicio Sesión");
+        dialogCargar.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialogCargar.setModal(true);
+        dialogCargar.setBackground(Color.white);
+        dialogCargar.setResizable(false);
+        dialogCargar.setSize(new Dimension(350, 100));
+
+
+        label.setText("Cargando información de los usuarios. Por favor, espere...");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setForeground(Color.black);
+        dialogCargar.getContentPane().add(label, BorderLayout.CENTER);
 
         jFrame_restaurarAcceso.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         jFrame_restaurarAcceso.setTitle("Programa Vacunas Panamá - Restaurar acceso");
@@ -1148,7 +1179,7 @@ public class Login extends JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        EventQueue.invokeLater(() -> new Login().setVisible(true));
+        SwingUtilities.invokeLater(() -> new Login().setVisible(true));
     }
 
     /* mis variables */
@@ -1220,5 +1251,6 @@ public class Login extends JFrame {
     private JButton jButton_restaurar;
     private JButton jButton_cancelar5;
     private JButton jButton_login;
+    private JDialog dialogCargar;
     // End of variables declaration
 }

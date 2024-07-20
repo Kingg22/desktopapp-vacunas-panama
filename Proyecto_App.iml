@@ -13,24 +13,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
-      <library name="JDBC SQL Driver">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Librerias/sqljdbc_12.6/esn/jars/mssql-jdbc-12.6.2.jre11.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Dotenv-Java">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Librerias/dotenv-java-3.0.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="AbsoluteLayout by Netbeans">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../Librerias/AbsoluteLayout.jar!/" />
@@ -39,15 +21,69 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Python 3.12 interpreter library" level="application" />
     <orderEntry type="module-library">
-      <library name="Crypto">
+      <library name="dotenv-java-3.0.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Librerias/spring-security-crypto-6.3.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Librerias/dotenv-java-3.0.0/dotenv-java-3.0.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../Librerias/dotenv-java-3.0.0/dotenv-java-3.0.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../Librerias/dotenv-java-3.0.0/dotenv-java-3.0.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Python 3.12 interpreter library" level="application" />
+    <orderEntry type="module-library">
+      <library name="java-jwt-4.4.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/java-jwt-4.4.0.jar!/" />
+          <root url="file://$MODULE_DIR$/../Librerias/java-jwt-4.4.0" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-core-2.14.2/jackson-core-2.14.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-databing-2.14.2/jackson-databind-2.14.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-annotations-2.14.2/jackson-annotations-2.14.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/java-jwt-4.4.0-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-core-2.14.2/jackson-core-2.14.2-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-databing-2.14.2/jackson-databind-2.14.2-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-annotations-2.14.2/jackson-annotations-2.14.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/java-jwt-4.4.0-sources.jar!/" />
+          <root url="file://$MODULE_DIR$/../Librerias/java-jwt-4.4.0" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-core-2.14.2/jackson-core-2.14.2-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-databing-2.14.2/jackson-databind-2.14.2-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/../Librerias/java-jwt-4.4.0/jackson-annotations-2.14.2/jackson-annotations-2.14.2-sources.jar!/" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../Librerias/java-jwt-4.4.0" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../Librerias/java-jwt-4.4.0" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="mssql-jdbc-12.6.1.jre11">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Librerias/mssql-jdbc-12.6.1/mssql-jdbc-12.6.1.jre11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../Librerias/mssql-jdbc-12.6.1/mssql-jdbc-12.6.1.jre11-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="spring-security-crypto-6.3.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Librerias/spring-security-crypto-6.3.0/spring-security-crypto-6.3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../Librerias/spring-security-crypto-6.3.0/spring-security-crypto-6.3.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../Librerias/spring-security-crypto-6.3.0/spring-security-crypto-6.3.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

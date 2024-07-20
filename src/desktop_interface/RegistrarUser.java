@@ -1,6 +1,8 @@
 package desktop_interface;
 
 import logic.conexions.DatabaseOperaciones;
+import logic.user_management.InicioSesion;
+import logic.user_management.TokenMananger;
 import logic.validations.*;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
@@ -409,7 +411,7 @@ public class RegistrarUser extends JFrame {
     private void formComponentShown(ComponentEvent evt) {
         Login.setImageLabel(icon_project, "src/images/operacionVacunas_Logo.png");
         try {
-            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(PantallaBase.transformMatrizToArray(new DatabaseOperaciones().getDistritos("admin", "admin1234", "Administrador"), 0)));
+            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(PantallaBase.transformMatrizToArray(new DatabaseOperaciones().getDistritos(TokenMananger.generateToken("admin", 5)), 0)));
         } catch (Exception e) {
             System.out.println(e);
             JOptionPane.showMessageDialog(null, "Ha ocurrido un problema encontrando las distritos. Reinicie la aplicación o contacte a soporte");

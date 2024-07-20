@@ -3,6 +3,10 @@ package desktop_interface;
 import logic.conexions.DatabaseOperaciones;
 import logic.conexions.Resultados;
 import logic.scanner_database.DatabaseInfo;
+import logic.user_management.InicioSesion;
+import logic.user_management.Preferencias;
+import logic.user_management.TokenMananger;
+import logic.user_management.Usuario;
 import logic.validations.*;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
@@ -15,6 +19,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PantallaAdmin extends JFrame {
 
@@ -28,12 +34,6 @@ public class PantallaAdmin extends JFrame {
         this.JPANEL_FILTRAR = new JTableFiltrar(jTable_Content);
         this.LAYOUT = (CardLayout) jPanel_derecho.getLayout();
         DB_ADMIN = new DatabaseOperaciones();
-        try {
-            dbO = DB_ADMIN.getDB("admin", "admin1234", "Administrador");
-        } catch (Exception e) {
-            System.err.println(e);
-            JOptionPane.showMessageDialog(this, "Ha ocurrido un error al obtener la información de la base de datos.");
-        }
         addListeners();
 
         JOIN1.setTables(dbO);
@@ -1723,7 +1723,7 @@ public class PantallaAdmin extends JFrame {
 
     private void button_modificarCredMouseClicked(MouseEvent evt) {
         try {
-            Resultados rUser = DB_ADMIN.searchUsuario("admin", "admin1234", "Administrador", userActual.getCedula(), "Doctor - Enfermera");
+            Resultados rUser = DB_ADMIN.searchUsuario(token, userActual.getCedula(), "Doctor - Enfermera");
             if (rUser != null && rUser.getDatos().length > 0) {
                 datosEncontrados = rUser.getDatos();
                 jTextField_usuario_Viejo.setText((String) datosEncontrados[0][1]);
@@ -1742,7 +1742,7 @@ public class PantallaAdmin extends JFrame {
 
     private void button_modificarDatosMouseClicked(MouseEvent evt) {
         try {
-            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(PantallaBase.transformMatrizToArray(DB_ADMIN.getDistritos("admin", "admin1234", "Administrador"), 0)));
+            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(PantallaBase.transformMatrizToArray(DB_ADMIN.getDistritos(token), 0)));
             datosEncontrados = new String[1][];
             datosEncontrados[0] = userActual.toArray();
             jTextField_nombre.setText((String) datosEncontrados[0][0]);
@@ -1780,7 +1780,7 @@ public class PantallaAdmin extends JFrame {
 
     private void button_actualizarMouseClicked(MouseEvent evt) {
         try {
-            dbO = DB_ADMIN.getDB("admin", "admin1234", "Administrador");
+            dbO = DB_ADMIN.getDB(token);
         } catch (Exception e) {
             System.err.println(e);
             JOptionPane.showMessageDialog(this, "Ha ocurrido un error al obtener la información de la base de datos.");
@@ -2319,34 +2319,34 @@ public class PantallaAdmin extends JFrame {
 
                     if (!condicionOp1 && !condicionOp2) {
                         if (!condicionOp3 && !condicionOp4) {
-                            if (DB_ADMIN.manipulatePaciente("admin", "admin1234", "Administrador", cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, telefonoM, correoM, direccionM, distritoM) > 0) {
+                            if (DB_ADMIN.manipulatePaciente(token, cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, telefonoM, correoM, direccionM, distritoM) > 0) {
                                 modificado = true;
                             }
                         } else if (!condicionOp3) {
-                            if (DB_ADMIN.manipulatePaciente("admin", "admin1234", "Administrador", cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, null, correoM, direccionM, distritoM) > 0) {
+                            if (DB_ADMIN.manipulatePaciente(token, cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, null, correoM, direccionM, distritoM) > 0) {
                                 modificado = true;
                             }
                         } else {
-                            if (DB_ADMIN.manipulatePaciente("admin", "admin1234", "Administrador", cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, null, null, direccionM, distritoM) > 0) {
+                            if (DB_ADMIN.manipulatePaciente(token, cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, null, null, direccionM, distritoM) > 0) {
                                 modificado = true;
                             }
                         }
                     } else if (!condicionOp3) {
                         if (!condicionOp4) {
-                            if (DB_ADMIN.manipulatePaciente("admin", "admin1234", "Administrador", cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, telefonoM, correoM, null, null) > 0) {
+                            if (DB_ADMIN.manipulatePaciente(token, cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, telefonoM, correoM, null, null) > 0) {
                                 modificado = true;
                             }
                         } else {
-                            if (DB_ADMIN.manipulatePaciente("admin", "admin1234", "Administrador", cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, null, correoM, null, null) > 0) {
+                            if (DB_ADMIN.manipulatePaciente(token, cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, null, correoM, null, null) > 0) {
                                 modificado = true;
                             }
                         }
                     } else if (!condicionOp4) {
-                        if (DB_ADMIN.manipulatePaciente("admin", "admin1234", "Administrador", cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, telefonoM, null, null, null) > 0) {
+                        if (DB_ADMIN.manipulatePaciente(token, cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, telefonoM, null, null, null) > 0) {
                             modificado = true;
                         }
                     } else {
-                        if (DB_ADMIN.manipulatePaciente("admin", "admin1234", "Administrador", cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, null, null, null, null) > 0) {
+                        if (DB_ADMIN.manipulatePaciente(token, cedulaM, nombreM, apellidoM, fechaNacimientoTimestamp, sexoM, null, null, null, null) > 0) {
                             modificado = true;
                         }
                     }
@@ -2462,7 +2462,24 @@ public class PantallaAdmin extends JFrame {
         this.userActual = userActual;
         cedulaUsuarioActual = this.userActual.getCedula();
         this.nombreBienvenida.setText(this.userActual.getNombre() + " " + this.userActual.getApellido());
+        token = TokenMananger.generateToken(this.userActual.getUsuario(), "admin");
+        try {
+            dbO = DB_ADMIN.getDB(token);
+        } catch (Exception e) {
+            System.err.println(e);
+            JOptionPane.showMessageDialog(this, "Ha ocurrido un error al obtener la información de la base de datos.");
+        }
         actualizarPreferencias(userActual.getPrefs());
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (JOptionPane.showConfirmDialog(null, "¿Extender la sesión actual?", "Sesión por expirar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    token = TokenMananger.generateToken(userActual.getUsuario(), "admin");
+                } else {
+                    dispose();
+                }
+            }
+        }, TokenMananger.getExpireTimeFromToken(token));
     }
 
     /* método para actualizar las preferencias del doctor actual */
@@ -2478,7 +2495,7 @@ public class PantallaAdmin extends JFrame {
         jComboBox_exportarType_preferido.setSelectedItem(pref.getExportFileType());
 
         try {
-            jComboBox_sede_preferida.setModel(new DefaultComboBoxModel<>(PantallaBase.transformMatrizToArray(DB_ADMIN.getSedes("admin", "admin1234", "Administrador"), 0)));
+            jComboBox_sede_preferida.setModel(new DefaultComboBoxModel<>(PantallaBase.transformMatrizToArray(DB_ADMIN.getSedes(token), 0)));
         } catch (Exception e) {
             System.out.println(e);
             JOptionPane.showMessageDialog(this, "Ha ocurrido un problema encontrando las sedes. Reinicie la aplicación o contacte a soporte");
@@ -2577,7 +2594,6 @@ public class PantallaAdmin extends JFrame {
                  UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PantallaAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        new InicioSesion();
         EventQueue.invokeLater(() -> new PantallaAdmin(new Usuario("Rey", "AcostaPruebas", "8-1024-1653", Timestamp.valueOf("2000-12-12 00:00:00"), "pruebas", "pruebas")).setVisible(true));
     }
 
@@ -2595,6 +2611,7 @@ public class PantallaAdmin extends JFrame {
     private DatabaseInfo dbO;
     private Object[][] datosEncontrados;
     private String cedulaUsuarioActual;
+    private String token;
     private Usuario userActual;
 
     // Variables declaration - do not modify

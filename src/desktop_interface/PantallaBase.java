@@ -1,5 +1,10 @@
 package desktop_interface;
 
+import logic.conexions.DatabaseOperaciones;
+import logic.user_management.InicioSesion;
+import logic.user_management.Preferencias;
+import logic.user_management.TokenMananger;
+import logic.user_management.Usuario;
 import logic.validations.*;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
@@ -15,6 +20,8 @@ public class PantallaBase extends JFrame {
     public PantallaBase(JFrame parent) {
         initComponents();
         this.JPANEL_FILTRAR = new JTableFiltrar(jTable_Content);
+        this.FONT_CHOOSER = new JFontChooser(this);
+        this.DB = new DatabaseOperaciones();
         LAYOUT = (CardLayout) jPanel_derecho.getLayout();
         PARENT_FRAME = parent;
         addListeners();
@@ -54,8 +61,8 @@ public class PantallaBase extends JFrame {
         jButton_ordenar = new JButton();
         jButton_savePreferences = new JButton();
         jComboBox_distrito = new JComboBox<>();
-        jComboBox_exportarType = new JComboBox<>();
-        jComboBox_exportarType1 = new JComboBox<>();
+        jComboBox_exportarType_preferido = new JComboBox<>();
+        jComboBox_sede_preferida = new JComboBox<>();
         jComboBox_sexo = new JComboBox<>();
         jDialog_modificarCred = new JDialog();
         jDialog_modificarDatos = new JDialog();
@@ -489,29 +496,29 @@ public class PantallaBase extends JFrame {
         jPanel_fontChooser.setLayout(new GridLayout(3, 2, 10, 10));
         jPanel_preferencias.add(jPanel_fontChooser);
         // Familia de la fuente
-        JLabel familyLabel = new JLabel("Familia:");
+        familyLabel = new JLabel("Familia:");
         familyLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
-        JComboBox<String> familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+        familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
         familyComboBox.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(familyLabel);
         jPanel_fontChooser.add(familyComboBox);
 
         // Estilo de la fuente
-        JLabel styleLabel = new JLabel("Estilo:");
+        styleLabel = new JLabel("Estilo:");
         styleLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
         String[] styles = {"Regular", "Negrita", "Cursiva", "Negrita Cursiva"};
-        JComboBox<String> styleComboBox = new JComboBox<>(styles);
+        styleComboBox = new JComboBox<>(styles);
         styleComboBox.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(styleLabel);
         jPanel_fontChooser.add(styleComboBox);
 
         // Tamaño de la fuente
-        JLabel sizeLabel = new JLabel("Tamaño:");
+        sizeLabel = new JLabel("Tamaño:");
         sizeLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
-        JSpinner sizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
-        sizeSpinner.setFont(new Font("Roboto", Font.PLAIN, 14));
+        fontSizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
+        fontSizeSpinner.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(sizeLabel);
-        jPanel_fontChooser.add(sizeSpinner);
+        jPanel_fontChooser.add(fontSizeSpinner);
 
         jPanel_separador3.setBackground(new Color(227, 218, 201));
         jPanel_separador3.setMaximumSize(new Dimension(32767, 25));
@@ -535,11 +542,11 @@ public class PantallaBase extends JFrame {
         jLabel1.setHorizontalTextPosition(SwingConstants.CENTER);
         jPanel_preferencias.add(jLabel1);
 
-        jComboBox_exportarType.setFont(new Font("Roboto", Font.PLAIN, 14));
-        jComboBox_exportarType.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir...", "CSV", "TXT", "PDF", "Excel"}));
-        jComboBox_exportarType.setMaximumSize(new Dimension(367, 40));
-        jComboBox_exportarType.setPreferredSize(new Dimension(190, 37));
-        jPanel_preferencias.add(jComboBox_exportarType);
+        jComboBox_exportarType_preferido.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jComboBox_exportarType_preferido.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir...", "CSV", "TXT", "PDF", "Excel"}));
+        jComboBox_exportarType_preferido.setMaximumSize(new Dimension(367, 40));
+        jComboBox_exportarType_preferido.setPreferredSize(new Dimension(190, 37));
+        jPanel_preferencias.add(jComboBox_exportarType_preferido);
 
         jPanel_separador4.setBackground(new Color(227, 218, 201));
         jPanel_separador4.setMaximumSize(new Dimension(32767, 25));
@@ -563,11 +570,11 @@ public class PantallaBase extends JFrame {
         jLabel5.setHorizontalTextPosition(SwingConstants.CENTER);
         jPanel_preferencias.add(jLabel5);
 
-        jComboBox_exportarType1.setFont(new Font("Roboto", Font.PLAIN, 14));
-        jComboBox_exportarType1.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir..."}));
-        jComboBox_exportarType1.setMaximumSize(new Dimension(567, 40));
-        jComboBox_exportarType1.setPreferredSize(new Dimension(450, 37));
-        jPanel_preferencias.add(jComboBox_exportarType1);
+        jComboBox_sede_preferida.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jComboBox_sede_preferida.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir..."}));
+        jComboBox_sede_preferida.setMaximumSize(new Dimension(567, 40));
+        jComboBox_sede_preferida.setPreferredSize(new Dimension(450, 37));
+        jPanel_preferencias.add(jComboBox_sede_preferida);
 
         jPanel_separador5.setBackground(new Color(227, 218, 201));
         jPanel_separador5.setMaximumSize(new Dimension(32767, 25));
@@ -1218,10 +1225,9 @@ public class PantallaBase extends JFrame {
     }
 
     private void jButton_fuenteMouseClicked(MouseEvent evt) {
-        JFontChooser fontChooser = new JFontChooser(this);
-        boolean result = fontChooser.showDialog(this);
+        boolean result = FONT_CHOOSER.showDialog(this);
         if (result) {
-            Font font = fontChooser.getSelectedFont();
+            Font font = FONT_CHOOSER.getSelectedFont();
             jTable_Content.setFont(font);
             jTable_Content.repaint();
         }
@@ -1351,10 +1357,6 @@ public class PantallaBase extends JFrame {
         jTable_Content.setAutoCreateRowSorter(true);
     }
 
-    private void jButton_savePreferencesMouseClicked(MouseEvent evt) {
-        /* TODO implementar lógica de guardar preferencias del usuario*/
-    }
-
     private void jTextField_direccionActionPerformed(ActionEvent evt) {
         if (jComboBox_distrito.getSelectedIndex() == 0) {
             jComboBox_distrito.setSelectedIndex(1);
@@ -1450,10 +1452,47 @@ public class PantallaBase extends JFrame {
         }
     }
 
+    /* evento único de jPanel preferencias */
+    private void jButton_savePreferencesMouseClicked(MouseEvent evt) {
+        int size = (int) fontSizeSpinner.getValue();
+        String font = (String) familyComboBox.getSelectedItem();
+        int style = styleComboBox.getSelectedIndex();
+        int sede = jComboBox_sede_preferida.getSelectedIndex();
+        String filetype = (String) jComboBox_exportarType_preferido.getSelectedItem();
+        Preferencias p = userActual.getPrefs();
+        p.setPrefs(font, style, size, sede, filetype);
+        actualizarPreferencias(p);
+        JOptionPane.showMessageDialog(this, "¡Se han guardado sus preferencias!");
+    }
+
     /* método para colocar el nombre al iniciar sesión */
-    public void setBienvenida(String nombre, String cedula) {
-        this.nombreBienvenida.setText(nombre);
-        cedulaUsuarioActual = cedula;
+    private void personalizarVentana(Usuario userActual) {
+        this.userActual = userActual;
+        cedulaUsuarioActual = this.userActual.getCedula();
+        this.nombreBienvenida.setText(this.userActual.getNombre() + " " + this.userActual.getApellido());
+        token = TokenMananger.generateToken(this.userActual.getUsuario(), "rol");
+        actualizarPreferencias(userActual.getPrefs());
+    }
+
+    /* método para actualizar las preferencias del doctor actual */
+    private void actualizarPreferencias(Preferencias pref) {
+        String font = pref.getFontName();
+        int style = pref.getFontStyle(), size = pref.getFontSize();
+        Font f = new Font(font, style, size);
+        jTable_Content.setFont(f);
+        fontSizeSpinner.setValue(size);
+        familyComboBox.setSelectedItem(font);
+        styleComboBox.setSelectedIndex(style);
+        jComboBox_exportarType_preferido.setSelectedItem(pref.getExportFileType());
+
+        try {
+            jComboBox_sede_preferida.setModel(new DefaultComboBoxModel<>(PantallaBase.transformMatrizToArray(DB.getSedes(token), 0)));
+        } catch (Exception e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(this, "Ha ocurrido un problema encontrando las sedes. Reinicie la aplicación o contacte a soporte");
+        }
+        jComboBox_sede_preferida.setSelectedIndex(pref.getSede());
+        FONT_CHOOSER.setPreferences(font, style, size);
     }
 
     /* método para añadir todos los listener de esta clase */
@@ -1605,10 +1644,14 @@ public class PantallaBase extends JFrame {
 
     /* variables propias */
     private final CardLayout LAYOUT;
+    private final DatabaseOperaciones DB;
+    private final JFontChooser FONT_CHOOSER;
     private final JFrame PARENT_FRAME;
     private final JTableFiltrar JPANEL_FILTRAR;
     private Component mostrando = null;
     private String cedulaUsuarioActual;
+    private String token;
+    private Usuario userActual;
 
     // Variables declaration - do not modify
     private JButton button_logOut;
@@ -1634,8 +1677,8 @@ public class PantallaBase extends JFrame {
     private JButton jButton_ordenar;
     private JButton jButton_savePreferences;
     private JComboBox<String> jComboBox_distrito;
-    private JComboBox<String> jComboBox_exportarType;
-    private JComboBox<String> jComboBox_exportarType1;
+    private JComboBox<String> jComboBox_exportarType_preferido;
+    private JComboBox<String> jComboBox_sede_preferida;
     private JComboBox<String> jComboBox_sexo;
     private JDialog jDialog_modificarCred;
     private JDialog jDialog_modificarDatos;
@@ -1723,5 +1766,11 @@ public class PantallaBase extends JFrame {
     private JTextField jTextField_telefono;
     private JTextField jTextField_usuario;
     private JTextField jTextField_usuarioNuevo;
+    private JSpinner fontSizeSpinner;
+    private JLabel sizeLabel;
+    private JComboBox<String> styleComboBox;
+    private JLabel styleLabel;
+    private JComboBox<String> familyComboBox;
+    private JLabel familyLabel;
     // End of variables declaration
 }

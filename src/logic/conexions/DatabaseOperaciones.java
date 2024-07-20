@@ -1,569 +1,440 @@
 package logic.conexions;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerResultSet;
 import logic.scanner_database.Column;
 import logic.scanner_database.DatabaseInfo;
-import logic.validations.InicioSesion;
+import logic.user_management.InicioSesion;
+import logic.user_management.TokenMananger;
 
-import java.sql.Date;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public class DatabaseOperaciones {
     private Connection connection = null;
-    private String usuarioActual = null;
+    private int rol = Integer.MIN_VALUE;
+    private String user = null;
     private DatabaseInfo databaseInfo = null;
 
-    public DatabaseInfo getDB(String user, String password, String rol) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            throw new SQLException("NO estas registrado para ejecutar este comando. TIMEOUT");
-        } else {
-            if (rol.equals("Administrador")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
+    public static int getTipo(String rolUsuario) {
+        int tipo;
+        rolUsuario = rolUsuario.toLowerCase().trim();
+        tipo = switch (rolUsuario) {
+            case "paciente":
+                yield 1;
+            case "doctor - enfermera":
+            case "doctor":
+            case "enfermera":
+                yield 2;
+            case "administrativo":
+                yield 3;
+            case "fabricante":
+                yield 4;
+            case "administrador":
+            case "admin":
+                yield 5;
+            case "autoridad":
+                yield 6;
+            default:
+                yield 0;
+        };
+        return tipo;
+    }
+
+    public static String getTipo(int tipo) {
+        String tipoR;
+        tipoR = switch (tipo) {
+            case 1 -> "Paciente";
+            case 2 -> "Doctor - Enfermera";
+            case 3 -> "Administrativo";
+            case 4 -> "Fabricante";
+            case 5 -> "Administrador";
+            case 6 -> "Autoridad";
+            default -> null;
+        };
+        return tipoR;
+    }
+
+    public static String getNumDosis(String numeroDosis) {
+        String numDosis;
+        numeroDosis = numeroDosis.toLowerCase().trim();
+        numDosis = switch (numeroDosis) {
+            case "primera dosis":
+            case "primera":
+            case "1":
+            case "uno":
+                yield "1";
+            case "segunda dosis":
+            case "segunda":
+            case "2":
+            case "dos":
+                yield "2";
+            case "tercera dosis":
+            case "tercera":
+            case "3":
+            case "tres":
+                yield "3";
+            case "refuerzo":
+            case "r":
+                yield "R";
+            case "primer refuerzo":
+            case "refuerzo uno":
+            case "refuerzo 1":
+            case "r1":
+                yield "R1";
+            case "segundo refuerzo":
+            case "refuerzo dos":
+            case "refuerzo 2":
+            case "r2":
+                yield "R2";
+            case "dosis previa":
+            case "previa":
+            case "p":
+                yield "P";
+            default:
+                yield null;
+        };
+        return numDosis;
+    }
+
+    public DatabaseInfo getDB(String token) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6});
+        DatabaseInfo resp = databaseInfo;
+        closeConnection();
+        return resp;
+    }
+
+    public int insertarDosis(String token, String cedulaPaciente, Timestamp fechaAplicacion, String numero_dosis, int idVacuna, int idSede, String lote) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        try {
+            SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection.prepareCall("{call dbo.InsertarDosis(?, ?, ?, ?, ?, ?)}");
+            callstmt.setString(1, cedulaPaciente);
+            callstmt.setDateTime(2, fechaAplicacion);
+            callstmt.setString(3, getNumDosis(numero_dosis));
+            callstmt.setInt(4, idVacuna);
+            callstmt.setInt(5, idSede);
+            callstmt.setString(6, lote);
+            return countRowSQLUpdate(callstmt);
+        } finally {
             closeConnection();
-            return databaseInfo;
         }
     }
 
-    public int insertarDosis(String user, String password, String rol, String cedulaPaciente, Timestamp fechaAplicacion, String numero_dosis, int idVacuna, int idSede, String lote) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            throw new SQLException("NO estas registrado para ejecutar un comando. TIMEOUT");
-        } else {
-            if (!rol.equals("Fabricante") && !rol.equals("Paciente")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            try {
-                SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection.prepareCall("{call dbo.InsertarDosis(?, ?, ?, ?, ?, ?)}");
-                callstmt.setString(1, cedulaPaciente);
-                callstmt.setDateTime(2, fechaAplicacion);
-                callstmt.setString(3, getNumDosis(numero_dosis));
-                callstmt.setInt(4, idVacuna);
-                callstmt.setInt(5, idSede);
-                callstmt.setString(6, lote);
-                return countRowSQLUpdate(callstmt);
-            } finally {
-                closeConnection();
-            }
+    public Resultados showReporteVacunacionFiltrado(String token, int idSede) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        List<Object[]> resultList = new ArrayList<>();
+        List<Column> columns = new ArrayList<>();
+        String[] columnas = new String[7];
+        int[] columnasWidth = new int[7];
+        try {
+            SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                    """
+                            SELECT CedulaPaciente, NombrePaciente, ApellidoPaciente, FechaNacimiento, Sexo, NombreVacuna, NumeroDosis\s
+                            FROM [Reporte Vacunas Completo]\s
+                            WHERE CONVERT(date, FechaAplicacion) = CONVERT(date, GETDATE()) AND IDSede = ?""");
+            callStmt.setInt(1, idSede);
+            processResult(callStmt, columns, columnas, columnasWidth, resultList);
+        } finally {
+            closeConnection();
+        }
+        return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+    }
+
+    public Resultados showLoteSedeVacuna(String token, String lote) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2, 3});
+        List<Object[]> resultList = new ArrayList<>();
+        List<Column> columns = new ArrayList<>();
+        String[] columnas = new String[6];
+        int[] columnasWidth = new int[6];
+        try {
+            SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                    "SELECT [Nombre sede], [Depedencia sede], Vacuna, Cantidad, Lote, [Fecha Lote]  " +
+                            "FROM [Sede - Inventario] \n" +
+                            "WHERE Lote = ?");
+            callStmt.setString(1, lote);
+            processResult(callStmt, columns, columnas, columnasWidth, resultList);
+        } finally {
+            closeConnection();
+        }
+        return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+    }
+
+    public Resultados showSedeInventarioVacuna(String token, int idSede, int idVacuna) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        List<Object[]> resultList = new ArrayList<>();
+        List<Column> columns = new ArrayList<>();
+        String[] columnas = new String[8];
+        int[] columnasWidth = new int[8];
+        try {
+            SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                    "SELECT *  FROM [Sede - Inventario] \n" +
+                            "WHERE ID_Sede = ? AND [ID Vacuna] = ?");
+            callStmt.setInt(1, idSede);
+            callStmt.setInt(2, idVacuna);
+            processResult(callStmt, columns, columnas, columnasWidth, resultList);
+        } finally {
+            closeConnection();
+        }
+        return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+    }
+
+    public Resultados showSedeInventario(String token, int idSede) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        List<Object[]> resultList = new ArrayList<>();
+        List<Column> columns = new ArrayList<>();
+        String[] columnas = new String[4];
+        int[] columnasWidth = new int[4];
+        try {
+            SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                    "SELECT Vacuna, Cantidad, Lote, [Fecha Lote]  FROM [Sede - Inventario] \n" +
+                            "WHERE ID_Sede = ?");
+            callStmt.setInt(1, idSede);
+            processResult(callStmt, columns, columnas, columnasWidth, resultList);
+        } finally {
+            closeConnection();
+        }
+        return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+    }
+
+    public Object[][] getDistritos(String token) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2, 3});
+        return executeQuery("SELECT d.distrito FROM Distrito d", new ArrayList<>(Collections.singleton(new Column("distrito", "VARCHAR", 50, true))));
+    }
+
+    public Object[][] getSedes(String token) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2, 3});
+        return executeQuery("SELECT s.nombre_sede FROM Sede s", new ArrayList<>(Collections.singleton(new Column("nombre_sede", "VARCHAR", 100, false))));
+    }
+
+    public Object[][] getVacunas(String token) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        return executeQuery("SELECT v.nombre_vacuna FROM Vacuna v", new ArrayList<>(Collections.singleton(new Column("nombre_vacuna", "VARCHAR", 100, false))));
+    }
+
+    public int manipulatePaciente(String token, String cedula, String nombre, String apellido, Timestamp fechaNacimiento, char sexo, String telefono, String correo, String direccion, String distrito)
+            throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        try {
+            SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection.prepareCall("{call dbo.ManipularPaciente(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            callstmt.setString(1, cedula);
+            callstmt.setString(2, nombre);
+            callstmt.setString(3, apellido);
+            callstmt.setDateTime(4, fechaNacimiento);
+            callstmt.setString(5, String.valueOf(sexo));
+            callstmt.setString(6, telefono);
+            callstmt.setString(7, correo);
+            callstmt.setString(8, direccion);
+            callstmt.setString(9, distrito);
+            return countRowSQLUpdate(callstmt);
+        } finally {
+            closeConnection();
         }
     }
 
-    public Resultados showReporteVacunacionFiltrado(String user, String password, String rol, int idSede) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (!rol.equals("Paciente") && !rol.equals("Fabricante")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
-            }
-            List<Object[]> resultList = new ArrayList<>();
-            List<Column> columns = new ArrayList<>();
-            String[] columnas = new String[7];
-            int[] columnasWidth = new int[7];
-            try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
-                        """
-                                SELECT CedulaPaciente, NombrePaciente, ApellidoPaciente, FechaNacimiento, Sexo, NombreVacuna, NumeroDosis\s
-                                FROM [Reporte Vacunas Completo]\s
-                                WHERE CONVERT(date, FechaAplicacion) = CONVERT(date, GETDATE()) AND IDSede = ?""");
-                callStmt.setInt(1, idSede);
-                processResult(callStmt, columns, columnas, columnasWidth, resultList);
-            } finally {
-                closeConnection();
-            }
-            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+    public int manipulateUsuario(String token, String cedulaUsuario, String userUsuario, String passwordUsuarioHash, String rolUsuario, Timestamp fechaNacimientoUsuario) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6});
+        int tipo = getTipo(rolUsuario);
+        try {
+            SQLServerCallableStatement callableStatement = (SQLServerCallableStatement) connection.prepareCall("{call dbo.CrearUsuario(?, ?, ?, ?, ?)}");
+            callableStatement.setString(1, cedulaUsuario);
+            callableStatement.setString(2, userUsuario);
+            callableStatement.setString(3, passwordUsuarioHash);
+            callableStatement.setInt(4, tipo);
+            callableStatement.setDateTime(5, fechaNacimientoUsuario);
+            return callableStatement.executeUpdate();
+        } finally {
+            closeConnection();
         }
     }
 
-    public Resultados showLoteSedeVacuna(String user, String password, String rol, String lote) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (!rol.equals("Paciente")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
-            }
-            List<Object[]> resultList = new ArrayList<>();
-            List<Column> columns = new ArrayList<>();
-            String[] columnas = new String[6];
-            int[] columnasWidth = new int[6];
-            try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
-                        "SELECT [Nombre sede], [Depedencia sede], Vacuna, Cantidad, Lote, [Fecha Lote]  " +
-                                "FROM [Sede - Inventario] \n" +
-                                "WHERE Lote = ?");
-                callStmt.setString(1, lote);
-                processResult(callStmt, columns, columnas, columnasWidth, resultList);
-            } finally {
-                closeConnection();
-            }
-            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+    public Resultados searchUsuario(String token, String cedulaUsuario, String rolUsuario) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        int tipo = getTipo(rolUsuario);
+        List<Object[]> resultList = new ArrayList<>();
+        List<Column> columns = new ArrayList<>();
+        String[] columnas = new String[5];
+        int[] columnasWidth = new int[5];
+        try {
+            SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement("SELECT * FROM dbo.BuscarUsuario(?, ?)");
+            callStmt.setString(1, cedulaUsuario);
+            callStmt.setInt(2, tipo);
+            processResult(callStmt, columns, columnas, columnasWidth, resultList);
+        } finally {
+            closeConnection();
+        }
+        return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+    }
+
+    public Resultados showUsuarios(String token) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6});
+        List<Column> columns = databaseInfo.getColumnsForTable("Usuarios");
+        int[] columnasWidth = new int[columns.size()];
+        for (int i = 0; i < columns.size(); i++) {
+            columnasWidth[i] = columns.get(i).getSize();
+        }
+        return new Resultados(new String[columns.size()], columnasWidth, executeQuery(("SELECT * FROM [Usuarios]"), columns));
+    }
+
+    public boolean refreshAgePaciente(String token) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 1, 2, 3});
+        try {
+            CallableStatement callS = connection.prepareCall("{call dbo.ActualizarEdadPacientes()}");
+            return callS.execute();
+        } finally {
+            closeConnection();
         }
     }
 
-    public Resultados showSedeInventarioVacuna(String user, String password, String rol, int idSede, int idVacuna) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (!rol.equals("Paciente")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
-            }
-            List<Object[]> resultList = new ArrayList<>();
-            List<Column> columns = new ArrayList<>();
-            String[] columnas = new String[8];
-            int[] columnasWidth = new int[8];
-            try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
-                        "SELECT *  FROM [Sede - Inventario] \n" +
-                                "WHERE ID_Sede = ? AND [ID Vacuna] = ?");
-                callStmt.setInt(1, idSede);
-                callStmt.setInt(2, idVacuna);
-                processResult(callStmt, columns, columnas, columnasWidth, resultList);
-            } finally {
-                closeConnection();
-            }
-            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
-        }
+    public Resultados showPacientes(String token) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2, 2});
+        return selectComplete(1, "Paciente");
     }
 
-    public Resultados showSedeInventario(String user, String password, String rol, int idSede) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (!rol.equals("Paciente")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
-            }
-            List<Object[]> resultList = new ArrayList<>();
-            List<Column> columns = new ArrayList<>();
-            String[] columnas = new String[4];
-            int[] columnasWidth = new int[4];
-            try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
-                        "SELECT Vacuna, Cantidad, Lote, [Fecha Lote]  FROM [Sede - Inventario] \n" +
-                                "WHERE ID_Sede = ?");
-                callStmt.setInt(1, idSede);
-                processResult(callStmt, columns, columnas, columnasWidth, resultList);
-            } finally {
-                closeConnection();
-            }
-            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+    public Resultados searchTablePaciente(String token, String cedula, String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2, 3});
+        List<Column> columns = databaseInfo.getColumnsForTable("Paciente");
+        columns.removeLast();
+        columns.add(new Column("direccion", "varchar", 255));
+        columns.add(new Column("distrito", "varchar", 100));
+        String[] columnas = new String[columns.size()];
+        int[] columnasWidth = new int[columns.size()];
+        for (int i = 0; i < columns.size(); i++) {
+            columnas[i] = columns.get(i).getName();
+            columnasWidth[i] = columns.get(i).getSize();
         }
+        // Construcción de la consulta SQL dinámica
+        StringBuilder sqlBuilder = new StringBuilder("SELECT cedula, nombre_paciente, apellido_paciente, fecha_nacimiento, edad_calculada, sexo, telefono_paciente, correo_electronico_paciente, direccion, distrito FROM Paciente LEFT JOIN Direccion d ON idDireccion = d.ID_direccion LEFT JOIN Distrito dd ON d.idDistrito = dd.ID_distrito WHERE 1=1");
+
+        if (cedula != null && !cedula.trim().isEmpty()) {
+            sqlBuilder.append(" AND cedula = '").append(cedula).append("'");
+        }
+        if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
+            sqlBuilder.append(" AND CONCAT(nombre_paciente, ' ', apellido_paciente) LIKE '%").append(nombreCompleto).append("%'");
+        }
+        if (fechaNacimiento != null && !fechaNacimiento.trim().isEmpty()) {
+            fechaNacimiento = String.valueOf(Date.valueOf(fechaNacimiento));
+            sqlBuilder.append(" AND CAST(fecha_nacimiento AS DATE) = '").append(fechaNacimiento).append("'");
+        }
+        return new Resultados(columnas, columnasWidth, executeQuery(sqlBuilder.toString(), columns));
     }
 
-    public Object[][] getDistritos(String user, String password, String rol) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (rol.equals("Administrador")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            return executeQuery("SELECT d.distrito FROM Distrito d", new ArrayList<>(Collections.singleton(new Column("distrito", "VARCHAR", 50, true))));
+    public Resultados searchPaciente(String token, String cedula, String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 1, 2, 3});
+        List<Column> columns = databaseInfo.getColumnsForView("Vista Doctor");
+        String[] columnas = new String[columns.size()];
+        int[] columnasWidth = new int[columns.size()];
+        for (int i = 0; i < columns.size(); i++) {
+            columnas[i] = columns.get(i).getName();
+            columnasWidth[i] = columns.get(i).getSize();
         }
+        // Construcción de la consulta SQL dinámica
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM [Vista Doctor] WHERE 1=1");
+
+        if (cedula != null && !cedula.trim().isEmpty()) {
+            sqlBuilder.append(" AND Cédula = '").append(cedula).append("'");
+        }
+        if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
+            sqlBuilder.append(" AND CONCAT(Nombre, ' ', Apellido) LIKE '%").append(nombreCompleto).append("%'");
+        }
+        if (fechaNacimiento != null && !fechaNacimiento.trim().isEmpty()) {
+            fechaNacimiento = String.valueOf(Date.valueOf(fechaNacimiento));
+            sqlBuilder.append(" AND CAST([Fecha de Nacimiento] AS DATE) = '").append(fechaNacimiento).append("'");
+        }
+        return new Resultados(columnas, columnasWidth, executeQuery(sqlBuilder.toString(), columns));
     }
 
-    public Object[][] getSedes(String user, String password, String rol) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (rol.equals("Administrador")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            return executeQuery("SELECT s.nombre_sede FROM Sede s", new ArrayList<>(Collections.singleton(new Column("nombre_sede", "VARCHAR", 100, false))));
+    public Resultados showVistaPaciente(String token, String cedula) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 1});
+        List<Object[]> resultList = new ArrayList<>();
+        List<Column> columns = new ArrayList<>();
+        String[] columnas = new String[6];
+        int[] columnasWidth = new int[6];
+        try {
+            SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                    "SELECT [Nombre Vacuna], [Número de dosis], [Enfermedad previene], [Fecha de aplicación], Sede, Dependencia \nFROM [Vista Paciente] \nWHERE Cédula = ?");
+            callStmt.setString(1, cedula);
+            processResult(callStmt, columns, columnas, columnasWidth, resultList);
+        } finally {
+            closeConnection();
         }
+        return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
     }
 
-    public Object[][] getVacunas(String user, String password, String rol) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (rol.equals("Administrador")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            return executeQuery("SELECT v.nombre_vacuna FROM Vacuna v", new ArrayList<>(Collections.singleton(new Column("nombre_vacuna", "VARCHAR", 100, false))));
+    public Resultados showVistaDoctor(String token, int idSede) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        List<Object[]> resultList = new ArrayList<>();
+        List<Column> columns = new ArrayList<>();
+        String[] columnas = new String[20];
+        int[] columnasWidth = new int[20];
+        try {
+            SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                    """
+                            SELECT Cédula, Nombre, Apellido, [Fecha de Nacimiento], [Edad], Sexo, Teléfono, \
+                            [Correo electrónico], [Dirección residencia actual], Distrito, Provincia, [Nombre vacuna], \
+                            Fabricante, [Fecha de aplicación], Sede, Dependencia, [Número de dosis], \
+                            [Intervalo dosis 1 y 2 recomendado en meses], [Intervalo real en días], [Edad mínima recomendada en meses]\s
+                            FROM [Vista Doctor]\s
+                            WHERE [ID Sede] = ?""");
+            callStmt.setInt(1, idSede);
+            processResult(callStmt, columns, columnas, columnasWidth, resultList);
+        } finally {
+            closeConnection();
         }
+        return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
     }
 
-    public int manipulatePaciente(String user, String password, String rol, String cedula, String nombre, String apellido, Timestamp fechaNacimiento, char sexo, String telefono, String correo, String direccion, String distrito) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            throw new SQLException("NO estas registrado para ejecutar un comando. TIMEOUT");
-        } else {
-            if (!rol.equals("Fabricante") && !rol.equals("Paciente")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            try {
-                SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection.prepareCall("{call dbo.ManipularPaciente(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-                callstmt.setString(1, cedula);
-                callstmt.setString(2, nombre);
-                callstmt.setString(3, apellido);
-                callstmt.setDateTime(4, fechaNacimiento);
-                callstmt.setString(5, String.valueOf(sexo));
-                callstmt.setString(6, telefono);
-                callstmt.setString(7, correo);
-                callstmt.setString(8, direccion);
-                callstmt.setString(9, distrito);
-                return countRowSQLUpdate(callstmt);
-            } finally {
-                closeConnection();
-            }
+    public Resultados buscarDosis(String token, String fechaInicio, String fechaFin, int idSede, int idVacuna, String numDosis) throws SQLException, ClassNotFoundException {
+        verifyAccess(token, new int[]{5, 6, 2});
+        List<Column> columns = databaseInfo.getColumnsForView("Vista Doctor");
+        String[] columnas = new String[columns.size()];
+        int[] columnasWidth = new int[columns.size()];
+        for (int i = 0; i < columns.size(); i++) {
+            columnas[i] = columns.get(i).getName();
+            columnasWidth[i] = columns.get(i).getSize();
         }
-    }
 
-    public int manipulateUsuario(String user, String password, String rol, String cedulaUsuario, String userUsuario, String passwordUsuarioHash, String rolUsuario, Timestamp fechaNacimientoUsuario) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return Integer.MIN_VALUE;
-        } else {
-            if (rol.equals("Administrador")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            int tipo = getTipo(rolUsuario);
-            try {
-                SQLServerCallableStatement callableStatement = (SQLServerCallableStatement) connection.prepareCall("{call dbo.CrearUsuario(?, ?, ?, ?, ?)}");
-                callableStatement.setString(1, cedulaUsuario);
-                callableStatement.setString(2, userUsuario);
-                callableStatement.setString(3, passwordUsuarioHash);
-                callableStatement.setInt(4, tipo);
-                callableStatement.setDateTime(5, fechaNacimientoUsuario);
-                return callableStatement.executeUpdate();
-            } finally {
-                closeConnection();
-            }
+        StringBuilder query = new StringBuilder("SELECT * FROM [Vista Doctor] WHERE 1=1");
+
+        if (fechaInicio != null && !fechaInicio.trim().isEmpty()) {
+            fechaInicio = String.valueOf(Date.valueOf(fechaInicio));
+            query.append(" AND CAST([Fecha de aplicación] AS DATE) >= '").append(fechaInicio).append("'");
         }
-    }
-
-    public Resultados searchUsuario(String user, String password, String rol, String cedulaUsuario, String rolUsuario) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (rol.equals("Administrador")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
-            }
-            int tipo = getTipo(rolUsuario);
-            List<Object[]> resultList = new ArrayList<>();
-            List<Column> columns = new ArrayList<>();
-            String[] columnas = new String[5];
-            int[] columnasWidth = new int[5];
-            try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement("SELECT * FROM dbo.BuscarUsuario(?, ?)");
-                callStmt.setString(1, cedulaUsuario);
-                callStmt.setInt(2, tipo);
-                processResult(callStmt, columns, columnas, columnasWidth, resultList);
-            } finally {
-                closeConnection();
-            }
-            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
+        if (fechaFin != null && !fechaFin.isEmpty()) {
+            fechaFin = String.valueOf(Date.valueOf(fechaFin));
+            query.append(" AND CAST([Fecha de aplicación] AS DATE) <= '").append(fechaFin).append("'");
         }
-    }
-
-    public Resultados showUsuarios(String user, String password, String rol) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (rol.equals("Administrador")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
-            }
-            List<Column> columns = databaseInfo.getColumnsForTable("Usuarios");
-            int[] columnasWidth = new int[columns.size()];
-            for (int i = 0; i < columns.size(); i++) {
-                columnasWidth[i] = columns.get(i).getSize();
-            }
-            return new Resultados(new String[columns.size()], columnasWidth, executeQuery(("SELECT * FROM [Usuarios]"), columns));
+        if (idSede != -1) {
+            query.append(" AND [ID Sede] = ").append(idSede);
         }
-    }
-
-    public boolean refreshAgePaciente(String user, String password, String rol) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return false;
-        } else {
-            if (rol.equals("Administrador")) {
-                switchUser(rol, user);
-            } else {
-                throw new SQLException("NO tiene permiso de ejecutar este comando. TIMEOUT");
-            }
-            try {
-                CallableStatement callS = connection.prepareCall("{call dbo.ActualizarEdadPacientes()}");
-                return callS.execute();
-            } finally {
-                closeConnection();
-            }
+        if (idVacuna != -1) {
+            query.append(" AND [ID Vacuna] = ").append(idVacuna);
         }
-    }
-
-    public Resultados showPacientes(String user, String password, String rol) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (!rol.equals("Fabricante")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            return selectComplete(1, "Paciente");
+        if (numDosis != null && numDosis.length() <= 2 && !numDosis.isBlank()) {
+            query.append(" AND [Número de dosis] = '").append(numDosis).append("'");
         }
-    }
-
-    public Resultados searchTablePaciente(String user, String password, String rol, String cedula, String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (!rol.equals("Fabricante")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            List<Column> columns = databaseInfo.getColumnsForTable("Paciente");
-            columns.removeLast();
-            columns.add(new Column("direccion", "varchar", 255));
-            columns.add(new Column("distrito", "varchar", 100));
-            String[] columnas = new String[columns.size()];
-            int[] columnasWidth = new int[columns.size()];
-            for (int i = 0; i < columns.size(); i++) {
-                columnas[i] = columns.get(i).getName();
-                columnasWidth[i] = columns.get(i).getSize();
-            }
-            // Construcción de la consulta SQL dinámica
-            StringBuilder sqlBuilder = new StringBuilder("SELECT cedula, nombre_paciente, apellido_paciente, fecha_nacimiento, edad_calculada, sexo, telefono_paciente, correo_electronico_paciente, direccion, distrito FROM Paciente LEFT JOIN Direccion d ON idDireccion = d.ID_direccion LEFT JOIN Distrito dd ON d.idDistrito = dd.ID_distrito WHERE 1=1");
-
-            if (cedula != null && !cedula.trim().isEmpty()) {
-                sqlBuilder.append(" AND cedula = '").append(cedula).append("'");
-            }
-            if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
-                sqlBuilder.append(" AND CONCAT(nombre_paciente, ' ', apellido_paciente) LIKE '%").append(nombreCompleto).append("%'");
-            }
-            if (fechaNacimiento != null && !fechaNacimiento.trim().isEmpty()) {
-                fechaNacimiento = String.valueOf(Date.valueOf(fechaNacimiento));
-                sqlBuilder.append(" AND CAST(fecha_nacimiento AS DATE) = '").append(fechaNacimiento).append("'");
-            }
-            return new Resultados(columnas, columnasWidth, executeQuery(sqlBuilder.toString(), columns));
-        }
-    }
-
-    public Resultados searchPaciente(String user, String password, String rol, String cedula, String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (!rol.equals("Fabricante")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            List<Column> columns = databaseInfo.getColumnsForView("Vista Doctor");
-            String[] columnas = new String[columns.size()];
-            int[] columnasWidth = new int[columns.size()];
-            for (int i = 0; i < columns.size(); i++) {
-                columnas[i] = columns.get(i).getName();
-                columnasWidth[i] = columns.get(i).getSize();
-            }
-            // Construcción de la consulta SQL dinámica
-            StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM [Vista Doctor] WHERE 1=1");
-
-            if (cedula != null && !cedula.trim().isEmpty()) {
-                sqlBuilder.append(" AND Cédula = '").append(cedula).append("'");
-            }
-            if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
-                sqlBuilder.append(" AND CONCAT(Nombre, ' ', Apellido) LIKE '%").append(nombreCompleto).append("%'");
-            }
-            if (fechaNacimiento != null && !fechaNacimiento.trim().isEmpty()) {
-                fechaNacimiento = String.valueOf(Date.valueOf(fechaNacimiento));
-                sqlBuilder.append(" AND CAST([Fecha de Nacimiento] AS DATE) = '").append(fechaNacimiento).append("'");
-            }
-            return new Resultados(columnas, columnasWidth, executeQuery(sqlBuilder.toString(), columns));
-        }
-    }
-
-    public Resultados showVistaPaciente(String user, String password, String rol, String cedula) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (rol.equals("Paciente") || rol.equals("Administrador") || rol.equals("Autoridad")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            List<Object[]> resultList = new ArrayList<>();
-            List<Column> columns = new ArrayList<>();
-            String[] columnas = new String[6];
-            int[] columnasWidth = new int[6];
-            try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement("SELECT [Nombre Vacuna], [Número de dosis], [Enfermedad previene], [Fecha de aplicación], Sede, Dependencia \nFROM [Vista Paciente] \nWHERE Cédula = ?");
-                callStmt.setString(1, cedula);
-                processResult(callStmt, columns, columnas, columnasWidth, resultList);
-            } finally {
-                closeConnection();
-            }
-            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
-        }
-    }
-
-    public Resultados showVistaDoctor(String user, String password, String rol, int idSede) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (rol.equals("Doctor - Enfermera") || rol.equals("Administrador") || rol.equals("Autoridad")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            List<Object[]> resultList = new ArrayList<>();
-            List<Column> columns = new ArrayList<>();
-            String[] columnas = new String[20];
-            int[] columnasWidth = new int[20];
-            try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
-                        """
-                                SELECT Cédula, Nombre, Apellido, [Fecha de Nacimiento], [Edad], Sexo, Teléfono, \
-                                [Correo electrónico], [Dirección residencia actual], Distrito, Provincia, [Nombre vacuna], \
-                                Fabricante, [Fecha de aplicación], Sede, Dependencia, [Número de dosis], \
-                                [Intervalo dosis 1 y 2 recomendado en meses], [Intervalo real en días], [Edad mínima recomendada en meses]\s
-                                FROM [Vista Doctor]\s
-                                WHERE [ID Sede] = ?""");
-                callStmt.setInt(1, idSede);
-                processResult(callStmt, columns, columnas, columnasWidth, resultList);
-            } finally {
-                closeConnection();
-            }
-            return new Resultados(columnas, columnasWidth, resultList.toArray(new Object[0][]));
-        }
-    }
-
-    public Resultados buscarDosis(String user, String password, String rol, String fechaInicio, String fechaFin, int idSede, int idVacuna, String numDosis) throws SQLException, ClassNotFoundException {
-        if (!InicioSesion.autentificar(user, password, rol)) {
-            return null;
-        } else {
-            if (!rol.equals("Fabricante")) {
-                switchUser(rol, user);
-                if (connection == null) {
-                    throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
-                }
-            } else {
-                throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
-            }
-            List<Column> columns = databaseInfo.getColumnsForView("Vista Doctor");
-            String[] columnas = new String[columns.size()];
-            int[] columnasWidth = new int[columns.size()];
-            for (int i = 0; i < columns.size(); i++) {
-                columnas[i] = columns.get(i).getName();
-                columnasWidth[i] = columns.get(i).getSize();
-            }
-
-            StringBuilder query = new StringBuilder("SELECT * FROM [Vista Doctor] WHERE 1=1");
-
-            if (fechaInicio != null && !fechaInicio.trim().isEmpty()) {
-                fechaInicio = String.valueOf(Date.valueOf(fechaInicio));
-                query.append(" AND CAST([Fecha de aplicación] AS DATE) >= '").append(fechaInicio).append("'");
-            }
-            if (fechaFin != null && !fechaFin.isEmpty()) {
-                fechaFin = String.valueOf(Date.valueOf(fechaFin));
-                query.append(" AND CAST([Fecha de aplicación] AS DATE) <= '").append(fechaFin).append("'");
-            }
-            if (idSede != -1) {
-                query.append(" AND [ID Sede] = ").append(idSede);
-            }
-            if (idVacuna != -1) {
-                query.append(" AND [ID Vacuna] = ").append(idVacuna);
-            }
-            if (numDosis != null && numDosis.length() <= 2 && !numDosis.isBlank()) {
-                query.append(" AND [Número de dosis] = '").append(numDosis).append("'");
-            }
-            return new Resultados(columnas, columnasWidth, executeQuery(query.toString(), columns));
-        }
+        return new Resultados(columnas, columnasWidth, executeQuery(query.toString(), columns));
     }
 
     // métodos privados para la clase funcionar
-    private void switchUser(String rol, String user) throws SQLException, ClassNotFoundException {
-        // Cerrar la conexión actual si existe
-        if (connection != null) {
-            Conexion.closeConnection(connection);
-        }
-        this.connection = Conexion.getConnection(rol);
-        databaseInfo = new DatabaseInfo(connection);
-        this.usuarioActual = rol;
-        executeUpdate("UPDATE Usuarios \nSET last_used = CURRENT_TIMESTAMP \nWHERE usuario = '" + user + "' AND tipo = " + getTipo(rol));
+    private void switchUser() throws SQLException, ClassNotFoundException {
+        Conexion.closeConnection(connection);
+        this.connection = Conexion.getConnection(getTipo(rol));
+        this.databaseInfo = new DatabaseInfo(connection);
+        System.out.println(executeUpdate(
+                "UPDATE Usuarios \nSET last_used = CURRENT_TIMESTAMP \nWHERE usuario = '" + user + "' AND tipo = " + rol)
+                + " last used of " + user + " rol:" + getTipo(rol) + " update!");
     }
 
     private void closeConnection() throws SQLException {
-        if (connection != null) {
-            Conexion.closeConnection(connection);
-        }
+        user = null;
+        rol = Integer.MIN_VALUE;
+        databaseInfo = null;
+        Conexion.closeConnection(connection);
     }
 
     private Object[][] executeQuery(String query, List<Column> columns) throws SQLException {
@@ -591,8 +462,8 @@ public class DatabaseOperaciones {
 
     private int executeUpdate(String query) throws SQLException {
         int result;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            result = preparedStatement.executeUpdate();
+        try (SQLServerPreparedStatement preparedStatement = (SQLServerPreparedStatement) connection.prepareStatement(query)) {
+            result = countRowSQLUpdate(preparedStatement);
         } finally {
             if (!query.startsWith("UPDATE Usuarios \nSET last_used"))
                 closeConnection();
@@ -697,66 +568,17 @@ public class DatabaseOperaciones {
         };
     }
 
-    private static int getTipo(String rolUsuario) throws SQLException {
-        int tipo;
-        tipo = switch (rolUsuario) {
-            case "Paciente" -> 1;
-            case "Doctor - Enfermera" -> 2;
-            case "Administrativo" -> 3;
-            case "Fabricante" -> 4;
-            case "Administrador" -> 5;
-            case "Autoridad" -> 6;
-            default -> 0;
-        };
-        if (tipo == 0) {
-            throw new SQLException("Rol del usuario no expected. TIMEOUT");
-        }
-        return tipo;
-    }
-
-    public static String getTipo(int tipo) throws SQLException {
-        String tipoR;
-        tipoR = switch (tipo) {
-            case 1 -> "Paciente";
-            case 2 -> "Doctor - Enfermera";
-            case 3 -> "Administrativo";
-            case 4 -> "Fabricante";
-            case 5 -> "Administrador";
-            case 6 -> "Autoridad";
-            default -> null;
-        };
-        if (tipoR == null) {
-            throw new SQLException("Rol del usuario no expected. TIMEOUT");
-        }
-        return tipoR;
-    }
-
-    public static String getNumDosis(String numeroDosis) throws SQLException {
-        String numDosis;
-        numDosis = switch (numeroDosis) {
-            case "Primera dosis" -> "1";
-            case "Segunda dosis" -> "2";
-            case "Tercera dosis" -> "3";
-            case "Refuerzo" -> "R";
-            case "Primer refuerzo" -> "R1";
-            case "Segundo refuerzo" -> "R2";
-            case "Dosis previa" -> "P";
-            default -> null;
-        };
-        if (numDosis == null) {
-            throw new SQLException("Número de dosis no expected. TIMEOUT");
-        }
-        return numDosis;
-    }
-
-    private int countRowSQLUpdate(SQLServerCallableStatement callableStatement) throws SQLException {
-        int count = callableStatement.executeUpdate();
-        count += callableStatement.getUpdateCount();
-        while (!callableStatement.getMoreResults()) {
-            if (callableStatement.getUpdateCount() == -1) {
+    private int countRowSQLUpdate(SQLServerPreparedStatement preparedStatement) throws SQLException {
+        int count = 0;
+        preparedStatement.execute();
+        count += preparedStatement.getUpdateCount();
+        while (!preparedStatement.getMoreResults()) {
+            int updateCount = preparedStatement.getUpdateCount();
+            if (updateCount == -1) {
+                // No hay más resultados
                 break;
             }
-            count += callableStatement.getUpdateCount();
+            count += updateCount;
         }
         return count;
     }
@@ -781,8 +603,50 @@ public class DatabaseOperaciones {
         }
     }
 
-    private boolean autentificadorTokenSesion(UUID token, String rol) {
-        return true;
+    private boolean verifyToken(String token) throws JWTVerificationException {
+        if (TokenMananger.verifyToken(token)) {
+            rol = TokenMananger.getRoleFromToken(token);
+            user = TokenMananger.getUserFromToken(token);
+            return true;
+        }
+        return false;
+    }
+
+    private void verifyAccess(String token, int[] rolRequerido) throws SQLException, ClassNotFoundException {
+        if (token == null) {
+            throw new CustomException(0, "Debe tener un token registrado para ejecutar un comando.");
+        }
+        if (rolRequerido.length == 0) {
+            throw new SQLException("Programador: Debe definir roles autorizados para este comando.");
+        }
+        try {
+            if (verifyToken(token)) {
+                if (rol == Integer.MIN_VALUE) {
+                    throw new CustomException(3, "No hay rol definido en el token usado.");
+                }
+                if (user == null) {
+                    throw new CustomException(4, "No hay usuario en el token usado.");
+                }
+                if (InicioSesion.obtener(user, getTipo(rol)) == null) {
+                    throw new CustomException(1, "No hay usuario registrado de forma local con el rol del token usado.");
+                }
+                boolean access = false;
+                for (int j : rolRequerido) {
+                    if (rol == j) {
+                        access = true;
+                        break;
+                    }
+                }
+                if (access) {
+                    switchUser();
+                    if (connection == null)
+                        throw new CustomException(2, "Ocurrió un error al conectarse a la base de datos. Acceso denegado.");
+                } else
+                    throw new CustomException(5, "NO tiene permiso para ejecutar este comando. TIMEOUT");
+            }
+        } catch (JWTVerificationException e) {
+            throw new CustomException(6, e);
+        }
     }
 
     // getters
@@ -790,8 +654,8 @@ public class DatabaseOperaciones {
         return connection;
     }
 
-    public String getUsuarioActual() {
-        return usuarioActual;
+    public String getRol() {
+        return getTipo(rol);
     }
 
     public DatabaseInfo getDatabaseInfo() {

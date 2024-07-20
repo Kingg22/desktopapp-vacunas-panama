@@ -1,4 +1,4 @@
-package logic.validations;
+package logic.user_management;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -22,7 +22,7 @@ public class Usuario {
     }
 
     public static boolean check2Password(String password, String passwordHash) {
-        return !BCrypt.checkpw(password, passwordHash);
+        return BCrypt.checkpw(password, passwordHash);
     }
 
     public Usuario(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String usuario, String password) {
@@ -121,6 +121,7 @@ public class Usuario {
         return BCrypt.checkpw(password, this.passwordHash);
     }
 
+    // getters
     public String getNombre() {
         return nombre;
     }

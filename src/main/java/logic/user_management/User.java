@@ -15,7 +15,7 @@ public class User {
     private String distrito;
     private String usuario;
     private String passwordHash;
-    private Preferencias prefs = new Preferencias();
+    private Preferences prefs = new Preferences();
 
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
@@ -151,10 +151,10 @@ public class User {
     }
 
     public void setPrefs() {
-        prefs = new Preferencias();
+        prefs = new Preferences();
     }
 
-    public Preferencias getPrefs() {
+    public Preferences getPrefs() {
         return prefs;
     }
 

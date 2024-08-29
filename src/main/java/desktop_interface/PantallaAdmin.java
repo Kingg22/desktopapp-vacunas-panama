@@ -3154,7 +3154,7 @@ public class PantallaAdmin extends JFrame {
         int style = styleComboBox.getSelectedIndex();
         int sede = jComboBox_sede_preferida.getSelectedIndex();
         String filetype = (String) jComboBox_exportarType_preferido.getSelectedItem();
-        Preferencias p = userActual.getPrefs();
+        Preferences p = userActual.getPrefs();
         p.setPrefs(font, style, size, sede, filetype);
         actualizarPreferencias(p);
         JOptionPane.showMessageDialog(this, "¡Se han guardado sus preferencias!");
@@ -3426,7 +3426,7 @@ public class PantallaAdmin extends JFrame {
         this.userActual = userActual;
         cedulaUsuarioActual = this.userActual.getCedula();
         this.nombreBienvenida.setText(this.userActual.getNombre() + " " + this.userActual.getApellido());
-        token = TokenMananger.generateToken(this.userActual.getCedula(), "Administrador");
+        token = TokenManager.generateToken(this.userActual.getCedula(), "Administrador");
         actualizarPreferencias(userActual.getPrefs());
         try {
             dbInfo = DB_ADMIN.getDB(token);
@@ -3487,7 +3487,7 @@ public class PantallaAdmin extends JFrame {
     }
 
     /* método para actualizar las preferencias del admin actual */
-    private void actualizarPreferencias(Preferencias pref) {
+    private void actualizarPreferencias(Preferences pref) {
         String font = pref.getFontName();
         int style = pref.getFontStyle(), size = pref.getFontSize();
         Font f = new Font(font, style, size);

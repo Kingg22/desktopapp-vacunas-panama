@@ -1,10 +1,9 @@
 package logic.user_management;
 
 import java.util.UUID;
-import java.util.prefs.Preferences;
 
-public class Preferencias {
-    private final Preferences prefs = Preferences.userNodeForPackage(User.class).node(UUID.randomUUID().toString());
+public class Preferences {
+    private final java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(User.class).node(UUID.randomUUID().toString());
 
     public boolean getPrefInput() {
         return prefs.getBoolean("prefInput", false);

@@ -53,7 +53,7 @@ public class SessionManager {
 
     private static void scheduleSessionExtension(String tokenActual, User usuario, int rol,
             CompletableFuture<String> futureToken) {
-        long delay = TokenMananger.getExpireTimeFromToken(tokenActual).getTime() - 3000;
+        long delay = TokenManager.getExpireTimeFromToken(tokenActual).getTime() - 3000;
         mainTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -89,7 +89,7 @@ public class SessionManager {
                     closeDialogTimer.cancel(); // Cancel the timer if user responds
                     dialog.dispose();
                     if (response == JOptionPane.YES_OPTION) {
-                        String newToken = TokenMananger.generateToken(usuario.getCedula(), rol);
+                        String newToken = TokenManager.generateToken(usuario.getCedula(), rol);
                         futureToken.complete(newToken);
                     } else {
                         futureToken.complete(null);
@@ -102,11 +102,11 @@ public class SessionManager {
 
     private static void scheduleSessionExtensionImmediately(String tokenActual, User usuario, int rol,
             CompletableFuture<String> futureToken) {
-        long delay = TokenMananger.getExpireTimeFromToken(tokenActual).getTime() - 1000;
+        long delay = TokenManager.getExpireTimeFromToken(tokenActual).getTime() - 1000;
         mainTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                String newToken = TokenMananger.generateToken(usuario.getCedula(), rol);
+                String newToken = TokenManager.generateToken(usuario.getCedula(), rol);
                 futureToken.complete(newToken);
             }
         }, delay);
@@ -119,7 +119,7 @@ public class SessionManager {
     /* main para pruebas unitarias */
     public static void main(String[] args) {
         try {
-            String token = TokenMananger.generateToken("prueba", "prueba");
+            String token = TokenManager.generateToken("prueba", "prueba");
             User usuario = new User("", "prueba", "", Timestamp.valueOf("2000-1-1 00:00:00"));
             System.out.println("Token inicial: " + token);
             String resp = SessionManager.extendSession(token, usuario, 1).get();

@@ -35,6 +35,7 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 - Nuestras UI están creadas para Escritorio.
 - Preferencias del usuario local de Java.
 - Cifrado de datos por agregar.
+- Tener algunas respuestas en caché para disminuir la carga de la base de datos.
 - El proyecto fue pensando como proyecto universitario y la conexión con la base de datos no es segura.
 - Las tablas en Java Swing tienen algún problema de renderizado donde los títulos y las columnas derechas se
   desfasan. Estamos investigando si fue error de implementación o del lenguaje.

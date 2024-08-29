@@ -104,7 +104,7 @@ public class UserManager {
                 Timestamp.valueOf("2024-06-01 00:00:00")));
         System.out.println("Administrador insertado local. 8-1024-1653 admin");
         System.out.println("Usuario de la aplicación insertado.");
-        return TokenMananger.generateToken("A-12345-123456", "App");
+        return TokenManager.generateToken("A-12345-123456", "App");
     }
 
     private static void sincronizarUsuariosBD() {

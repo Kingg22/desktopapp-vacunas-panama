@@ -1,6 +1,4 @@
-# Título del Proyecto
-
-Proyecto de Gestión de Información sobre Vacunación en Panamá
+# :syringe: Proyecto de Gestión de Información sobre Vacunación en Panamá
 
 ![Imagen logo del proyecto](https://github.com/Kingg22/Proyecto_App-MINSA-2.0/blob/558997ac0ca507279a87c716cf0c4a89aaf71eb0/src/images/operacionVacunas_logo_pequeno.png)
 
@@ -20,19 +18,19 @@ universitario y solo realizamos la interfaz de usuario para pacientes, doctores 
 
 :construction: Proyecto mejorado lentamente en los tiempos libres :construction:
 
-### Objetivo del Proyecto
+### :pushpin: Objetivo del Proyecto
 
 El objetivo principal del proyecto es llevar un mejor control sobre la vacunación en las distintas sedes sanitarias del
 país, brindando datos precisos para combatir y tomar medidas necesarias en casos de epidemias y pandemias. Este sistema
 contribuirá al Plan Nacional de Salud 2016-2025, específicamente en la Política 2, que se enfoca en ejercer el liderazgo
 en salud a nivel nacional y en la integración del sistema de información de salud en las entidades públicas y privadas.
 
-### Alcance del Proyecto
+### :dart: Alcance del Proyecto
 
 Cobertura Nacional:
 La base de datos será utilizada a nivel nacional por centros médicos estatales y centros privados que deseen participar.
 
-### Limitaciones del Proyecto
+### :warning: Limitaciones del Proyecto
 
 - Nuestras UI están creadas para Escritorio.
 - Preferencias del usuario local de Java.
@@ -64,7 +62,7 @@ Implementar mecanismos de seguridad para proteger la información sensible de lo
 
 Asegurar que la base de datos pueda integrarse con otros sistemas de información de salud.
 
-## Recomendaciones para la Implementación
+## :rocket: Recomendaciones para la Implementación
 
 ### Precisión en la Edad de los Pacientes:
 
@@ -121,7 +119,7 @@ Mantener logs de todos los eventos en la base de datos para realizar auditorías
 
 ## :hammer_and_wrench:Tecnologías Utilizadas
 
-**Puede encontrar las licencias MIT en la carpeta _CREDITS_**
+**Trabajando en hacer referencia a las licencias correctamente. Una disculpa.**
 
 - [Java](https://www.java.com/es/) - Para el desarrollo de la interfaz de usuario principal.
 - [Python](https://www.python.org/) - Para el desarrollo de la interfaz de usuario de pacientes.
@@ -139,7 +137,7 @@ Mantener logs de todos los eventos en la base de datos para realizar auditorías
   Driver para conectar con la base de datos SQL Server en Java.
 - [ODBC Driver](https://github.com/mkleehammer/pyodbc) - Driver para conectar bases de datos en Python.
 
-## Autores
+## :pencil: Autores
 
 - **Rey Acosta** - _Java_ - [kingg22](https://github.com/Kingg22)
 - **Patrick Villarroel** - _Python_ - [patrickvillarroel](https://github.com/patrickvillarroel)
@@ -149,3 +147,40 @@ Mantener logs de todos los eventos en la base de datos para realizar auditorías
 Este proyecto representa un paso significativo hacia la modernización y mejora del control de la vacunación en Panamá. A
 través de la implementación de tecnologías modernas y prácticas de desarrollo robustas, se espera mejorar la eficiencia
 y efectividad del sistema de salud en el manejo de la información sobre vacunación.
+
+## :wrench: Clonación y configuración del repositorio
+> [!NOTE]
+> Para disfrutar de un buen ambiente para programar, necesitas [Maven](https://maven.apache.org/download.cgi), Java JDK 21, Python y pip ya instalado.
+
+Sigue estos pasos para clonar el repositorio, configurar el entorno en tu IDE y preparar el entorno virtual de Python: 
+
+Abre una terminal y ejecuta los siguientes comandos:
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/Kingg22/Programa_Vacunas_Panama.git
+```
+### 2. Abrir el proyecto donde fue clonado el repositorio
+### 3. Configurar el Entorno Virtual de Python:
+```bash 
+python -m venv venv
+venv\Scripts\activate
+```
+En el segundo comando debe cambiar su terminal a (venv) o env lo que significa un entorno virtual activado.
+Recomandamos el uso de un entorno virtual para evitar conflictos de librerias de python y un entorno limpio para el proyecto.
+### 4. Instalar depedencias de python
+```bash
+pip install pyodbc flet python-dotenv
+```
+### 5. Verificación
+Para verificar que todo ha sido configurado correctamente seguir los siguientes pasos:
+#### 1. Crear el package con Maven
+Utilizando el IDE integrado con Maven o el siguiente comando:
+```bash
+mvn package -f ".\pom.xml"
+```
+#### 2. Ejecutar en su consola:
+```bash
+java -jar .\target\Programa_Vacunas_Panama-0.1-jar-with-dependencies.jar
+```
+Cualquier error verificar la versión del Java JDK, el python venv y las rutas relativas o absolutas de los archivos.
+

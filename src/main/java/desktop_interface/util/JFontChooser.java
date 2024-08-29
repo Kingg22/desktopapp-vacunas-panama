@@ -1,4 +1,4 @@
-package desktop_interface;
+package desktop_interface.util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,9 +7,9 @@ public class JFontChooser extends JDialog {
 
     private Font selectedFont;
     private boolean okPressed;
-    private JComboBox<String> familyComboBox;
-    private JComboBox<String> styleComboBox;
-    private JSpinner sizeSpinner;
+    private final JComboBox<String> familyComboBox;
+    private final JComboBox<String> styleComboBox;
+    private final JSpinner sizeSpinner;
 
     public JFontChooser(Frame parent) {
         super(parent, "Elige una fuente", true);

@@ -1,19 +1,19 @@
-package logic.validations;
+package desktop_interface.util.validations;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-public class LimitarCampos extends PlainDocument {
-    final int limit;
-    final String placeholder;
-    String pattern;
+public class LimitarCamposFecha extends PlainDocument {
+    private final int limit;
+    private final String placeholder;
+    private static final String DATE_PATTERN = "^\\d{0,4}(-\\d{0,2}){0,2}$";
+    private static final String DATETIME_PATTERN = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.\\d{1,9})?$";
 
-    public LimitarCampos(int limit, String placeholder, String pattern) {
+    public LimitarCamposFecha(int limit, String placeholder) {
         super();
         this.limit = limit;
         this.placeholder = placeholder;
-        this.pattern = pattern;
     }
 
     @Override
@@ -44,8 +44,7 @@ public class LimitarCampos extends PlainDocument {
     }
 
     private boolean match(String str) {
-        str = str.toUpperCase();
-        return str.matches(pattern);
+        return str.matches(DATE_PATTERN) || str.matches(DATETIME_PATTERN);
     }
 
     @Override

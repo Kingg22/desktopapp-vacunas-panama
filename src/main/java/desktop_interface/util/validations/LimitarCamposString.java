@@ -1,4 +1,4 @@
-package logic.validations;
+package desktop_interface.util.validations;
 
 public class LimitarCamposString extends LimitarCampos {
 

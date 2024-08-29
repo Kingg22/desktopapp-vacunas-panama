@@ -12,7 +12,8 @@ public class Conexion {
     private static final String passwordDoc = dotenv.get("PASSWORD_DOC");
     private static final String passwordProv = dotenv.get("PASSWORD_PROV");
     private static final String passwordOfic = dotenv.get("PASSWORD_ADMINISTRATIVO");
-    private static final String password = dotenv.get("PASSWORD_ADM");
+    private static final String passwordAdm = dotenv.get("PASSWORD_ADM");
+    private static final String password = dotenv.get("PASSWORD");
     private static final String URL = dotenv.get("DB_URL");
 
     public static Connection getConnection(String rol) throws SQLException, ClassNotFoundException {
@@ -23,7 +24,8 @@ public class Conexion {
             case "doctor - enfermera" -> DriverManager.getConnection(URL, "Doctores", passwordDoc);
             case "proveedor" -> DriverManager.getConnection(URL, "Proveedores", passwordProv);
             case "administrativo" -> DriverManager.getConnection(URL, "Administrativos", passwordOfic);
-            case "administrador", "autoridad" -> DriverManager.getConnection(URL, "Administradores", password);
+            case "administrador", "autoridad" -> DriverManager.getConnection(URL, "Administradores", passwordAdm);
+            case "app" -> DriverManager.getConnection(URL, "ApplicationJava", password);
             default -> null;
         };
     }

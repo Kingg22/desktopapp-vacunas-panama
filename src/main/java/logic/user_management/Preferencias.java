@@ -1,10 +1,10 @@
-package logic.validations;
+package logic.user_management;
 
 import java.util.UUID;
 import java.util.prefs.Preferences;
 
 public class Preferencias {
-    private final Preferences prefs = Preferences.userNodeForPackage(Usuario.class).node(UUID.randomUUID().toString());
+    private final Preferences prefs = Preferences.userNodeForPackage(User.class).node(UUID.randomUUID().toString());
 
     public boolean getPrefInput() {
         return prefs.getBoolean("prefInput", false);

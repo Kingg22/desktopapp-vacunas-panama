@@ -1,9 +1,9 @@
 package desktop_interface;
 
-import logic.Validations.LimitarCamposSQL;
-import logic.Validations.LimitarCamposSeguro;
-import logic.Validations.Preferencias;
-import logic.Validations.Usuario;
+import logic.validations.LimitarCamposSQL;
+import logic.validations.LimitarCamposSeguro;
+import logic.validations.Preferencias;
+import logic.validations.Usuario;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;

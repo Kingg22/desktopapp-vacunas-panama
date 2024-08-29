@@ -1,4 +1,4 @@
-package logic.Validations;
+package logic.validations;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 

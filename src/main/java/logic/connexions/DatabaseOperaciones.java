@@ -1,8 +1,8 @@
-package logic.Conexions;
+package logic.connexions;
 
-import logic.ScannerDatabase.Column;
-import logic.ScannerDatabase.DatabaseInfo;
-import logic.Validations.InicioSesion;
+import logic.scanner_database.Column;
+import logic.scanner_database.DatabaseInfo;
+import logic.validations.InicioSesion;
 import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerResultSet;

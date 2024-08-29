@@ -1,8 +1,8 @@
 package desktop_interface;
 
-import logic.Conexions.DatabaseOperaciones;
-import logic.Conexions.Resultados;
-import logic.Validations.*;
+import logic.connexions.DatabaseOperaciones;
+import logic.connexions.Resultados;
+import logic.validations.*;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 

@@ -1,4 +1,4 @@
-package logic.ScannerDatabase;
+package logic.scanner_database;
 
 import java.sql.*;
 import java.util.ArrayList;

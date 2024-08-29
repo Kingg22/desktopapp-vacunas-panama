@@ -1,7 +1,7 @@
-package logic.Validations;
+package logic.validations;
 
-import logic.Conexions.DatabaseOperaciones;
-import logic.Conexions.Resultados;
+import logic.connexions.DatabaseOperaciones;
+import logic.connexions.Resultados;
 
 import javax.swing.*;
 import java.sql.SQLException;

@@ -1,6 +1,6 @@
 package desktop_interface;
 
-import logic.Validations.LimitarCamposSeguro;
+import logic.validations.LimitarCamposSeguro;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;

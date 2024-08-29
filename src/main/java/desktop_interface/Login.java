@@ -1,6 +1,6 @@
 package desktop_interface;
 
-import logic.Validations.*;
+import logic.validations.*;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 

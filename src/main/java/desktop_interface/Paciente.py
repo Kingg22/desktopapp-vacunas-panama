@@ -9,18 +9,14 @@ from dotenv import load_dotenv
 from flet import *
 
 load_dotenv()
-servidor = os.getenv("SERVER_P_PYTHON")
-db = os.getenv("DB_NAME")
-cPaciente = os.getenv("PASSWORD_PAC")
+DB_URL=os.getenv("DB_URL_PY")
 
 
 # Conexión con la bade de datos, cambia los valores para conectarse de forma local
 def conexion():
     print("Estableciendo conexión a la base de datos...")
     try:
-        connection = pyodbc.connect(
-            'DRIVER={SQL Server};SERVER=' + servidor + ';DATABASE=' + db + ';UID=Pacientes;PWD=' + cPaciente +
-            ';Encrypt=no;trusted_connection=yes')
+        connection = pyodbc.connect(DB_URL)
         print("Conexión exitosa")
         return connection
     except Exception as ex:

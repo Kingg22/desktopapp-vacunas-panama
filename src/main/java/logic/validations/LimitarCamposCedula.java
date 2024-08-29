@@ -1,4 +1,4 @@
-package logic.Validations;
+package logic.validations;
 
 public class LimitarCamposCedula extends LimitarCampos {
 

@@ -1,4 +1,4 @@
-package logic.Validations;
+package logic.validations;
 
 public class LimitarCamposSQL extends LimitarCampos {
 

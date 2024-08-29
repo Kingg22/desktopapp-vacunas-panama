@@ -1,4 +1,4 @@
-package logic.Conexions;
+package logic.connexions;
 
 public class Resultados {
     String[] columnas;

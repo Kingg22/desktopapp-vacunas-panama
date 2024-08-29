@@ -183,4 +183,13 @@ mvn package -f ".\pom.xml"
 java -jar .\target\Programa_Vacunas_Panama-0.1-jar-with-dependencies.jar
 ```
 Cualquier error verificar la versión del Java JDK, el python venv y las rutas relativas o absolutas de los archivos.
+### Configuración específica para IntelliJ
+> [!NOTE]
+> Para utilizar IntelliJ IDEA necesitas una licencia de [Jetbrains](https://www.jetbrains.com/idea/) posterior a los 30 días de prueba.
 
+Posterior a los pasos anteriores:
+#### Configurar en Project Structure module Python:
+En la ventana emergente, sección SDK debe aparecer su Python venv ya configurado. Si no lo observa, cerrar IntelliJ, invalidar la caché y reiniciar.
+Con este SDK de Python ya listo con los pasos anteriores, en Modules estará las carpetas de Java Maven.
+Le damos a add Module y escogemos Python, le cargará automático el Python venv ya configurado y guardamos los cambios.
+Se necesita esto para que el IDE IntelliJ cargue todas las dependencias y pueda analizar el archivo .py del proyecto.

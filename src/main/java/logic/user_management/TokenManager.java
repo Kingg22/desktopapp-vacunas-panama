@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TokenMananger {
+public class TokenManager {
     private static final String SECRET = Dotenv.load().get("SECRET");
     private static final long EXPIRATION_TIME = 3600000;
     private static final Map<String, Date> tokens = new HashMap<>();

@@ -1,6 +1,11 @@
-package desktop_interface;
+package desktop_interface.util;
 
-import logic.validations.*;
+import desktop_interface.Login;
+import logic.connexions.DatabaseOperaciones;
+import logic.user_management.*;
+import desktop_interface.util.validations.*;
+import org.netbeans.lib.awtextra.AbsoluteConstraints;
+import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -8,143 +13,148 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Timestamp;
+import java.util.concurrent.ExecutionException;
 
 public class PantallaBase extends JFrame {
-
-    public PantallaBase(JFrame parent) {
-        PantallaBase.parentFrame = parent;
+    // TODO agregar a los métodos la lógica de los JDialog y añadir unas líneas de
+    // extendSession implementación
+    // TODO agregar visibilidad a las contraseñas con botón
+    public PantallaBase(JFrame parent, User usuario) {
         initComponents();
+        this.JPANEL_FILTRAR = new JTableFiltrar(jTable_Content);
+        this.FONT_CHOOSER = new JFontChooser(this);
+        this.DB = new DatabaseOperaciones();
+        LAYOUT = (CardLayout) jPanel_derecho.getLayout();
+        PARENT_FRAME = parent;
+        addListeners();
 
-        this.jPanel_filtrar = new JTableFiltrar(jTable_Content);
-
-        JButton[] botones = { button_opcion1, button_opcion2, button_opcion3,
-                button_opcion4, button_opcion5, button_modificarDatos,
-                button_modificarCred, button_preferencias, jButton_savePreferences,
+        JButton[] botones = { button_opcion1, button_opcion2, button_opcion3, button_opcion4, button_opcion5,
+                button_modificarDatos, button_modificarCred, button_preferencias, jButton_savePreferences,
                 button_soporte };
         for (JButton boton : botones) {
             boton.setUI(new BasicButtonUI());
             boton.setBackground(new Color(86, 86, 86));
         }
         button_logOut.setUI(new BasicButtonUI());
-        layout = (CardLayout) jPanel_derecho.getLayout();
-
+        personalizarVentana(usuario);
         this.setExtendedState(MAXIMIZED_BOTH);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-        jDialog_modificarCred = new JDialog();
-        jScrollPane2 = new JScrollPane();
-        background_dialog2 = new JPanel();
-        titulo2 = new JLabel();
-        jTextArea1 = new JTextArea();
-        usuario = new JLabel();
-        jTextField_usuario = new JTextField();
-        jSeparator8 = new JSeparator();
-        usuario_nuevo = new JLabel();
-        jTextField_usuarioNuevo = new JTextField();
-        jSeparator14 = new JSeparator();
-        contrasena = new JLabel();
-        jPasswordField_nueva1 = new JPasswordField();
-        jSeparator11 = new JSeparator();
-        repetir_contrasena = new JLabel();
-        jPasswordField_nueva2 = new JPasswordField();
-        jSeparator7 = new JSeparator();
-        errorMessage2 = new JLabel();
-        jButton_modificar2 = new JButton();
-        jButton_cancelar2 = new JButton();
-        contrasena_anterior = new JLabel();
-        jPasswordField_vieja = new JPasswordField();
-        jSeparator13 = new JSeparator();
-        jPanel_mostrarTabla = new JPanel();
-        jPanel2 = new JPanel();
-        titulo_contenido1 = new JLabel();
-        jScrollPane_Table = new JScrollPane();
-        jTable_Content = new JTable();
-        opcionesTabla = new JPanel();
-        jTextField_buscarTabla = new JTextField();
-        jButton_buscar = new JButton();
-        jButton_acercar = new JButton();
-        jButton_alejar = new JButton();
-        jButton_ordenar = new JButton();
-        jButton_filtros = new JButton();
-        jButton_fuente = new JButton();
-        jButton_exportar = new JButton();
-        jPanel_preferencias = new JPanel();
-        icon_preferencias = new JLabel();
-        titulo3 = new JLabel();
-        jPanel_separador1 = new JPanel();
-        jLabel4 = new JLabel();
-        jPanel_separador2 = new JPanel();
-        jPanel_fontChooser = new JPanel();
-        jPanel_separador3 = new JPanel();
-        jLabel1 = new JLabel();
-        jComboBox_exportarType = new JComboBox<>();
-        jPanel_separador4 = new JPanel();
-        jLabel5 = new JLabel();
-        jComboBox_exportarType1 = new JComboBox<>();
-        jPanel_separador5 = new JPanel();
-        jButton_savePreferences = new JButton();
-        jPanel_soporte = new JPanel();
-        jLabel10 = new JLabel();
-        jPanel5 = new JPanel();
-        jLabel11 = new JLabel();
-        jDialog_modificarDatos = new JDialog();
-        jScrollPane1 = new JScrollPane();
-        background_dialog1 = new JPanel();
-        titulo = new JLabel();
-        indicaciones = new JTextArea();
-        nombre = new JLabel();
-        jTextField_nombre = new JTextField();
-        jSeparator3 = new JSeparator();
-        apellido = new JLabel();
-        jTextField_apellido = new JTextField();
-        jSeparator4 = new JSeparator();
-        cedula = new JLabel();
-        jTextField_cedula = new JTextField();
-        jSeparator5 = new JSeparator();
-        fecha_nacimiento = new JLabel();
-        jTextField_fechaNacimiento = new JTextField();
-        jSeparator9 = new JSeparator();
-        sexo = new JLabel();
-        jComboBox_sexo = new JComboBox<>();
-        direccion = new JLabel();
-        jTextField_direccion = new JTextField();
-        distrito = new JLabel();
-        jComboBox_distrito = new JComboBox<>();
-        jSeparator10 = new JSeparator();
-        correo = new JLabel();
-        jTextField_correo = new JTextField();
-        jSeparator6 = new JSeparator();
-        jTextField_telefono = new JTextField();
-        telefono = new JLabel();
-        jSeparator12 = new JSeparator();
-        errorMessage = new JLabel();
-        jButton_cancelar = new JButton();
-        jButton_modificar = new JButton();
-        jScrollPane3 = new JScrollPane();
-        background = new JPanel();
-        jPanel_menuOpciones = new JPanel();
-        separador1 = new JPanel();
-        icon_project = new JLabel();
-        separador3 = new JPanel();
-        rolName = new JLabel();
-        nombreBienvenida = new JLabel();
-        separador2 = new JPanel();
+        button_logOut = new JButton();
+        button_modificarCred = new JButton();
+        button_modificarDatos = new JButton();
         button_opcion1 = new JButton();
         button_opcion2 = new JButton();
         button_opcion3 = new JButton();
         button_opcion4 = new JButton();
         button_opcion5 = new JButton();
-        separador4 = new JPanel();
-        button_modificarDatos = new JButton();
-        button_modificarCred = new JButton();
         button_preferencias = new JButton();
         button_soporte = new JButton();
-        button_logOut = new JButton();
-        jPanel_derecho = new JPanel();
-        jPanel1 = new JPanel();
+        jButton_acercar = new JButton();
+        jButton_alejar = new JButton();
+        jButton_buscar = new JButton();
+        jButton_cancelar = new JButton();
+        jButton_cancelar2 = new JButton();
+        jButton_exportar = new JButton();
+        jButton_filtros = new JButton();
+        jButton_fuente = new JButton();
+        jButton_modificar = new JButton();
+        jButton_modificar2 = new JButton();
+        jButton_ordenar = new JButton();
+        jButton_savePreferences = new JButton();
+        jComboBox_distrito = new JComboBox<>();
+        jComboBox_exportarType_preferido = new JComboBox<>();
+        jComboBox_sede_preferida = new JComboBox<>();
+        jComboBox_sexo = new JComboBox<>();
+        jDialog_modificarCred = new JDialog();
+        jDialog_modificarDatos = new JDialog();
+        apellido = new JLabel();
+        cedula = new JLabel();
+        contrasena = new JLabel();
+        contrasena_anterior = new JLabel();
+        correo = new JLabel();
+        direccion = new JLabel();
+        distrito = new JLabel();
+        errorMessage = new JLabel();
+        errorMessage2 = new JLabel();
+        fecha_nacimiento = new JLabel();
+        icon_preferencias = new JLabel();
+        icon_project = new JLabel();
+        jLabel1 = new JLabel();
+        jLabel10 = new JLabel();
+        jLabel11 = new JLabel();
+        jLabel4 = new JLabel();
+        jLabel5 = new JLabel();
         jLabel6 = new JLabel();
+        nombre = new JLabel();
+        nombreBienvenida = new JLabel();
+        repetir_contrasena = new JLabel();
+        rolName = new JLabel();
+        sexo = new JLabel();
+        telefono = new JLabel();
+        titulo = new JLabel();
+        titulo_contenido1 = new JLabel();
+        titulo2 = new JLabel();
+        titulo3 = new JLabel();
+        usuario = new JLabel();
+        usuario_nuevo = new JLabel();
+        background = new JPanel();
+        background_dialog1 = new JPanel();
+        background_dialog2 = new JPanel();
+        jPanel_derecho = new JPanel();
+        jPanel_fontChooser = new JPanel();
+        jPanel_menuOpciones = new JPanel();
+        jPanel_mostrarTabla = new JPanel();
+        jPanel_preferencias = new JPanel();
+        jPanel_separador1 = new JPanel();
+        jPanel_separador2 = new JPanel();
+        jPanel_separador3 = new JPanel();
+        jPanel_separador4 = new JPanel();
+        jPanel_separador5 = new JPanel();
+        jPanel_soporte = new JPanel();
+        jPanel1 = new JPanel();
+        jPanel2 = new JPanel();
+        jPanel5 = new JPanel();
+        opcionesTabla = new JPanel();
+        separador1 = new JPanel();
+        separador2 = new JPanel();
+        separador3 = new JPanel();
+        separador4 = new JPanel();
+        jPasswordField_nueva1 = new JPasswordField();
+        jPasswordField_nueva2 = new JPasswordField();
+        jPasswordField_vieja = new JPasswordField();
+        jScrollPane_Table = new JScrollPane();
+        jScrollPane1 = new JScrollPane();
+        jScrollPane2 = new JScrollPane();
+        jScrollPane3 = new JScrollPane();
+        jSeparator10 = new JSeparator();
+        jSeparator11 = new JSeparator();
+        jSeparator12 = new JSeparator();
+        jSeparator13 = new JSeparator();
+        jSeparator14 = new JSeparator();
+        jSeparator3 = new JSeparator();
+        jSeparator4 = new JSeparator();
+        jSeparator5 = new JSeparator();
+        jSeparator6 = new JSeparator();
+        jSeparator7 = new JSeparator();
+        jSeparator8 = new JSeparator();
+        jSeparator9 = new JSeparator();
+        jTable_Content = new JTable();
+        indicaciones = new JTextArea();
+        jTextArea1 = new JTextArea();
+        jTextField_apellido = new JTextField();
+        jTextField_buscarTabla = new JTextField();
+        jTextField_cedula = new JTextField();
+        jTextField_correo = new JTextField();
+        jTextField_direccion = new JTextField();
+        jTextField_fechaNacimiento = new JTextField();
+        jTextField_nombre = new JTextField();
+        jTextField_telefono = new JTextField();
+        jTextField_usuario = new JTextField();
+        jTextField_usuarioNuevo = new JTextField();
 
         jDialog_modificarCred.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         jDialog_modificarCred.setTitle("Programa Vacunas Panamá - Modificar credenciales");
@@ -157,13 +167,13 @@ public class PantallaBase extends JFrame {
 
         background_dialog2.setBackground(new Color(255, 255, 255));
         background_dialog2.setPreferredSize(new Dimension(444, 494));
-        background_dialog2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        background_dialog2.setLayout(new AbsoluteLayout());
 
         titulo2.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
         titulo2.setForeground(new Color(0, 0, 0));
         titulo2.setHorizontalAlignment(SwingConstants.CENTER);
         titulo2.setText("Modificar credenciales de acceso");
-        background_dialog2.add(titulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(88, 25, 269, -1));
+        background_dialog2.add(titulo2, new AbsoluteConstraints(88, 25, 269, -1));
 
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new Color(255, 255, 255));
@@ -176,13 +186,13 @@ public class PantallaBase extends JFrame {
         jTextArea1.setWrapStyleWord(true);
         jTextArea1.setBorder(null);
         jTextArea1.setFocusable(false);
-        background_dialog2.add(jTextArea1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 380, 100));
+        background_dialog2.add(jTextArea1, new AbsoluteConstraints(30, 60, 380, 100));
 
         usuario.setBackground(new Color(0, 0, 0));
         usuario.setFont(new Font("Roboto", Font.PLAIN, 12));
         usuario.setForeground(new Color(0, 0, 0));
         usuario.setText("Usuario anterior *");
-        background_dialog2.add(usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
+        background_dialog2.add(usuario, new AbsoluteConstraints(30, 170, -1, -1));
 
         jTextField_usuario.setBackground(new Color(255, 255, 255));
         jTextField_usuario.setDocument(new LimitarCamposSeguro(50, "Ingrese su usuario"));
@@ -192,27 +202,17 @@ public class PantallaBase extends JFrame {
         jTextField_usuario.setActionCommand("<Not Set>");
         jTextField_usuario.setBorder(null);
         jTextField_usuario.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese su usuario");
-        jTextField_usuario.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_usuarioFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_usuarioFocusLost(evt);
-            }
-        });
-        jTextField_usuario.addActionListener(this::jTextField_usuarioActionPerformed);
-        background_dialog2.add(jTextField_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 380, -1));
+        StaticMethods.handleFocusGain(jTextField_usuario, "Ingrese su usuario");
+        background_dialog2.add(jTextField_usuario, new AbsoluteConstraints(30, 190, 380, -1));
 
         jSeparator8.setForeground(new Color(30, 30, 30));
-        background_dialog2.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 380, 21));
+        background_dialog2.add(jSeparator8, new AbsoluteConstraints(30, 210, 380, 21));
 
         usuario_nuevo.setBackground(new Color(0, 0, 0));
         usuario_nuevo.setFont(new Font("Roboto", Font.PLAIN, 12));
         usuario_nuevo.setForeground(new Color(0, 0, 0));
         usuario_nuevo.setText("Usuario nuevo");
-        background_dialog2.add(usuario_nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
+        background_dialog2.add(usuario_nuevo, new AbsoluteConstraints(30, 220, -1, -1));
 
         jTextField_usuarioNuevo.setBackground(new Color(255, 255, 255));
         jTextField_usuarioNuevo.setDocument(new LimitarCamposSeguro(50, "Ingrese un usuario nuevo"));
@@ -222,28 +222,17 @@ public class PantallaBase extends JFrame {
         jTextField_usuarioNuevo.setActionCommand("<Not Set>");
         jTextField_usuarioNuevo.setBorder(null);
         jTextField_usuarioNuevo.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_usuarioNuevo, "Ingrese un usuario nuevo");
-        jTextField_usuarioNuevo.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_usuarioNuevoFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_usuarioNuevoFocusLost(evt);
-            }
-        });
-        jTextField_usuarioNuevo.addActionListener(this::jTextField_usuarioNuevoActionPerformed);
-        background_dialog2.add(jTextField_usuarioNuevo,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 380, -1));
+        StaticMethods.handleFocusGain(jTextField_usuarioNuevo, "Ingrese un usuario nuevo");
+        background_dialog2.add(jTextField_usuarioNuevo, new AbsoluteConstraints(30, 240, 380, -1));
 
         jSeparator14.setForeground(new Color(30, 30, 30));
-        background_dialog2.add(jSeparator14, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 380, 21));
+        background_dialog2.add(jSeparator14, new AbsoluteConstraints(30, 260, 380, 21));
 
         contrasena.setBackground(new Color(0, 0, 0));
         contrasena.setFont(new Font("Roboto", Font.PLAIN, 12));
         contrasena.setForeground(new Color(0, 0, 0));
         contrasena.setText("Contraseña nueva");
-        background_dialog2.add(contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, -1, -1));
+        background_dialog2.add(contrasena, new AbsoluteConstraints(30, 320, -1, -1));
 
         jPasswordField_nueva1.setBackground(new Color(255, 255, 255));
         jPasswordField_nueva1.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
@@ -252,28 +241,17 @@ public class PantallaBase extends JFrame {
         jPasswordField_nueva1.setText("Ingrese su contraseña");
         jPasswordField_nueva1.setBorder(null);
         jPasswordField_nueva1.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jPasswordField_nueva1, "Ingrese su contraseña");
-        jPasswordField_nueva1.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jPasswordField_nueva1FocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jPasswordField_nueva1FocusLost(evt);
-            }
-        });
-        jPasswordField_nueva1.addActionListener(this::jPasswordField_nueva1ActionPerformed);
-        background_dialog2.add(jPasswordField_nueva1,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 380, -1));
+        StaticMethods.handleFocusGain(jPasswordField_nueva1, "Ingrese su contraseña");
+        background_dialog2.add(jPasswordField_nueva1, new AbsoluteConstraints(30, 340, 380, -1));
 
         jSeparator11.setForeground(new Color(30, 30, 30));
-        background_dialog2.add(jSeparator11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 380, 21));
+        background_dialog2.add(jSeparator11, new AbsoluteConstraints(30, 360, 380, 21));
 
         repetir_contrasena.setBackground(new Color(0, 0, 0));
         repetir_contrasena.setFont(new Font("Roboto", Font.PLAIN, 12));
         repetir_contrasena.setForeground(new Color(0, 0, 0));
         repetir_contrasena.setText("Repetir contraseña nueva *");
-        background_dialog2.add(repetir_contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, -1));
+        background_dialog2.add(repetir_contrasena, new AbsoluteConstraints(30, 370, -1, -1));
 
         jPasswordField_nueva2.setBackground(new Color(255, 255, 255));
         jPasswordField_nueva2.setDocument(new LimitarCamposSeguro(20, "Repita su contraseña"));
@@ -282,22 +260,12 @@ public class PantallaBase extends JFrame {
         jPasswordField_nueva2.setText("Repita su contraseña");
         jPasswordField_nueva2.setBorder(null);
         jPasswordField_nueva2.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jPasswordField_nueva2, "Repita su contraseña");
-        jPasswordField_nueva2.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jPasswordField_nueva2FocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jPasswordField_nueva2FocusLost(evt);
-            }
-        });
+        StaticMethods.handleFocusGain(jPasswordField_nueva2, "Repita su contraseña");
         jPasswordField_nueva2.addActionListener(this::jPasswordField_nueva2ActionPerformed);
-        background_dialog2.add(jPasswordField_nueva2,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 380, -1));
+        background_dialog2.add(jPasswordField_nueva2, new AbsoluteConstraints(30, 390, 380, -1));
 
         jSeparator7.setForeground(new Color(30, 30, 30));
-        background_dialog2.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 380, 21));
+        background_dialog2.add(jSeparator7, new AbsoluteConstraints(30, 410, 380, 21));
 
         errorMessage2.setFont(new Font("Roboto", Font.BOLD, 14));
         errorMessage2.setForeground(Color.red);
@@ -305,7 +273,7 @@ public class PantallaBase extends JFrame {
         errorMessage2.setText("Error. ");
         errorMessage2.setHorizontalTextPosition(SwingConstants.CENTER);
         errorMessage2.setVisible(false);
-        background_dialog2.add(errorMessage2, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 430, 440, -1));
+        background_dialog2.add(errorMessage2, new AbsoluteConstraints(2, 430, 440, -1));
 
         jButton_modificar2.setBackground(new Color(0, 204, 0));
         jButton_modificar2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -316,7 +284,7 @@ public class PantallaBase extends JFrame {
                 jButton_modificar2MouseClicked(evt);
             }
         });
-        background_dialog2.add(jButton_modificar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 450, -1, -1));
+        background_dialog2.add(jButton_modificar2, new AbsoluteConstraints(320, 450, -1, -1));
 
         jButton_cancelar2.setBackground(new Color(153, 153, 153));
         jButton_cancelar2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -327,13 +295,13 @@ public class PantallaBase extends JFrame {
                 jButton_cancelar2MouseClicked(evt);
             }
         });
-        background_dialog2.add(jButton_cancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 450, -1, -1));
+        background_dialog2.add(jButton_cancelar2, new AbsoluteConstraints(230, 450, -1, -1));
 
         contrasena_anterior.setBackground(new Color(0, 0, 0));
         contrasena_anterior.setFont(new Font("Roboto", Font.PLAIN, 12));
         contrasena_anterior.setForeground(new Color(0, 0, 0));
         contrasena_anterior.setText("Contraseña anterior *");
-        background_dialog2.add(contrasena_anterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, -1));
+        background_dialog2.add(contrasena_anterior, new AbsoluteConstraints(30, 270, -1, -1));
 
         jPasswordField_vieja.setBackground(new Color(255, 255, 255));
         jPasswordField_vieja.setDocument(new LimitarCamposSeguro(20, "Ingrese su contraseña"));
@@ -342,22 +310,11 @@ public class PantallaBase extends JFrame {
         jPasswordField_vieja.setText("Ingrese su contraseña");
         jPasswordField_vieja.setBorder(null);
         jPasswordField_vieja.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jPasswordField_vieja, "Ingrese su contraseña");
-        jPasswordField_vieja.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jPasswordField_viejaFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jPasswordField_viejaFocusLost(evt);
-            }
-        });
-        jPasswordField_vieja.addActionListener(this::jPasswordField_viejaActionPerformed);
-        background_dialog2.add(jPasswordField_vieja,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 380, -1));
+        StaticMethods.handleFocusGain(jPasswordField_vieja, "Ingrese su contraseña");
+        background_dialog2.add(jPasswordField_vieja, new AbsoluteConstraints(30, 290, 380, -1));
 
         jSeparator13.setForeground(new Color(30, 30, 30));
-        background_dialog2.add(jSeparator13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 380, 21));
+        background_dialog2.add(jSeparator13, new AbsoluteConstraints(30, 310, 380, 21));
 
         jScrollPane2.setViewportView(background_dialog2);
 
@@ -419,15 +376,6 @@ public class PantallaBase extends JFrame {
         jTextField_buscarTabla.setText("Buscar...");
         jTextField_buscarTabla.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
         jTextField_buscarTabla.setPreferredSize(new Dimension(125, 26));
-        jTextField_buscarTabla.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_buscarTablaFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_buscarTablaFocusLost(evt);
-            }
-        });
         jTextField_buscarTabla.addActionListener(this::jTextField_buscarTablaActionPerformed);
         opcionesTabla.add(jTextField_buscarTabla);
 
@@ -547,30 +495,30 @@ public class PantallaBase extends JFrame {
         jPanel_fontChooser.setLayout(new GridLayout(3, 2, 10, 10));
         jPanel_preferencias.add(jPanel_fontChooser);
         // Familia de la fuente
-        JLabel familyLabel = new JLabel("Familia:");
+        familyLabel = new JLabel("Familia:");
         familyLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
-        JComboBox<String> familyComboBox = new JComboBox<>(
+        familyComboBox = new JComboBox<>(
                 GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
         familyComboBox.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(familyLabel);
         jPanel_fontChooser.add(familyComboBox);
 
         // Estilo de la fuente
-        JLabel styleLabel = new JLabel("Estilo:");
+        styleLabel = new JLabel("Estilo:");
         styleLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
         String[] styles = { "Regular", "Negrita", "Cursiva", "Negrita Cursiva" };
-        JComboBox<String> styleComboBox = new JComboBox<>(styles);
+        styleComboBox = new JComboBox<>(styles);
         styleComboBox.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(styleLabel);
         jPanel_fontChooser.add(styleComboBox);
 
         // Tamaño de la fuente
-        JLabel sizeLabel = new JLabel("Tamaño:");
+        sizeLabel = new JLabel("Tamaño:");
         sizeLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
-        JSpinner sizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
-        sizeSpinner.setFont(new Font("Roboto", Font.PLAIN, 14));
+        fontSizeSpinner = new JSpinner(new SpinnerNumberModel(12, 1, 100, 1));
+        fontSizeSpinner.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(sizeLabel);
-        jPanel_fontChooser.add(sizeSpinner);
+        jPanel_fontChooser.add(fontSizeSpinner);
 
         jPanel_separador3.setBackground(new Color(227, 218, 201));
         jPanel_separador3.setMaximumSize(new Dimension(32767, 25));
@@ -592,12 +540,12 @@ public class PantallaBase extends JFrame {
         jLabel1.setHorizontalTextPosition(SwingConstants.CENTER);
         jPanel_preferencias.add(jLabel1);
 
-        jComboBox_exportarType.setFont(new Font("Roboto", Font.PLAIN, 14));
-        jComboBox_exportarType
+        jComboBox_exportarType_preferido.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jComboBox_exportarType_preferido
                 .setModel(new DefaultComboBoxModel<>(new String[] { "Elegir...", "CSV", "TXT", "PDF", "Excel" }));
-        jComboBox_exportarType.setMaximumSize(new Dimension(367, 40));
-        jComboBox_exportarType.setPreferredSize(new Dimension(190, 37));
-        jPanel_preferencias.add(jComboBox_exportarType);
+        jComboBox_exportarType_preferido.setMaximumSize(new Dimension(367, 40));
+        jComboBox_exportarType_preferido.setPreferredSize(new Dimension(190, 37));
+        jPanel_preferencias.add(jComboBox_exportarType_preferido);
 
         jPanel_separador4.setBackground(new Color(227, 218, 201));
         jPanel_separador4.setMaximumSize(new Dimension(32767, 25));
@@ -619,11 +567,11 @@ public class PantallaBase extends JFrame {
         jLabel5.setHorizontalTextPosition(SwingConstants.CENTER);
         jPanel_preferencias.add(jLabel5);
 
-        jComboBox_exportarType1.setFont(new Font("Roboto", Font.PLAIN, 14));
-        jComboBox_exportarType1.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir..." }));
-        jComboBox_exportarType1.setMaximumSize(new Dimension(567, 40));
-        jComboBox_exportarType1.setPreferredSize(new Dimension(450, 37));
-        jPanel_preferencias.add(jComboBox_exportarType1);
+        jComboBox_sede_preferida.setFont(new Font("Roboto", Font.PLAIN, 14));
+        jComboBox_sede_preferida.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir..." }));
+        jComboBox_sede_preferida.setMaximumSize(new Dimension(567, 40));
+        jComboBox_sede_preferida.setPreferredSize(new Dimension(450, 37));
+        jPanel_preferencias.add(jComboBox_sede_preferida);
 
         jPanel_separador5.setBackground(new Color(227, 218, 201));
         jPanel_separador5.setMaximumSize(new Dimension(32767, 25));
@@ -665,13 +613,13 @@ public class PantallaBase extends JFrame {
         jPanel5.setBackground(new Color(227, 218, 201));
         jPanel5.setLayout(new GridLayout(3, 10));
         jPanel_soporte.add(jPanel5, BorderLayout.CENTER);
-        jPanel5.add(PantallaBase.createQuestionPanel("No veo ningún dato al consultar",
+        jPanel5.add(StaticMethods.createQuestionPanel("No veo ningún dato al consultar",
                 """
                         Esto significa que usted puede o no estar registrado y/o no tiene ninguna vacuna aplicada.
                         Para verificar que este registrado con sus datos correctamente:
                         1. De click en el botón 'Modificar datos personales' y observe si algún dato como su cédula de identidad personal esta mal escrito, si es así, debe modificar para corregir.
                         Si a pesar de esto, no ve ningún dato, significa que no tiene ninguna vacuna registrada en el sistema. Puede acudir a su médico para registrar su cartilla de vacunación."""));
-        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo cambiar mis preferencias de usuario?",
+        jPanel5.add(StaticMethods.createQuestionPanel("¿Cómo cambiar mis preferencias de usuario?",
                 """
                         1. Dar click en el botón 'Preferencias' y actualizamos las preferencias, de manera inicial, el sistema define la sede y el distrito en la primera.
                         Para el distrito no puede definir una preferencia.
@@ -679,7 +627,7 @@ public class PantallaBase extends JFrame {
                         Si tiene activada editar directo en tabla podrá editar las dosis de vacuna, datos del paciente y agregar datos en las opciones de consulta sin necesidad de usar el otro botón.
                         Si desea modificar sus datos personales o su credencial de acceso (usuario y contraseña)
                         Refiérase a la siguiente pregunta '¿Cómo cambio mis datos personales o credenciales de acceso?'"""));
-        jPanel5.add(PantallaBase.createQuestionPanel("¿Cómo cambio mis datos personales o credenciales de acceso?",
+        jPanel5.add(StaticMethods.createQuestionPanel("¿Cómo cambio mis datos personales o credenciales de acceso?",
                 """
                         1. Dar click en el botón 'Modificar datos personales' o 'Modificar credenciales' y editar solamente los datos que deseamos modificar.
                         Consejos: La cédula de identidad personal debe estar escrito tal cual su documento.
@@ -707,13 +655,13 @@ public class PantallaBase extends JFrame {
 
         background_dialog1.setBackground(new Color(255, 255, 255));
         background_dialog1.setPreferredSize(new Dimension(444, 544));
-        background_dialog1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        background_dialog1.setLayout(new AbsoluteLayout());
 
         titulo.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
         titulo.setForeground(new Color(0, 0, 0));
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setText("Modificar datos personales");
-        background_dialog1.add(titulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 269, -1));
+        background_dialog1.add(titulo, new AbsoluteConstraints(90, 20, 269, -1));
 
         indicaciones.setEditable(false);
         indicaciones.setBackground(new Color(255, 255, 255));
@@ -727,13 +675,13 @@ public class PantallaBase extends JFrame {
         indicaciones.setBorder(null);
         indicaciones.setFocusable(false);
         indicaciones.setRequestFocusEnabled(false);
-        background_dialog1.add(indicaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 390, 50));
+        background_dialog1.add(indicaciones, new AbsoluteConstraints(30, 40, 390, 50));
 
         nombre.setBackground(new Color(0, 0, 0));
         nombre.setFont(new Font("Roboto", Font.PLAIN, 12));
         nombre.setForeground(new Color(0, 0, 0));
         nombre.setText("Nombre *");
-        background_dialog1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
+        background_dialog1.add(nombre, new AbsoluteConstraints(30, 90, -1, -1));
 
         jTextField_nombre.setBackground(new Color(255, 255, 255));
         jTextField_nombre.setDocument(new LimitarCamposString(50, "Ingrese su nombre"));
@@ -742,27 +690,17 @@ public class PantallaBase extends JFrame {
         jTextField_nombre.setText("Ingrese su nombre");
         jTextField_nombre.setBorder(null);
         jTextField_nombre.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_nombre, "Ingrese su nombre");
-        jTextField_nombre.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_nombreFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_nombreFocusLost(evt);
-            }
-        });
-        jTextField_nombre.addActionListener(this::jTextField_nombreActionPerformed);
-        background_dialog1.add(jTextField_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 390, -1));
+        StaticMethods.handleFocusGain(jTextField_nombre, "Ingrese su nombre");
+        background_dialog1.add(jTextField_nombre, new AbsoluteConstraints(30, 110, 390, -1));
 
         jSeparator3.setForeground(new Color(30, 30, 30));
-        background_dialog1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 390, 21));
+        background_dialog1.add(jSeparator3, new AbsoluteConstraints(30, 130, 390, 21));
 
         apellido.setBackground(new Color(0, 0, 0));
         apellido.setFont(new Font("Roboto", Font.PLAIN, 12));
         apellido.setForeground(new Color(0, 0, 0));
         apellido.setText("Apellido *");
-        background_dialog1.add(apellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, -1));
+        background_dialog1.add(apellido, new AbsoluteConstraints(30, 140, -1, -1));
 
         jTextField_apellido.setBackground(new Color(255, 255, 255));
         jTextField_apellido.setDocument(new LimitarCamposString(50, "Ingrese su apellido"));
@@ -771,28 +709,17 @@ public class PantallaBase extends JFrame {
         jTextField_apellido.setText("Ingrese su apellido");
         jTextField_apellido.setBorder(null);
         jTextField_apellido.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_apellido, "Ingrese su apellido");
-        jTextField_apellido.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_apellidoFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_apellidoFocusLost(evt);
-            }
-        });
-        jTextField_apellido.addActionListener(this::jTextField_apellidoActionPerformed);
-        background_dialog1.add(jTextField_apellido,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 390, -1));
+        StaticMethods.handleFocusGain(jTextField_apellido, "Ingrese su apellido");
+        background_dialog1.add(jTextField_apellido, new AbsoluteConstraints(30, 160, 390, -1));
 
         jSeparator4.setForeground(new Color(30, 30, 30));
-        background_dialog1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 390, 21));
+        background_dialog1.add(jSeparator4, new AbsoluteConstraints(30, 180, 390, 21));
 
         cedula.setBackground(new Color(0, 0, 0));
         cedula.setFont(new Font("Roboto", Font.PLAIN, 12));
         cedula.setForeground(new Color(0, 0, 0));
         cedula.setText("Cédula *");
-        background_dialog1.add(cedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, -1, -1));
+        background_dialog1.add(cedula, new AbsoluteConstraints(30, 190, -1, -1));
 
         jTextField_cedula.setEditable(false);
         jTextField_cedula.setBackground(new Color(255, 255, 255));
@@ -801,17 +728,16 @@ public class PantallaBase extends JFrame {
         jTextField_cedula.setText("Ingrese su cédula");
         jTextField_cedula.setBorder(null);
         jTextField_cedula.setMaximumSize(new Dimension(2147483647, 50));
-        jTextField_cedula.addActionListener(this::jTextField_cedulaActionPerformed);
-        background_dialog1.add(jTextField_cedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 390, -1));
+        background_dialog1.add(jTextField_cedula, new AbsoluteConstraints(30, 210, 390, -1));
 
         jSeparator5.setForeground(new Color(30, 30, 30));
-        background_dialog1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, 390, 21));
+        background_dialog1.add(jSeparator5, new AbsoluteConstraints(30, 230, 390, 21));
 
         fecha_nacimiento.setBackground(new Color(0, 0, 0));
         fecha_nacimiento.setFont(new Font("Roboto", Font.PLAIN, 12));
         fecha_nacimiento.setForeground(new Color(0, 0, 0));
         fecha_nacimiento.setText("Fecha de nacimiento *");
-        background_dialog1.add(fecha_nacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, -1, -1));
+        background_dialog1.add(fecha_nacimiento, new AbsoluteConstraints(30, 240, -1, -1));
 
         jTextField_fechaNacimiento.setEditable(false);
         jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
@@ -820,30 +746,28 @@ public class PantallaBase extends JFrame {
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD hh:mm:ss");
         jTextField_fechaNacimiento.setBorder(null);
         jTextField_fechaNacimiento.setMaximumSize(new Dimension(2147483647, 50));
-        jTextField_fechaNacimiento.addActionListener(this::jTextField_fechaNacimientoActionPerformed);
-        background_dialog1.add(jTextField_fechaNacimiento,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 390, -1));
+        background_dialog1.add(jTextField_fechaNacimiento, new AbsoluteConstraints(30, 260, 390, -1));
 
         jSeparator9.setForeground(new Color(30, 30, 30));
-        background_dialog1.add(jSeparator9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 390, 21));
+        background_dialog1.add(jSeparator9, new AbsoluteConstraints(30, 280, 390, 21));
 
         sexo.setBackground(new Color(0, 0, 0));
         sexo.setFont(new Font("Roboto", Font.PLAIN, 12));
         sexo.setForeground(new Color(0, 0, 0));
         sexo.setText("Sexo *");
-        background_dialog1.add(sexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, -1, -1));
+        background_dialog1.add(sexo, new AbsoluteConstraints(30, 290, -1, -1));
 
         jComboBox_sexo.setBackground(Color.gray);
         jComboBox_sexo.setFont(new Font("Roboto", Font.PLAIN, 14));
         jComboBox_sexo.setForeground(Color.black);
         jComboBox_sexo.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir", "Masculino", "Feminino" }));
-        background_dialog1.add(jComboBox_sexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 308, 170, -1));
+        background_dialog1.add(jComboBox_sexo, new AbsoluteConstraints(30, 308, 170, -1));
 
         direccion.setBackground(new Color(0, 0, 0));
         direccion.setFont(new Font("Roboto", Font.PLAIN, 12));
         direccion.setForeground(new Color(0, 0, 0));
         direccion.setText("Dirección");
-        background_dialog1.add(direccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, -1, -1));
+        background_dialog1.add(direccion, new AbsoluteConstraints(30, 340, -1, -1));
 
         jTextField_direccion.setBackground(new Color(255, 255, 255));
         jTextField_direccion.setDocument(new LimitarCamposAlpha(100, "Ingrese su dirección"));
@@ -852,40 +776,29 @@ public class PantallaBase extends JFrame {
         jTextField_direccion.setText("Ingrese su dirección");
         jTextField_direccion.setBorder(null);
         jTextField_direccion.setMaximumSize(new Dimension(2147483647, 50));
-        jTextField_direccion.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_direccionFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_direccionFocusLost(evt);
-            }
-        });
         jTextField_direccion.addActionListener(this::jTextField_direccionActionPerformed);
-        background_dialog1.add(jTextField_direccion,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 190, -1));
+        background_dialog1.add(jTextField_direccion, new AbsoluteConstraints(30, 360, 190, -1));
 
         distrito.setBackground(new Color(0, 0, 0));
         distrito.setFont(new Font("Roboto", Font.PLAIN, 12));
         distrito.setForeground(new Color(0, 0, 0));
         distrito.setText("Distrito");
-        background_dialog1.add(distrito, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 340, 50, -1));
+        background_dialog1.add(distrito, new AbsoluteConstraints(230, 340, 50, -1));
 
         jComboBox_distrito.setBackground(Color.gray);
         jComboBox_distrito.setFont(new Font("Roboto", Font.PLAIN, 14));
         jComboBox_distrito.setForeground(Color.black);
         jComboBox_distrito.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir", "Distrito por registrar" }));
-        background_dialog1.add(jComboBox_distrito,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 356, 190, -1));
+        background_dialog1.add(jComboBox_distrito, new AbsoluteConstraints(230, 356, 190, -1));
 
         jSeparator10.setForeground(new Color(30, 30, 30));
-        background_dialog1.add(jSeparator10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 190, 21));
+        background_dialog1.add(jSeparator10, new AbsoluteConstraints(30, 380, 190, 21));
 
         correo.setBackground(new Color(0, 0, 0));
         correo.setFont(new Font("Roboto", Font.PLAIN, 12));
         correo.setForeground(new Color(0, 0, 0));
         correo.setText("Correo electrónico");
-        background_dialog1.add(correo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, -1, -1));
+        background_dialog1.add(correo, new AbsoluteConstraints(30, 390, -1, -1));
 
         jTextField_correo.setBackground(new Color(255, 255, 255));
         jTextField_correo.setDocument(new LimitarCamposEmail(50, "Ingrese su correo electrónico"));
@@ -894,21 +807,11 @@ public class PantallaBase extends JFrame {
         jTextField_correo.setText("Ingrese su correo electrónico");
         jTextField_correo.setBorder(null);
         jTextField_correo.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_correo, "Ingrese su correo electrónico");
-        jTextField_correo.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_correoFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_correoFocusLost(evt);
-            }
-        });
-        jTextField_correo.addActionListener(this::jTextField_correoActionPerformed);
-        background_dialog1.add(jTextField_correo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 390, -1));
+        StaticMethods.handleFocusGain(jTextField_correo, "Ingrese su correo electrónico");
+        background_dialog1.add(jTextField_correo, new AbsoluteConstraints(30, 410, 390, -1));
 
         jSeparator6.setForeground(new Color(30, 30, 30));
-        background_dialog1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 390, 21));
+        background_dialog1.add(jSeparator6, new AbsoluteConstraints(30, 430, 390, 21));
 
         jTextField_telefono.setBackground(new Color(255, 255, 255));
         jTextField_telefono.setDocument(new LimitarCamposPhone(15,
@@ -919,36 +822,26 @@ public class PantallaBase extends JFrame {
                 "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
         jTextField_telefono.setBorder(null);
         jTextField_telefono.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_telefono,
+        StaticMethods.handleFocusGain(jTextField_telefono,
                 "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
-        jTextField_telefono.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_telefonoFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_telefonoFocusLost(evt);
-            }
-        });
         jTextField_telefono.addActionListener(this::jTextField_telefonoActionPerformed);
-        background_dialog1.add(jTextField_telefono,
-                new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 460, 390, -1));
+        background_dialog1.add(jTextField_telefono, new AbsoluteConstraints(30, 460, 390, -1));
 
         telefono.setBackground(new Color(0, 0, 0));
         telefono.setFont(new Font("Roboto", Font.PLAIN, 12));
         telefono.setForeground(new Color(0, 0, 0));
         telefono.setText("Teléfono ");
-        background_dialog1.add(telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, -1, -1));
+        background_dialog1.add(telefono, new AbsoluteConstraints(30, 440, -1, -1));
 
         jSeparator12.setForeground(new Color(30, 30, 30));
-        background_dialog1.add(jSeparator12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 390, 21));
+        background_dialog1.add(jSeparator12, new AbsoluteConstraints(30, 480, 390, 21));
 
         errorMessage.setFont(new Font("Roboto", Font.BOLD, 14));
         errorMessage.setForeground(Color.red);
         errorMessage.setHorizontalAlignment(SwingConstants.CENTER);
         errorMessage.setText("ERROR.");
         errorMessage.setVisible(false);
-        background_dialog1.add(errorMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 390, -1));
+        background_dialog1.add(errorMessage, new AbsoluteConstraints(30, 490, 390, -1));
 
         jButton_cancelar.setBackground(new Color(153, 153, 153));
         jButton_cancelar.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -959,7 +852,7 @@ public class PantallaBase extends JFrame {
                 jButton_cancelarMouseClicked(evt);
             }
         });
-        background_dialog1.add(jButton_cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 510, -1, -1));
+        background_dialog1.add(jButton_cancelar, new AbsoluteConstraints(240, 510, -1, -1));
 
         jButton_modificar.setBackground(new Color(0, 204, 0));
         jButton_modificar.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
@@ -970,7 +863,7 @@ public class PantallaBase extends JFrame {
                 jButton_modificarMouseClicked(evt);
             }
         });
-        background_dialog1.add(jButton_modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 510, -1, -1));
+        background_dialog1.add(jButton_modificar, new AbsoluteConstraints(330, 510, -1, -1));
 
         jScrollPane1.setViewportView(background_dialog1);
 
@@ -1236,15 +1129,15 @@ public class PantallaBase extends JFrame {
     }// </editor-fold>
 
     private void formComponentShown(ComponentEvent evt) {
-        Login.setImageLabal(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
+        StaticMethods.setImageLabel(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
     }
 
     private void formWindowClosing(WindowEvent evt) {
         int confirm = JOptionPane.showConfirmDialog(null, "¿Esta seguro de cerrar sesión?",
                 "Cerrando sesión y ventana...", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirm == 0) {
-            parentFrame.setVisible(true);
-            parentFrame.requestFocus();
+            PARENT_FRAME.setVisible(true);
+            PARENT_FRAME.requestFocus();
             this.dispose();
         }
     }
@@ -1269,10 +1162,10 @@ public class PantallaBase extends JFrame {
             jPanel_derecho.add(jPanel_preferencias, "preferences");
         }
         if (mostrando == jPanel_preferencias) {
-            layout.show(jPanel_derecho, "vacio");
+            LAYOUT.show(jPanel_derecho, "vacio");
             mostrando = jPanel1;
         } else {
-            layout.show(jPanel_derecho, "preferences");
+            LAYOUT.show(jPanel_derecho, "preferences");
             mostrando = jPanel_preferencias;
         }
         jPanel_derecho.revalidate();
@@ -1284,10 +1177,10 @@ public class PantallaBase extends JFrame {
             jPanel_derecho.add(jPanel_mostrarTabla, "option 1");
         }
         if (mostrando == jPanel_mostrarTabla) {
-            layout.show(jPanel_derecho, "vacio");
+            LAYOUT.show(jPanel_derecho, "vacio");
             mostrando = jPanel1;
         } else {
-            layout.show(jPanel_derecho, "option 1");
+            LAYOUT.show(jPanel_derecho, "option 1");
             mostrando = jPanel_mostrarTabla;
         }
         jPanel_derecho.revalidate();
@@ -1299,10 +1192,10 @@ public class PantallaBase extends JFrame {
             jPanel_derecho.add(jPanel_soporte, "soporte");
         }
         if (mostrando == jPanel_soporte) {
-            layout.show(jPanel_derecho, "vacio");
+            LAYOUT.show(jPanel_derecho, "vacio");
             mostrando = jPanel1;
         } else {
-            layout.show(jPanel_derecho, "soporte");
+            LAYOUT.show(jPanel_derecho, "soporte");
             mostrando = jPanel_soporte;
         }
         jPanel_derecho.revalidate();
@@ -1321,10 +1214,9 @@ public class PantallaBase extends JFrame {
     }
 
     private void jButton_fuenteMouseClicked(MouseEvent evt) {
-        JFontChooser fontChooser = new JFontChooser(this);
-        boolean result = fontChooser.showDialog(this);
+        boolean result = FONT_CHOOSER.showDialog(this);
         if (result) {
-            Font font = fontChooser.getSelectedFont();
+            Font font = FONT_CHOOSER.getSelectedFont();
             jTable_Content.setFont(font);
             jTable_Content.repaint();
         }
@@ -1335,22 +1227,6 @@ public class PantallaBase extends JFrame {
     }
 
     /* eventos jDialog modificar credenciales del usuario */
-    private void jTextField_usuarioFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese su usuario");
-    }
-
-    private void jTextField_usuarioFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese su usuario");
-    }
-
-    private void jPasswordField_nueva2FocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_nueva2, "Repita su contraseña");
-    }
-
-    private void jPasswordField_nueva2FocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_nueva2, "Repita su contraseña");
-    }
-
     private void jPasswordField_nueva2ActionPerformed(ActionEvent evt) {
         jButton_modificar2MouseClicked(null);
     }
@@ -1379,8 +1255,7 @@ public class PantallaBase extends JFrame {
             errorMessage2.setText("Error. Los campos usuario y contraseña anterior son obligatorios.");
             errorMessage2.setVisible(true);
             return;
-        } else if (!InicioSesion.autentificar(usuario, String.valueOf(jPasswordField_vieja.getPassword()),
-                "Paciente")) {
+        } else if (!UserManager.autentificar(usuario, String.valueOf(jPasswordField_vieja.getPassword()), "Paciente")) {
             contrasena_anterior.setForeground(Color.red);
             jPasswordField_vieja.setForeground(Color.red);
             errorMessage2.setText("Error. La contraseña anterior no coincide. Cambios cancelado");
@@ -1399,11 +1274,11 @@ public class PantallaBase extends JFrame {
                         errorMessage2.setVisible(true);
                         return;
                     } else {
-                        cambiado = InicioSesion.modificarCredenciales(cedulaUsuarioActual, usuarioNuevo,
+                        cambiado = UserManager.modificarCredenciales(cedulaUsuarioActual, usuarioNuevo,
                                 String.valueOf(jPasswordField_nueva1.getPassword()), "Paciente");
                     }
                 } else {
-                    cambiado = InicioSesion.modificarCredenciales(cedulaUsuarioActual, usuarioNuevo,
+                    cambiado = UserManager.modificarCredenciales(cedulaUsuarioActual, usuarioNuevo,
                             String.valueOf(jPasswordField_vieja.getPassword()), "Paciente");
                 }
             } else if (!condicion4 && !condicion5) {
@@ -1417,7 +1292,7 @@ public class PantallaBase extends JFrame {
                     errorMessage2.setVisible(true);
                     return;
                 } else {
-                    cambiado = InicioSesion.modificarCredenciales(cedulaUsuarioActual, usuario,
+                    cambiado = UserManager.modificarCredenciales(cedulaUsuarioActual, usuario,
                             String.valueOf(jPasswordField_nueva1.getPassword()), "Paciente");
                 }
             } else {
@@ -1432,8 +1307,8 @@ public class PantallaBase extends JFrame {
             JOptionPane.showMessageDialog(null,
                     "Para confirmar los cambios de credenciales se cerrará el programa y debe iniciar sesión nuevamente.",
                     "Modificando datos...", JOptionPane.INFORMATION_MESSAGE);
-            parentFrame.setVisible(true);
-            parentFrame.requestFocus();
+            PARENT_FRAME.setVisible(true);
+            PARENT_FRAME.requestFocus();
             this.dispose();
             jDialog_modificarCred.dispose();
             System.gc();
@@ -1445,34 +1320,6 @@ public class PantallaBase extends JFrame {
 
     private void jButton_cancelar2MouseClicked(MouseEvent evt) {
         jDialog_modificarCred.dispose();
-    }
-
-    private void jPasswordField_nueva1FocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_nueva1, "Ingrese su contraseña");
-    }
-
-    private void jPasswordField_nueva1FocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_nueva1, "Ingrese su contraseña");
-    }
-
-    private void jPasswordField_nueva1ActionPerformed(ActionEvent evt) {
-        jPasswordField_nueva2.requestFocus();
-    }
-
-    private void jTextField_usuarioActionPerformed(ActionEvent evt) {
-        jTextField_usuarioNuevo.requestFocus();
-    }
-
-    private void jPasswordField_viejaFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_vieja, "Ingrese su contraseña");
-    }
-
-    private void jPasswordField_viejaFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField_vieja, "Ingrese su contraseña");
-    }
-
-    private void jPasswordField_viejaActionPerformed(ActionEvent evt) {
-        jPasswordField_nueva1.requestFocus();
     }
 
     /* eventos de tabla option 1 */
@@ -1495,19 +1342,11 @@ public class PantallaBase extends JFrame {
         jButton_buscarMouseClicked(null);
     }
 
-    private void jTextField_buscarTablaFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_buscarTabla, "Buscar...");
-    }
-
-    private void jTextField_buscarTablaFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_buscarTabla, "Buscar...");
-    }
-
     private void jButton_filtrosMouseClicked(MouseEvent evt) {
-        if (!jPanel_mostrarTabla.isAncestorOf(jPanel_filtrar)) {
-            jPanel_mostrarTabla.add(jPanel_filtrar, BorderLayout.NORTH);
+        if (!jPanel_mostrarTabla.isAncestorOf(JPANEL_FILTRAR)) {
+            jPanel_mostrarTabla.add(JPANEL_FILTRAR, BorderLayout.NORTH);
         } else {
-            jPanel_mostrarTabla.remove(jPanel_filtrar);
+            jPanel_mostrarTabla.remove(JPANEL_FILTRAR);
         }
         jPanel_mostrarTabla.revalidate();
         jPanel_mostrarTabla.repaint();
@@ -1517,77 +1356,11 @@ public class PantallaBase extends JFrame {
         jTable_Content.setAutoCreateRowSorter(true);
     }
 
-    private void jButton_savePreferencesMouseClicked(MouseEvent evt) {
-        /* TODO implementar lógica de guardar preferencias del usuario */
-    }
-
-    private void jTextField_nombreFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_nombre, "Ingrese su nombre");
-    }
-
-    private void jTextField_nombreFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_nombre, "Ingrese su nombre");
-    }
-
-    private void jTextField_nombreActionPerformed(ActionEvent evt) {
-        jTextField_apellido.requestFocus();
-    }
-
-    private void jTextField_apellidoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_apellido, "Ingrese su apellido");
-    }
-
-    private void jTextField_apellidoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_apellido, "Ingrese su apellido");
-    }
-
-    private void jTextField_apellidoActionPerformed(ActionEvent evt) {
-        jTextField_cedula.requestFocus();
-    }
-
-    private void jTextField_cedulaActionPerformed(ActionEvent evt) {
-        jTextField_fechaNacimiento.requestFocus();
-    }
-
-    private void jTextField_fechaNacimientoActionPerformed(ActionEvent evt) {
-        jTextField_direccion.requestFocus();
-    }
-
-    private void jTextField_direccionFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_direccion, "Ingrese su dirección");
-    }
-
-    private void jTextField_direccionFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_direccion, "Ingrese su dirección");
-    }
-
     private void jTextField_direccionActionPerformed(ActionEvent evt) {
         if (jComboBox_distrito.getSelectedIndex() == 0) {
             jComboBox_distrito.setSelectedIndex(1);
         }
         jTextField_correo.requestFocus();
-    }
-
-    private void jTextField_correoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_correo, "Ingrese su correo electrónico");
-    }
-
-    private void jTextField_correoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_correo, "Ingrese su correo electrónico");
-    }
-
-    private void jTextField_correoActionPerformed(ActionEvent evt) {
-        jTextField_telefono.requestFocus();
-    }
-
-    private void jTextField_telefonoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono,
-                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
-    }
-
-    private void jTextField_telefonoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono,
-                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
     }
 
     private void jTextField_telefonoActionPerformed(ActionEvent evt) {
@@ -1686,48 +1459,101 @@ public class PantallaBase extends JFrame {
         }
     }
 
-    private void jTextField_usuarioNuevoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_usuarioNuevo, "Ingrese un usuario nuevo");
-    }
-
-    private void jTextField_usuarioNuevoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_usuarioNuevo, "Ingrese un usuario nuevo");
-    }
-
-    private void jTextField_usuarioNuevoActionPerformed(ActionEvent evt) {
-        jPasswordField_vieja.requestFocus();
+    /* evento único de jPanel preferencias */
+    private void jButton_savePreferencesMouseClicked(MouseEvent evt) {
+        int size = (int) fontSizeSpinner.getValue();
+        String font = (String) familyComboBox.getSelectedItem();
+        int style = styleComboBox.getSelectedIndex();
+        int sede = jComboBox_sede_preferida.getSelectedIndex();
+        String filetype = (String) jComboBox_exportarType_preferido.getSelectedItem();
+        Preferencias p = userActual.getPrefs();
+        p.setPrefs(font, style, size, sede, filetype);
+        actualizarPreferencias(p);
+        JOptionPane.showMessageDialog(this, "¡Se han guardado sus preferencias!");
     }
 
     /* método para colocar el nombre al iniciar sesión */
-    public void setBienvenida(String nombre, String cedula) {
-        this.nombreBienvenida.setText(nombre);
-        cedulaUsuarioActual = cedula;
+    private void personalizarVentana(User userActual) {
+        this.userActual = userActual;
+        cedulaUsuarioActual = this.userActual.getCedula();
+        this.nombreBienvenida.setText(this.userActual.getNombre() + " " + this.userActual.getApellido());
+        token = TokenMananger.generateToken(this.userActual.getCedula(), "rol");
+        actualizarPreferencias(userActual.getPrefs());
+        // Utiliza SwingWorker para evitar bloquear la interfaz gráfica
+        new SwingWorker<>() {
+            @Override
+            protected String doInBackground() throws Exception {
+                try {
+                    token = SessionManager.extendSession(token, userActual, "rol").get();
+                    if (token != null) {
+                        // Espera el resultado de la extensión de sesión
+                        return SessionManager.extendSession(token, userActual, "rol").get();
+                    } else {
+                        SessionManager.cancelTimers();
+                        PARENT_FRAME.setVisible(true);
+                        PARENT_FRAME.requestFocus();
+                        dispose();
+                    }
+                } catch (InterruptedException | ExecutionException e) {
+                    System.err.println(e);
+                    JOptionPane.showMessageDialog(null,
+                            "A ocurrido un error en el evento que pregunta si extiende la sesión por vencimiento del token. Contactar a soporte.\n"
+                                    +
+                                    "No hay certeza si tiene token para realizar sus tareas. Recomendamos cerrar sesión");
+                }
+                return null;
+            }
+        }.execute();
     }
 
-    /* método static para crear FAQ con estilo moderno */
-    public static JPanel createQuestionPanel(String question, String answer) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panel.setBackground(new Color(227, 218, 201));
+    /* método para actualizar las preferencias del usuario actual */
+    private void actualizarPreferencias(Preferencias pref) {
+        String font = pref.getFontName();
+        int style = pref.getFontStyle(), size = pref.getFontSize();
+        Font f = new Font(font, style, size);
+        jTable_Content.setFont(f);
+        fontSizeSpinner.setValue(size);
+        familyComboBox.setSelectedItem(font);
+        styleComboBox.setSelectedIndex(style);
+        jComboBox_exportarType_preferido.setSelectedItem(pref.getExportFileType());
 
-        JButton questionButton = new JButton(question);
-        questionButton.setUI(new BasicButtonUI());
-        questionButton.setBackground(Color.LIGHT_GRAY);
-        JTextArea answerArea = new JTextArea(answer, 5, 30);
-        answerArea.setLineWrap(true);
-        answerArea.setWrapStyleWord(true);
-        answerArea.setEditable(false);
-        answerArea.setVisible(false);
+        try {
+            jComboBox_sede_preferida
+                    .setModel(new DefaultComboBoxModel<>(StaticMethods.transformMatrizToArray(DB.getSedes(token), 0)));
+        } catch (Exception e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(this,
+                    "Ha ocurrido un problema encontrando las sedes. Reinicie la aplicación o contacte a soporte");
+        }
+        jComboBox_sede_preferida.setSelectedIndex(pref.getSede());
+        FONT_CHOOSER.setPreferences(font, style, size);
+    }
 
-        questionButton.addActionListener(e -> {
-            answerArea.setVisible(!answerArea.isVisible());
-            panel.revalidate();
-        });
+    /* método para añadir todos los listener de esta clase */
+    private void addListeners() {
+        StaticMethods.addFocusListeners(jPasswordField_nueva1, "Ingrese su contraseña");
+        StaticMethods.addFocusListeners(jTextField_usuario, "Ingrese su usuario");
+        StaticMethods.addFocusListeners(jPasswordField_nueva2, "Repita su contraseña");
+        StaticMethods.addFocusListeners(jPasswordField_vieja, "Ingrese su contraseña");
+        StaticMethods.addFocusListeners(jTextField_buscarTabla, "Buscar...");
+        StaticMethods.addFocusListeners(jTextField_nombre, "Ingrese su nombre");
+        StaticMethods.addFocusListeners(jTextField_apellido, "Ingrese su apellido");
+        StaticMethods.addFocusListeners(jTextField_direccion, "Ingrese su dirección");
+        StaticMethods.addFocusListeners(jTextField_correo, "Ingrese su correo electrónico");
+        StaticMethods.addFocusListeners(jTextField_telefono,
+                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local) no se acepta + al principio");
+        StaticMethods.addFocusListeners(jTextField_usuarioNuevo, "Ingrese un usuario nuevo");
 
-        panel.add(questionButton, BorderLayout.NORTH);
-        panel.add(answerArea, BorderLayout.CENTER);
-
-        return panel;
+        // Action Listener
+        StaticMethods.addActionListeners(jPasswordField_nueva1, jPasswordField_nueva2);
+        StaticMethods.addActionListeners(jTextField_usuario, jTextField_usuarioNuevo);
+        StaticMethods.addActionListeners(jPasswordField_vieja, jPasswordField_nueva1);
+        StaticMethods.addActionListeners(jTextField_nombre, jTextField_apellido);
+        StaticMethods.addActionListeners(jTextField_apellido, jTextField_cedula);
+        StaticMethods.addActionListeners(jTextField_cedula, jTextField_fechaNacimiento);
+        StaticMethods.addActionListeners(jTextField_fechaNacimiento, jTextField_direccion);
+        StaticMethods.addActionListeners(jTextField_correo, jTextField_telefono);
+        StaticMethods.addActionListeners(jTextField_usuarioNuevo, jPasswordField_vieja);
     }
 
     /* método main para pruebas unitarias */
@@ -1745,21 +1571,23 @@ public class PantallaBase extends JFrame {
                     ex);
         }
 
-        EventQueue.invokeLater(() -> new PantallaBase(new Login()).setVisible(true));
+        SwingUtilities.invokeLater(
+                () -> new PantallaBase(new Login(), new User("", "", "", Timestamp.valueOf("2000-1-1 00:00:00")))
+                        .setVisible(true));
     }
 
     /* variables propias */
-    private static JFrame parentFrame;
-    private static CardLayout layout = null;
+    private final CardLayout LAYOUT;
+    private final DatabaseOperaciones DB;
+    private final JFontChooser FONT_CHOOSER;
+    private final JFrame PARENT_FRAME;
+    private final JTableFiltrar JPANEL_FILTRAR;
     private Component mostrando = null;
-    private final JTableFiltrar jPanel_filtrar;
     private String cedulaUsuarioActual;
+    private String token;
+    private User userActual;
 
     // Variables declaration - do not modify
-    private JLabel apellido;
-    private JPanel background;
-    private JPanel background_dialog1;
-    private JPanel background_dialog2;
     private JButton button_logOut;
     private JButton button_modificarCred;
     private JButton button_modificarDatos;
@@ -1770,18 +1598,6 @@ public class PantallaBase extends JFrame {
     private JButton button_opcion5;
     private JButton button_preferencias;
     private JButton button_soporte;
-    private JLabel cedula;
-    private JLabel contrasena;
-    private JLabel contrasena_anterior;
-    private JLabel correo;
-    private JLabel direccion;
-    private JLabel distrito;
-    private JLabel errorMessage;
-    private JLabel errorMessage2;
-    private JLabel fecha_nacimiento;
-    private JLabel icon_preferencias;
-    private JLabel icon_project;
-    private JTextArea indicaciones;
     private JButton jButton_acercar;
     private JButton jButton_alejar;
     private JButton jButton_buscar;
@@ -1795,20 +1611,44 @@ public class PantallaBase extends JFrame {
     private JButton jButton_ordenar;
     private JButton jButton_savePreferences;
     private JComboBox<String> jComboBox_distrito;
-    private JComboBox<String> jComboBox_exportarType;
-    private JComboBox<String> jComboBox_exportarType1;
+    private JComboBox<String> jComboBox_exportarType_preferido;
+    private JComboBox<String> jComboBox_sede_preferida;
     private JComboBox<String> jComboBox_sexo;
     private JDialog jDialog_modificarCred;
     private JDialog jDialog_modificarDatos;
+    private JLabel apellido;
+    private JLabel cedula;
+    private JLabel contrasena;
+    private JLabel contrasena_anterior;
+    private JLabel correo;
+    private JLabel direccion;
+    private JLabel distrito;
+    private JLabel errorMessage;
+    private JLabel errorMessage2;
+    private JLabel fecha_nacimiento;
+    private JLabel icon_preferencias;
+    private JLabel icon_project;
     private JLabel jLabel1;
     private JLabel jLabel10;
     private JLabel jLabel11;
     private JLabel jLabel4;
     private JLabel jLabel5;
     private JLabel jLabel6;
-    private JPanel jPanel1;
-    private JPanel jPanel2;
-    private JPanel jPanel5;
+    private JLabel nombre;
+    private JLabel nombreBienvenida;
+    private JLabel repetir_contrasena;
+    private JLabel rolName;
+    private JLabel sexo;
+    private JLabel telefono;
+    private JLabel titulo;
+    private JLabel titulo_contenido1;
+    private JLabel titulo2;
+    private JLabel titulo3;
+    private JLabel usuario;
+    private JLabel usuario_nuevo;
+    private JPanel background;
+    private JPanel background_dialog1;
+    private JPanel background_dialog2;
     private JPanel jPanel_derecho;
     private JPanel jPanel_fontChooser;
     private JPanel jPanel_menuOpciones;
@@ -1820,13 +1660,21 @@ public class PantallaBase extends JFrame {
     private JPanel jPanel_separador4;
     private JPanel jPanel_separador5;
     private JPanel jPanel_soporte;
+    private JPanel jPanel1;
+    private JPanel jPanel2;
+    private JPanel jPanel5;
+    private JPanel opcionesTabla;
+    private JPanel separador1;
+    private JPanel separador2;
+    private JPanel separador3;
+    private JPanel separador4;
     private JPasswordField jPasswordField_nueva1;
     private JPasswordField jPasswordField_nueva2;
     private JPasswordField jPasswordField_vieja;
+    private JScrollPane jScrollPane_Table;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JScrollPane jScrollPane3;
-    private JScrollPane jScrollPane_Table;
     private JSeparator jSeparator10;
     private JSeparator jSeparator11;
     private JSeparator jSeparator12;
@@ -1840,6 +1688,7 @@ public class PantallaBase extends JFrame {
     private JSeparator jSeparator8;
     private JSeparator jSeparator9;
     private JTable jTable_Content;
+    private JTextArea indicaciones;
     private JTextArea jTextArea1;
     private JTextField jTextField_apellido;
     private JTextField jTextField_buscarTabla;
@@ -1851,22 +1700,11 @@ public class PantallaBase extends JFrame {
     private JTextField jTextField_telefono;
     private JTextField jTextField_usuario;
     private JTextField jTextField_usuarioNuevo;
-    private JLabel nombre;
-    private JLabel nombreBienvenida;
-    private JPanel opcionesTabla;
-    private JLabel repetir_contrasena;
-    private JLabel rolName;
-    private JPanel separador1;
-    private JPanel separador2;
-    private JPanel separador3;
-    private JPanel separador4;
-    private JLabel sexo;
-    private JLabel telefono;
-    private JLabel titulo;
-    private JLabel titulo2;
-    private JLabel titulo3;
-    private JLabel titulo_contenido1;
-    private JLabel usuario;
-    private JLabel usuario_nuevo;
+    private JSpinner fontSizeSpinner;
+    private JLabel sizeLabel;
+    private JComboBox<String> styleComboBox;
+    private JLabel styleLabel;
+    private JComboBox<String> familyComboBox;
+    private JLabel familyLabel;
     // End of variables declaration
 }

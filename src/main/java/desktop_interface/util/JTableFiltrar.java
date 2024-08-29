@@ -1,6 +1,6 @@
-package desktop_interface;
+package desktop_interface.util;
 
-import logic.validations.LimitarCamposSeguro;
+import desktop_interface.util.validations.LimitarCamposSeguro;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -45,7 +45,7 @@ public class JTableFiltrar extends JPanel {
 
         jTextField_buscarColumn.setDocument(new LimitarCamposSeguro(15, "Buscar en..."));
         jTextField_buscarColumn.setText("Buscar en...");
-        RegistrarUser.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
+        StaticMethods.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
         jTextField_buscarColumn.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 jTextField_buscarColumnFocusGained(evt);
@@ -64,11 +64,11 @@ public class JTableFiltrar extends JPanel {
     }
 
     private void jTextField_buscarColumnFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
+        StaticMethods.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
     }
 
     private void jTextField_buscarColumnFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
+        StaticMethods.handleFocusGain(jTextField_buscarColumn, "Buscar en...");
     }
 
     private void jTextField_buscarColumnActionPerformed(ActionEvent evt) {
@@ -98,8 +98,9 @@ public class JTableFiltrar extends JPanel {
         jTable_Content.setRowSorter(sorter);
     }
 
-    public void setPreferences(String[] columna) {
+    public void setColumns(String[] columna) {
         jComboBox_filterColumn.removeAllItems();
+        jComboBox_filterColumn.addItem("Elegir");
         for (String s : columna) {
             jComboBox_filterColumn.addItem(s);
         }

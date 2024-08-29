@@ -1,14 +1,13 @@
 package desktop_interface;
 
+import desktop_interface.util.StaticMethods;
 import logic.connexions.DatabaseOperaciones;
-import logic.validations.*;
+import logic.user_management.UserManager;
+import desktop_interface.util.validations.*;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
@@ -19,8 +18,18 @@ import java.util.TimerTask;
 public class RegistrarUser extends JFrame {
 
     public RegistrarUser(JFrame parent) {
-        RegistrarUser.parentFrame = parent;
         initComponents();
+        addListeners();
+        PARENT_FRAME = parent;
+
+        try {
+            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(StaticMethods.transformMatrizToArray(
+                    new DatabaseOperaciones().getDistritos(UserManager.getToken(9223372036854774807L)), 0)));
+        } catch (Exception e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(null,
+                    "Ha ocurrido un problema encontrando las distritos. Reinicie la aplicación o contacte a soporte");
+        }
 
         this.requestFocusInWindow();
     }
@@ -139,17 +148,7 @@ public class RegistrarUser extends JFrame {
         jTextField_nombre.setText("Ingrese su nombre");
         jTextField_nombre.setBorder(null);
         jTextField_nombre.setMaximumSize(new Dimension(2147483647, 50));
-        handleFocusGain(jTextField_nombre, "Ingrese su nombre");
-        jTextField_nombre.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_nombreFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_nombreFocusLost(evt);
-            }
-        });
-        jTextField_nombre.addActionListener(this::jTextField_nombreActionPerformed);
+        StaticMethods.handleFocusGain(jTextField_nombre, "Ingrese su nombre");
         background.add(jTextField_nombre, new AbsoluteConstraints(30, 100, 550, -1));
 
         jSeparator3.setForeground(new Color(30, 30, 30));
@@ -168,17 +167,7 @@ public class RegistrarUser extends JFrame {
         jTextField_apellido.setText("Ingrese su apellido");
         jTextField_apellido.setBorder(null);
         jTextField_apellido.setMaximumSize(new Dimension(2147483647, 50));
-        handleFocusGain(jTextField_apellido, "Ingrese su apellido");
-        jTextField_apellido.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_apellidoFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_apellidoFocusLost(evt);
-            }
-        });
-        jTextField_apellido.addActionListener(this::jTextField_apellidoActionPerformed);
+        StaticMethods.handleFocusGain(jTextField_apellido, "Ingrese su apellido");
         background.add(jTextField_apellido, new AbsoluteConstraints(30, 150, 550, -1));
 
         jSeparator4.setForeground(new Color(30, 30, 30));
@@ -197,17 +186,7 @@ public class RegistrarUser extends JFrame {
         jTextField_cedula.setText("Ingrese su cédula");
         jTextField_cedula.setBorder(null);
         jTextField_cedula.setMaximumSize(new Dimension(2147483647, 50));
-        handleFocusGain(jTextField_cedula, "Ingrese su cédula");
-        jTextField_cedula.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_cedulaFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_cedulaFocusLost(evt);
-            }
-        });
-        jTextField_cedula.addActionListener(this::jTextField_cedulaActionPerformed);
+        StaticMethods.handleFocusGain(jTextField_cedula, "Ingrese su cédula");
         background.add(jTextField_cedula, new AbsoluteConstraints(30, 200, 550, -1));
 
         jSeparator5.setForeground(new Color(30, 30, 30));
@@ -227,17 +206,8 @@ public class RegistrarUser extends JFrame {
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
         jTextField_fechaNacimiento.setBorder(null);
         jTextField_fechaNacimiento.setMaximumSize(new Dimension(2147483647, 50));
-        handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
-        jTextField_fechaNacimiento.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_fechaNacimientoFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_fechaNacimientoFocusLost(evt);
-            }
-        });
-        jTextField_fechaNacimiento.addActionListener(this::jTextField_fechaNacimientoActionPerformed);
+        StaticMethods.handleFocusGain(jTextField_fechaNacimiento,
+                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
         background.add(jTextField_fechaNacimiento, new AbsoluteConstraints(30, 250, 550, -1));
 
         jSeparator9.setForeground(new Color(30, 30, 30));
@@ -268,15 +238,6 @@ public class RegistrarUser extends JFrame {
         jTextField_direccion.setText("Ingrese su dirección");
         jTextField_direccion.setBorder(null);
         jTextField_direccion.setMaximumSize(new Dimension(2147483647, 50));
-        jTextField_direccion.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_direccionFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_direccionFocusLost(evt);
-            }
-        });
         jTextField_direccion.addActionListener(this::jTextField_direccionActionPerformed);
         background.add(jTextField_direccion, new AbsoluteConstraints(30, 350, 250, -1));
 
@@ -308,17 +269,7 @@ public class RegistrarUser extends JFrame {
         jTextField_correo.setText("Ingrese su correo electrónico");
         jTextField_correo.setBorder(null);
         jTextField_correo.setMaximumSize(new Dimension(2147483647, 50));
-        handleFocusGain(jTextField_correo, "Ingrese su correo electrónico");
-        jTextField_correo.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_correoFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_correoFocusLost(evt);
-            }
-        });
-        jTextField_correo.addActionListener(this::jTextField_correoActionPerformed);
+        StaticMethods.handleFocusGain(jTextField_correo, "Ingrese su correo electrónico");
         background.add(jTextField_correo, new AbsoluteConstraints(30, 400, 550, -1));
 
         jSeparator6.setForeground(new Color(30, 30, 30));
@@ -339,18 +290,8 @@ public class RegistrarUser extends JFrame {
                 .setText("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
         jTextField_telefono.setBorder(null);
         jTextField_telefono.setMaximumSize(new Dimension(2147483647, 50));
-        handleFocusGain(jTextField_telefono,
+        StaticMethods.handleFocusGain(jTextField_telefono,
                 "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
-        jTextField_telefono.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_telefonoFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_telefonoFocusLost(evt);
-            }
-        });
-        jTextField_telefono.addActionListener(this::jTextField_telefonoActionPerformed);
         background.add(jTextField_telefono, new AbsoluteConstraints(30, 450, 550, -1));
 
         jSeparator12.setForeground(new Color(30, 30, 30));
@@ -370,17 +311,7 @@ public class RegistrarUser extends JFrame {
         jTextField_usuario.setActionCommand("<Not Set>");
         jTextField_usuario.setBorder(null);
         jTextField_usuario.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese un usuario");
-        jTextField_usuario.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jTextField_usuarioFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jTextField_usuarioFocusLost(evt);
-            }
-        });
-        jTextField_usuario.addActionListener(this::jTextField_usuarioActionPerformed);
+        StaticMethods.handleFocusGain(jTextField_usuario, "Ingrese un usuario");
         background.add(jTextField_usuario, new AbsoluteConstraints(30, 500, 550, -1));
 
         jSeparator8.setForeground(new Color(30, 30, 30));
@@ -399,16 +330,7 @@ public class RegistrarUser extends JFrame {
         jPasswordField.setText("Ingrese una contraseña");
         jPasswordField.setBorder(null);
         jPasswordField.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jPasswordField, "Ingrese una contraseña");
-        jPasswordField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent evt) {
-                jPasswordFieldFocusGained(evt);
-            }
-
-            public void focusLost(FocusEvent evt) {
-                jPasswordFieldFocusLost(evt);
-            }
-        });
+        StaticMethods.handleFocusGain(jPasswordField, "Ingrese una contraseña");
         jPasswordField.addActionListener(this::jPasswordFieldActionPerformed);
         background.add(jPasswordField, new AbsoluteConstraints(30, 550, 550, -1));
 
@@ -495,20 +417,12 @@ public class RegistrarUser extends JFrame {
         setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
 
         setSize(new Dimension(616, 738));
-        setLocationRelativeTo(parentFrame);
+        setLocationRelativeTo(PARENT_FRAME);
     }// </editor-fold>
 
     /* eventos */
     private void formComponentShown(ComponentEvent evt) {
-        Login.setImageLabal(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
-        try {
-            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(PantallaDoctor.transformMatrizToArray(
-                    new DatabaseOperaciones().getDistritos("admin", "admin1234", "Administrador"), 0)));
-        } catch (Exception e) {
-            System.out.println(e);
-            JOptionPane.showMessageDialog(null,
-                    "Ha ocurrido un problema encontrando las distritos. Reinicie la aplicación o contacte a soporte");
-        }
+        StaticMethods.setImageLabel(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
     }
 
     private void formWindowClosing(WindowEvent evt) {
@@ -525,10 +439,13 @@ public class RegistrarUser extends JFrame {
     }
 
     private void iniciarSesionMouseClicked(MouseEvent evt) {
-        parentFrame.setVisible(true);
+        PARENT_FRAME.setVisible(true);
         this.dispose();
     }
 
+    /*
+     * evento para insertar un usuario comprobando los campos y su previa existencia
+     */
     private void button_registrarseMouseClicked(MouseEvent evt) {
         if (!button_registrarse.isEnabled()) {
             return;
@@ -541,7 +458,7 @@ public class RegistrarUser extends JFrame {
             public void run() {
                 button_registrarse.setEnabled(true);
             }
-        }, registerDisableTime);
+        }, REGISTER_DISABLE_TIME);
 
         boolean insertado = false;
         String nombreM = jTextField_nombre.getText();
@@ -565,7 +482,7 @@ public class RegistrarUser extends JFrame {
                 public void run() {
                     JOptionPane.showMessageDialog(null,
                             "Registrarse con otro rol diferente a paciente no implementando. Lo sentimos. Se cerrará esta ventana.");
-                    parentFrame.setVisible(true);
+                    PARENT_FRAME.setVisible(true);
                     dispose();
                 }
             }, 5);
@@ -633,7 +550,7 @@ public class RegistrarUser extends JFrame {
                 errorMessage.setVisible(true);
                 return;
             } else {
-                if (InicioSesion.buscar(cedulaM, rolM) == null) {
+                if (UserManager.buscar(cedulaM, rolM) == null) {
                     try {
                         Timestamp fechaNacimientoTimestamp;
                         if (fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$")) {
@@ -646,34 +563,34 @@ public class RegistrarUser extends JFrame {
 
                         if (!condicionOp1 && !condicionOp2) {
                             if (!condicionOp3 && !condicionOp4) {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                insertado = UserManager.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
                                         sexoM, distritoM, direccionM, correoM, telefonoM, usuarioM,
                                         String.valueOf(jPasswordField.getPassword()), rolM);
                             } else if (!condicionOp3) {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                insertado = UserManager.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
                                         sexoM, distritoM, direccionM, correoM, null, usuarioM,
                                         String.valueOf(jPasswordField.getPassword()), rolM);
                             } else {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                insertado = UserManager.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
                                         sexoM, distritoM, direccionM, null, null, usuarioM,
                                         String.valueOf(jPasswordField.getPassword()), rolM);
                             }
                         } else if (!condicionOp3) {
                             if (!condicionOp4) {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                insertado = UserManager.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
                                         sexoM, null, null, correoM, telefonoM, usuarioM,
                                         String.valueOf(jPasswordField.getPassword()), rolM);
                             } else {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                insertado = UserManager.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
                                         sexoM, null, null, correoM, null, usuarioM,
                                         String.valueOf(jPasswordField.getPassword()), rolM);
                             }
                         } else if (!condicionOp4) {
-                            insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                            insertado = UserManager.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
                                     sexoM, null, null, null, telefonoM, usuarioM,
                                     String.valueOf(jPasswordField.getPassword()), rolM);
                         } else {
-                            insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                            insertado = UserManager.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
                                     sexoM, null, null, null, null, usuarioM,
                                     String.valueOf(jPasswordField.getPassword()), rolM);
                         }
@@ -700,7 +617,7 @@ public class RegistrarUser extends JFrame {
                 public void run() {
                     JOptionPane.showMessageDialog(null,
                             "Se ha registrado con éxito. En unos momentos se cerrará esta ventana y podrá iniciar sesión.");
-                    parentFrame.setVisible(true);
+                    PARENT_FRAME.setVisible(true);
                     dispose();
                 }
             }, 5);
@@ -710,38 +627,10 @@ public class RegistrarUser extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
     }
 
-    private void jTextField_nombreActionPerformed(ActionEvent evt) {
-        jTextField_apellido.requestFocus();
-    }
-
-    private void jTextField_apellidoActionPerformed(ActionEvent evt) {
-        jTextField_cedula.requestFocus();
-    }
-
-    private void jTextField_cedulaActionPerformed(ActionEvent evt) {
-        jTextField_fechaNacimiento.requestFocus();
-    }
-
-    private void jTextField_correoActionPerformed(ActionEvent evt) {
-        jTextField_telefono.requestFocus();
-    }
-
-    private void jTextField_usuarioActionPerformed(ActionEvent evt) {
-        jPasswordField.requestFocus();
-    }
-
     private void jPasswordFieldActionPerformed(ActionEvent evt) {
         acceptTerms.setSelected(true);
         acceptTerms.requestFocus();
         button_registrarseMouseClicked(null);
-    }
-
-    private void jTextField_telefonoActionPerformed(ActionEvent evt) {
-        jTextField_usuario.requestFocus();
-    }
-
-    private void jTextField_fechaNacimientoActionPerformed(ActionEvent evt) {
-        jTextField_direccion.requestFocus();
     }
 
     private void jTextField_direccionActionPerformed(ActionEvent evt) {
@@ -751,83 +640,16 @@ public class RegistrarUser extends JFrame {
         jTextField_correo.requestFocus();
     }
 
-    private void jTextField_nombreFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_nombre, "Ingrese su nombre");
+    /* método para personalizar al iniciar clase */
+    public void setRol(String rol) {
+        this.rol.setText(rol);
     }
 
-    private void jTextField_nombreFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_nombre, "Ingrese su nombre");
+    public void setButtonSubmit(String estado) {
+        this.button_registrarse.setText(estado);
     }
 
-    private void jTextField_apellidoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_apellido, "Ingrese su apellido");
-    }
-
-    private void jTextField_apellidoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_apellido, "Ingrese su apellido");
-    }
-
-    private void jTextField_cedulaFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_cedula, "Ingrese su cédula");
-    }
-
-    private void jTextField_cedulaFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_cedula, "Ingrese su cédula");
-    }
-
-    private void jTextField_fechaNacimientoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento,
-                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
-    }
-
-    private void jTextField_fechaNacimientoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento,
-                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
-    }
-
-    private void jTextField_direccionFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_direccion, "Ingrese su dirección");
-    }
-
-    private void jTextField_direccionFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_direccion, "Ingrese su dirección");
-    }
-
-    private void jTextField_correoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_correo, "Ingrese su correo electrónico");
-    }
-
-    private void jTextField_correoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_correo, "Ingrese su correo electrónico");
-    }
-
-    private void jTextField_telefonoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono,
-                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
-    }
-
-    private void jTextField_telefonoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono,
-                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
-    }
-
-    private void jTextField_usuarioFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese un usuario");
-    }
-
-    private void jTextField_usuarioFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_usuario, "Ingrese un usuario");
-    }
-
-    private void jPasswordFieldFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField, "Ingrese una contraseña");
-    }
-
-    private void jPasswordFieldFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusPassword(jPasswordField, "Ingrese una contraseña");
-    }
-
-    /* métodos propios */
+    /* métodos para comprobar llenado de campos */
     private boolean isAnyFieldEmpty() {
         return jTextField_nombre.getText().isBlank()
                 || jTextField_apellido.getText().isBlank()
@@ -848,80 +670,28 @@ public class RegistrarUser extends JFrame {
                 || jComboBox_sexo.getSelectedIndex() == 0;
     }
 
-    public void setRol(String rol) {
-        this.rol.setText(rol);
-    }
+    /* método para añadir los listeners de esta clase */
+    private void addListeners() {
+        StaticMethods.addFocusListeners(jTextField_nombre, "Ingrese su nombre");
+        StaticMethods.addFocusListeners(jTextField_apellido, "Ingrese su apellido");
+        StaticMethods.addFocusListeners(jTextField_cedula, "Ingrese su cédula");
+        StaticMethods.addFocusListeners(jTextField_fechaNacimiento,
+                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
+        StaticMethods.addFocusListeners(jTextField_direccion, "Ingrese su dirección");
+        StaticMethods.addFocusListeners(jTextField_correo, "Ingrese su correo electrónico");
+        StaticMethods.addFocusListeners(jTextField_telefono,
+                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
+        StaticMethods.addFocusListeners(jTextField_usuario, "Ingrese un usuario");
+        StaticMethods.addFocusListeners(jPasswordField, "Ingrese una contraseña");
 
-    public void setButtonSubmit(String estado) {
-        this.button_registrarse.setText(estado);
-    }
-
-    public static void handleFocusPassword(JPasswordField password, String placeholder) {
-        Document document = password.getDocument();
-        if (String.valueOf(password.getPassword()).equals(placeholder)) {
-            if (document instanceof LimitarCampos doc) {
-                try {
-                    doc.remove(0, doc.getLength());
-                } catch (BadLocationException e) {
-                    System.err.println(e);
-                }
-            } else {
-                password.setText("");
-            }
-            password.setForeground(Color.BLACK);
-        } else if (String.valueOf(password.getPassword()).isBlank()) {
-            if (document instanceof LimitarCampos doc) {
-                try {
-                    doc.remove(0, doc.getLength());
-                } catch (BadLocationException e) {
-                    System.err.println(e);
-                }
-            } else {
-                password.setText(placeholder);
-            }
-            password.setForeground(Color.gray);
-        }
-    }
-
-    public static void handleFocusGain(JTextField field, String defaultText) {
-        Document document = field.getDocument();
-        String text = field.getText();
-
-        if (text.isBlank()) {
-            if (document instanceof LimitarCampos) {
-                try {
-                    document.remove(0, document.getLength());
-                } catch (BadLocationException e) {
-                    System.err.println(e);
-                }
-            } else if (document instanceof PlainDocument) {
-                try {
-                    document.remove(0, document.getLength());
-                } catch (BadLocationException e) {
-                    System.err.println(e);
-                }
-            } else {
-                field.setText(defaultText);
-            }
-            field.setForeground(Color.gray);
-        } else if (text.equals(defaultText)) {
-            if (document instanceof LimitarCampos) {
-                try {
-                    document.remove(0, document.getLength());
-                } catch (BadLocationException e) {
-                    System.err.println(e);
-                }
-            } else if (document instanceof PlainDocument) {
-                try {
-                    document.remove(0, document.getLength());
-                } catch (BadLocationException e) {
-                    System.err.println(e);
-                }
-            } else {
-                field.setText("");
-            }
-            field.setForeground(Color.BLACK);
-        }
+        // Action Listener
+        StaticMethods.addActionListeners(jTextField_nombre, jTextField_apellido);
+        StaticMethods.addActionListeners(jTextField_apellido, jTextField_cedula);
+        StaticMethods.addActionListeners(jTextField_cedula, jTextField_fechaNacimiento);
+        StaticMethods.addActionListeners(jTextField_fechaNacimiento, jTextField_direccion);
+        StaticMethods.addActionListeners(jTextField_correo, jTextField_telefono);
+        StaticMethods.addActionListeners(jTextField_telefono, jTextField_usuario);
+        StaticMethods.addActionListeners(jTextField_usuario, jPasswordField);
     }
 
     /* Main de prueba individual */
@@ -939,7 +709,7 @@ public class RegistrarUser extends JFrame {
                     ex);
         }
 
-        EventQueue.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             RegistrarUser r = new RegistrarUser(new Login());
             r.setVisible(true);
             r.requestFocusInWindow();
@@ -947,8 +717,8 @@ public class RegistrarUser extends JFrame {
     }
 
     /* variables propias */
-    private static JFrame parentFrame;
-    private final long registerDisableTime = 30000;
+    private final JFrame PARENT_FRAME;
+    private final long REGISTER_DISABLE_TIME = 30000;
 
     // Variables declaration - do not modify
     private JCheckBox acceptTerms;

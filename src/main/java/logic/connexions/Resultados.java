@@ -3,11 +3,9 @@ package logic.connexions;
 public class Resultados {
     String[] columnas;
     Object[][] datos;
-    int[] columnasWidth;
 
-    public Resultados(String[] columnas, int[] columnasWidth, Object[][] datos) {
+    public Resultados(String[] columnas, Object[][] datos) {
         this.columnas = columnas;
-        this.columnasWidth = columnasWidth;
         this.datos = datos;
     }
 
@@ -28,9 +26,5 @@ public class Resultados {
             sb.append("\n");
         }
         return sb.toString();
-    }
-
-    public int[] getColumnasWidth() {
-        return columnasWidth;
     }
 }

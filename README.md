@@ -20,12 +20,6 @@ universitario y solo realizamos la interfaz de usuario para pacientes, doctores 
 
 :construction: Proyecto mejorado lentamente en los tiempos libres :construction:
 
-## :hammer:Funcionalidades del proyecto
-
-- `Funcionalidad 1`: descripción de la funcionalidad 1
-- `Funcionalidad 2`: descripción de la funcionalidad 2
-- `Funcionalidad 3`: descripción de la funcionalidad 3
-
 ### Objetivo del Proyecto
 
 El objetivo principal del proyecto es llevar un mejor control sobre la vacunación en las distintas sedes sanitarias del
@@ -43,11 +37,8 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 - Nuestras UI están creadas para Escritorio.
 - Preferencias del usuario local de Java.
 - Cifrado de datos por agregar.
-- No utilizamos un administrador de dependencias como Maven, por lo tanto, se deben descargar y configurar de forma
-  manual.
-- No manejamos docker en este proyecto como solución a lo anterior.
 - El proyecto fue pensando como proyecto universitario y la conexión con la base de datos no es segura.
-- Las tablas en Java Swing tienen algún problema de renderizado donde los títulos y data en las columnas derechas se
+- Las tablas en Java Swing tienen algún problema de renderizado donde los títulos y las columnas derechas se
   desfasan. Estamos investigando si fue error de implementación o del lenguaje.
 - Si del proyecto creamos un ejecutable para los usuarios, este tendría que ser para escritorio y límitado a instalarlo
   incluso para el paciente consultar sus dosis 1 sola vez.
@@ -129,27 +120,29 @@ arquitectura.
 Mantener logs de todos los eventos en la base de datos para realizar auditorías.
 
 ## :hammer_and_wrench:Tecnologías Utilizadas
-**Puede encontrar las licencias MIT en la carpeta *CREDITS***
-* [Java](https://www.java.com/es/) - Para el desarrollo de la interfaz de usuario principal.
-* [Python](https://www.python.org/) - Para el desarrollo de la interfaz de usuario de pacientes.
-* [SQL Server](https://www.microsoft.com/es-mx/sql-server) - Para la gestión de la base de datos.
-* [Absolute Layout](https://www.cs.brandeis.edu/~hosang/BiVoSite/API/org/netbeans/lib/awtextra/AbsoluteLayout.html) -
+
+**Puede encontrar las licencias MIT en la carpeta _CREDITS_**
+
+- [Java](https://www.java.com/es/) - Para el desarrollo de la interfaz de usuario principal.
+- [Python](https://www.python.org/) - Para el desarrollo de la interfaz de usuario de pacientes.
+- [SQL Server](https://www.microsoft.com/es-mx/sql-server) - Para la gestión de la base de datos.
+- [Absolute Layout](https://www.cs.brandeis.edu/~hosang/BiVoSite/API/org/netbeans/lib/awtextra/AbsoluteLayout.html) -
   Layout para posiciones fijas del GUI Building by Netbeans.
-* [Bcrypt](https://docs.spring.io/spring-security/reference/features/integrations/cryptography.html) - Librería de
+- [Bcrypt](https://docs.spring.io/spring-security/reference/features/integrations/cryptography.html) - Librería de
   Spring Security Crypto Java para el hash de contraseñas.
-* [Java JWT (JSON Web Token)](https://github.com/auth0/java-jwt) - Librería de Java para utilizar tokens de JWT (method
+- [Java JWT (JSON Web Token)](https://github.com/auth0/java-jwt) - Librería de Java para utilizar tokens de JWT (method
   for representing claims securely between two parties).
-* [Dotenv-Java](https://github.com/cdimascio/dotenv-java) - Librería de Java para cargar las variables de entornos .env
-* [Dotenv-Python](https://github.com/theskumar/python-dotenv) - Librería de Python para cargar las variables de entorno
+- [Dotenv-Java](https://github.com/cdimascio/dotenv-java) - Librería de Java para cargar las variables de entornos .env
+- [Dotenv-Python](https://github.com/theskumar/python-dotenv) - Librería de Python para cargar las variables de entorno
   .env
-* [JDBC SQL Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) -
+- [JDBC SQL Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) -
   Driver para conectar con la base de datos SQL Server en Java.
-* [ODBC Driver](https://github.com/mkleehammer/pyodbc) - Driver para conectar bases de datos en Python.
+- [ODBC Driver](https://github.com/mkleehammer/pyodbc) - Driver para conectar bases de datos en Python.
 
 ## Autores
 
-* **Rey Acosta** - *Java* - [kingg22](https://github.com/Kingg22)
-* **Patrick Villarroel** - *Python* - [patrickvillarroel](https://github.com/patrickvillarroel)
+- **Rey Acosta** - _Java_ - [kingg22](https://github.com/Kingg22)
+- **Patrick Villarroel** - _Python_ - [patrickvillarroel](https://github.com/patrickvillarroel)
 
 ## Conclusión
 

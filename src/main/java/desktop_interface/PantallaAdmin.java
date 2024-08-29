@@ -471,7 +471,7 @@ public class PantallaAdmin extends JFrame {
         jButton_select.setBackground(new Color(0, 204, 0));
         jButton_select.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
         jButton_select.setForeground(new Color(0, 0, 0));
-        jButton_select.setIcon(new ImageIcon(getClass().getResource("/images/lupa_icon.png")));
+        jButton_select.setIcon(new ImageIcon(getClass().getResource("src/main/resources/images/lupa_icon.png")));
         jButton_select.setText("Buscar");
         jButton_select.setMaximumSize(new Dimension(2147483647, 30));
         jButton_select.setPreferredSize(new Dimension(794, 30));
@@ -522,7 +522,7 @@ public class PantallaAdmin extends JFrame {
         opcionesTabla.add(jTextField_buscarTabla);
 
         jButton_buscar.setBackground(new Color(204, 204, 204));
-        jButton_buscar.setIcon(new ImageIcon(getClass().getResource("/images/lupa_icon.png")));
+        jButton_buscar.setIcon(new ImageIcon(getClass().getResource("src/main/resources/images/lupa_icon.png")));
         jButton_buscar.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 jButton_buscarMouseClicked(evt);
@@ -584,7 +584,7 @@ public class PantallaAdmin extends JFrame {
         jPanel_preferencias.setPreferredSize(new Dimension(794, 794));
         jPanel_preferencias.setLayout(new BoxLayout(jPanel_preferencias, BoxLayout.Y_AXIS));
 
-        icon_preferencias.setIcon(new ImageIcon(getClass().getResource("/images/ajuetes3.png")));
+        icon_preferencias.setIcon(new ImageIcon(getClass().getResource("src/main/resources/images/ajuetes3.png")));
         icon_preferencias.setHorizontalTextPosition(SwingConstants.CENTER);
         icon_preferencias.setPreferredSize(new Dimension(130, 120));
         jPanel_preferencias.add(icon_preferencias);
@@ -746,7 +746,7 @@ public class PantallaAdmin extends JFrame {
         jDialog_modificarDatos.setTitle("Programa Vacunas Panamá - Modificar datos personales");
         jDialog_modificarDatos.setModal(true);
         jDialog_modificarDatos.setResizable(false);
-        jDialog_modificarDatos.setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
+        jDialog_modificarDatos.setIconImage(new ImageIcon(getClass().getResource("src/main/resources/images/Icon1.png")).getImage());
         jDialog_modificarDatos.setSize(new Dimension(450, 600));
 
         jScrollPane_Dialog_modificarDatos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -984,7 +984,7 @@ public class PantallaAdmin extends JFrame {
         jDialog_modificarCred.setTitle("Programa Vacunas Panamá - Modificar credenciales");
         jDialog_modificarCred.setModal(true);
         jDialog_modificarCred.setResizable(false);
-        jDialog_modificarCred.setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
+        jDialog_modificarCred.setIconImage(new ImageIcon(getClass().getResource("src/main/resources/images/Icon1.png")).getImage());
         jDialog_modificarCred.setSize(new Dimension(450, 550));
 
         jScrollPane_Dialog_modificarCred.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1281,7 +1281,7 @@ public class PantallaAdmin extends JFrame {
         jButton_update.setBackground(new Color(0, 204, 0));
         jButton_update.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
         jButton_update.setForeground(new Color(0, 0, 0));
-        jButton_update.setIcon(new ImageIcon(getClass().getResource("/images/lupa_icon.png")));
+        jButton_update.setIcon(new ImageIcon(getClass().getResource("src/main/resources/images/lupa_icon.png")));
         jButton_update.setText("Actualizar");
         jButton_update.setMaximumSize(new Dimension(2147483647, 30));
         jButton_update.setPreferredSize(new Dimension(794, 30));
@@ -1388,7 +1388,7 @@ public class PantallaAdmin extends JFrame {
         jButton_insert.setBackground(new Color(0, 204, 0));
         jButton_insert.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
         jButton_insert.setForeground(new Color(0, 0, 0));
-        jButton_insert.setIcon(new ImageIcon(getClass().getResource("/images/lupa_icon.png")));
+        jButton_insert.setIcon(new ImageIcon(getClass().getResource("src/main/resources/images/lupa_icon.png")));
         jButton_insert.setText("Insertar");
         jButton_insert.setMaximumSize(new Dimension(2147483647, 30));
         jButton_insert.setPreferredSize(new Dimension(794, 30));
@@ -1473,7 +1473,7 @@ public class PantallaAdmin extends JFrame {
         jButton_delete.setBackground(new Color(0, 204, 0));
         jButton_delete.setFont(new Font("Microsoft YaHei", Font.BOLD, 12));
         jButton_delete.setForeground(new Color(0, 0, 0));
-        jButton_delete.setIcon(new ImageIcon(getClass().getResource("/images/lupa_icon.png")));
+        jButton_delete.setIcon(new ImageIcon(getClass().getResource("src/main/resources/images/lupa_icon.png")));
         jButton_delete.setText("Eliminar");
         jButton_delete.setMaximumSize(new Dimension(2147483647, 30));
         jButton_delete.setPreferredSize(new Dimension(794, 30));
@@ -1566,7 +1566,7 @@ public class PantallaAdmin extends JFrame {
         jPanel_menuOpciones.add(separador1);
 
         icon_project.setHorizontalAlignment(SwingConstants.CENTER);
-        icon_project.setIcon(new ImageIcon(getClass().getResource("/images/operacionVacunas_logo.png")));
+        icon_project.setIcon(new ImageIcon(getClass().getResource("src/main/resources/images/operacionVacunas_logo.png")));
         icon_project.setAlignmentX(0.5F);
         icon_project.setHorizontalTextPosition(SwingConstants.CENTER);
         icon_project.setMaximumSize(new Dimension(200, 200));
@@ -1785,7 +1785,7 @@ public class PantallaAdmin extends JFrame {
         jScrollPane_Frame.setViewportView(background);
 
         getContentPane().add(jScrollPane_Frame, BorderLayout.CENTER);
-        setIconImage(new ImageIcon(getClass().getResource("/images/Icon1.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("src/main/resources/images/Icon1.png")).getImage());
 
         pack();
         setLocationRelativeTo(null);
@@ -2289,9 +2289,9 @@ public class PantallaAdmin extends JFrame {
                             parametros.add(whereCondicion);
                         } else if (operator.equals("IN") || operator.equals("NOT IN")) {
                             String[] valores = whereCondicion.split(",");
-                            for (int i = 0; i < valores.length; i++) {
+                            for (String valore : valores) {
                                 selectBuilder.append(" ?,");
-                                parametros.add(valores[i].trim());
+                                parametros.add(valore.trim());
                             }
                             selectBuilder.deleteCharAt(selectBuilder.length() - 1);
                         } else if (operator.equals("BETWEEN") || operator.equals("NOT BETWEEN")) {
@@ -2371,9 +2371,9 @@ public class PantallaAdmin extends JFrame {
                                         return;
                                 } else if (operador.equalsIgnoreCase("IN") || operador.equalsIgnoreCase("NOT IN")) {
                                     String[] valores = parts[1].split(",");
-                                    for (int i = 0; i < valores.length; i++) {
+                                    for (String valore : valores) {
                                         selectBuilder.append(" ?,");
-                                        parametros.add(valores[i].trim());
+                                        parametros.add(valore.trim());
                                     }
                                     selectBuilder.deleteCharAt(selectBuilder.length() - 1);
                                 } else if (operador.equalsIgnoreCase("BETWEEN")
@@ -3464,7 +3464,7 @@ public class PantallaAdmin extends JFrame {
         // Utiliza SwingWorker para evitar bloquear la interfaz gráfica
         new SwingWorker<>() {
             @Override
-            protected String doInBackground() throws Exception {
+            protected String doInBackground() {
                 while (true) {
                     try {
                         token = SessionManager.extendSession(token, userActual, "admin").get();

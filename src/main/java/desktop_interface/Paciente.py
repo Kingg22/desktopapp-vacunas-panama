@@ -256,7 +256,7 @@ def main(page: Page, cedula, nombre):
                             controls=[
                                 ft.Container(
                                     ft.Image(
-                                        src='src/images/icon1.png',
+                                        src='src/main/resources/images/icon1.png',
                                         width=100,
                                         height=100
                                     ),

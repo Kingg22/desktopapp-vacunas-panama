@@ -1,4 +1,4 @@
-package Logica.Validations;
+package logic.Validations;
 
 import java.util.UUID;
 import java.util.prefs.Preferences;

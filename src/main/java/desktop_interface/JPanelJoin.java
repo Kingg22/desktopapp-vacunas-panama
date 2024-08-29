@@ -1,4 +1,4 @@
-package InterfazDesktop;
+package desktop_interface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,8 @@ public class JPanelJoin extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         jComboBox_innerTyp.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_innerTyp.setModel(new DefaultComboBoxModel<>(new String[]{"INNER", "FULL", "LEFT", "RIGHT", "CROSS"}));
+        jComboBox_innerTyp
+                .setModel(new DefaultComboBoxModel<>(new String[] { "INNER", "FULL", "LEFT", "RIGHT", "CROSS" }));
         jComboBox_innerTyp.setPreferredSize(new Dimension(80, 27));
         add(jComboBox_innerTyp);
 
@@ -43,7 +44,7 @@ public class JPanelJoin extends JPanel {
         add(join);
 
         jComboBox_tabla2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla2"}));
+        jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[] { "Tabla2" }));
         jComboBox_tabla2.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla2.addActionListener(this::jComboBox_tabla2ActionPerformed);
         add(jComboBox_tabla2);
@@ -57,7 +58,7 @@ public class JPanelJoin extends JPanel {
         add(punto2);
 
         jComboBox_tabla3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla3.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
+        jComboBox_tabla3.setModel(new DefaultComboBoxModel<>(new String[] { "Tabla1" }));
         jComboBox_tabla3.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla3.addActionListener(this::jComboBox_tabla3ActionPerformed);
         add(jComboBox_tabla3);
@@ -71,7 +72,7 @@ public class JPanelJoin extends JPanel {
         add(punto);
 
         jComboBox_columna1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_columna1.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
+        jComboBox_columna1.setModel(new DefaultComboBoxModel<>(new String[] { "*" }));
         jComboBox_columna1.setPreferredSize(new Dimension(150, 27));
         add(jComboBox_columna1);
 
@@ -84,7 +85,7 @@ public class JPanelJoin extends JPanel {
         add(punto4);
 
         jComboBox_tabla4.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla4.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla2"}));
+        jComboBox_tabla4.setModel(new DefaultComboBoxModel<>(new String[] { "Tabla2" }));
         jComboBox_tabla4.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla4.addActionListener(this::jComboBox_tabla4ActionPerformed);
         add(jComboBox_tabla4);
@@ -98,7 +99,7 @@ public class JPanelJoin extends JPanel {
         add(punto3);
 
         jComboBox_columna3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_columna3.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
+        jComboBox_columna3.setModel(new DefaultComboBoxModel<>(new String[] { "*" }));
         jComboBox_columna3.setPreferredSize(new Dimension(150, 27));
         add(jComboBox_columna3);
     }// </editor-fold>

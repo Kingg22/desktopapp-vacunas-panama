@@ -1,4 +1,4 @@
-package Logica.ScannerDatabase;
+package logic.ScannerDatabase;
 
 public class Column {
     private final String name;

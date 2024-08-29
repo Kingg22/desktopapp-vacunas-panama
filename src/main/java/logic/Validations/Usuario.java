@@ -1,4 +1,4 @@
-package Logica.Validations;
+package logic.Validations;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -25,7 +25,8 @@ public class Usuario {
         return BCrypt.checkpw(password, passwordHash);
     }
 
-    public Usuario(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String usuario, String password) {
+    public Usuario(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String usuario,
+            String password) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -34,7 +35,8 @@ public class Usuario {
         this.passwordHash = hashPassword(password);
     }
 
-    public Usuario(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String correo, String telefono, String direccion, String distrito, String usuario, String password) {
+    public Usuario(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String correo,
+            String telefono, String direccion, String distrito, String usuario, String password) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -54,7 +56,8 @@ public class Usuario {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Usuario(String cedula, String usuario, String passwordHash, Timestamp fechaNacimiento, String correo, String telefono, String direccion, String distrito) {
+    public Usuario(String cedula, String usuario, String passwordHash, Timestamp fechaNacimiento, String correo,
+            String telefono, String direccion, String distrito) {
         this.cedula = cedula;
         this.usuario = usuario;
         this.passwordHash = passwordHash;
@@ -72,7 +75,8 @@ public class Usuario {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public void modificarDatos(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String correo, String telefono, String direccion, String distrito) {
+    public void modificarDatos(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String correo,
+            String telefono, String direccion, String distrito) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -95,7 +99,8 @@ public class Usuario {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public void modificarObligatorias(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String usuario, String password) {
+    public void modificarObligatorias(String nombre, String apellido, String cedula, Timestamp fechaNacimiento,
+            String usuario, String password) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -104,7 +109,8 @@ public class Usuario {
         this.passwordHash = hashPassword(password);
     }
 
-    public void modificarCompleto(String nombre, String apellido, String cedula, Timestamp fechaNacimiento, String correo, String telefono, String direccion, String distrito, String usuario, String password) {
+    public void modificarCompleto(String nombre, String apellido, String cedula, Timestamp fechaNacimiento,
+            String correo, String telefono, String direccion, String distrito, String usuario, String password) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -146,7 +152,8 @@ public class Usuario {
     }
 
     public String[] toArray() {
-        return new String[]{nombre, apellido, cedula, fechaNacimiento.toString(), correo, telefono, direccion, distrito};
+        return new String[] { nombre, apellido, cedula, fechaNacimiento.toString(), correo, telefono, direccion,
+                distrito };
     }
 
     public void setPrefs() {

@@ -1,6 +1,6 @@
-package InterfazDesktop;
+package desktop_interface;
 
-import Logica.Validations.*;
+import logic.Validations.*;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -25,7 +25,9 @@ public class Login extends JFrame {
             InicioSesion is = new InicioSesion();
         } catch (Exception e) {
             System.err.println(e);
-            JOptionPane.showMessageDialog(null, "A ocurrido un error al iniciar operaciones. Contacte a soporte. Recomendamos cerrar el programa.", "FATAL ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "A ocurrido un error al iniciar operaciones. Contacte a soporte. Recomendamos cerrar el programa.",
+                    "FATAL ERROR", JOptionPane.ERROR_MESSAGE);
         }
 
         addRoleButtonListeners();
@@ -153,7 +155,8 @@ public class Login extends JFrame {
         jComboBox_rol.setBackground(Color.gray);
         jComboBox_rol.setFont(new Font("Roboto", Font.PLAIN, 14));
         jComboBox_rol.setForeground(Color.black);
-        jComboBox_rol.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Paciente", "Doctor - Enfermera", "Fabricante", "Administrativo", "Autoridad"}));
+        jComboBox_rol.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir", "Paciente", "Doctor - Enfermera",
+                "Fabricante", "Administrativo", "Autoridad" }));
         background1.add(jComboBox_rol, new AbsoluteConstraints(30, 120, 170, -1));
 
         jTextField_cedula.setBackground(new Color(255, 255, 255));
@@ -192,13 +195,15 @@ public class Login extends JFrame {
         background1.add(fecha_nacimiento, new AbsoluteConstraints(30, 220, -1, -1));
 
         jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
-        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(19, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
+        jTextField_fechaNacimiento
+                .setDocument(new LimitarCamposFecha(19, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
         jTextField_fechaNacimiento.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_fechaNacimiento.setForeground(Color.gray);
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
         jTextField_fechaNacimiento.setBorder(null);
         jTextField_fechaNacimiento.setMaximumSize(new Dimension(2147483647, 50));
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
+        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento,
+                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
         jTextField_fechaNacimiento.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 jTextField_fechaNacimientoFocusGained(evt);
@@ -216,7 +221,8 @@ public class Login extends JFrame {
 
         acceptTerms.setFont(new Font("Microsoft YaHei Light", Font.PLAIN, 12));
         acceptTerms.setForeground(new Color(102, 102, 102));
-        acceptTerms.setText("Al usar este formulario usted declara estar autorizado y da su consentimiento para validar.");
+        acceptTerms
+                .setText("Al usar este formulario usted declara estar autorizado y da su consentimiento para validar.");
         acceptTerms.setToolTipText("Aceptar términos y condiciones");
         acceptTerms.setBorder(null);
         acceptTerms.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -474,18 +480,20 @@ public class Login extends JFrame {
                                 .addContainerGap()
                                 .addComponent(paciente_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(paciente, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                                .addComponent(paciente, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel_pacienteBottonLayout.setVerticalGroup(
                 jPanel_pacienteBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_pacienteBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel_pacienteBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(paciente_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(paciente, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                                .addGroup(jPanel_pacienteBottonLayout
+                                        .createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(paciente_icon, GroupLayout.PREFERRED_SIZE, 28,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(paciente, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE))
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         jPanel_background_loginForm.add(jPanel_pacienteBotton, new AbsoluteConstraints(110, 110, 170, -1));
 
@@ -510,17 +518,17 @@ public class Login extends JFrame {
                                 .addComponent(doctor_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(doctor, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel_doctorBottonLayout.setVerticalGroup(
                 jPanel_doctorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_doctorBottonLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel_doctorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(doctor, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(doctor_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-                                .addGap(14, 14, 14))
-        );
+                                        .addComponent(doctor, GroupLayout.Alignment.TRAILING,
+                                                GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(doctor_icon, GroupLayout.PREFERRED_SIZE, 28,
+                                                GroupLayout.PREFERRED_SIZE))
+                                .addGap(14, 14, 14)));
 
         jPanel_background_loginForm.add(jPanel_doctorBotton, new AbsoluteConstraints(110, 160, 170, -1));
 
@@ -542,23 +550,26 @@ public class Login extends JFrame {
                 jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(GroupLayout.Alignment.TRAILING, jPanel_proveedorBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(fabricante_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(fabricante_icon, GroupLayout.PREFERRED_SIZE, 25,
+                                        GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(fabricante, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                                .addComponent(fabricante, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel_proveedorBottonLayout.setVerticalGroup(
                 jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
                                 .addGap(5, 5, 5)
-                                .addGroup(jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
-                                                .addComponent(fabricante_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                        .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
-                                                .addComponent(fabricante, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addContainerGap())))
-        );
+                                .addGroup(
+                                        jPanel_proveedorBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
+                                                        .addComponent(fabricante_icon, GroupLayout.PREFERRED_SIZE, 28,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(0, 0, Short.MAX_VALUE))
+                                                .addGroup(jPanel_proveedorBottonLayout.createSequentialGroup()
+                                                        .addComponent(fabricante, GroupLayout.DEFAULT_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addContainerGap()))));
 
         jPanel_background_loginForm.add(jPanel_proveedorBotton, new AbsoluteConstraints(110, 210, 170, -1));
 
@@ -577,22 +588,25 @@ public class Login extends JFrame {
         jPanel_administrativoBotton.setLayout(jPanel_administrativoBottonLayout);
         jPanel_administrativoBottonLayout.setHorizontalGroup(
                 jPanel_administrativoBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel_administrativoBottonLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(administrativo_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(administrativo)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                        .addGroup(GroupLayout.Alignment.TRAILING,
+                                jPanel_administrativoBottonLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(administrativo_icon, GroupLayout.PREFERRED_SIZE, 25,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(administrativo)
+                                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel_administrativoBottonLayout.setVerticalGroup(
                 jPanel_administrativoBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_administrativoBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel_administrativoBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(administrativo_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(administrativo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap())
-        );
+                                .addGroup(jPanel_administrativoBottonLayout
+                                        .createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(administrativo_icon, GroupLayout.PREFERRED_SIZE, 28,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(administrativo, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap()));
 
         jPanel_background_loginForm.add(jPanel_administrativoBotton, new AbsoluteConstraints(110, 260, 170, -1));
 
@@ -614,22 +628,25 @@ public class Login extends JFrame {
                 jPanel_autoridadBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(GroupLayout.Alignment.TRAILING, jPanel_autoridadBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(autoridad_icon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(autoridad_icon, GroupLayout.PREFERRED_SIZE, 25,
+                                        GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(autoridad, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                                .addComponent(autoridad, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel_autoridadBottonLayout.setVerticalGroup(
                 jPanel_autoridadBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel_autoridadBottonLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel_autoridadBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel_autoridadBottonLayout.createSequentialGroup()
-                                                .addComponent(autoridad_icon, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                        .addComponent(autoridad, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap())
-        );
+                                .addGroup(
+                                        jPanel_autoridadBottonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel_autoridadBottonLayout.createSequentialGroup()
+                                                        .addComponent(autoridad_icon, GroupLayout.PREFERRED_SIZE, 28,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(0, 0, Short.MAX_VALUE))
+                                                .addComponent(autoridad, GroupLayout.DEFAULT_SIZE,
+                                                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap()));
 
         jPanel_background_loginForm.add(jPanel_autoridadBotton, new AbsoluteConstraints(110, 310, 170, -1));
 
@@ -722,28 +739,28 @@ public class Login extends JFrame {
                         .addGroup(jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanelOcultoLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE)))
                         .addGroup(jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanelOcultoLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
                                         .addComponent(jLabel2)
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-        );
+                                        .addGap(0, 0, Short.MAX_VALUE))));
         jPanelOcultoLayout.setVerticalGroup(
                 jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGap(0, 10, Short.MAX_VALUE)
                         .addGroup(jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanelOcultoLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE)))
                         .addGroup(jPanelOcultoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanelOcultoLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
                                         .addComponent(jLabel2)
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-        );
+                                        .addGap(0, 0, Short.MAX_VALUE))));
 
         jPanel_background_loginForm.add(jPanelOculto, new AbsoluteConstraints(180, 351, 10, 10));
 
@@ -760,12 +777,12 @@ public class Login extends JFrame {
 
     /* eventos */
     private void formComponentShown(ComponentEvent evt) {
-        Login.setImageLabal(paciente_icon, "src/images/patient_icon.png");
-        Login.setImageLabal(doctor_icon, "src/images/doctor_icon.png");
-        Login.setImageLabal(fabricante_icon, "src/images/supplier_icon.png");
-        Login.setImageLabal(administrativo_icon, "src/images/administrative_icon.png");
-        Login.setImageLabal(autoridad_icon, "src/images/authority_icon.png");
-        Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
+        Login.setImageLabal(paciente_icon, "src/main/resources/images/patient_icon.png");
+        Login.setImageLabal(doctor_icon, "src/main/resources/images/doctor_icon.png");
+        Login.setImageLabal(fabricante_icon, "src/main/resources/images/supplier_icon.png");
+        Login.setImageLabal(administrativo_icon, "src/main/resources/images/administrative_icon.png");
+        Login.setImageLabal(autoridad_icon, "src/main/resources/images/authority_icon.png");
+        Login.setImageLabal(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
     }
 
     /* eventos del jFrame login */
@@ -802,22 +819,26 @@ public class Login extends JFrame {
                 String nombreC = usuario1.getNombre() + " " + usuario1.getApellido();
                 switch (rolText) {
                     case ("Paciente"): {
-                        //PantallaPaciente pac = new PantallaPaciente(this);
+                        // PantallaPaciente pac = new PantallaPaciente(this);
                         SwingUtilities.invokeLater(() -> this.setVisible(false));
 
                         SwingWorker<Void, String> worker = new SwingWorker<>() {
                             @Override
                             protected Void doInBackground() throws Exception {
                                 try {
-                                    ProcessBuilder builder = new ProcessBuilder("python", "src\\InterfazDesktop\\Paciente.py", usuario1.getCedula(), nombreC);
+                                    ProcessBuilder builder = new ProcessBuilder("venv\\Scripts\\python.exe",
+                                            "src\\main\\java\\desktop_interface\\Paciente.py", usuario1.getCedula(),
+                                            nombreC);
                                     Process process = builder.start();
 
                                     System.out.println("Ha empezado el script Python. Esperando...");
 
                                     // Capturar la salida estándar (stdout)
-                                    BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                                    BufferedReader stdInput = new BufferedReader(
+                                            new InputStreamReader(process.getInputStream()));
                                     // Capturar la salida de error (stderr)
-                                    BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                                    BufferedReader stdError = new BufferedReader(
+                                            new InputStreamReader(process.getErrorStream()));
 
                                     String s;
                                     System.out.println("Salida estándar del script Python:\n");
@@ -836,11 +857,14 @@ public class Login extends JFrame {
                                     if (exitCode == 0) {
                                         System.out.println("El script Python ha terminado correctamente.");
                                     } else {
-                                        System.err.println("El script Python ha terminado con error. Código de salida: " + exitCode);
+                                        System.err.println("El script Python ha terminado con error. Código de salida: "
+                                                + exitCode);
                                     }
                                 } catch (IOException | InterruptedException e) {
                                     System.err.println(e);
-                                    JOptionPane.showMessageDialog(null, "Error al abrir la ventana Paciente. Disculpe, contacte a soporte", "FATAL ERROR Paciente", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null,
+                                            "Error al abrir la ventana Paciente. Disculpe, contacte a soporte",
+                                            "FATAL ERROR Paciente", JOptionPane.ERROR_MESSAGE);
                                 }
                                 return null;
                             }
@@ -859,9 +883,10 @@ public class Login extends JFrame {
                         };
                         worker.execute();
                         /*
-                        pac = new PantallaPaciente(this);
-                        pac.setBienvenida(nombreC, usuario1.getCedula());
-                        pac.setVisible(true); */
+                         * pac = new PantallaPaciente(this);
+                         * pac.setBienvenida(nombreC, usuario1.getCedula());
+                         * pac.setVisible(true);
+                         */
                         this.setVisible(true);
                         break;
                     }
@@ -890,12 +915,14 @@ public class Login extends JFrame {
                     }
                     default: {
                         /*
-                        base = new PantallaBase(this);
-                        base.setBienvenida(nombreC, usuario1.getCedula());
-                        base.setVisible(true);
-                        this.dispose();
+                         * base = new PantallaBase(this);
+                         * base.setBienvenida(nombreC, usuario1.getCedula());
+                         * base.setVisible(true);
+                         * this.dispose();
                          */
-                        JOptionPane.showMessageDialog(null, "Error al crear el nuevo frame según rol. Opción no definida", "Error Login", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,
+                                "Error al crear el nuevo frame según rol. Opción no definida", "Error Login",
+                                JOptionPane.ERROR_MESSAGE);
                         toggleLogin(false);
                         this.roleButtonMouseClicked(selectedButton);
                         break;
@@ -975,11 +1002,13 @@ public class Login extends JFrame {
     }
 
     private void jTextField_fechaNacimientoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
+        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento,
+                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
     }
 
     private void jTextField_fechaNacimientoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
+        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento,
+                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
     }
 
     private void jTextField_fechaNacimientoActionPerformed(ActionEvent evt) {
@@ -1012,13 +1041,15 @@ public class Login extends JFrame {
             errorMessage.setVisible(true);
         } else if (acceptTerms.getSelectedObjects() == null) {
             acceptTerms.setForeground(Color.red);
-        } else if (cedulaM.isBlank() || fechaNacimientoM.isBlank() || cedulaM.equals("Ingrese su cédula") || fechaNacimientoM.equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss")) {
+        } else if (cedulaM.isBlank() || fechaNacimientoM.isBlank() || cedulaM.equals("Ingrese su cédula")
+                || fechaNacimientoM.equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss")) {
             errorMessage.setText("Error. Todos los campos son obligatorios.");
             errorMessage.setVisible(true);
         } else if (!cedulaM.matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$")) {
             errorMessage.setText("Error. La cédula no tiene el formato correcto. XX-XXXX-XXXXX");
             errorMessage.setVisible(true);
-        } else if (!fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(\\s(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]))?$")) {
+        } else if (!fechaNacimientoM.matches(
+                "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])(\\s(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]))?$")) {
             errorMessage.setText("Error. fecha no coincide con el formato. Mínimo fecha AAAA-MM-DD");
             errorMessage.setVisible(true);
         } else {
@@ -1060,7 +1091,8 @@ public class Login extends JFrame {
                 String nombreCompleto = usuario1.getNombre() + " " + usuario1.getApellido();
                 respuesta.setText(nombreCompleto);
             } else {
-                errorMessage.setText("Error. Los datos no coinciden. Intente nuevamente, si hay un error, consulte a su médico.");
+                errorMessage.setText(
+                        "Error. Los datos no coinciden. Intente nuevamente, si hay un error, consulte a su médico.");
                 errorMessage.setVisible(true);
             }
         }
@@ -1097,10 +1129,14 @@ public class Login extends JFrame {
 
     private void jFrame_restaurarAccesoWindowClosing(WindowEvent evt) {
         if (jTextField_cedula.getText().isBlank() || jTextField_fechaNacimiento.getText().isBlank()
-                || !jTextField_cedula.getText().equals("Ingrese su cédula") || !jTextField_fechaNacimiento.getText().equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss")
+                || !jTextField_cedula.getText().equals("Ingrese su cédula")
+                || !jTextField_fechaNacimiento.getText().equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss")
                 || jTextField_usuario.getText().isBlank() || String.valueOf(jPasswordField.getPassword()).isBlank()
-                || !jTextField_usuario.getText().equals("Ingrese un usuario") || !String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña")) {
-            int confirm = JOptionPane.showConfirmDialog(null, "¿Esta seguro de cerra esta ventana? Se perderán los datos que ingresó.", "Cerrando ventana...", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                || !jTextField_usuario.getText().equals("Ingrese un usuario")
+                || !String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña")) {
+            int confirm = JOptionPane.showConfirmDialog(null,
+                    "¿Esta seguro de cerra esta ventana? Se perderán los datos que ingresó.", "Cerrando ventana...",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (confirm == 1) {
                 return;
             }
@@ -1111,7 +1147,7 @@ public class Login extends JFrame {
     }
 
     private void icon_project1AncestorAdded(AncestorEvent evt) {
-        Login.setImageLabal(icon_project1, "src/images/operacionVacunas_logo.png");
+        Login.setImageLabal(icon_project1, "src/main/resources/images/operacionVacunas_logo.png");
     }
 
     private void userInputFocusGained(FocusEvent evt) {
@@ -1155,7 +1191,8 @@ public class Login extends JFrame {
         errorMessage.setForeground(Color.red);
         errorMessage.setHorizontalAlignment(0);
         if (user.isBlank() || String.valueOf(jPasswordField.getPassword()).isBlank()
-                || user.equals("Ingrese un usuario") || String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña")) {
+                || user.equals("Ingrese un usuario")
+                || String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña")) {
             errorMessage.setText("Error. Todos los campos son obligatorios.");
             errorMessage.setVisible(true);
         } else {
@@ -1165,7 +1202,8 @@ public class Login extends JFrame {
                 this.setVisible(true);
                 jFrame_restaurarAcceso.dispose();
             } else {
-                errorMessage.setText("Error. No se pudo restaurar sus credenciales. Intente nuevamente o inicie sesión.");
+                errorMessage
+                        .setText("Error. No se pudo restaurar sus credenciales. Intente nuevamente o inicie sesión.");
                 errorMessage.setVisible(true);
             }
         }
@@ -1233,7 +1271,8 @@ public class Login extends JFrame {
 
     public static void setImageLabal(JLabel label, String imagen) {
         ImageIcon image = new ImageIcon(imagen);
-        Icon icon = new ImageIcon(image.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH));
+        Icon icon = new ImageIcon(
+                image.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH));
         label.setIcon(icon);
         label.repaint();
     }
@@ -1247,8 +1286,8 @@ public class Login extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 

@@ -1,4 +1,4 @@
-package InterfazDesktop;
+package desktop_interface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,13 +22,14 @@ public class JFontChooser extends JDialog {
 
         // Familia de la fuente
         JLabel familyLabel = new JLabel("Familia:");
-        familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+        familyComboBox = new JComboBox<>(
+                GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
         fontPanel.add(familyLabel);
         fontPanel.add(familyComboBox);
 
         // Estilo de la fuente
         JLabel styleLabel = new JLabel("Estilo:");
-        String[] styles = {"Regular", "Negrita", "Cursiva", "Negrita Cursiva"};
+        String[] styles = { "Regular", "Negrita", "Cursiva", "Negrita Cursiva" };
         styleComboBox = new JComboBox<>(styles);
         fontPanel.add(styleLabel);
         fontPanel.add(styleComboBox);

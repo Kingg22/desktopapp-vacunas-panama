@@ -1,4 +1,4 @@
-package Logica.Validations;
+package logic.Validations;
 
 public class LimitarCamposNumeric extends LimitarCampos {
 

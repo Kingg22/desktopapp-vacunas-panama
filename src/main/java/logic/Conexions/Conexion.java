@@ -1,4 +1,4 @@
-package Logica.Conexions;
+package logic.Conexions;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -16,7 +16,8 @@ public class Conexion {
     private static final String passwordProv = dotenv.get("PASSWORD_PROV");
     private static final String passwordOfic = dotenv.get("PASSWORD_ADMINISTRATIVO");
     private static final String password = dotenv.get("PASSWORD_ADM");
-    private static final String URL = "jdbc:sqlserver://localhost\\" + servidor + ":" + puerto + ";database=" + db + ";encrypt=false;";
+    private static final String URL = "jdbc:sqlserver://localhost\\" + servidor + ":" + puerto + ";database=" + db
+            + ";encrypt=false;";
 
     public static Connection getConnection(String rol) throws SQLException, ClassNotFoundException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");

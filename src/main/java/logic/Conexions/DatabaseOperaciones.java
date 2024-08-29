@@ -1,8 +1,8 @@
-package Logica.Conexions;
+package logic.Conexions;
 
-import Logica.ScannerDatabase.Column;
-import Logica.ScannerDatabase.DatabaseInfo;
-import Logica.Validations.InicioSesion;
+import logic.ScannerDatabase.Column;
+import logic.ScannerDatabase.DatabaseInfo;
+import logic.Validations.InicioSesion;
 import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerResultSet;
@@ -19,7 +19,8 @@ public class DatabaseOperaciones {
     private DatabaseInfo databaseInfo = null;
     private boolean adminCreateBD = false;
 
-    public int insertarDosis(String user, String password, String rol, String cedulaPaciente, Timestamp fechaAplicacion, String numero_dosis, int idVacuna, int idSede, String lote) throws SQLException, ClassNotFoundException {
+    public int insertarDosis(String user, String password, String rol, String cedulaPaciente, Timestamp fechaAplicacion,
+            String numero_dosis, int idVacuna, int idSede, String lote) throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             throw new SQLException("NO estas registrado para ejecutar un comando. TIMEOUT");
         } else {
@@ -32,7 +33,8 @@ public class DatabaseOperaciones {
                 throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
             }
             try {
-                SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection.prepareCall("{call dbo.InsertarDosis(?, ?, ?, ?, ?, ?)}");
+                SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection
+                        .prepareCall("{call dbo.InsertarDosis(?, ?, ?, ?, ?, ?)}");
                 callstmt.setString(1, cedulaPaciente);
                 callstmt.setDateTime(2, fechaAplicacion);
                 callstmt.setString(3, getNumDosis(numero_dosis));
@@ -46,7 +48,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados showReporteVacunacionFiltrado(String user, String password, String rol, int idSede) throws SQLException, ClassNotFoundException {
+    public Resultados showReporteVacunacionFiltrado(String user, String password, String rol, int idSede)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -64,7 +67,8 @@ public class DatabaseOperaciones {
             int[] columnasWidth = new int[7];
             try {
                 SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
-                        "SELECT CedulaPaciente, NombrePaciente, ApellidoPaciente, FechaNacimiento, Sexo, NombreVacuna, NumeroDosis \n" +
+                        "SELECT CedulaPaciente, NombrePaciente, ApellidoPaciente, FechaNacimiento, Sexo, NombreVacuna, NumeroDosis \n"
+                                +
                                 "FROM [Reporte Vacunas Completo] \n" +
                                 "WHERE CONVERT(date, FechaAplicacion) = CONVERT(date, GETDATE()) AND IDSede = ?");
                 callStmt.setInt(1, idSede);
@@ -76,7 +80,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados showLoteSedeVacuna(String user, String password, String rol, String lote) throws SQLException, ClassNotFoundException {
+    public Resultados showLoteSedeVacuna(String user, String password, String rol, String lote)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -106,7 +111,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados showSedeInventarioVacuna(String user, String password, String rol, int idSede, int idVacuna) throws SQLException, ClassNotFoundException {
+    public Resultados showSedeInventarioVacuna(String user, String password, String rol, int idSede, int idVacuna)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -136,7 +142,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados showSedeInventario(String user, String password, String rol, int idSede) throws SQLException, ClassNotFoundException {
+    public Resultados showSedeInventario(String user, String password, String rol, int idSede)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -165,7 +172,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Object[][] getDistritos(String user, String password, String rol) throws SQLException, ClassNotFoundException {
+    public Object[][] getDistritos(String user, String password, String rol)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -177,7 +185,8 @@ public class DatabaseOperaciones {
             } else {
                 throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
             }
-            return executeQuery("SELECT d.distrito FROM Distrito d", new ArrayList<>(Collections.singleton(new Column("distrito", "VARCHAR", 50, true))));
+            return executeQuery("SELECT d.distrito FROM Distrito d",
+                    new ArrayList<>(Collections.singleton(new Column("distrito", "VARCHAR", 50, true))));
         }
     }
 
@@ -193,7 +202,8 @@ public class DatabaseOperaciones {
             } else {
                 throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
             }
-            return executeQuery("SELECT s.nombre_sede FROM Sede s", new ArrayList<>(Collections.singleton(new Column("nombre_sede", "VARCHAR", 100, false))));
+            return executeQuery("SELECT s.nombre_sede FROM Sede s",
+                    new ArrayList<>(Collections.singleton(new Column("nombre_sede", "VARCHAR", 100, false))));
         }
     }
 
@@ -209,11 +219,14 @@ public class DatabaseOperaciones {
             } else {
                 throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
             }
-            return executeQuery("SELECT v.nombre_vacuna FROM Vacuna v", new ArrayList<>(Collections.singleton(new Column("nombre_vacuna", "VARCHAR", 100, false))));
+            return executeQuery("SELECT v.nombre_vacuna FROM Vacuna v",
+                    new ArrayList<>(Collections.singleton(new Column("nombre_vacuna", "VARCHAR", 100, false))));
         }
     }
 
-    public int manipulatePaciente(String user, String password, String rol, String cedula, String nombre, String apellido, Timestamp fechaNacimiento, char sexo, String telefono, String correo, String direccion, String distrito) throws SQLException, ClassNotFoundException {
+    public int manipulatePaciente(String user, String password, String rol, String cedula, String nombre,
+            String apellido, Timestamp fechaNacimiento, char sexo, String telefono, String correo, String direccion,
+            String distrito) throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             throw new SQLException("NO estas registrado para ejecutar un comando. TIMEOUT");
         } else {
@@ -226,7 +239,8 @@ public class DatabaseOperaciones {
                 throw new SQLException("NO tiene permiso para ejecutar este comando. TIMEOUT");
             }
             try {
-                SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection.prepareCall("{call dbo.ManipularPaciente(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+                SQLServerCallableStatement callstmt = (SQLServerCallableStatement) connection
+                        .prepareCall("{call dbo.ManipularPaciente(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
                 callstmt.setString(1, cedula);
                 callstmt.setString(2, nombre);
                 callstmt.setString(3, apellido);
@@ -243,7 +257,9 @@ public class DatabaseOperaciones {
         }
     }
 
-    public int manipulateUsuario(String user, String password, String rol, String cedulaUsuario, String userUsuario, String passwordUsuarioHash, String rolUsuario, Timestamp fechaNacimientoUsuario) throws SQLException, ClassNotFoundException {
+    public int manipulateUsuario(String user, String password, String rol, String cedulaUsuario, String userUsuario,
+            String passwordUsuarioHash, String rolUsuario, Timestamp fechaNacimientoUsuario)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return Integer.MIN_VALUE;
         } else {
@@ -257,7 +273,8 @@ public class DatabaseOperaciones {
             }
             int tipo = getTipo(rolUsuario);
             try {
-                SQLServerCallableStatement callableStatement = (SQLServerCallableStatement) connection.prepareCall("{call dbo.CrearUsuario(?, ?, ?, ?, ?)}");
+                SQLServerCallableStatement callableStatement = (SQLServerCallableStatement) connection
+                        .prepareCall("{call dbo.CrearUsuario(?, ?, ?, ?, ?)}");
                 callableStatement.setString(1, cedulaUsuario);
                 callableStatement.setString(2, userUsuario);
                 callableStatement.setString(3, passwordUsuarioHash);
@@ -270,14 +287,16 @@ public class DatabaseOperaciones {
         }
     }
 
-    public int createAdminBD(String cedulaAdmin, String userAdmin, String passwordAdminHash, Timestamp fechaNacimientoAdmin) throws SQLException, ClassNotFoundException {
+    public int createAdminBD(String cedulaAdmin, String userAdmin, String passwordAdminHash,
+            Timestamp fechaNacimientoAdmin) throws SQLException, ClassNotFoundException {
         if (!adminCreateBD) {
             switchToAdmin();
             if (connection == null) {
                 throw new SQLException("Ocurrió un error al conectarse a la base de datos. Acceso denegado");
             }
             try {
-                SQLServerCallableStatement callableStatement = (SQLServerCallableStatement) connection.prepareCall("{call dbo.CrearUsuario(?, ?, ?, ?, ?)}");
+                SQLServerCallableStatement callableStatement = (SQLServerCallableStatement) connection
+                        .prepareCall("{call dbo.CrearUsuario(?, ?, ?, ?, ?)}");
                 callableStatement.setString(1, cedulaAdmin);
                 callableStatement.setString(2, userAdmin);
                 callableStatement.setString(3, passwordAdminHash);
@@ -293,7 +312,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados searchUsuario(String user, String password, String rol, String cedulaUsuario, String rolUsuario) throws SQLException, ClassNotFoundException {
+    public Resultados searchUsuario(String user, String password, String rol, String cedulaUsuario, String rolUsuario)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -311,7 +331,8 @@ public class DatabaseOperaciones {
             String[] columnas = new String[5];
             int[] columnasWidth = new int[5];
             try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement("SELECT * FROM dbo.BuscarUsuario(?, ?)");
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection
+                        .prepareStatement("SELECT * FROM dbo.BuscarUsuario(?, ?)");
                 callStmt.setString(1, cedulaUsuario);
                 callStmt.setInt(2, tipo);
                 processResult(callStmt, columns, columnas, columnasWidth, resultList);
@@ -322,7 +343,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados showUsuarios(String user, String password, String rol) throws SQLException, ClassNotFoundException {
+    public Resultados showUsuarios(String user, String password, String rol)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -339,11 +361,13 @@ public class DatabaseOperaciones {
             for (int i = 0; i < columns.size(); i++) {
                 columnasWidth[i] = columns.get(i).getSize();
             }
-            return new Resultados(new String[columns.size()], columnasWidth, executeQuery(("SELECT * FROM [Usuarios]"), columns));
+            return new Resultados(new String[columns.size()], columnasWidth,
+                    executeQuery(("SELECT * FROM [Usuarios]"), columns));
         }
     }
 
-    public boolean refreshAgePaciente(String user, String password, String rol) throws SQLException, ClassNotFoundException {
+    public boolean refreshAgePaciente(String user, String password, String rol)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return false;
         } else {
@@ -361,7 +385,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados showPacientes(String user, String password, String rol) throws SQLException, ClassNotFoundException {
+    public Resultados showPacientes(String user, String password, String rol)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -377,7 +402,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados searchTablePaciente(String user, String password, String rol, String cedula, String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
+    public Resultados searchTablePaciente(String user, String password, String rol, String cedula,
+            String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -400,13 +426,15 @@ public class DatabaseOperaciones {
                 columnasWidth[i] = columns.get(i).getSize();
             }
             // Construcción de la consulta SQL dinámica
-            StringBuilder sqlBuilder = new StringBuilder("SELECT cedula, nombre_paciente, apellido_paciente, fecha_nacimiento, edad_calculada, sexo, telefono_paciente, correo_electronico_paciente, direccion, distrito FROM Paciente LEFT JOIN Direccion d ON idDireccion = d.ID_direccion LEFT JOIN Distrito dd ON d.idDistrito = dd.ID_distrito WHERE 1=1");
+            StringBuilder sqlBuilder = new StringBuilder(
+                    "SELECT cedula, nombre_paciente, apellido_paciente, fecha_nacimiento, edad_calculada, sexo, telefono_paciente, correo_electronico_paciente, direccion, distrito FROM Paciente LEFT JOIN Direccion d ON idDireccion = d.ID_direccion LEFT JOIN Distrito dd ON d.idDistrito = dd.ID_distrito WHERE 1=1");
 
             if (cedula != null && !cedula.trim().isEmpty()) {
                 sqlBuilder.append(" AND cedula = '" + cedula + "'");
             }
             if (nombreCompleto != null && !nombreCompleto.trim().isEmpty()) {
-                sqlBuilder.append(" AND CONCAT(nombre_paciente, ' ', apellido_paciente) LIKE '%" + nombreCompleto + "%'");
+                sqlBuilder
+                        .append(" AND CONCAT(nombre_paciente, ' ', apellido_paciente) LIKE '%" + nombreCompleto + "%'");
             }
             if (fechaNacimiento != null && !fechaNacimiento.trim().isEmpty()) {
                 fechaNacimiento = String.valueOf(Date.valueOf(fechaNacimiento));
@@ -416,7 +444,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados searchPaciente(String user, String password, String rol, String cedula, String nombreCompleto, String fechaNacimiento) throws SQLException, ClassNotFoundException {
+    public Resultados searchPaciente(String user, String password, String rol, String cedula, String nombreCompleto,
+            String fechaNacimiento) throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -452,7 +481,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados showVistaPaciente(String user, String password, String rol, String cedula) throws SQLException, ClassNotFoundException {
+    public Resultados showVistaPaciente(String user, String password, String rol, String cedula)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -469,7 +499,8 @@ public class DatabaseOperaciones {
             String[] columnas = new String[6];
             int[] columnasWidth = new int[6];
             try {
-                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement("SELECT [Nombre Vacuna], [Número de dosis], [Enfermedad previene], [Fecha de aplicación], Sede, Dependencia \nFROM [Vista Paciente] \nWHERE Cédula = ?");
+                SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
+                        "SELECT [Nombre Vacuna], [Número de dosis], [Enfermedad previene], [Fecha de aplicación], Sede, Dependencia \nFROM [Vista Paciente] \nWHERE Cédula = ?");
                 callStmt.setString(1, cedula);
                 processResult(callStmt, columns, columnas, columnasWidth, resultList);
             } finally {
@@ -479,7 +510,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados showVistaDoctor(String user, String password, String rol, int idSede) throws SQLException, ClassNotFoundException {
+    public Resultados showVistaDoctor(String user, String password, String rol, int idSede)
+            throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -498,9 +530,11 @@ public class DatabaseOperaciones {
             try {
                 SQLServerPreparedStatement callStmt = (SQLServerPreparedStatement) connection.prepareStatement(
                         "SELECT Cédula, Nombre, Apellido, [Fecha de Nacimiento], [Edad], Sexo, Teléfono, " +
-                                "[Correo electrónico], [Dirección residencia actual], Distrito, Provincia, [Nombre vacuna], " +
+                                "[Correo electrónico], [Dirección residencia actual], Distrito, Provincia, [Nombre vacuna], "
+                                +
                                 "Fabricante, [Fecha de aplicación], Sede, Dependencia, [Número de dosis], " +
-                                "[Intervalo dosis 1 y 2 recomendado en meses], [Intervalo real en días], [Edad mínima recomendada en meses] \n" +
+                                "[Intervalo dosis 1 y 2 recomendado en meses], [Intervalo real en días], [Edad mínima recomendada en meses] \n"
+                                +
                                 "FROM [Vista Doctor] \nWHERE [ID Sede] = ?");
                 callStmt.setInt(1, idSede);
                 processResult(callStmt, columns, columnas, columnasWidth, resultList);
@@ -511,7 +545,8 @@ public class DatabaseOperaciones {
         }
     }
 
-    public Resultados buscarDosis(String user, String password, String rol, String fechaInicio, String fechaFin, int idSede, int idVacuna, String numDosis) throws SQLException, ClassNotFoundException {
+    public Resultados buscarDosis(String user, String password, String rol, String fechaInicio, String fechaFin,
+            int idSede, int idVacuna, String numDosis) throws SQLException, ClassNotFoundException {
         if (!InicioSesion.autentificar(user, password, rol)) {
             return null;
         } else {
@@ -563,12 +598,14 @@ public class DatabaseOperaciones {
         this.connection = Conexion.getConnection(rol);
         databaseInfo = new DatabaseInfo(connection);
         this.usuarioActual = rol;
-        executeUpdate("UPDATE Usuarios \nSET last_used = CURRENT_TIMESTAMP \nWHERE usuario = '" + user + "' AND tipo = " + getTipo(rol));
+        executeUpdate("UPDATE Usuarios \nSET last_used = CURRENT_TIMESTAMP \nWHERE usuario = '" + user + "' AND tipo = "
+                + getTipo(rol));
     }
 
     private void switchToAdmin() throws SQLException, ClassNotFoundException {
         if (adminCreateBD) {
-            throw new SQLException("NO se puede ejecutar este método más de 1 vez y fuera de esta clase. TIMEOUT - BAN USER");
+            throw new SQLException(
+                    "NO se puede ejecutar este método más de 1 vez y fuera de esta clase. TIMEOUT - BAN USER");
         }
         // Cerrar la conexión actual si existe
         if (connection != null) {
@@ -593,7 +630,7 @@ public class DatabaseOperaciones {
         List<Object[]> resultList = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);
-             SQLServerResultSet resultSet = (SQLServerResultSet) preparedStatement.executeQuery()) {
+                SQLServerResultSet resultSet = (SQLServerResultSet) preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Object[] row = new Object[columns.size()];
@@ -780,12 +817,14 @@ public class DatabaseOperaciones {
         return count;
     }
 
-    private void processResult(SQLServerPreparedStatement statement, List<Column> columns, String[] columnas, int[] columnasWidth, List<Object[]> resultList) throws SQLException {
+    private void processResult(SQLServerPreparedStatement statement, List<Column> columns, String[] columnas,
+            int[] columnasWidth, List<Object[]> resultList) throws SQLException {
         ResultSet resultSet = statement.executeQuery();
         ResultSetMetaData metaData = resultSet.getMetaData();
         int columnCount = metaData.getColumnCount();
         for (int i = 1; i <= columnCount; i++) {
-            columns.add(new Column(metaData.getColumnName(i), metaData.getColumnTypeName(i), metaData.getColumnDisplaySize(i)));
+            columns.add(new Column(metaData.getColumnName(i), metaData.getColumnTypeName(i),
+                    metaData.getColumnDisplaySize(i)));
         }
         for (int i = 0; i < columns.size(); i++) {
             columnasWidth[i] = columns.get(i).getSize();

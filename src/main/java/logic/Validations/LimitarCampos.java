@@ -1,4 +1,4 @@
-package Logica.Validations;
+package logic.Validations;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

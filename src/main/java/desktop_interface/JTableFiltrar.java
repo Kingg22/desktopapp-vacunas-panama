@@ -1,6 +1,6 @@
-package InterfazDesktop;
+package desktop_interface;
 
-import Logica.Validations.LimitarCamposSeguro;
+import logic.Validations.LimitarCamposSeguro;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -36,7 +36,7 @@ public class JTableFiltrar extends JPanel {
         jLabel2.setText("Filtro de columnas");
         add(jLabel2);
 
-        jComboBox_filterColumn.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir"}));
+        jComboBox_filterColumn.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir" }));
         jComboBox_filterColumn.addActionListener(this::jComboBox_filterColumnActionPerformed);
         add(jComboBox_filterColumn);
 

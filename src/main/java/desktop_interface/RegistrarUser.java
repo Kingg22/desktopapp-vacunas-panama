@@ -1,7 +1,7 @@
-package InterfazDesktop;
+package desktop_interface;
 
-import Logica.Conexions.DatabaseOperaciones;
-import Logica.Validations.*;
+import logic.Conexions.DatabaseOperaciones;
+import logic.Validations.*;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -220,7 +220,8 @@ public class RegistrarUser extends JFrame {
         background.add(fecha_nacimiento, new AbsoluteConstraints(30, 230, -1, -1));
 
         jTextField_fechaNacimiento.setBackground(new Color(255, 255, 255));
-        jTextField_fechaNacimiento.setDocument(new LimitarCamposFecha(30, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
+        jTextField_fechaNacimiento
+                .setDocument(new LimitarCamposFecha(30, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss"));
         jTextField_fechaNacimiento.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_fechaNacimiento.setForeground(Color.gray);
         jTextField_fechaNacimiento.setText("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
@@ -251,7 +252,7 @@ public class RegistrarUser extends JFrame {
         jComboBox_sexo.setBackground(Color.gray);
         jComboBox_sexo.setFont(new Font("Roboto", Font.PLAIN, 14));
         jComboBox_sexo.setForeground(Color.black);
-        jComboBox_sexo.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Masculino", "Femenino"}));
+        jComboBox_sexo.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir", "Masculino", "Femenino" }));
         background.add(jComboBox_sexo, new AbsoluteConstraints(30, 300, 170, -1));
 
         direccion.setBackground(new Color(0, 0, 0));
@@ -288,7 +289,7 @@ public class RegistrarUser extends JFrame {
         jComboBox_distrito.setBackground(Color.gray);
         jComboBox_distrito.setFont(new Font("Roboto", Font.PLAIN, 14));
         jComboBox_distrito.setForeground(Color.black);
-        jComboBox_distrito.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir", "Distrito por registrar"}));
+        jComboBox_distrito.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir", "Distrito por registrar" }));
         background.add(jComboBox_distrito, new AbsoluteConstraints(290, 345, 290, -1));
 
         jSeparator10.setForeground(new Color(30, 30, 30));
@@ -330,13 +331,16 @@ public class RegistrarUser extends JFrame {
         background.add(telefono, new AbsoluteConstraints(30, 430, -1, -1));
 
         jTextField_telefono.setBackground(new Color(255, 255, 255));
-        jTextField_telefono.setDocument(new LimitarCamposPhone(15, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)"));
+        jTextField_telefono.setDocument(new LimitarCamposPhone(15,
+                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)"));
         jTextField_telefono.setFont(new Font("Roboto", Font.PLAIN, 14));
         jTextField_telefono.setForeground(Color.gray);
-        jTextField_telefono.setText("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
+        jTextField_telefono
+                .setText("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
         jTextField_telefono.setBorder(null);
         jTextField_telefono.setMaximumSize(new Dimension(2147483647, 50));
-        handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
+        handleFocusGain(jTextField_telefono,
+                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
         jTextField_telefono.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
                 jTextField_telefonoFocusGained(evt);
@@ -413,7 +417,8 @@ public class RegistrarUser extends JFrame {
 
         acceptTerms.setFont(new Font("Microsoft YaHei Light", Font.PLAIN, 12));
         acceptTerms.setForeground(new Color(102, 102, 102));
-        acceptTerms.setText("Al registrarse, usted acepta los términos y condiciones del servicio, y la política de privacidad. ");
+        acceptTerms.setText(
+                "Al registrarse, usted acepta los términos y condiciones del servicio, y la política de privacidad. ");
         acceptTerms.setToolTipText("Aceptar términos y condiciones");
         acceptTerms.setBorder(null);
         acceptTerms.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -434,7 +439,8 @@ public class RegistrarUser extends JFrame {
         extendTerms.setForeground(new Color(102, 102, 102));
         extendTerms.setLineWrap(true);
         extendTerms.setRows(5);
-        extendTerms.setText("Adicional si no esta registrado, se le creará un perfil. Su cédula debe coincidir para ver resultados, además no podrá corregirla al igual que su fecha de nacimiento. Los datos suministrados se consideran verdaderos, estrictamente personal, información confidencial y sensible.");
+        extendTerms.setText(
+                "Adicional si no esta registrado, se le creará un perfil. Su cédula debe coincidir para ver resultados, además no podrá corregirla al igual que su fecha de nacimiento. Los datos suministrados se consideran verdaderos, estrictamente personal, información confidencial y sensible.");
         extendTerms.setWrapStyleWord(true);
         extendTerms.setBorder(null);
         extendTerms.setFocusable(false);
@@ -494,18 +500,22 @@ public class RegistrarUser extends JFrame {
 
     /* eventos */
     private void formComponentShown(ComponentEvent evt) {
-        Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
+        Login.setImageLabal(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
         try {
-            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(PantallaDoctor.transformMatrizToArray(new DatabaseOperaciones().getDistritos("admin", "admin1234", "Administrador"), 0)));
+            jComboBox_distrito.setModel(new DefaultComboBoxModel<>(PantallaDoctor.transformMatrizToArray(
+                    new DatabaseOperaciones().getDistritos("admin", "admin1234", "Administrador"), 0)));
         } catch (Exception e) {
             System.out.println(e);
-            JOptionPane.showMessageDialog(null, "Ha ocurrido un problema encontrando las distritos. Reinicie la aplicación o contacte a soporte");
+            JOptionPane.showMessageDialog(null,
+                    "Ha ocurrido un problema encontrando las distritos. Reinicie la aplicación o contacte a soporte");
         }
     }
 
     private void formWindowClosing(WindowEvent evt) {
         if (!isAnyFieldEmpty() || !isPlaceHolder()) {
-            int confirm = JOptionPane.showConfirmDialog(null, "¿Esta seguro de cerra esta ventana? Se perderán los datos que ingresó.", "Cerrando ventana...", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            int confirm = JOptionPane.showConfirmDialog(null,
+                    "¿Esta seguro de cerra esta ventana? Se perderán los datos que ingresó.", "Cerrando ventana...",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (confirm == 0) {
                 iniciarSesionMouseClicked(null);
             }
@@ -553,7 +563,8 @@ public class RegistrarUser extends JFrame {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    JOptionPane.showMessageDialog(null, "Registrarse con otro rol diferente a paciente no implementando. Lo sentimos. Se cerrará esta ventana.");
+                    JOptionPane.showMessageDialog(null,
+                            "Registrarse con otro rol diferente a paciente no implementando. Lo sentimos. Se cerrará esta ventana.");
                     parentFrame.setVisible(true);
                     dispose();
                 }
@@ -563,19 +574,26 @@ public class RegistrarUser extends JFrame {
         boolean condicion1 = nombreM.isBlank() || nombreM.equals("Ingrese su nombre");
         boolean condicion2 = apellidoM.isBlank() || apellidoM.equals("Ingrese su apellido");
         boolean condicion3 = cedulaM.isBlank() || cedulaM.equals("Ingrese su cédula");
-        boolean condicion4 = fechaNacimientoM.isBlank() || fechaNacimientoM.equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
+        boolean condicion4 = fechaNacimientoM.isBlank()
+                || fechaNacimientoM.equals("Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
         boolean condicion5 = sexoM == 'E';
         boolean condicion6 = usuarioM.isBlank() || usuarioM.equals("Ingrese un usuario");
-        boolean condicion7 = String.valueOf(jPasswordField.getPassword()).isBlank() || String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña");
-        boolean condicionesObligatorias = !condicion1 && !condicion2 && !condicion3 && !condicion4 && !condicion5 && !condicion6 && !condicion7;
+        boolean condicion7 = String.valueOf(jPasswordField.getPassword()).isBlank()
+                || String.valueOf(jPasswordField.getPassword()).equals("Ingrese una contraseña");
+        boolean condicionesObligatorias = !condicion1 && !condicion2 && !condicion3 && !condicion4 && !condicion5
+                && !condicion6 && !condicion7;
 
         boolean condicionOp1 = distritoM == null || distritoM.equals("Elegir");
         boolean condicionOp2 = direccionM.isBlank() || direccionM.equals("Ingrese su dirección");
         boolean condicionOp3 = correoM.isBlank() || correoM.equals("Ingrese su correo electrónico");
-        boolean condicionOp4 = telefonoM.isBlank() || telefonoM.equals("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
+        boolean condicionOp4 = telefonoM.isBlank() || telefonoM
+                .equals("Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
 
-        boolean verificacion1 = !cedulaM.matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$");
-        boolean verificacion2 = (!fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$") && !fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.\\d{1,9})?$"));
+        boolean verificacion1 = !cedulaM
+                .matches("^(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\d{1,4})-(\\d{1,6})$");
+        boolean verificacion2 = (!fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$")
+                && !fechaNacimientoM.matches(
+                        "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]) (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.\\d{1,9})?$"));
         boolean verificacion3 = !correoM.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
         boolean verificacion4 = (condicionOp1 && !condicionOp2) || (!condicionOp1 && condicionOp2);
 
@@ -598,7 +616,8 @@ public class RegistrarUser extends JFrame {
                 errorMessage.setVisible(true);
                 return;
             } else if (verificacion2) {
-                errorMessage.setText("Error. La fecha de nacimiento no tiene el formato correcto. La fecha sin hora es obligatorio. YYYY-MM-DD");
+                errorMessage.setText(
+                        "Error. La fecha de nacimiento no tiene el formato correcto. La fecha sin hora es obligatorio. YYYY-MM-DD");
                 errorMessage.setForeground(Color.red);
                 errorMessage.setVisible(true);
                 return;
@@ -608,7 +627,8 @@ public class RegistrarUser extends JFrame {
                 errorMessage.setVisible(true);
                 return;
             } else if (verificacion4) {
-                errorMessage.setText("Error. La dirección o el distrito están incompletos. Debe llenar ambos campos o ninguno.");
+                errorMessage.setText(
+                        "Error. La dirección o el distrito están incompletos. Debe llenar ambos campos o ninguno.");
                 errorMessage.setForeground(Color.red);
                 errorMessage.setVisible(true);
                 return;
@@ -617,7 +637,8 @@ public class RegistrarUser extends JFrame {
                     try {
                         Timestamp fechaNacimientoTimestamp;
                         if (fechaNacimientoM.matches("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$")) {
-                            fechaNacimientoTimestamp = Timestamp.valueOf(LocalDate.parse(fechaNacimientoM).atStartOfDay());
+                            fechaNacimientoTimestamp = Timestamp
+                                    .valueOf(LocalDate.parse(fechaNacimientoM).atStartOfDay());
                         } else {
                             fechaNacimientoTimestamp = Timestamp.valueOf(fechaNacimientoM);
 
@@ -625,31 +646,47 @@ public class RegistrarUser extends JFrame {
 
                         if (!condicionOp1 && !condicionOp2) {
                             if (!condicionOp3 && !condicionOp4) {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, distritoM, direccionM, correoM, telefonoM, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                        sexoM, distritoM, direccionM, correoM, telefonoM, usuarioM,
+                                        String.valueOf(jPasswordField.getPassword()), rolM);
                             } else if (!condicionOp3) {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, distritoM, direccionM, correoM, null, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                        sexoM, distritoM, direccionM, correoM, null, usuarioM,
+                                        String.valueOf(jPasswordField.getPassword()), rolM);
                             } else {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, distritoM, direccionM, null, null, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                        sexoM, distritoM, direccionM, null, null, usuarioM,
+                                        String.valueOf(jPasswordField.getPassword()), rolM);
                             }
                         } else if (!condicionOp3) {
                             if (!condicionOp4) {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, null, null, correoM, telefonoM, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                        sexoM, null, null, correoM, telefonoM, usuarioM,
+                                        String.valueOf(jPasswordField.getPassword()), rolM);
                             } else {
-                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, null, null, correoM, null, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                                insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                        sexoM, null, null, correoM, null, usuarioM,
+                                        String.valueOf(jPasswordField.getPassword()), rolM);
                             }
                         } else if (!condicionOp4) {
-                            insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, null, null, null, telefonoM, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                            insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                    sexoM, null, null, null, telefonoM, usuarioM,
+                                    String.valueOf(jPasswordField.getPassword()), rolM);
                         } else {
-                            insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp, sexoM, null, null, null, null, usuarioM, String.valueOf(jPasswordField.getPassword()), rolM);
+                            insertado = InicioSesion.insertar(nombreM, apellidoM, cedulaM, fechaNacimientoTimestamp,
+                                    sexoM, null, null, null, null, usuarioM,
+                                    String.valueOf(jPasswordField.getPassword()), rolM);
                         }
                     } catch (Exception e) {
                         System.out.println(e);
                         JOptionPane.showMessageDialog(this,
-                                "Ha ocurrido un problema registrando al paciente y su usuario. No hay certeza si los datos fueron manipulados. " +
+                                "Ha ocurrido un problema registrando al paciente y su usuario. No hay certeza si los datos fueron manipulados. "
+                                        +
                                         "\nGuarde los datos para futuro registro. Reinicie la aplicación o contacte a soporte");
                     }
                 } else {
-                    errorMessage.setText("La cédula ya está registrada para este rol. Acceda para modificar sus datos o click olvidó su contraseña.");
+                    errorMessage.setText(
+                            "La cédula ya está registrada para este rol. Acceda para modificar sus datos o click olvidó su contraseña.");
                     errorMessage.setForeground(Color.red);
                     errorMessage.setVisible(true);
                     return;
@@ -661,14 +698,16 @@ public class RegistrarUser extends JFrame {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    JOptionPane.showMessageDialog(null, "Se ha registrado con éxito. En unos momentos se cerrará esta ventana y podrá iniciar sesión.");
+                    JOptionPane.showMessageDialog(null,
+                            "Se ha registrado con éxito. En unos momentos se cerrará esta ventana y podrá iniciar sesión.");
                     parentFrame.setVisible(true);
                     dispose();
                 }
             }, 5);
         } else
             JOptionPane.showMessageDialog(null,
-                    "Ha ocurrido error al registrarse. Intentar más tarde o contacte a soporte", "ERROR REGISTRAR", JOptionPane.ERROR_MESSAGE);
+                    "Ha ocurrido error al registrarse. Intentar más tarde o contacte a soporte", "ERROR REGISTRAR",
+                    JOptionPane.ERROR_MESSAGE);
     }
 
     private void jTextField_nombreActionPerformed(ActionEvent evt) {
@@ -737,11 +776,13 @@ public class RegistrarUser extends JFrame {
     }
 
     private void jTextField_fechaNacimientoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
+        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento,
+                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
     }
 
     private void jTextField_fechaNacimientoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento, "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
+        RegistrarUser.handleFocusGain(jTextField_fechaNacimiento,
+                "Ingrese su fecha de nacimiento YYYY-MM-DD* hh:mm:ss");
     }
 
     private void jTextField_direccionFocusGained(FocusEvent evt) {
@@ -761,11 +802,13 @@ public class RegistrarUser extends JFrame {
     }
 
     private void jTextField_telefonoFocusGained(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
+        RegistrarUser.handleFocusGain(jTextField_telefono,
+                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
     }
 
     private void jTextField_telefonoFocusLost(FocusEvent evt) {
-        RegistrarUser.handleFocusGain(jTextField_telefono, "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
+        RegistrarUser.handleFocusGain(jTextField_telefono,
+                "Ingrese su teléfono (código de país, el código de ciudad y el número de teléfono local)");
     }
 
     private void jTextField_usuarioFocusGained(FocusEvent evt) {
@@ -890,9 +933,10 @@ public class RegistrarUser extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RegistrarUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RegistrarUser.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         }
 
         EventQueue.invokeLater(() -> {

@@ -1,9 +1,9 @@
-package InterfazDesktop;
+package desktop_interface;
 
-import Logica.Validations.LimitarCamposSQL;
-import Logica.Validations.LimitarCamposSeguro;
-import Logica.Validations.Preferencias;
-import Logica.Validations.Usuario;
+import logic.Validations.LimitarCamposSQL;
+import logic.Validations.LimitarCamposSeguro;
+import logic.Validations.Preferencias;
+import logic.Validations.Usuario;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -25,10 +25,10 @@ public class PantallaAdmin extends JFrame {
         this.layout = (CardLayout) jPanel_derecho.getLayout();
         addFocusListeners();
 
-        JButton[] botones = {button_opcion1, button_opcion2,
+        JButton[] botones = { button_opcion1, button_opcion2,
                 button_opcion5, button_modificarDatos,
                 button_modificarCred, button_preferencias, jButton_savePreferences,
-                button_soporte, button_opcion6, button_opcion7, button_logOut};
+                button_soporte, button_opcion6, button_opcion7, button_logOut };
         for (JButton boton : botones) {
             boton.setUI(new BasicButtonUI());
             boton.setBackground(new Color(86, 86, 86));
@@ -162,7 +162,7 @@ public class PantallaAdmin extends JFrame {
         jLabel6 = new JLabel();
 
         jComboBox_columna3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_columna3.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
+        jComboBox_columna3.setModel(new DefaultComboBoxModel<>(new String[] { "*" }));
         jComboBox_columna3.setPreferredSize(new Dimension(150, 27));
 
         jTextField_valorInsert2.setDocument(new LimitarCamposSQL(50, "Valor"));
@@ -211,7 +211,7 @@ public class PantallaAdmin extends JFrame {
         jPanel3.add(select);
 
         jComboBox_columna.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_columna.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
+        jComboBox_columna.setModel(new DefaultComboBoxModel<>(new String[] { "*" }));
         jComboBox_columna.setPreferredSize(new Dimension(150, 27));
         jPanel3.add(jComboBox_columna);
 
@@ -252,7 +252,7 @@ public class PantallaAdmin extends JFrame {
         jPanel4.add(from);
 
         jComboBox_tabla.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
+        jComboBox_tabla.setModel(new DefaultComboBoxModel<>(new String[] { "Tabla1" }));
         jComboBox_tabla.setMaximumSize(new Dimension(367, 32767));
         jComboBox_tabla.setPreferredSize(new Dimension(150, 27));
         jPanel4.add(jComboBox_tabla);
@@ -266,7 +266,7 @@ public class PantallaAdmin extends JFrame {
         jPanel4.add(cantJoin);
 
         jComboBox_joins.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_joins.setModel(new DefaultComboBoxModel<>(new String[]{"0", "1", "2", "3", "4", "5"}));
+        jComboBox_joins.setModel(new DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5" }));
         jComboBox_joins.setMaximumSize(new Dimension(80, 32767));
         jComboBox_joins.setPreferredSize(new Dimension(80, 27));
         jComboBox_joins.addActionListener(this::jComboBox_joinsActionPerformed);
@@ -394,8 +394,7 @@ public class PantallaAdmin extends JFrame {
         opcionesTabla.setPreferredSize(new Dimension(794, 45));
         opcionesTabla.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        jTextField_buscarTabla.setDocument(new LimitarCamposSeguro(25, "Buscar...")
-        );
+        jTextField_buscarTabla.setDocument(new LimitarCamposSeguro(25, "Buscar..."));
         jTextField_buscarTabla.setText("Buscar...");
         jTextField_buscarTabla.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
         jTextField_buscarTabla.setPreferredSize(new Dimension(125, 26));
@@ -493,12 +492,10 @@ public class PantallaAdmin extends JFrame {
         jPanel_separador1.setLayout(jPanel_separador1Layout);
         jPanel_separador1Layout.setHorizontalGroup(
                 jPanel_separador1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 977, Short.MAX_VALUE)
-        );
+                        .addGap(0, 977, Short.MAX_VALUE));
         jPanel_separador1Layout.setVerticalGroup(
                 jPanel_separador1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 25, Short.MAX_VALUE)
-        );
+                        .addGap(0, 25, Short.MAX_VALUE));
 
         jPanel_preferencias.add(jPanel_separador1);
 
@@ -515,12 +512,10 @@ public class PantallaAdmin extends JFrame {
         jPanel_separador2.setLayout(jPanel_separador2Layout);
         jPanel_separador2Layout.setHorizontalGroup(
                 jPanel_separador2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 977, Short.MAX_VALUE)
-        );
+                        .addGap(0, 977, Short.MAX_VALUE));
         jPanel_separador2Layout.setVerticalGroup(
                 jPanel_separador2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 15, Short.MAX_VALUE)
-        );
+                        .addGap(0, 15, Short.MAX_VALUE));
 
         jPanel_preferencias.add(jPanel_separador2);
 
@@ -533,7 +528,8 @@ public class PantallaAdmin extends JFrame {
         // Familia de la fuente
         JLabel familyLabel = new JLabel("Familia:");
         familyLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
-        JComboBox<String> familyComboBox = new JComboBox<>(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+        JComboBox<String> familyComboBox = new JComboBox<>(
+                GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
         familyComboBox.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(familyLabel);
         jPanel_fontChooser.add(familyComboBox);
@@ -541,7 +537,7 @@ public class PantallaAdmin extends JFrame {
         // Estilo de la fuente
         JLabel styleLabel = new JLabel("Estilo:");
         styleLabel.setFont(new Font("Roboto", Font.PLAIN, 14));
-        String[] styles = {"Regular", "Negrita", "Cursiva", "Negrita Cursiva"};
+        String[] styles = { "Regular", "Negrita", "Cursiva", "Negrita Cursiva" };
         JComboBox<String> styleComboBox = new JComboBox<>(styles);
         styleComboBox.setFont(new Font("Roboto", Font.PLAIN, 14));
         jPanel_fontChooser.add(styleLabel);
@@ -562,12 +558,10 @@ public class PantallaAdmin extends JFrame {
         jPanel_separador3.setLayout(jPanel_separador3Layout);
         jPanel_separador3Layout.setHorizontalGroup(
                 jPanel_separador3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 977, Short.MAX_VALUE)
-        );
+                        .addGap(0, 977, Short.MAX_VALUE));
         jPanel_separador3Layout.setVerticalGroup(
                 jPanel_separador3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 25, Short.MAX_VALUE)
-        );
+                        .addGap(0, 25, Short.MAX_VALUE));
 
         jPanel_preferencias.add(jPanel_separador3);
 
@@ -578,7 +572,8 @@ public class PantallaAdmin extends JFrame {
         jPanel_preferencias.add(jLabel1);
 
         jComboBox_exportarType.setFont(new Font("Roboto", Font.PLAIN, 14));
-        jComboBox_exportarType.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir...", "CSV", "TXT", "PDF", "Excel"}));
+        jComboBox_exportarType
+                .setModel(new DefaultComboBoxModel<>(new String[] { "Elegir...", "CSV", "TXT", "PDF", "Excel" }));
         jComboBox_exportarType.setMaximumSize(new Dimension(367, 40));
         jComboBox_exportarType.setPreferredSize(new Dimension(190, 37));
         jPanel_preferencias.add(jComboBox_exportarType);
@@ -590,12 +585,10 @@ public class PantallaAdmin extends JFrame {
         jPanel_separador4.setLayout(jPanel_separador4Layout);
         jPanel_separador4Layout.setHorizontalGroup(
                 jPanel_separador4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 977, Short.MAX_VALUE)
-        );
+                        .addGap(0, 977, Short.MAX_VALUE));
         jPanel_separador4Layout.setVerticalGroup(
                 jPanel_separador4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 25, Short.MAX_VALUE)
-        );
+                        .addGap(0, 25, Short.MAX_VALUE));
 
         jPanel_preferencias.add(jPanel_separador4);
 
@@ -606,7 +599,7 @@ public class PantallaAdmin extends JFrame {
         jPanel_preferencias.add(jLabel5);
 
         jComboBox_exportarType1.setFont(new Font("Roboto", Font.PLAIN, 14));
-        jComboBox_exportarType1.setModel(new DefaultComboBoxModel<>(new String[]{"Elegir..."}));
+        jComboBox_exportarType1.setModel(new DefaultComboBoxModel<>(new String[] { "Elegir..." }));
         jComboBox_exportarType1.setMaximumSize(new Dimension(567, 40));
         jComboBox_exportarType1.setPreferredSize(new Dimension(450, 37));
         jPanel_preferencias.add(jComboBox_exportarType1);
@@ -618,12 +611,10 @@ public class PantallaAdmin extends JFrame {
         jPanel_separador5.setLayout(jPanel_separador5Layout);
         jPanel_separador5Layout.setHorizontalGroup(
                 jPanel_separador5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 977, Short.MAX_VALUE)
-        );
+                        .addGap(0, 977, Short.MAX_VALUE));
         jPanel_separador5Layout.setVerticalGroup(
                 jPanel_separador5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 25, Short.MAX_VALUE)
-        );
+                        .addGap(0, 25, Short.MAX_VALUE));
 
         jPanel_preferencias.add(jPanel_separador5);
 
@@ -673,7 +664,7 @@ public class PantallaAdmin extends JFrame {
         jPanel10.add(update);
 
         jComboBox_tabla1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla1.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
+        jComboBox_tabla1.setModel(new DefaultComboBoxModel<>(new String[] { "Tabla1" }));
         jComboBox_tabla1.setMaximumSize(new Dimension(367, 32767));
         jComboBox_tabla1.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla1.addActionListener(this::jComboBox_tabla1ActionPerformed);
@@ -688,7 +679,7 @@ public class PantallaAdmin extends JFrame {
         jPanel10.add(set1);
 
         jComboBox_columna2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_columna2.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
+        jComboBox_columna2.setModel(new DefaultComboBoxModel<>(new String[] { "*" }));
         jComboBox_columna2.setPreferredSize(new Dimension(150, 27));
         jPanel10.add(jComboBox_columna2);
 
@@ -726,7 +717,8 @@ public class PantallaAdmin extends JFrame {
         jPanel10.add(cantColumn1);
 
         jComboBox_cantColumn1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_cantColumn1.setModel(new DefaultComboBoxModel<>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"}));
+        jComboBox_cantColumn1.setModel(new DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8",
+                "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19" }));
         jComboBox_cantColumn1.setMaximumSize(new Dimension(80, 32767));
         jComboBox_cantColumn1.setPreferredSize(new Dimension(80, 27));
         jComboBox_cantColumn1.addActionListener(this::jComboBox_cantColumn1ActionPerformed);
@@ -813,7 +805,7 @@ public class PantallaAdmin extends JFrame {
         jPanel12.add(insert);
 
         jComboBox_tabla2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
+        jComboBox_tabla2.setModel(new DefaultComboBoxModel<>(new String[] { "Tabla1" }));
         jComboBox_tabla2.setMaximumSize(new Dimension(367, 32767));
         jComboBox_tabla2.setPreferredSize(new Dimension(150, 27));
         jComboBox_tabla2.addActionListener(this::jComboBox_tabla2ActionPerformed);
@@ -828,7 +820,7 @@ public class PantallaAdmin extends JFrame {
         jPanel12.add(punto2);
 
         jComboBox_columna1.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_columna1.setModel(new DefaultComboBoxModel<>(new String[]{"*"}));
+        jComboBox_columna1.setModel(new DefaultComboBoxModel<>(new String[] { "*" }));
         jComboBox_columna1.setPreferredSize(new Dimension(150, 27));
         jPanel12.add(jComboBox_columna1);
 
@@ -882,7 +874,8 @@ public class PantallaAdmin extends JFrame {
         jPanel12.add(cantColumn);
 
         jComboBox_cantColumn2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_cantColumn2.setModel(new DefaultComboBoxModel<>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"}));
+        jComboBox_cantColumn2.setModel(new DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8",
+                "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19" }));
         jComboBox_cantColumn2.setMaximumSize(new Dimension(80, 32767));
         jComboBox_cantColumn2.setPreferredSize(new Dimension(80, 27));
         jComboBox_cantColumn2.addActionListener(this::jComboBox_cantColumn2ActionPerformed);
@@ -940,7 +933,7 @@ public class PantallaAdmin extends JFrame {
         jPanel13.add(delete);
 
         jComboBox_tabla3.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
-        jComboBox_tabla3.setModel(new DefaultComboBoxModel<>(new String[]{"Tabla1"}));
+        jComboBox_tabla3.setModel(new DefaultComboBoxModel<>(new String[] { "Tabla1" }));
         jComboBox_tabla3.setPreferredSize(new Dimension(150, 27));
         jPanel13.add(jComboBox_tabla3);
 
@@ -1022,12 +1015,10 @@ public class PantallaAdmin extends JFrame {
         separador.setLayout(separadorLayout);
         separadorLayout.setHorizontalGroup(
                 separadorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 794, Short.MAX_VALUE)
-        );
+                        .addGap(0, 794, Short.MAX_VALUE));
         separadorLayout.setVerticalGroup(
                 separadorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 30, Short.MAX_VALUE)
-        );
+                        .addGap(0, 30, Short.MAX_VALUE));
 
         jPanel_insert_update_delete.add(separador);
 
@@ -1048,12 +1039,10 @@ public class PantallaAdmin extends JFrame {
         jPanel_backup.setLayout(jPanel_backupLayout);
         jPanel_backupLayout.setHorizontalGroup(
                 jPanel_backupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 100, Short.MAX_VALUE)
-        );
+                        .addGap(0, 100, Short.MAX_VALUE));
         jPanel_backupLayout.setVerticalGroup(
                 jPanel_backupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 100, Short.MAX_VALUE)
-        );
+                        .addGap(0, 100, Short.MAX_VALUE));
 
         jPanel15.setBackground(new Color(227, 218, 201));
         jPanel15.setPreferredSize(new Dimension(794, 25));
@@ -1091,12 +1080,10 @@ public class PantallaAdmin extends JFrame {
         separador1.setLayout(separador1Layout);
         separador1Layout.setHorizontalGroup(
                 separador1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
+                        .addGap(0, 0, Short.MAX_VALUE));
         separador1Layout.setVerticalGroup(
                 separador1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
+                        .addGap(0, 0, Short.MAX_VALUE));
 
         jPanel_menuOpciones.add(separador1);
 
@@ -1119,12 +1106,10 @@ public class PantallaAdmin extends JFrame {
         separador3.setLayout(separador3Layout);
         separador3Layout.setHorizontalGroup(
                 separador3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
+                        .addGap(0, 0, Short.MAX_VALUE));
         separador3Layout.setVerticalGroup(
                 separador3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
+                        .addGap(0, 0, Short.MAX_VALUE));
 
         jPanel_menuOpciones.add(separador3);
 
@@ -1154,12 +1139,10 @@ public class PantallaAdmin extends JFrame {
         separador2.setLayout(separador2Layout);
         separador2Layout.setHorizontalGroup(
                 separador2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
+                        .addGap(0, 0, Short.MAX_VALUE));
         separador2Layout.setVerticalGroup(
                 separador2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
+                        .addGap(0, 0, Short.MAX_VALUE));
 
         jPanel_menuOpciones.add(separador2);
 
@@ -1223,12 +1206,10 @@ public class PantallaAdmin extends JFrame {
         separador4.setLayout(separador4Layout);
         separador4Layout.setHorizontalGroup(
                 separador4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
+                        .addGap(0, 0, Short.MAX_VALUE));
         separador4Layout.setVerticalGroup(
                 separador4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE)
-        );
+                        .addGap(0, 0, Short.MAX_VALUE));
 
         jPanel_menuOpciones.add(separador4);
 
@@ -1306,15 +1287,13 @@ public class PantallaAdmin extends JFrame {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(23, 23, 23)
                                 .addComponent(jLabel6, GroupLayout.PREFERRED_SIZE, 595, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(198, Short.MAX_VALUE))
-        );
+                                .addContainerGap(198, Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel6, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(752, Short.MAX_VALUE))
-        );
+                                .addContainerGap(752, Short.MAX_VALUE)));
 
         jPanel_derecho.add(jPanel1, "vacio");
 
@@ -1331,7 +1310,7 @@ public class PantallaAdmin extends JFrame {
     }// </editor-fold>
 
     private void formComponentShown(ComponentEvent evt) {
-        Login.setImageLabal(icon_project, "src/images/operacionVacunas_Logo.png");
+        Login.setImageLabal(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
     }
 
     /* eventos del menú lateral */
@@ -1399,7 +1378,7 @@ public class PantallaAdmin extends JFrame {
         jPanel_derecho.repaint();
     }
 
-    /* eventos del jPanel mostrar tabla option 1*/
+    /* eventos del jPanel mostrar tabla option 1 */
     private void jButton_acercarMouseClicked(MouseEvent evt) {
         Font currentFont = jTable_Content.getFont();
         jTable_Content.setFont(currentFont.deriveFont(currentFont.getSize() + 2f));
@@ -1467,13 +1446,14 @@ public class PantallaAdmin extends JFrame {
     }
 
     private void jButton_savePreferencesMouseClicked(MouseEvent evt) {
-        /* TODO implementar lógica de guardar preferencias del usuario*/
+        /* TODO implementar lógica de guardar preferencias del usuario */
     }
 
     /* eventos del panel SELECT */
     private void jButton_selectMouseClicked(MouseEvent evt) {
         if (jComboBox_tabla.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "ERROR. Debe seleccionar alguna tabla en el FROM. OPERACIÓN CANCELADA", "ERROR SELECT", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "ERROR. Debe seleccionar alguna tabla en el FROM. OPERACIÓN CANCELADA",
+                    "ERROR SELECT", JOptionPane.ERROR_MESSAGE);
         } else {
             /* TODO implementar el BUSCAR SELECT según los criterios */
         }
@@ -1612,9 +1592,14 @@ public class PantallaAdmin extends JFrame {
     private void jButton2MouseClicked(MouseEvent evt) {
         String condicion = jTextField_where1.getText();
         if (condicion.isBlank() || condicion.equals("Condición o condiciones")) {
-            JOptionPane.showMessageDialog(null, "No puede actualizar toda la data de una tabla. Declare una condición WHERE", "ERROR UPDATE", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "No puede actualizar toda la data de una tabla. Declare una condición WHERE", "ERROR UPDATE",
+                    JOptionPane.ERROR_MESSAGE);
         } else {
-            /* TODO implementar lógica de hacer update en la tabla específica y columnas específicas con la condición específica */
+            /*
+             * TODO implementar lógica de hacer update en la tabla específica y columnas
+             * específicas con la condición específica
+             */
         }
     }
 
@@ -1721,7 +1706,9 @@ public class PantallaAdmin extends JFrame {
     private void jButton4MouseClicked(MouseEvent evt) {
         String condicion = jTextField_where2.getText();
         if (condicion.isBlank() || condicion.equals("Condición o condiciones")) {
-            JOptionPane.showMessageDialog(null, "No puede eliminar toda la data de una tabla. Declare una condición WHERE", "ERROR DELETE", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "No puede eliminar toda la data de una tabla. Declare una condición WHERE", "ERROR DELETE",
+                    JOptionPane.ERROR_MESSAGE);
         } else {
             /* TODO implementar lógica de eliminar con la condición específica */
         }
@@ -1907,9 +1894,10 @@ public class PantallaAdmin extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PantallaAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PantallaAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         }
 
         EventQueue.invokeLater(() -> new PantallaAdmin().setVisible(true));

@@ -160,7 +160,7 @@ public class UserManager {
         }
     }
 
-    private static void sincronizarUsuarios(Resultados result) throws SQLException {
+    private static void sincronizarUsuarios(Resultados result) {
         Object[][] da = result.getDatos();
         for (Object[] dato : da) {
             String cedula = (String) dato[1];
@@ -254,8 +254,7 @@ public class UserManager {
 
                     // Espera antes de intentar extender el token nuevamente
                     try {
-                        Thread.sleep(System.currentTimeMillis() + 3500000); // Ajusta el tiempo de espera según sea
-                                                                            // necesario
+                        Thread.sleep(System.currentTimeMillis() + 3500000); // Ajusta el tiempo de espera según sea necesario
                     } catch (InterruptedException e) {
                         System.err.println(e);
                         break; // Sale del bucle si hay una interrupción

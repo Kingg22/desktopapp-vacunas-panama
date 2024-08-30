@@ -13,6 +13,7 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.net.URL;
 
 public class StaticMethods {
     /* métodos static para manejar los focus de los campos según el tipo */
@@ -216,11 +217,15 @@ public class StaticMethods {
     }
 
     /* ajusta la imagen en un JLabel cuando este se redimensiona */
-    public static void setImageLabel(JLabel label, String imagen) {
-        ImageIcon image = new ImageIcon(imagen);
-        Icon icon = new ImageIcon(image.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH));
-        label.setIcon(icon);
-        label.repaint();
+    public static void setImageLabel(JLabel label) {
+        Icon image = label.getIcon();
+        if (image instanceof ImageIcon imageIcon) {
+            Icon icon = new ImageIcon(imageIcon.getImage().getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH));
+            label.setIcon(icon);
+            label.repaint();
+        } else {
+            System.err.println("El icono actual no es una instancia de ImageIcon y no se puede redimensionar. " + label);
+        }
     }
 
     /* ejemplo de try catch CustomException */

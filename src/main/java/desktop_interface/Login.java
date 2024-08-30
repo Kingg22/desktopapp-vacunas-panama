@@ -715,12 +715,12 @@ public class Login extends JFrame {
 
     /* eventos */
     private void formComponentShown(ComponentEvent evt) {
-        StaticMethods.setImageLabel(paciente_icon, "src/main/resources/images/patient_icon.png");
-        StaticMethods.setImageLabel(doctor_icon, "src/main/resources/images/doctor_icon.png");
-        StaticMethods.setImageLabel(fabricante_icon, "src/main/resources/images/supplier_icon.png");
-        StaticMethods.setImageLabel(administrativo_icon, "src/main/resources/images/administrative_icon.png");
-        StaticMethods.setImageLabel(autoridad_icon, "src/main/resources/images/authority_icon.png");
-        StaticMethods.setImageLabel(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
+        StaticMethods.setImageLabel(paciente_icon);
+        StaticMethods.setImageLabel(doctor_icon);
+        StaticMethods.setImageLabel(fabricante_icon);
+        StaticMethods.setImageLabel(administrativo_icon);
+        StaticMethods.setImageLabel(autoridad_icon);
+        StaticMethods.setImageLabel(icon_project);
     }
 
     /* eventos del jFrame login */
@@ -1039,7 +1039,7 @@ public class Login extends JFrame {
     }
 
     private void icon_project1AncestorAdded(AncestorEvent evt) {
-        StaticMethods.setImageLabel(icon_project1, "src/main/resources/images/operacionVacunas_logo.png");
+        StaticMethods.setImageLabel(icon_project1);
     }
 
     private void jButton_cancelar5MouseClicked(MouseEvent evt) {

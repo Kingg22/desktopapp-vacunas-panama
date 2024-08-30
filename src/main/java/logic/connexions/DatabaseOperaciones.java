@@ -7,7 +7,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerResultSet;
 import com.microsoft.sqlserver.jdbc.SQLServerResultSetMetaData;
 import logic.scanner_database.Column;
 import logic.scanner_database.DatabaseInfo;
-import logic.user_management.TokenMananger;
+import logic.user_management.TokenManager;
 import logic.user_management.UserManager;
 
 import java.sql.*;
@@ -700,9 +700,9 @@ public class DatabaseOperaciones {
     }
 
     private boolean verifyToken(String token) throws JWTVerificationException {
-        if (TokenMananger.verifyToken(token)) {
-            rol = TokenMananger.getRoleFromToken(token);
-            cedula = TokenMananger.getCedulaFromToken(token);
+        if (TokenManager.verifyToken(token)) {
+            rol = TokenManager.getRoleFromToken(token);
+            cedula = TokenManager.getCedulaFromToken(token);
             return true;
         }
         return false;

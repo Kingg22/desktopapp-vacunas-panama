@@ -422,7 +422,7 @@ public class RegistrarUser extends JFrame {
 
     /* eventos */
     private void formComponentShown(ComponentEvent evt) {
-        StaticMethods.setImageLabel(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
+        StaticMethods.setImageLabel(icon_project);
     }
 
     private void formWindowClosing(WindowEvent evt) {

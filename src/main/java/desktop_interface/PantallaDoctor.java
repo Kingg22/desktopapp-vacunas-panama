@@ -2322,7 +2322,7 @@ public class PantallaDoctor extends JFrame {
     }// </editor-fold>
 
     private void formComponentShown(ComponentEvent evt) {
-        StaticMethods.setImageLabel(icon_project, "src/main/resources/images/operacionVacunas_Logo.png");
+        StaticMethods.setImageLabel(icon_project);
         try {
             if (DB_DOCTOR.refreshAgePaciente(token))
                 System.out.println("Se actualizó la edad de los pacientes en la base de datos.");
@@ -3861,7 +3861,7 @@ public class PantallaDoctor extends JFrame {
         int style = styleComboBox.getSelectedIndex();
         int sede = jComboBox_sede_preferida.getSelectedIndex();
         String filetype = (String) jComboBox_exportarType_preferido.getSelectedItem();
-        Preferencias p = userActual.getPrefs();
+        Preferences p = userActual.getPrefs();
         p.setPrefs(font, style, size, sede, filetype);
         actualizarPreferencias(p);
         JOptionPane.showMessageDialog(this, "¡Se han guardado sus preferencias!");
@@ -3983,7 +3983,7 @@ public class PantallaDoctor extends JFrame {
         this.userActual = userActual;
         cedulaUsuarioActual = this.userActual.getCedula();
         this.nombreBienvenida.setText(this.userActual.getNombre() + " " + this.userActual.getApellido());
-        token = TokenMananger.generateToken(this.userActual.getCedula(), "Doctor - Enfermera");
+        token = TokenManager.generateToken(this.userActual.getCedula(), "Doctor - Enfermera");
         actualizarPreferencias(this.userActual.getPrefs());
         new SwingWorker<>() {
             @Override
@@ -4012,7 +4012,7 @@ public class PantallaDoctor extends JFrame {
     }
 
     /* método para actualizar las preferencias del doctor actual */
-    private void actualizarPreferencias(Preferencias pref) {
+    private void actualizarPreferencias(Preferences pref) {
         String font = pref.getFontName();
         int style = pref.getFontStyle(), size = pref.getFontSize();
         Font f = new Font(font, style, size);

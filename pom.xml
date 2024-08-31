@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kingg</groupId>
-    <artifactId>Programa_Vacunas_Panama</artifactId>
+    <artifactId>desktopapp-vacunas-Panama</artifactId>
     <version>0.1</version>
 
-    <name>Programa_Vacunas_Panama</name>
-    <description>Programa en Java que se conecta a una base de datos relacional SQL.
+    <name>desktopapp-vacunas-Panama</name>
+    <description>Programa en Java Swing que se conecta a una base de datos SQL Server Express.
         Tema: Almacenamiento de la inmunización en Panamá con objetivo público y privado.
     </description>
 

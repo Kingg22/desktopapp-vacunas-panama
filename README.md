@@ -40,18 +40,9 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 - [Python](https://www.python.org/) - Para el desarrollo de la interfaz de usuario de pacientes.
 - [SQL Server](https://www.microsoft.com/es-mx/sql-server) - Para la gestión de la base de datos.
 - [Spring](https://spring.io/)
-- [Absolute Layout](https://www.cs.brandeis.edu/~hosang/BiVoSite/API/org/netbeans/lib/awtextra/AbsoluteLayout.html) -
-  Layout para posiciones fijas del GUI Building by Netbeans.
-- [Bcrypt](https://docs.spring.io/spring-security/reference/features/integrations/cryptography.html) - Librería de
-  Spring Security Crypto Java para el hash de contraseñas.
-- [Java JWT (JSON Web Token)](https://github.com/auth0/java-jwt) - Librería de Java para utilizar tokens de JWT (method
-  for representing claims securely between two parties).
-- [Dotenv-Java](https://github.com/cdimascio/dotenv-java) - Librería de Java para cargar las variables de entornos .env
-- [Dotenv-Python](https://github.com/theskumar/python-dotenv) - Librería de Python para cargar las variables de entorno
-  .env
+- [Spring Dotenv](https://github.com/paulschwarz/spring-dotenv) - Librería de Java para cargar las variables de entornos .env para Spring
 - [JDBC SQL Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) -
   Driver para conectar con la base de datos SQL Server en Java.
-- [ODBC Driver](https://github.com/mkleehammer/pyodbc) - Driver para conectar bases de datos en Python.
 
 ## :pencil: Autores
 

@@ -1,12 +1,12 @@
-package com.kingg.api_vacunas_Panama.entity;
+package com.kingg.api_vacunas_panama.entity;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "pacientes_dosis")
-public class PacienteDosis {
+public class PacientesDosis {
     @EmbeddedId
-    private PacienteDosisId id;
+    private PacientesDosisId id;
 
     @MapsId("cedulaPaciente")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -18,11 +18,11 @@ public class PacienteDosis {
     @JoinColumn(name = "id_dosis", nullable = false)
     private Dosis idDosis;
 
-    public PacienteDosisId getId() {
+    public PacientesDosisId getId() {
         return id;
     }
 
-    public void setId(PacienteDosisId id) {
+    public void setId(PacientesDosisId id) {
         this.id = id;
     }
 

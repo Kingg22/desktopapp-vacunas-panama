@@ -1,4 +1,4 @@
-package com.kingg.api_vacunas_Panama;
+package com.kingg.api_vacunas_panama;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

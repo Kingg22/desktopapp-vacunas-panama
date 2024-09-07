@@ -1,7 +1,10 @@
-package com.kingg.api_vacunas_Panama.entity;
+package com.kingg.api_vacunas_panama.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Nationalized;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "provincias")
@@ -11,17 +14,12 @@ public class Provincia {
     @Column(name = "id_provincia", nullable = false)
     private Integer id;
 
-    @ColumnDefault("0")
-    @Column(name = "provincia", length = 30)
-    private String provincia;
+    @Nationalized
+    @Column(name = "nombre_provincia", length = 30)
+    private String nombreProvincia;
 
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
-    }
+    @OneToMany(mappedBy = "idProvincia")
+    private Set<Distrito> distritos = new LinkedHashSet<>();
 
     public Integer getId() {
         return id;
@@ -29,6 +27,22 @@ public class Provincia {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getNombreProvincia() {
+        return nombreProvincia;
+    }
+
+    public void setNombreProvincia(String nombreProvincia) {
+        this.nombreProvincia = nombreProvincia;
+    }
+
+    public Set<Distrito> getDistritos() {
+        return distritos;
+    }
+
+    public void setDistritos(Set<Distrito> distritos) {
+        this.distritos = distritos;
     }
 
 }

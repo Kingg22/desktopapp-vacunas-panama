@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>com.kingg</groupId>
-    <artifactId>api-vacunas-Panama</artifactId>
+    <artifactId>api-vacunas-panama</artifactId>
     <version>0.0.1</version>
 
-    <name>api-vacunas-Panama</name>
+    <name>api-vacunas-panama</name>
     <description>API en Java con Spring que se conecta a una base de datos relacional SQL. Tema: Almacenamiento de la inmunización en Panamá con objetivo público y privado.</description>
 
     <url/>
@@ -67,6 +67,23 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
+            <version>6.3.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+            <version>6.3.3</version>
         </dependency>
 
         <dependency>

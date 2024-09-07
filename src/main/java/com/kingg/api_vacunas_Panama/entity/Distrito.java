@@ -1,7 +1,10 @@
-package com.kingg.api_vacunas_Panama.entity;
+package com.kingg.api_vacunas_panama.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Nationalized;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "distritos")
@@ -11,14 +14,32 @@ public class Distrito {
     @Column(name = "id_distrito", nullable = false)
     private Integer id;
 
-    @ColumnDefault("'Panama'")
-    @Column(name = "distrito", length = 100)
-    private String distrito;
+    @Nationalized
+    @Column(name = "nombre_distrito", length = 100)
+    private String nombreDistrito;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ColumnDefault("0")
     @JoinColumn(name = "id_provincia")
     private Provincia idProvincia;
+
+    @OneToMany(mappedBy = "idDistrito")
+    private Set<Direccion> direcciones = new LinkedHashSet<>();
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombreDistrito() {
+        return nombreDistrito;
+    }
+
+    public void setNombreDistrito(String nombreDistrito) {
+        this.nombreDistrito = nombreDistrito;
+    }
 
     public Provincia getIdProvincia() {
         return idProvincia;
@@ -28,20 +49,12 @@ public class Distrito {
         this.idProvincia = idProvincia;
     }
 
-    public String getDistrito() {
-        return distrito;
+    public Set<Direccion> getDirecciones() {
+        return direcciones;
     }
 
-    public void setDistrito(String distrito) {
-        this.distrito = distrito;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void setDirecciones(Set<Direccion> direcciones) {
+        this.direcciones = direcciones;
     }
 
 }

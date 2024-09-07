@@ -1,17 +1,27 @@
-package com.kingg.api_vacunas_Panama.entity;
+package com.kingg.api_vacunas_panama.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Nationalized;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class PacienteDosisId implements java.io.Serializable {
-    private static final long serialVersionUID = -5431680245325751262L;
+public class PacientesDosisId implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6526647629932400742L;
+    @Size(max = 20)
+    @NotNull
+    @Nationalized
     @Column(name = "cedula_paciente", nullable = false, length = 20)
     private String cedulaPaciente;
 
+    @NotNull
     @Column(name = "id_dosis", nullable = false)
     private Integer idDosis;
 
@@ -35,7 +45,7 @@ public class PacienteDosisId implements java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        PacienteDosisId entity = (PacienteDosisId) o;
+        PacientesDosisId entity = (PacientesDosisId) o;
         return Objects.equals(this.idDosis, entity.idDosis) &&
                 Objects.equals(this.cedulaPaciente, entity.cedulaPaciente);
     }

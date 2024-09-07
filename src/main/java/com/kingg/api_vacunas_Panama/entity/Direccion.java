@@ -1,7 +1,9 @@
-package com.kingg.api_vacunas_Panama.entity;
+package com.kingg.api_vacunas_panama.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "direcciones")
@@ -11,21 +13,15 @@ public class Direccion {
     @Column(name = "id_direccion", nullable = false)
     private Integer id;
 
-    @Column(name = "direccion")
+    @Column(name = "direccion", length = 150)
     private String direccion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ColumnDefault("0")
     @JoinColumn(name = "id_distrito")
     private Distrito idDistrito;
 
-    public Distrito getIdDistrito() {
-        return idDistrito;
-    }
-
-    public void setIdDistrito(Distrito idDistrito) {
-        this.idDistrito = idDistrito;
-    }
+    @OneToMany(mappedBy = "idDireccion")
+    private Set<Paciente> pacientes = new LinkedHashSet<>();
 
     public Integer getId() {
         return id;
@@ -41,6 +37,22 @@ public class Direccion {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public Distrito getIdDistrito() {
+        return idDistrito;
+    }
+
+    public void setIdDistrito(Distrito idDistrito) {
+        this.idDistrito = idDistrito;
+    }
+
+    public Set<Paciente> getPacientes() {
+        return pacientes;
+    }
+
+    public void setPacientes(Set<Paciente> pacientes) {
+        this.pacientes = pacientes;
     }
 
 }

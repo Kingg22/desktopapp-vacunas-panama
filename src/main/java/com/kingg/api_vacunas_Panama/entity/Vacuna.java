@@ -1,15 +1,22 @@
-package com.kingg.api_vacunas_Panama.entity;
+package com.kingg.api_vacunas_panama.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Nationalized;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "vacunas")
+@Table(name = "vacunas", indexes = {
+        @Index(name = "ix_vacunas_nombre", columnList = "nombre_vacuna")
+})
 public class Vacuna {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_vacuna", nullable = false)
     private Integer id;
 
+    @Nationalized
     @Column(name = "nombre_vacuna", length = 100)
     private String nombreVacuna;
 
@@ -17,7 +24,10 @@ public class Vacuna {
     private Integer edadMinima;
 
     @Column(name = "intervalo_dosis_1_2_meses")
-    private Double intervaloDosis12Meses;
+    private Double intervalo2DosisMeses;
+
+    @OneToMany(mappedBy = "idVacuna")
+    private Set<Dosis> dosis = new LinkedHashSet<>();
 
     public Integer getId() {
         return id;
@@ -43,12 +53,20 @@ public class Vacuna {
         this.edadMinima = edadMinima;
     }
 
-    public Double getIntervaloDosis12Meses() {
-        return intervaloDosis12Meses;
+    public Double getIntervalo2DosisMeses() {
+        return intervalo2DosisMeses;
     }
 
-    public void setIntervaloDosis12Meses(Double intervaloDosis12Meses) {
-        this.intervaloDosis12Meses = intervaloDosis12Meses;
+    public void setIntervalo2DosisMeses(Double intervalo2DosisMeses) {
+        this.intervalo2DosisMeses = intervalo2DosisMeses;
+    }
+
+    public Set<Dosis> getDosis() {
+        return dosis;
+    }
+
+    public void setDosis(Set<Dosis> dosis) {
+        this.dosis = dosis;
     }
 
 }

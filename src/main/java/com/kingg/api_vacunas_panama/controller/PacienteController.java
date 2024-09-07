@@ -7,10 +7,11 @@ import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api_vacunas/v1/paciente", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/vacunacion/v1/paciente", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PacienteController {
     private final PacienteService pacienteService;
 

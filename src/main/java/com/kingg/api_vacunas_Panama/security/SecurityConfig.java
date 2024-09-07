@@ -40,11 +40,11 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api_vacunas/v1/paciente/**").hasAnyAuthority("PACIENTE_READ")
-                                .requestMatchers("/api_vacunas/v1/vacunas/**").hasAnyRole("DOCTOR", "ENFERMERA")
-                                .requestMatchers("/api_vacunas/v1/account/register").permitAll()
-                                .requestMatchers("/api_vacunas/v1/account/login").permitAll()
-                                .requestMatchers("/api_vacunas/v1/account/restore").permitAll()
+                                .requestMatchers("/vacunacion/v1/paciente/**").hasAnyAuthority("PACIENTE_READ")
+                                .requestMatchers("/vacunacion/v1/vacunas/**").hasAnyRole("DOCTOR", "ENFERMERA")
+                                .requestMatchers("/vacunacion/v1/account/register").permitAll()
+                                .requestMatchers("/vacunacion/v1/account/login").permitAll()
+                                .requestMatchers("/vacunacion/v1/account/restore").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))

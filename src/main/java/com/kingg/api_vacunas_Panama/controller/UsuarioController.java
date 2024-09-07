@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping(path = "/api_vacunas/v1/account", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/vacunacion/v1/account", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsuarioController {
     private final UsuarioRepository usuarioRepository;
     private final TokenService tokenService;

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api_vacunas/v1/token", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/vacunacion/v1/token", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TokenController {
     private final TokenService tokenService;
 

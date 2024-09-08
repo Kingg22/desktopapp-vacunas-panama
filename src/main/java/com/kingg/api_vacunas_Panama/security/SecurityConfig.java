@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 
 import java.security.interfaces.RSAPrivateKey;
@@ -34,18 +37,30 @@ public class SecurityConfig {
     private RSAPrivateKey privateKey;
     @Value("${security.jwt.issuer}")
     private String issuer;
+    AccessDeniedHandler accessDeniedHandler;
+    AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
+    public SecurityConfig(AccessDeniedHandler accessDeniedHandler, AuthenticationEntryPoint authenticationEntryPoint) {
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/vacunacion/v1/paciente/**").hasAnyAuthority("PACIENTE_READ")
-                                .requestMatchers("/vacunacion/v1/vacunas/**").hasAnyRole("DOCTOR", "ENFERMERA")
-                                .requestMatchers("/vacunacion/v1/account/register").permitAll()
-                                .requestMatchers("/vacunacion/v1/account/login").permitAll()
-                                .requestMatchers("/vacunacion/v1/account/restore").permitAll()
-                                .anyRequest().authenticated()
+                        .requestMatchers("/vacunacion/v1/paciente/**").hasAnyAuthority("PACIENTE_READ")
+                        .requestMatchers("/vacunacion/v1/vacunas/**").hasAnyRole("DOCTOR", "ENFERMERA")
+                        .requestMatchers("/vacunacion/v1/account/register").permitAll()
+                        .requestMatchers("/vacunacion/v1/account/login").permitAll()
+                        .requestMatchers("/vacunacion/v1/account/restore").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(authenticationEntryPoint)
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -83,4 +98,5 @@ public class SecurityConfig {
     public CompromisedPasswordChecker compromisedPasswordChecker() {
         return new HaveIBeenPwnedRestApiPasswordChecker();
     }
+
 }

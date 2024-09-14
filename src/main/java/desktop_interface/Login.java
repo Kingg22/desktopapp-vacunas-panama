@@ -762,7 +762,7 @@ public class Login extends JFrame {
 
                         SwingWorker<Void, String> worker = new SwingWorker<>() {
                             @Override
-                            protected Void doInBackground() throws Exception {
+                            protected Void doInBackground() {
                                 try {
                                     ProcessBuilder builder = new ProcessBuilder("venv\\Scripts\\python.exe",
                                             "src\\main\\java\\desktop_interface\\Paciente.py", usuario1.getCedula(),

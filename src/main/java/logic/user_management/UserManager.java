@@ -225,7 +225,7 @@ public class UserManager {
     private synchronized static void extendSessionApp() {
         new SwingWorker<>() {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void doInBackground() {
                 User userApp = buscar("A-12345-123456", "App");
                 while (true) {
                     try {

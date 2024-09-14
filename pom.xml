@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kingg</groupId>
-    <artifactId>Programa_Vacunas_Panama</artifactId>
+    <artifactId>desktopapp-vacunas-panama</artifactId>
     <version>0.1</version>
 
-    <name>Programa_Vacunas_Panama</name>
+    <name>desktopapp-vacunas-panama</name>
     <description>Programa en Java que se conecta a una base de datos relacional SQL.
         Tema: Almacenamiento de la inmunización en Panamá con objetivo público y privado.
     </description>
@@ -71,7 +71,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.7.1</version>
-
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -93,6 +92,28 @@
                     </execution>
                 </executions>
             </plugin>
+
+	    <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.4.0</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <configuration>
+                            <outputDirectory>${project.basedir}</outputDirectory>
+                            <licenseMerges>
+                                <licenseMerge>The Apache Software License, Version 2.0|Apache License, Version
+                                    2.0|Apache Public License 2.0|Apache License 2.0|Apache-2.0
+                                </licenseMerge>
+                                <licenseMerge>The MIT License|MIT License</licenseMerge>
+                            </licenseMerges>
+                            <sortArtifactByName>true</sortArtifactByName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

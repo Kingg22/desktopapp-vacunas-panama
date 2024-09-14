@@ -16,7 +16,7 @@ universitario y solo realizamos la interfaz de usuario para pacientes, doctores 
 
 :white_check_mark: Proyecto terminado para la universidad :white_check_mark:
 
-:construction: Proyecto mejorado lentamente en los tiempos libres :construction:
+:rotating_light: Proyecto deprecado. Cambiado a una [API REST Full](https://github.com/Kingg22/desktopapp-vacunas-panama/tree/refactor/api) :rotating_light:
 
 ### :pushpin: Objetivo del Proyecto
 
@@ -46,82 +46,65 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 - El listado de vacunas (por lo tanto, enfermedades, síntomas y 1 fabricante por vacuna) fue
   del [esquema de vacunación de Panamá 2023 abril](https://www.spp.com.pa/publicaciones/documentos-interes/vacunacion/ESQUEMA-DE-VACUNACION_2023_3Abril.pdf).
 
-### Recolección de Datos:
+### Características del proyecto
+1. Recolección de Datos:
+   
+    Capturar información detallada sobre las vacunas, eventos supuestamente atribuibles a la vacunación e inmunización
+   (ESAVI), y datos demográficos de los pacientes.
+2. Gestión de Información:
 
-Capturar información detallada sobre las vacunas, eventos supuestamente atribuibles a la vacunación e inmunización
-(ESAVI), y datos demográficos de los pacientes.
+   Permitir la entrada, actualización y eliminación de datos sobre vacunaciones.
+3. Seguridad:
 
-### Gestión de Información:
+    Implementar mecanismos de seguridad para proteger la información sensible de los pacientes.
+4. Interoperabilidad:
 
-Permitir la entrada, actualización y eliminación de datos sobre vacunaciones.
-
-### Seguridad:
-
-Implementar mecanismos de seguridad para proteger la información sensible de los pacientes.
-
-### Interoperabilidad:
-
-Asegurar que la base de datos pueda integrarse con otros sistemas de información de salud.
+    Asegurar que la base de datos pueda integrarse con otros sistemas de información de salud.
 
 ## :rocket: Recomendaciones para la Implementación
 
-### Precisión en la Edad de los Pacientes:
+1. Precisión en la Edad de los Pacientes:
+    
+   Utilizar eventos programados o jobs de SQL Server Agent para actualizar la edad de los pacientes anualmente en su cumpleaños.
+2. Autocompletado de Direcciones:
+   
+   Implementar un sistema de autocompletado para evitar duplicidades y mejorar la precisión en la base de datos.
+3. Expediente Digital:
+   
+   Integrar reacciones a vacunas, efectos secundarios y contraindicaciones en el expediente digital del paciente.
+4. Esquemas Especiales de Vacunación:
+   
+    Implementar reglas de negocio para manejar esquemas especiales de vacunación para niños rezagados, mujeres embarazadas y
+   otras poblaciones específicas.
+5. Mejora en la Validación de Datos:
+   
+    Fortalecer la validación de datos en la entrada para asegurar la calidad de la información y seguridad.
+6. Generación de Certificados de Vacunas:
+   
+   Implementar la generación de certificados de vacunas en formatos PDF, Excel.
+7. Autenticación de 2 Factores:
 
-Utilizar eventos programados o jobs de SQL Server Agent para actualizar la edad de los pacientes anualmente en su
-cumpleaños.
-
-### Autocompletado de Direcciones:
-
-Implementar un sistema de autocompletado para evitar duplicidades y mejorar la precisión en la base de datos.
-
-### Expediente Digital:
-
-Integrar reacciones a vacunas, efectos secundarios y contraindicaciones en el expediente digital del paciente.
-
-### Esquemas Especiales de Vacunación:
-
-Implementar reglas de negocio para manejar esquemas especiales de vacunación para niños rezagados, mujeres embarazadas y
-otras poblaciones específicas.
-
-### Mejora en la Validación de Datos:
-
-Fortalecer la validación de datos en la entrada para asegurar la calidad de la información y seguridad.
-
-### Generación de Certificados de Vacunas:
-
-Implementar la generación de certificados de vacunas en formatos PDF, Excel.
-
-### Autenticación de 2 Factores:
-
-Añadir autenticación de dos factores vía correo electrónico para mejorar la seguridad del sistema.
-
-### Seguridad de la Base de Datos:
-
-Implementar timeout para consultas a la base de datos y manipulación de información, y cifrar los datos sensibles.
-
-### Gestión de Usuarios y Roles:
-
-Cambiar el enfoque de usuarios específicos a roles con permisos específicos, y utilizar usuarios individuales para cada
-paciente.
-
-### Interfaz de Usuario Portable:
-
-Desarrollar la aplicación como una solución web o de microservicios para facilitar el acceso sin necesidad de instalar
-una aplicación de escritorio.
-
-### Preferencias de Interfaz:
-
-Permitir personalización de la interfaz de usuario, como tamaño y tipo de letra, independiente de la plataforma y
-arquitectura.
-
-### Auditoría y Logs:
-
-Mantener logs de todos los eventos en la base de datos para realizar auditorías.
+   Añadir autenticación de dos factores vía correo electrónico para mejorar la seguridad del sistema.
+8. Seguridad de la Base de Datos:
+   
+   Implementar timeout para consultas a la base de datos y manipulación de información, y cifrar los datos sensibles.
+9. Gestión de Usuarios y Roles:
+   
+   Cambiar el enfoque de usuarios específicos a roles con permisos específicos, y utilizar usuarios individuales para cada
+      paciente.
+10. Interfaz de Usuario Portable:
+    
+    Desarrollar la aplicación como una solución web o de microservicios para facilitar el acceso sin necesidad de instalar
+        una aplicación de escritorio.
+11. Preferencias de Interfaz:
+    
+    Permitir personalización de la interfaz de usuario, como tamaño y tipo de letra, independiente de la plataforma y
+        arquitectura.
+12. Auditoría y Logs:
+    
+    Mantener logs de todos los eventos en la base de datos para realizar auditorías.
 
 ## :hammer_and_wrench:Tecnologías Utilizadas
-
-**Trabajando en hacer referencia a las licencias correctamente. Una disculpa.**
-
 - [Java](https://www.java.com/es/) - Para el desarrollo de la interfaz de usuario principal.
 - [Python](https://www.python.org/) - Para el desarrollo de la interfaz de usuario de pacientes.
 - [SQL Server](https://www.microsoft.com/es-mx/sql-server) - Para la gestión de la base de datos.
@@ -158,7 +141,7 @@ Sigue estos pasos para clonar el repositorio, configurar el entorno en tu IDE y 
 Abre una terminal y ejecuta los siguientes comandos:
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/Kingg22/Programa_Vacunas_Panama.git
+git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
 ```
 ### 2. Abrir el proyecto donde fue clonado el repositorio
 ### 3. Configurar el Entorno Virtual de Python:
@@ -167,30 +150,34 @@ python -m venv venv
 venv\Scripts\activate
 ```
 En el segundo comando debe cambiar su terminal a (venv) o env lo que significa un entorno virtual activado.
-Recomandamos el uso de un entorno virtual para evitar conflictos de librerias de python y un entorno limpio para el proyecto.
-### 4. Instalar depedencias de python
+Recomendamos el uso de un entorno virtual para evitar conflictos de librerías de python y un entorno limpio para el proyecto.
+### 4. Instalar dependencias de python
 ```bash
 pip install pyodbc flet python-dotenv
 ```
-### 5. Verificación
+### 5. Personalizar su entorno
+1. Crear la base de datos en sql server con el script dado, en este debe escribir las contraseñas para cada login.
+2. Crear su .env incluyendo las credenciales anteriores. Debe respetar el formato para java y para python.
+### 6. Verificación
 Para verificar que todo ha sido configurado correctamente seguir los siguientes pasos:
-#### 1. Crear el package con Maven
-Utilizando el IDE integrado con Maven o el siguiente comando:
-```bash
-mvn package -f ".\pom.xml"
-```
-#### 2. Ejecutar en su consola:
-```bash
-java -jar .\target\Programa_Vacunas_Panama-0.1-jar-with-dependencies.jar
-```
-Cualquier error verificar la versión del Java JDK, el python venv y las rutas relativas o absolutas de los archivos.
-### Configuración específica para IntelliJ
+1. Crear el package con Maven
+  Utilizando el IDE integrado con Maven o el siguiente comando:
+    ```bash
+    mvn package -f ".\pom.xml"
+    ```
+2. Ejecutar en su consola:
+    ```bash
+    java -jar .\target\Programa_Vacunas_Panama-0.1-jar-with-dependencies.jar
+    ```
+   Cualquier error verificar la versión del Java JDK, el python venv y las rutas relativas o absolutas de los archivos.
+### Configuración específica para IntelliJ IDEA
 > [!NOTE]
 > Para utilizar IntelliJ IDEA necesitas una licencia de [Jetbrains](https://www.jetbrains.com/idea/) posterior a los 30 días de prueba.
 
 Posterior a los pasos anteriores:
-#### Configurar en Project Structure module Python:
-En la ventana emergente, sección SDK debe aparecer su Python venv ya configurado. Si no lo observa, cerrar IntelliJ, invalidar la caché y reiniciar.
-Con este SDK de Python ya listo con los pasos anteriores, en Modules estará las carpetas de Java Maven.
-Le damos a add Module y escogemos Python, le cargará automático el Python venv ya configurado y guardamos los cambios.
-Se necesita esto para que el IDE IntelliJ cargue todas las dependencias y pueda analizar el archivo .py del proyecto.
+- Configurar en Project Structure module Python:
+  1. En la ventana emergente, sección SDK debe aparecer su Python venv ya configurado. Si no lo observa, cerrar IntelliJ, invalidar la caché y reiniciar.
+  2. Con este SDK de Python ya listo con los pasos anteriores, en Modules estará las carpetas de Java Maven.
+  3. Le damos a add Module y escogemos Python, le cargará automático el Python venv ya configurado y guardamos los cambios.
+  
+  Se necesita esto para que el IDE IntelliJ cargue todas las dependencias y pueda analizar el archivo .py del proyecto.

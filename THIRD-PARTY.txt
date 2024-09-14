@@ -1,0 +1,10 @@
+
+Lists of 8 third-party dependencies.
+     (Apache License, Version 2.0) dotenv-java (io.github.cdimascio:dotenv-java:3.0.1 - https://github.com/cdimascio/dotenv-java)
+     (The Apache Software License, Version 2.0) Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.14.2 - https://github.com/FasterXML/jackson)
+     (The Apache Software License, Version 2.0) Jackson-core (com.fasterxml.jackson.core:jackson-core:2.14.2 - https://github.com/FasterXML/jackson-core)
+     (The Apache Software License, Version 2.0) jackson-databind (com.fasterxml.jackson.core:jackson-databind:2.14.2 - https://github.com/FasterXML/jackson)
+     (The MIT License (MIT)) java jwt (com.auth0:java-jwt:4.4.0 - https://github.com/auth0/java-jwt)
+     (The Apache Software License, Version 2.0) Maven definition for AbsoluteLayout.jar - external part of NetBeans module. (org.netbeans.external:AbsoluteLayout:RELEASE210 - https://netbeans.apache.org/AbsoluteLayout/)
+     (The MIT License) Microsoft JDBC Driver for SQL Server (com.microsoft.sqlserver:mssql-jdbc:12.8.1.jre11 - https://github.com/Microsoft/mssql-jdbc)
+     (Apache License, Version 2.0) spring-security-crypto (org.springframework.security:spring-security-crypto:6.3.1 - https://spring.io/projects/spring-security)

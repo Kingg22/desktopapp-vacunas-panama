@@ -1466,7 +1466,7 @@ public class PantallaBase extends JFrame {
         int style = styleComboBox.getSelectedIndex();
         int sede = jComboBox_sede_preferida.getSelectedIndex();
         String filetype = (String) jComboBox_exportarType_preferido.getSelectedItem();
-        Preferencias p = userActual.getPrefs();
+        Preferences p = userActual.getPrefs();
         p.setPrefs(font, style, size, sede, filetype);
         actualizarPreferencias(p);
         JOptionPane.showMessageDialog(this, "¡Se han guardado sus preferencias!");
@@ -1477,12 +1477,12 @@ public class PantallaBase extends JFrame {
         this.userActual = userActual;
         cedulaUsuarioActual = this.userActual.getCedula();
         this.nombreBienvenida.setText(this.userActual.getNombre() + " " + this.userActual.getApellido());
-        token = TokenMananger.generateToken(this.userActual.getCedula(), "rol");
+        token = TokenManager.generateToken(this.userActual.getCedula(), "rol");
         actualizarPreferencias(userActual.getPrefs());
         // Utiliza SwingWorker para evitar bloquear la interfaz gráfica
         new SwingWorker<>() {
             @Override
-            protected String doInBackground() throws Exception {
+            protected String doInBackground() {
                 try {
                     token = SessionManager.extendSession(token, userActual, "rol").get();
                     if (token != null) {
@@ -1507,7 +1507,7 @@ public class PantallaBase extends JFrame {
     }
 
     /* método para actualizar las preferencias del usuario actual */
-    private void actualizarPreferencias(Preferencias pref) {
+    private void actualizarPreferencias(Preferences pref) {
         String font = pref.getFontName();
         int style = pref.getFontStyle(), size = pref.getFontSize();
         Font f = new Font(font, style, size);

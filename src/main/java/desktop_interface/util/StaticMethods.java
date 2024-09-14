@@ -137,7 +137,7 @@ public class StaticMethods {
     }
 
     /* TODO método static para exportar según el tipo de archivo requerido */
-    public static boolean exportar(JComboBox<String> comboBox) {
+    private static boolean exportar(JComboBox<String> comboBox) {
         String typePreferences = (String) comboBox.getSelectedItem();
         if (typePreferences == null || typePreferences.trim().isBlank()) {
             return false;

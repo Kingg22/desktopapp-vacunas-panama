@@ -174,10 +174,12 @@ public class PantallaAdmin extends JFrame {
         jTextField_valorInsert2.setFont(new Font("Microsoft YaHei", Font.PLAIN, 12));
         jTextField_valorInsert2.setText("Valor");
         jTextField_valorInsert2.addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(FocusEvent evt) {
                 jTextField_valorInsert2FocusGained(evt);
             }
 
+            @Override
             public void focusLost(FocusEvent evt) {
                 jTextField_valorInsert2FocusLost(evt);
             }
@@ -225,10 +227,12 @@ public class PantallaAdmin extends JFrame {
         jTextField_selectComplejo.setVisible(false);
         StaticMethods.handleFocusGain(jTextField_selectComplejo, "Campos y/o función");
         jTextField_selectComplejo.addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(FocusEvent evt) {
                 jTextField_selectComplejoFocusGained(evt);
             }
 
+            @Override
             public void focusLost(FocusEvent evt) {
                 jTextField_selectComplejoFocusLost(evt);
             }
@@ -367,6 +371,7 @@ public class PantallaAdmin extends JFrame {
         jButton_select.setMaximumSize(new Dimension(2147483647, 30));
         jButton_select.setPreferredSize(new Dimension(794, 30));
         jButton_select.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_selectMouseClicked(evt);
             }
@@ -404,10 +409,12 @@ public class PantallaAdmin extends JFrame {
         jTextField_buscarTabla.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
         jTextField_buscarTabla.setPreferredSize(new Dimension(125, 26));
         jTextField_buscarTabla.addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(FocusEvent evt) {
                 jTextField_buscarTablaFocusGained(evt);
             }
 
+            @Override
             public void focusLost(FocusEvent evt) {
                 jTextField_buscarTablaFocusLost(evt);
             }
@@ -418,6 +425,7 @@ public class PantallaAdmin extends JFrame {
         jButton_buscar.setBackground(new Color(204, 204, 204));
         jButton_buscar.setIcon(new ImageIcon(getClass().getResource("src/main/resources/images/lupa_icon.png")));
         jButton_buscar.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_buscarMouseClicked(evt);
             }
@@ -426,6 +434,7 @@ public class PantallaAdmin extends JFrame {
 
         jButton_acercar.setText("Acercar");
         jButton_acercar.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_acercarMouseClicked(evt);
             }
@@ -434,6 +443,7 @@ public class PantallaAdmin extends JFrame {
 
         jButton_alejar.setText("Alejar");
         jButton_alejar.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_alejarMouseClicked(evt);
             }
@@ -442,6 +452,7 @@ public class PantallaAdmin extends JFrame {
 
         jButton_ordenar.setText("Ordenar");
         jButton_ordenar.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_ordenarMouseClicked(evt);
             }
@@ -450,6 +461,7 @@ public class PantallaAdmin extends JFrame {
 
         jButton_filtros.setText("Filtros");
         jButton_filtros.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_filtrosMouseClicked(evt);
             }
@@ -458,6 +470,7 @@ public class PantallaAdmin extends JFrame {
 
         jButton_fuente.setText("Fuente y tamaño");
         jButton_fuente.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_fuenteMouseClicked(evt);
             }
@@ -466,6 +479,7 @@ public class PantallaAdmin extends JFrame {
 
         jButton_exportar.setText("Exportar tabla");
         jButton_exportar.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_exportarMouseClicked(evt);
             }
@@ -631,6 +645,7 @@ public class PantallaAdmin extends JFrame {
         jButton_savePreferences.setMaximumSize(new Dimension(166, 48));
         jButton_savePreferences.setPreferredSize(new Dimension(166, 48));
         jButton_savePreferences.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton_savePreferencesMouseClicked(evt);
             }
@@ -702,10 +717,12 @@ public class PantallaAdmin extends JFrame {
         jTextField_valorUpdate.setHorizontalAlignment(JTextField.LEFT);
         jTextField_valorUpdate.setText("Valor");
         jTextField_valorUpdate.addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(FocusEvent evt) {
                 jTextField_valorUpdateFocusGained(evt);
             }
 
+            @Override
             public void focusLost(FocusEvent evt) {
                 jTextField_valorUpdateFocusLost(evt);
             }
@@ -736,10 +753,12 @@ public class PantallaAdmin extends JFrame {
         jTextField_updateComplejo.setVisible(false);
         StaticMethods.handleFocusGain(jTextField_updateComplejo, "Campos y/o función");
         jTextField_updateComplejo.addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(FocusEvent evt) {
                 jTextField_updateComplejoFocusGained(evt);
             }
 
+            @Override
             public void focusLost(FocusEvent evt) {
                 jTextField_updateComplejoFocusLost(evt);
             }
@@ -893,10 +912,12 @@ public class PantallaAdmin extends JFrame {
         jTextField_insertComplejo.setVisible(false);
         StaticMethods.handleFocusGain(jTextField_insertComplejo, "Campos y/o función");
         jTextField_insertComplejo.addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(FocusEvent evt) {
                 jTextField_insertComplejoFocusGained(evt);
             }
 
+            @Override
             public void focusLost(FocusEvent evt) {
                 jTextField_insertComplejoFocusLost(evt);
             }
@@ -919,6 +940,7 @@ public class PantallaAdmin extends JFrame {
         jButton3.setMaximumSize(new Dimension(2147483647, 30));
         jButton3.setPreferredSize(new Dimension(794, 30));
         jButton3.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 jButton3MouseClicked(evt);
             }
@@ -948,10 +970,12 @@ public class PantallaAdmin extends JFrame {
         jTextField_deleteComplejo.setVisible(false);
         StaticMethods.handleFocusGain(jTextField_deleteComplejo, "Campos y/o función");
         jTextField_deleteComplejo.addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(FocusEvent evt) {
                 jTextField_deleteComplejoFocusGained(evt);
             }
 
+            @Override
             public void focusLost(FocusEvent evt) {
                 jTextField_deleteComplejoFocusLost(evt);
             }

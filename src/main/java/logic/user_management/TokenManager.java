@@ -44,10 +44,10 @@ public class TokenManager {
     }
 
     public static boolean verifyToken(String token) throws JWTVerificationException {
-        JWT.require(Algorithm.HMAC256(SECRET))
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(SECRET))
                 .build()
                 .verify(token);
-        return true;
+        return decodedJWT.getToken() != null;
     }
 
     public static int getRoleFromToken(String token) throws JWTVerificationException {

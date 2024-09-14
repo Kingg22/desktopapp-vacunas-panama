@@ -3861,7 +3861,7 @@ public class PantallaDoctor extends JFrame {
         int style = styleComboBox.getSelectedIndex();
         int sede = jComboBox_sede_preferida.getSelectedIndex();
         String filetype = (String) jComboBox_exportarType_preferido.getSelectedItem();
-        Preferencias p = userActual.getPrefs();
+        Preferences p = userActual.getPrefs();
         p.setPrefs(font, style, size, sede, filetype);
         actualizarPreferencias(p);
         JOptionPane.showMessageDialog(this, "¡Se han guardado sus preferencias!");
@@ -3983,11 +3983,11 @@ public class PantallaDoctor extends JFrame {
         this.userActual = userActual;
         cedulaUsuarioActual = this.userActual.getCedula();
         this.nombreBienvenida.setText(this.userActual.getNombre() + " " + this.userActual.getApellido());
-        token = TokenMananger.generateToken(this.userActual.getCedula(), "Doctor - Enfermera");
+        token = TokenManager.generateToken(this.userActual.getCedula(), "Doctor - Enfermera");
         actualizarPreferencias(this.userActual.getPrefs());
         new SwingWorker<>() {
             @Override
-            protected String doInBackground() throws Exception {
+            protected String doInBackground() {
                 try {
                     token = SessionManager.extendSession(token, userActual, "doctor").get();
                     if (token != null) {
@@ -4012,7 +4012,7 @@ public class PantallaDoctor extends JFrame {
     }
 
     /* método para actualizar las preferencias del doctor actual */
-    private void actualizarPreferencias(Preferencias pref) {
+    private void actualizarPreferencias(Preferences pref) {
         String font = pref.getFontName();
         int style = pref.getFontStyle(), size = pref.getFontSize();
         Font f = new Font(font, style, size);

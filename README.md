@@ -29,6 +29,17 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 
 ~~TODO Agregar limitaciones nuevas al readme~~
 
+## :x: Limitaciones actuales de la API
+
+- Los roles es una entidad que se puede modificar posterior a la creación del enum utilizado por la API al verificar los
+  roles y su jerarquía.
+  Se debe modificar a medida que los roles cambien.
+- Se valida el formato del email mas no su dominio existente.
+- La v1 de la API está limitada en:
+    - Búsquedas por ID, por ejemplo no puedes buscar un paciente por su fecha de nacimiento solo por su CIP. Como
+      paliativo a esto se utilizan funciones.
+    - No hay endpoint u operaciones asíncronas.
+
 ## :hammer_and_wrench:Tecnologías Utilizadas
 - [Java](https://www.java.com/es/) - Para el desarrollo de la API.
 - [SQL Server](https://www.microsoft.com/es-mx/sql-server) - Para la gestión de la base de datos.
@@ -36,6 +47,9 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 - [Spring Dotenv](https://github.com/paulschwarz/spring-dotenv) - Librería de Java para cargar las variables de entornos .env para Spring.
 - [JDBC SQL Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) - Driver para conectar con la base de datos SQL Server en Java.
 - [Error handling Spring Boot](https://github.com/wimdeblauwe/error-handling-spring-boot-starter/) - Librería de Java para Spring Boot utilizada para dar Error Response uniformes y Logger de los mismos. 
+
+Puede encontrar más detalles de las licencias
+en [THIRD-PARTY](https://github.com/Kingg22/desktopapp-vacunas-panama/blob/fe49877f9930485f0dc147c5dc2938b427588f39/THIRD-PARTY.txt)
 
 ## :pencil: Autores
 
@@ -59,13 +73,16 @@ y efectividad del sistema de salud en el manejo de la información sobre vacunac
   - No identificados: Registrar con identificador de la sede con las letras "NI-" al inicio.
   - Pasaporte: Tal cual escrito máximo 20 caracteres. Recomendamos reducir el uso de esta opción.
 ### Base de datos
-- Se implementó una [convención de nombres](https://blog.sqlauthority.com/i/dl/SQLServerGuideLines.pdf), brindada por [Pinal Dave](https://blog.sqlauthority.com/) en su blog.
+
+- Se implementó una [convención de nombres](https://blog.sqlauthority.com/i/dl/SQLServerGuideLines.pdf), brindada
+  por [Pinal Dave](https://blog.sqlauthority.com/) en su blog, modificada.
 - Los tipos de datos fueron cambiados para mejorar rendimiento y concurrencia.
 - Se centralizó el manejo de usuarios, roles y permisos, delegando la autorización a los sistemas.
 - Se añadieron índices para optimizar las búsquedas.
 - Las funciones devuelven columnas sin alias; los alias se usan solo en las vistas.
 - Más procedimientos almacenados para facilitar transacciones comunes.
 - Se define el campo "licencia" para los fabricantes puedan utilizarlo como CIP de su usuario, esto facilita la búsqueda del fabricante con su JWT.
+- Más datos de pruebas.
 
 ## :high_brightness: Recomendaciones para implementar esta API en producción
 - Utilizar un gestor de secretos para los datos en el .env

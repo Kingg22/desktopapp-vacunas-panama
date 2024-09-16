@@ -42,4 +42,6 @@ public interface MapStructMapper {
     @Mapping(target = "idProvincia", source = "idDistrito.idProvincia.id")
     @Mapping(target = "nombreProvincia", source = "idDistrito.idProvincia.nombreProvincia")
     DireccionDto direccionToDirecctionDto(Direccion direccion);
+
+    ViewPacientesVacunasEnfermedadesDto viewPacienteVacunaEnfermedadToDto(ViewPacientesVacunasEnfermedades viewPacientesVacunasEnfermedades);
 }

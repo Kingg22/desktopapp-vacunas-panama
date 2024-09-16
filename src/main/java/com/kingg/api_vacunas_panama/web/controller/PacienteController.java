@@ -1,6 +1,5 @@
 package com.kingg.api_vacunas_panama.web.controller;
 
-import com.kingg.api_vacunas_panama.web.dto.PacienteDto;
 import com.kingg.api_vacunas_panama.service.PacienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,7 +17,7 @@ public class PacienteController {
     private final PacienteService pacienteService;
 
     @GetMapping
-    public ResponseEntity<PacienteDto> getPaciente() {
+    public ResponseEntity<Object> getPaciente() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(pacienteService.getPaciente(authentication.getName()).orElse(null));
     }

@@ -1,14 +1,14 @@
 name: vacunas_app
 
 services:
-  api_vacunas:
+  api-vacunas:
     image: api-vacunas-panama:0.0.1
     env_file:
       - ".env"
     #restart: on-failure
-    container_name: api_spring_vacunas
+    container_name: api-spring-vacunas
     depends_on:
-      bd_vacunas:
+      bd-vacunas:
         condition: service_healthy
     ports:
       - "8080:8080"
@@ -17,9 +17,9 @@ services:
     networks:
       - network_vacunas
 
-  bd_vacunas:
+  bd-vacunas:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sql_server_vacunas
+    container_name: sql-server-vacunas
     ports:
       - "1440:1433"
     environment:

@@ -44,6 +44,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers ->
+                        headers.contentSecurityPolicy(cspc -> cspc
+                                .policyDirectives("default-src 'none'; frame-ancestors 'none'; sandbox; media-src 'self'; object-src 'self';")))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/vacunacion/v1/account/register").permitAll()
                         .requestMatchers("/vacunacion/v1/account/login").permitAll()

@@ -85,12 +85,6 @@ y efectividad del sistema de salud en el manejo de la información sobre vacunac
 - Cifrar los datos sensibles en la base de datos y comunicación de los sistemas.
 - Se está planeando para la v2:
   - Filtrado de respuestas. Con este feature se completa la migración de la versión desktoapp.
-  - Paginación de respuestas.
-  - Implementar sistema de caché con comodín para forzar la respuesta. 
-  - Implementar una base de datos en memoría para guardar los datos hasta que la base de datos este disponible nuevamente.
-  - Más herramientas de seguridad.
-  - Generación de Certificados de Vacunas en formatos PDF.
-  - Inicio de sesión con OAuth como Google para facilidad de los usuarios, únicamente se le pide su CIP como dato adicional.
 ### :busts_in_silhouette: Otros sistemas o API's que interactúen con la base de datos:
 - Todos los sistemas creados que se conectan a esta API deben mantener el formato de CIP dada.
 - Todas las contraseñas deben utilizar BCryptEncoder con strength 10.
@@ -109,7 +103,7 @@ Sigue estos pasos para clonar el repositorio:
 Abre una terminal y ejecuta los siguientes comandos:
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/Kingg22/Programa_Vacunas_Panama.git
+git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
 ```
 ### 2. Abrir la carpeta donde fue clonado el repositorio
 ### 3. Crear entorno propio para deploy
@@ -134,8 +128,8 @@ git clone https://github.com/Kingg22/Programa_Vacunas_Panama.git
     Este proceso puede demorar un poco la primera vez, se recomienda skip tests para disminuir el tiempo de espera.
 8. Levantar docker compose por primera vez. Abra una terminal en el proyecto y ejecute:
     ``` bash
-    docker-compose up --build -d
-    docker exec -it sql_server_vacunas sleep 30s & /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P '' -No -C -d master -i /vacunas-init.sql"
+    docker-compose up --build -d bd-vacunas
+    docker exec -it sql-server-vacunas /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P '' -No -C -d master -i /vacunas-init.sql
     ```
     Donde en -P debe colocar la contraseña creada en el docker-compose.yaml
     
@@ -155,7 +149,7 @@ git clone https://github.com/Kingg22/Programa_Vacunas_Panama.git
     ```
     En su defecto utilice una terminal en el proyecto ejecute:
     ``` bash
-    docker logs sql_server_vacunas
+    docker logs sql-server-vacunas
     ```
 ### 4. Levantar los contenedores después de configurar:
    1. Cambiar los tiempos del healthcheck en docker-compose.yaml como mínimo de start_period 20s
@@ -170,7 +164,7 @@ Observación: Si cambia el puerto que se expone en docker-compose.yaml debe apun
 ### Verificar modificaciones sin desplegar contenedor de API
 1. Levantar la base de datos si no esta activa:
     ``` bash
-    docker-compose up --build -d bd_vacunas 
+    docker-compose up --build -d bd-vacunas 
     ```
 2. Utilizando el IDE integrado con Maven o el siguiente comando:
     ```bash

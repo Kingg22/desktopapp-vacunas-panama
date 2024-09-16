@@ -19,7 +19,7 @@ public record UsuarioDto(UUID id,
                          String cedula,
                          String username,
                          @Email(message = "El Email debe ser válido") String correoUsuario,
-                         @Size(min = 8, max = 70, message = "La contraseña debe ser entre 8 y 70 caracteres") String clave,
+                         @Size(min = 8, max = 70, message = "La contraseña no es válida") String clave,
                          @PastOrPresent(message = "La fecha de nacimiento no puede ser futura")
                          @NotNull(message = "La fecha de nacimiento es obligatoria")
                          LocalDateTime fechaNacimiento,

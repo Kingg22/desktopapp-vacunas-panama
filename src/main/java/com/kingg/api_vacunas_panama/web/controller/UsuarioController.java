@@ -74,7 +74,7 @@ public class UsuarioController {
         }
 
         Usuario saveUser = usuarioManagementService.createUser(usuarioDto);
-
+        saveUser.setClaveHash("");
         Map<String, Object> response = new HashMap<>();
         response.put("Token", tokenService.generateToken(saveUser));
         response.put("User", saveUser);

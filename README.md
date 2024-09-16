@@ -1,6 +1,6 @@
 # :syringe: Proyecto de Gestión de Información sobre Vacunación en Panamá
 
-![Imagen logo del proyecto](https://github.com/Kingg22/Proyecto_App-MINSA-2.0/blob/558997ac0ca507279a87c716cf0c4a89aaf71eb0/src/images/operacionVacunas_logo_pequeno.png)
+![Imagen logo del proyecto](https://github.com/Kingg22/desktopapp-vacunas-panama/blob/8a9c61eaada5e77ada158bd032a3814ea4402b22/src/main/resources/images/operacionVacunas_logo_pequeno.png)
 
 ## Descripción
 

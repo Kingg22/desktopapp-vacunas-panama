@@ -1,8 +1,5 @@
 package com.kingg.api_vacunas_panama.service;
 
-import com.kingg.api_vacunas_panama.web.dto.PermisoDto;
-import com.kingg.api_vacunas_panama.web.dto.RolDto;
-import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import com.kingg.api_vacunas_panama.persistence.entity.Permiso;
 import com.kingg.api_vacunas_panama.persistence.entity.Rol;
 import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
@@ -11,7 +8,11 @@ import com.kingg.api_vacunas_panama.persistence.repository.RolRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.UsuarioRepository;
 import com.kingg.api_vacunas_panama.util.RolEnum;
 import com.kingg.api_vacunas_panama.util.mapper.MapStructMapper;
+import com.kingg.api_vacunas_panama.web.dto.PermisoDto;
+import com.kingg.api_vacunas_panama.web.dto.RolDto;
+import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +62,12 @@ public class UsuarioManagementService {
         return permisoRepository.save(mapper.permisoDtoToPermiso(permisoDto));
     }
 
+    @Transactional
+    public void changePassword(Usuario user, String newPassword) {
+        user.setClaveHash(passwordEncoder.encode(newPassword));
+        usuarioRepository.save(user);
+    }
+
     public Usuario getUsuario(String id) {
         return usuarioRepository.findByCedulaOrCorreoUsuarioOrUsername(id, id, id).orElseThrow();
     }
@@ -77,19 +84,29 @@ public class UsuarioManagementService {
         return correo != null && usuarioRepository.findByCorreoUsuario(correo).isPresent();
     }
 
+    public boolean equalsPassword(Usuario user, String newPassword) {
+        return passwordEncoder.matches(newPassword, user.getClaveHash());
+    }
+
     public boolean canRegisterRole(RolDto rolDto, List<RolEnum> authenticatedRoles) {
         int maxRolPriority = authenticatedRoles.stream()
                 .mapToInt(RolEnum::getPriority)
                 .max()
                 .orElse(0);
 
-        return RolEnum.valueOf(rolDto.nombreRol().toUpperCase()).getPriority()<= maxRolPriority;
+        return RolEnum.valueOf(rolDto.nombreRol().toUpperCase()).getPriority() <= maxRolPriority;
     }
 
     public boolean hasUserManagementPermissions(List<String> authenticatedAuthorities) {
         return authenticatedAuthorities.contains("ADMINISTRATIVO_WRITE")
                 || authenticatedAuthorities.contains("AUTORIDAD_WRITE")
                 || authenticatedAuthorities.contains("USER_MANAGER_WRITE");
+    }
+
+    public Usuario canRestore(String username, LocalDateTime fechaNacimiento) {
+        return usuarioRepository.findByCedulaOrCorreoUsuarioOrUsername(username, username, username)
+                .filter(user -> user.getFechaNacimiento().equals(fechaNacimiento))
+                .orElseThrow(() -> new UsernameNotFoundException("username not found or birthdate don't match to restore"));
     }
 
     private Rol convertToRoleExisting(RolDto rolDto) {

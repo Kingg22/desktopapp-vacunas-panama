@@ -1,11 +1,12 @@
 package com.kingg.api_vacunas_panama.web.controller;
 
-import com.kingg.api_vacunas_panama.web.dto.LoginDto;
-import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
 import com.kingg.api_vacunas_panama.service.TokenService;
 import com.kingg.api_vacunas_panama.service.UsuarioManagementService;
 import com.kingg.api_vacunas_panama.util.RolEnum;
+import com.kingg.api_vacunas_panama.web.dto.LoginDto;
+import com.kingg.api_vacunas_panama.web.dto.RestoreDto;
+import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -83,22 +84,39 @@ public class UsuarioController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody @Valid LoginDto loginDto) {
+        Map<String, Object> response = new HashMap<>();
+        if (compromisedPasswordChecker.check(loginDto.password()).isCompromised()) {
+            response.put("status", 302);
+            response.put("message", "The password you provided is compromised. Please reset your password in the given uri");
+            response.put("errors", "compromised password");
+            response.put("uri", "/vacunacion/account/restore");
+            return ResponseEntity.badRequest().body(response);
+        }
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.username(),
                 loginDto.password()
         ));
-        Map<String, Object> response = new HashMap<>();
+        Usuario user = usuarioManagementService.getUsuario(authentication.getName());
+        user.setClaveHash("");
+        response.put("User", user);
         response.put("Token", tokenService.generateToken(authentication));
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/restore")
+    public ResponseEntity<Object> restore(@RequestBody @Valid RestoreDto restoreDto) {
+        Usuario user = usuarioManagementService.canRestore(restoreDto.username(), restoreDto.fechaNacimientoUsuario());
+        if (user != null && !usuarioManagementService.equalsPassword(user, restoreDto.newPassword()) && !compromisedPasswordChecker.check(restoreDto.newPassword()).isCompromised()) {
+            usuarioManagementService.changePassword(user, restoreDto.newPassword());
+            return ResponseEntity.ok("Password restored successfully");
+        }
+        return ResponseEntity.badRequest().body("Failed to restore password. Please verify your new password");
+    }
+
     @GetMapping
     public ResponseEntity<Object> profile(Authentication authentication) {
-        Map<String, Object> response = new HashMap<>();
-
-        response.put("Username", authentication.getName());
-        response.put("Authorities", authentication.getAuthorities());
-        response.put("User", usuarioManagementService.getUsuario(authentication.getName()));
+        Usuario response = usuarioManagementService.getUsuario(authentication.getName());
+        response.setClaveHash("");
         return ResponseEntity.ok(response);
     }
 

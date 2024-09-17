@@ -26,4 +26,10 @@ public record UsuarioDto(UUID id,
                          LocalDateTime createdAt, LocalDateTime lastUsed,
                          @NotNull(message = "Debe crear una instancia de roles") @Valid Set<RolDto> roles,
                          Boolean disabled) implements Serializable {
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "cedula: " + cedula + ",username: " + username + ", email: " + correoUsuario + ", fechaNacimiento: " + fechaNacimiento + ", " +
+                "createdAt: " + createdAt + ", lastUsed: " + lastUsed + ", roles: [" + roles.toString() + "], disabled: " + disabled + ")";
+    }
 }

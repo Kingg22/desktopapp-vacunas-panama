@@ -4,14 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record RestoreDto(@NotBlank(message = "El usuario es requerido") String username,
-                         @Size(min = 8, max = 70, message = "La contraseña no es válida") String newPassword,
-                         @PastOrPresent(message = "La fecha de nacimiento no puede ser futura") LocalDateTime fechaNacimientoUsuario) {
+                         @Size(min = 8, max = 70, message = "La contraseña no es válida") String new_password,
+                         @PastOrPresent(message = "La fecha de nacimiento no puede ser futura") LocalDate fecha_nacimiento_usuario) {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
-                "username: " + username + ", fechaNacimiento: " + fechaNacimientoUsuario + ")";
+                "username: " + username + ", fecha_nacimiento_usuario: " + fecha_nacimiento_usuario + ")";
     }
 }

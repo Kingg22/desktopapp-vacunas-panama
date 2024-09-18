@@ -1,7 +1,7 @@
 package com.kingg.api_vacunas_panama.service;
 
-import com.kingg.api_vacunas_panama.persistence.entity.Permiso;
-import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
+import com.kingg.api_vacunas_panama.web.dto.PermisoDto;
+import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -25,14 +25,14 @@ public class TokenService {
     @Value("${security.jwt.expiration-time}")
     private Integer expirationTime;
 
-    public String generateToken(Usuario usuario) {
-        Collection<String> rolesPermisos = usuario.getRoles().stream()
+    public String generateToken(UsuarioDto usuario) {
+        Collection<String> rolesPermisos = usuario.roles().stream()
                     .flatMap(role -> Stream.concat(
-                            Stream.of("ROLE_" + role.getNombreRol().toUpperCase()),
-                            role.getPermisos().stream().map(Permiso::getNombrePermiso))
+                            Stream.of("ROLE_" + role.nombre().toUpperCase()),
+                            role.permisos().stream().map(PermisoDto::nombre))
                     ).toList();
 
-        return createToken(usuario.getCedula(), rolesPermisos);
+        return createToken(usuario.cedula(), rolesPermisos);
     }
 
     public String generateToken(Authentication authentication) {

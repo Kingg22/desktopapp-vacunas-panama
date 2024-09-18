@@ -7,7 +7,7 @@ import com.kingg.api_vacunas_panama.persistence.repository.PermisoRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.RolRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.UsuarioRepository;
 import com.kingg.api_vacunas_panama.util.RolEnum;
-import com.kingg.api_vacunas_panama.util.mapper.MapStructMapper;
+import com.kingg.api_vacunas_panama.util.mapper.AccountMapper;
 import com.kingg.api_vacunas_panama.web.dto.PermisoDto;
 import com.kingg.api_vacunas_panama.web.dto.RolDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -29,14 +30,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UsuarioManagementService {
-    private final MapStructMapper mapper;
+    private final AccountMapper mapper;
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final PermisoRepository permisoRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Usuario createUser(UsuarioDto usuarioDto) {
+    public UsuarioDto createUser(UsuarioDto usuarioDto) {
         Set<Rol> role = usuarioDto.roles().stream()
                 .map(this::convertToRoleExisting)
                 .collect(Collectors.toSet());
@@ -44,32 +45,39 @@ public class UsuarioManagementService {
         Usuario usuario = Usuario.builder()
                 .cedula(usuarioDto.cedula())
                 .username(usuarioDto.username())
-                .correoUsuario(usuarioDto.correoUsuario())
-                .claveHash(passwordEncoder.encode(usuarioDto.clave()))
-                .fechaNacimiento(usuarioDto.fechaNacimiento())
+                .correoUsuario(usuarioDto.email())
+                .claveHash(passwordEncoder.encode(usuarioDto.password()))
+                .fechaNacimiento(usuarioDto.fecha_nacimiento_usuario())
                 .disabled(usuarioDto.disabled())
                 .createdAt(LocalDateTime.now())
                 .roles(role)
                 .build();
-        return usuarioRepository.save(usuario);
+        return mapper.usuarioToDto(usuarioRepository.save(usuario));
     }
 
-    public Rol createRol(RolDto rolDto) {
-        return rolRepository.save(mapper.rolDtoToRol(rolDto));
+    public RolDto createRol(RolDto rolDto) {
+        return mapper.rolToDto(rolRepository.save(mapper.rolDtoToRol(rolDto)));
     }
 
-    public Permiso createPermiso(PermisoDto permisoDto) {
-        return permisoRepository.save(mapper.permisoDtoToPermiso(permisoDto));
+    public PermisoDto createPermiso(PermisoDto permisoDto) {
+        return mapper.permisoToDto(permisoRepository.save(mapper.permisoDtoToPermiso(permisoDto)));
     }
 
     @Transactional
-    public void changePassword(Usuario user, String newPassword) {
-        user.setClaveHash(passwordEncoder.encode(newPassword));
-        usuarioRepository.save(user);
+    public void changePassword(String username, String newPassword, LocalDate birthdate) {
+        Usuario usuario = usuarioRepository.findByCedulaOrCorreoUsuarioOrUsername(username, username, username)
+                .filter(user -> user.getFechaNacimiento().toLocalDate().equals(birthdate))
+                .orElseThrow(() -> new UsernameNotFoundException("username not found or birthdate don't match to restore"));
+        if (passwordEncoder.matches(newPassword, usuario.getClaveHash())) {
+            throw new IllegalArgumentException("new password cannot be equals to last password");
+        }
+        usuario.setClaveHash(passwordEncoder.encode(newPassword));
+        usuarioRepository.save(usuario);
     }
 
-    public Usuario getUsuario(String id) {
-        return usuarioRepository.findByCedulaOrCorreoUsuarioOrUsername(id, id, id).orElseThrow();
+    public UsuarioDto getUsuario(String id) {
+        Usuario usuario = usuarioRepository.findByCedulaOrCorreoUsuarioOrUsername(id, id, id).orElseThrow();
+        return mapper.usuarioToDto(usuario);
     }
 
     public boolean isCedulaRegistered(String cedula) {
@@ -84,17 +92,13 @@ public class UsuarioManagementService {
         return correo != null && usuarioRepository.findByCorreoUsuario(correo).isPresent();
     }
 
-    public boolean equalsPassword(Usuario user, String newPassword) {
-        return passwordEncoder.matches(newPassword, user.getClaveHash());
-    }
-
     public boolean canRegisterRole(RolDto rolDto, List<RolEnum> authenticatedRoles) {
         int maxRolPriority = authenticatedRoles.stream()
                 .mapToInt(RolEnum::getPriority)
                 .max()
                 .orElse(0);
 
-        return RolEnum.valueOf(rolDto.nombreRol().toUpperCase()).getPriority() <= maxRolPriority;
+        return RolEnum.valueOf(rolDto.nombre().toUpperCase()).getPriority() <= maxRolPriority;
     }
 
     public boolean hasUserManagementPermissions(List<String> authenticatedAuthorities) {
@@ -103,17 +107,11 @@ public class UsuarioManagementService {
                 || authenticatedAuthorities.contains("USER_MANAGER_WRITE");
     }
 
-    public Usuario canRestore(String username, LocalDateTime fechaNacimiento) {
-        return usuarioRepository.findByCedulaOrCorreoUsuarioOrUsername(username, username, username)
-                .filter(user -> user.getFechaNacimiento().equals(fechaNacimiento))
-                .orElseThrow(() -> new UsernameNotFoundException("username not found or birthdate don't match to restore"));
-    }
-
     private Rol convertToRoleExisting(RolDto rolDto) {
-        return rolRepository.findByNombreRolOrId(rolDto.nombreRol(), rolDto.id()).orElseThrow();
+        return rolRepository.findByNombreRolOrId(rolDto.nombre(), rolDto.id()).orElseThrow();
     }
 
     private Permiso convertToPermisoExisting(PermisoDto permisoDto) {
-        return permisoRepository.findByNombrePermisoOrId(permisoDto.nombrePermiso(), permisoDto.id()).orElseThrow();
+        return permisoRepository.findByNombrePermisoOrId(permisoDto.nombre(), permisoDto.id()).orElseThrow();
     }
 }

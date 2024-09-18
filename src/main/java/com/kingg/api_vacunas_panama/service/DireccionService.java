@@ -11,8 +11,12 @@ public class DireccionService {
 
     private final DistritoRepository distritoRepository;
 
-    public Distrito findById(Short id) {
+    public Distrito getDistrito(Short id) {
         return distritoRepository.findById(id).orElse(null);
+    }
+
+    public Distrito getDistrito(String nombreDistrito) {
+        return distritoRepository.findByNombreDistrito(nombreDistrito).orElse(null);
     }
 
 }

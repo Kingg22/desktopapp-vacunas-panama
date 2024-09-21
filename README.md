@@ -119,8 +119,7 @@ y efectividad del sistema de salud en el manejo de la información sobre vacunac
 - Precisión en la Edad de los Pacientes: Utilizar eventos programados o jobs de SQL Server Agent para actualizar la edad
   de los pacientes anualmente en su cumpleaños.
 - Implementar un sistema de autocompletado para evitar duplicidades y mejorar la precisión en la base de datos.
--
-Crear [índices de texto](https://learn.microsoft.com/es-es/sql/t-sql/statements/create-fulltext-index-transact-sql?view=sql-server-ver16)
+- Crear [índices de texto](https://learn.microsoft.com/es-es/sql/t-sql/statements/create-fulltext-index-transact-sql?view=sql-server-ver16)
 en el idioma de los datos para facilitar este feature y reducir el tiempo de búsquedas.
 - Expediente Digital: Integrar reacciones a vacunas, efectos secundarios y contraindicaciones en el expediente digital
   del paciente.

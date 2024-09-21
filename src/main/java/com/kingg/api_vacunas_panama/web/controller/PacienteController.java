@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
@@ -23,9 +22,7 @@ public class PacienteController {
 
     @GetMapping
     public ResponseEntity<Object> getPaciente(Authentication authentication, HttpServletRequest request) {
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put("view_paciente_vacuna_enfermedad", pacienteService.getViewEnfermedad(authentication.getName()).orElse(null));
-        return ResponseEntity.ok(ResponseUtil.createResponse(Map.of("code", HttpStatus.OK.value()), data, null, null, request));
+        return ResponseEntity.ok(ResponseUtil.createResponse(Map.of("code", HttpStatus.OK.value()), pacienteService.getViewVacunaEnfermedad(authentication.getName()), null, null, request));
     }
 
 }

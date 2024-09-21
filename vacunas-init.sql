@@ -1,9 +1,14 @@
 USE master;
+IF DB_ID('vacunas') IS NOT NULL
+    SET NOEXEC ON
 CREATE DATABASE vacunas;
 GO
 
 USE vacunas;
-
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 -- Únicamente las aplicaciones deben tener un login y su user con permisos
 CREATE LOGIN ApplicationsVacunas
     WITH PASSWORD = '',
@@ -23,7 +28,8 @@ CREATE TABLE permisos
     id_permiso          SMALLINT PRIMARY KEY IDENTITY (1,1),
     nombre_permiso      NVARCHAR(100) NOT NULL,
     descripcion_permiso NVARCHAR(100),
-    CONSTRAINT uq_permisos_nombre UNIQUE (nombre_permiso)
+    CONSTRAINT uq_permisos_nombre UNIQUE (nombre_permiso),
+    INDEX ix_permisos_nombre (nombre_permiso)
 );
 GO
 CREATE TABLE roles
@@ -31,7 +37,8 @@ CREATE TABLE roles
     id_rol          SMALLINT PRIMARY KEY IDENTITY (1,1),
     nombre_rol      NVARCHAR(100) NOT NULL,
     descripcion_rol NVARCHAR(100),
-    CONSTRAINT uq_roles_rol UNIQUE (nombre_rol)
+    CONSTRAINT uq_roles_rol UNIQUE (nombre_rol),
+    INDEX ix_roles_nombre (nombre_rol)
 );
 GO
 CREATE TABLE usuarios
@@ -51,7 +58,8 @@ CREATE TABLE usuarios
         CONSTRAINT df_usuarios_updated DEFAULT CURRENT_TIMESTAMP,
     last_used        DATETIME,
     CONSTRAINT ck_usuarios_fecha_nacimiento CHECK (fecha_nacimiento <= GETDATE()),
-    CONSTRAINT uq_usuarios_cedula UNIQUE (cedula)
+    CONSTRAINT uq_usuarios_cedula UNIQUE (cedula),
+    INDEX ix_usuarios_cedula (cedula)
 );
 GO
 CREATE UNIQUE NONCLUSTERED INDEX ix_usuarios_username
@@ -70,9 +78,6 @@ CREATE TABLE usuarios_roles
     CONSTRAINT fk_usuarios_roles_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ON DELETE CASCADE,
     CONSTRAINT fk_usuarios_roles_rol FOREIGN KEY (id_rol) REFERENCES roles (id_rol) ON DELETE CASCADE
 );
-GO
-CREATE NONCLUSTERED INDEX ix_usuarios_roles
-    ON usuarios_roles (id_rol, id_usuario);
 GO
 CREATE TABLE roles_permisos
 (
@@ -106,7 +111,8 @@ CREATE TABLE provincias
                                            N'Naso Tjër Di', /*14*/
                                            N'Guna de Madugandí', /*15*/
                                            N'Guna de Wargandí' /*16*/
-                                              ))
+                                              )),
+    INDEX ix_provincias_nombre (nombre_provincia)
 );
 GO
 CREATE TABLE distritos
@@ -202,7 +208,8 @@ CREATE TABLE distritos
                                                    'San Carlos')) OR
         (id_provincia = 14 AND nombre_distrito IN (N'Naso Tjër Di')) OR
         (id_provincia IS NULL AND nombre_distrito IS NULL) -- Permitir NULL si es necesario
-        )
+        ),
+    INDEX ix_distritos_nombre (nombre_distrito)
 );
 GO
 CREATE TABLE direcciones
@@ -212,7 +219,8 @@ CREATE TABLE direcciones
     direccion    VARCHAR(150) NOT NULL,
     id_distrito  TINYINT
         CONSTRAINT df_direcciones_distrito DEFAULT 0,
-    CONSTRAINT fk_direcciones_distrito FOREIGN KEY (id_distrito) REFERENCES distritos (id_distrito)
+    CONSTRAINT fk_direcciones_distrito FOREIGN KEY (id_distrito) REFERENCES distritos (id_distrito),
+    INDEX ix_direcciones_direccion (direccion)
 );
 GO
 CREATE TABLE pacientes
@@ -232,7 +240,7 @@ CREATE TABLE pacientes
     CONSTRAINT ck_telefonos_paciente_no_signo_plus CHECK (telefono_paciente NOT LIKE '%+%'),
     CONSTRAINT ck_pacientes_edad CHECK (edad_calculada >= 0),
     CONSTRAINT fk_pacientes_direccion FOREIGN KEY (id_direccion) REFERENCES direcciones (id_direccion) ON UPDATE CASCADE,
-    INDEX ix_pacientes_nombre_apellido (nombre_paciente, apellido1_paciente, apellido2_paciente)
+    INDEX ix_pacientes_nombre_apellidos (nombre_paciente, apellido1_paciente, apellido2_paciente)
 );
 GO
 CREATE UNIQUE NONCLUSTERED INDEX ix_pacientes_correo
@@ -506,26 +514,35 @@ GO
 
 -- Procedimientos
 -- algunos procedimiento dan opcional el nombre tabla, los sistemas deben procurar usar el id y no el nombre
-CREATE PROCEDURE sp_vacunas_update_paciente_edad
+CREATE PROCEDURE sp_vacunas_update_paciente_edad(
+    @result INT OUTPUT
+)
 AS
 BEGIN
+    SET NOCOUNT ON;
+    SET @result = 0;
     UPDATE pacientes
     SET edad_calculada = DATEDIFF(YEAR, fecha_nacimiento, GETDATE())
     WHERE DATEPART(MONTH, fecha_nacimiento) = DATEPART(MONTH, GETDATE())
       AND DATEPART(DAY, fecha_nacimiento) = DATEPART(DAY, GETDATE());
+    SET @result = @@ROWCOUNT;
 END;
 GO
 
-CREATE PROCEDURE sp_vacunas_insert_sede @nombre_sede NVARCHAR(100),
-                                        @dependencia_sede NVARCHAR(13),
-                                        @correo_sede NVARCHAR(50) = NULL,
-                                        @telefono_sede NVARCHAR(15) = NULL,
-                                        @direccion_sede NVARCHAR(150) = NULL,
-                                        @distrito_sede NVARCHAR(100) = NULL
+CREATE PROCEDURE sp_vacunas_insert_sede(
+    @nombre_sede NVARCHAR(100),
+    @dependencia_sede NVARCHAR(13),
+    @correo_sede NVARCHAR(50) = NULL,
+    @telefono_sede NVARCHAR(15) = NULL,
+    @direccion_sede NVARCHAR(150) = NULL,
+    @distrito_sede NVARCHAR(100) = NULL,
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
-
+        SET NOCOUNT ON;
+        SET @result = 0;
         DECLARE @id_direccion UNIQUEIDENTIFIER;
 
         -- Validar que dirección y distrito estén ambos campos o ninguno
@@ -546,37 +563,38 @@ BEGIN
                 RAISERROR ('La sede con ese nombre ya existe.', 16, 1);
             END
 
-        BEGIN TRANSACTION;
+        BEGIN TRANSACTION
 
-        -- Insertar la dirección si no existe
-        IF @direccion_sede IS NOT NULL AND @distrito_sede IS NOT NULL
-            BEGIN
-                -- Verificar si la dirección ya existe
-                SELECT @id_direccion = id_direccion
-                FROM direcciones
-                WHERE direccion = @direccion_sede;
+            -- Insertar la dirección si no existe
+            IF @direccion_sede IS NOT NULL AND @distrito_sede IS NOT NULL
+                BEGIN
+                    -- Verificar si la dirección ya existe
+                    SELECT @id_direccion = id_direccion
+                    FROM direcciones
+                    WHERE direccion = @direccion_sede;
 
-                IF @id_direccion IS NULL
-                    BEGIN
-                        SET @id_direccion = NEWID();
-                        -- Insertar nueva dirección
-                        INSERT INTO direcciones (id_direccion, direccion, id_distrito)
-                        VALUES (@id_direccion, @direccion_sede,
-                                (SELECT id_distrito FROM distritos WHERE nombre_distrito = @distrito_sede))
-                    END
-            END
-        ELSE
-            BEGIN
-                SELECT @id_direccion = id_direccion
-                FROM direcciones
-                WHERE direccion = N'Dirección por registrar'
-                  AND id_distrito = 0
-            END
+                    IF @id_direccion IS NULL
+                        BEGIN
+                            SET @id_direccion = NEWID();
+                            -- Insertar nueva dirección
+                            INSERT INTO direcciones (id_direccion, direccion, id_distrito)
+                            VALUES (@id_direccion, @direccion_sede,
+                                    (SELECT id_distrito FROM distritos WHERE nombre_distrito = @distrito_sede))
+                            SET @result = @result + @@ROWCOUNT;
+                        END
+                END
+            ELSE
+                BEGIN
+                    SELECT @id_direccion = id_direccion
+                    FROM direcciones
+                    WHERE direccion = N'Dirección por registrar'
+                      AND id_distrito = 0
+                END
 
-        -- Insertar la sede
-        INSERT INTO sedes (nombre_sede, dependencia_sede, correo_sede, telefono_sede, id_direccion)
-        VALUES (@nombre_sede, @dependencia_sede, @correo_sede, @telefono_sede, @id_direccion);
-
+            -- Insertar la sede
+            INSERT INTO sedes (nombre_sede, dependencia_sede, correo_sede, telefono_sede, id_direccion)
+            VALUES (@nombre_sede, @dependencia_sede, @correo_sede, @telefono_sede, @id_direccion);
+            SET @result = @result + @@ROWCOUNT;
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
@@ -596,19 +614,24 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE sp_vacunas_gestionar_paciente @cedula_paciente NVARCHAR(20),
-                                               @nombre_paciente NVARCHAR(50),
-                                               @apellido1_paciente NVARCHAR(50),
-                                               @apellido2_paciente NVARCHAR(50) = NULL,
-                                               @fecha_nacimiento_paciente SMALLDATETIME,
-                                               @sexo_paciente CHAR(1),
-                                               @telefono_paciente NVARCHAR(15) = NULL,
-                                               @correo_paciente NVARCHAR(50) = NULL,
-                                               @direccion_residencial_paciente NVARCHAR(150) = NULL,
-                                               @distrito_reside_paciente NVARCHAR(100) = NULL
+CREATE PROCEDURE sp_vacunas_gestionar_paciente(
+    @cedula_paciente NVARCHAR(20),
+    @nombre_paciente NVARCHAR(50),
+    @apellido1_paciente NVARCHAR(50),
+    @apellido2_paciente NVARCHAR(50) = NULL,
+    @fecha_nacimiento_paciente SMALLDATETIME,
+    @sexo_paciente CHAR(1),
+    @telefono_paciente NVARCHAR(15) = NULL,
+    @correo_paciente NVARCHAR(50) = NULL,
+    @direccion_residencial_paciente NVARCHAR(150) = NULL,
+    @distrito_reside_paciente NVARCHAR(100) = NULL,
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
         -- Validar que dirección y distrito estén ambos campos o ninguno
         IF (@direccion_residencial_paciente IS NOT NULL AND @distrito_reside_paciente IS NULL) OR
            (@direccion_residencial_paciente IS NULL AND @distrito_reside_paciente IS NOT NULL)
@@ -648,6 +671,7 @@ BEGIN
                             VALUES (@id_direccion, @direccion_residencial_paciente, (SELECT id_distrito
                                                                                      FROM distritos
                                                                                      WHERE nombre_distrito = @distrito_reside_paciente));
+                            SET @result = @result + @@ROWCOUNT;
                         END
                 END
             ELSE
@@ -681,6 +705,7 @@ BEGIN
                            telefono_paciente != @telefono_paciente OR
                            correo_paciente != @correo_paciente OR
                            id_direccion != @id_direccion);
+                    SET @result = @result + @@ROWCOUNT;
                 END
             ELSE
                 BEGIN
@@ -691,6 +716,7 @@ BEGIN
                     VALUES (@cedula_paciente, @nombre_paciente, @apellido1_paciente, @apellido2_paciente,
                             @fecha_nacimiento_paciente,
                             @sexo_paciente, @telefono_paciente, @correo_paciente, @id_direccion);
+                    SET @result = @result + @@ROWCOUNT;
                 END
         COMMIT TRANSACTION;
     END TRY
@@ -711,24 +737,29 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE sp_vacunas_insert_dosis @cedula_paciente NVARCHAR(20),
-                                         @fecha_aplicacion DATETIME,
-                                         @numero_dosis CHAR(2),
-                                         @uuid_vacuna UNIQUEIDENTIFIER NULL,
-                                                                       @nombre_vacuna NVARCHAR(100) NULL,
-    @id_sede UNIQUEIDENTIFIER NULL,
-	@nombre_sede NVARCHAR(100) NULL,
-    @lote NVARCHAR(10) = NULL
+CREATE PROCEDURE sp_vacunas_insert_dosis(
+    @cedula_paciente NVARCHAR(20),
+    @fecha_aplicacion DATETIME,
+    @numero_dosis CHAR(2),
+    @uuid_vacuna UNIQUEIDENTIFIER = NULL,
+    @nombre_vacuna NVARCHAR(100) = NULL,
+    @uuid_sede UNIQUEIDENTIFIER = NULL,
+    @nombre_sede NVARCHAR(100) = NULL,
+    @lote NVARCHAR(10) = NULL,
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
         -- validar los datos opcionales tengan mínimo 1 dato para cada tabla
         IF @nombre_vacuna IS NULL AND @uuid_vacuna IS NULL
             BEGIN
                 RAISERROR ('Debe especificar la vacuna por uuid o nombre.', 16, 1);
             END
 
-        IF @id_sede IS NULL AND @nombre_sede IS NULL
+        IF @uuid_sede IS NULL AND @nombre_sede IS NULL
             BEGIN
                 RAISERROR ('Debe especificar la sede por uuid o nombre.', 16, 1);
             END
@@ -748,12 +779,12 @@ BEGIN
 
         IF @nombre_sede IS NOT NULL
             BEGIN
-                SELECT @id_sede = id_sede
+                SELECT @uuid_sede = id_sede
                 FROM sedes
                 WHERE nombre_sede = @nombre_sede;
 
                 -- Verificar si se encontró la vacuna
-                IF @id_sede IS NULL
+                IF @uuid_sede IS NULL
                     BEGIN
                         RAISERROR (N'No se encontró ninguna sede con el nombre proporcionado.', 16, 1);
                     END
@@ -766,7 +797,7 @@ BEGIN
             END
 
         -- Verificar si la sede existe
-        IF NOT EXISTS (SELECT 1 FROM sedes WHERE id_sede = @id_sede)
+        IF NOT EXISTS (SELECT 1 FROM sedes WHERE id_sede = @uuid_sede)
             BEGIN
                 RAISERROR ('La sede especificada no existe.', 16, 1);
             END
@@ -854,58 +885,61 @@ BEGIN
                         END
                 END
 
-        BEGIN TRANSACTION;
-        DECLARE @CantidadDisponible INT;
-        DECLARE @FechaLote DATETIME;
-        DECLARE @id_dosis UNIQUEIDENTIFIER = NEWID();
+        BEGIN TRANSACTION
+            DECLARE @CantidadDisponible INT;
+            DECLARE @FechaLote DATETIME;
+            DECLARE @id_dosis UNIQUEIDENTIFIER = NEWID();
 
-        -- Verificar si hay registro en el inventario de la sede
-        IF EXISTS (SELECT 1
-                   FROM sedes_inventarios
-                   WHERE id_sede = @id_sede
-                     AND id_vacuna = @uuid_vacuna
-                     AND lote_sede LIKE @Lote)
-            BEGIN
-                SELECT @CantidadDisponible = Cantidad, @FechaLote = fecha_lote_sede
-                FROM sedes_inventarios
-                WHERE id_sede = @id_sede
-                  AND id_vacuna = @uuid_vacuna
-                  AND lote_sede LIKE @Lote;
+            -- Verificar si hay registro en el inventario de la sede
+            IF EXISTS (SELECT 1
+                       FROM sedes_inventarios
+                       WHERE id_sede = @uuid_sede
+                         AND id_vacuna = @uuid_vacuna
+                         AND lote_sede LIKE @Lote)
+                BEGIN
+                    SELECT @CantidadDisponible = Cantidad, @FechaLote = fecha_lote_sede
+                    FROM sedes_inventarios
+                    WHERE id_sede = @uuid_sede
+                      AND id_vacuna = @uuid_vacuna
+                      AND lote_sede LIKE @Lote;
 
-                IF @CantidadDisponible < 1
-                    BEGIN
-                        RAISERROR ('Cantidad insuficiente de dosis de la vacuna en el inventario de la sede.', 16, 1);
-                    END
+                    IF @CantidadDisponible < 1
+                        BEGIN
+                            RAISERROR ('Cantidad insuficiente de dosis de la vacuna en el inventario de la sede.', 16, 1);
+                        END
 
-                IF @FechaLote <= CURRENT_TIMESTAMP
-                    BEGIN
-                        RAISERROR (N'La fecha de vencimiento del lote de esta vacuna es el día de hoy o anterior.', 16, 1);
-                    END
-            END
+                    IF @FechaLote <= CURRENT_TIMESTAMP
+                        BEGIN
+                            RAISERROR (N'La fecha de vencimiento del lote de esta vacuna es el día de hoy o anterior.', 16, 1);
+                        END
+                END
 
-        SET @numero_dosis = RTRIM(@numero_dosis);
+            SET @numero_dosis = RTRIM(@numero_dosis);
 
-        -- Insertar la nueva dosis
-        INSERT INTO Dosis (id_dosis, fecha_aplicacion, numero_dosis, id_vacuna, id_sede)
-        VALUES (@id_dosis, @fecha_aplicacion, @numero_dosis, @uuid_vacuna, @id_sede);
+            -- Insertar la nueva dosis
+            INSERT INTO Dosis (id_dosis, fecha_aplicacion, numero_dosis, id_vacuna, id_sede)
+            VALUES (@id_dosis, @fecha_aplicacion, @numero_dosis, @uuid_vacuna, @uuid_sede);
+            SET @result = @result + @@ROWCOUNT;
 
-        -- Insertar la relación en Paciente_Dosis
-        INSERT INTO pacientes_dosis (cedula_paciente, id_dosis)
-        VALUES (@cedula_paciente, @id_dosis);
+            -- Insertar la relación en Paciente_Dosis
+            INSERT INTO pacientes_dosis (cedula_paciente, id_dosis)
+            VALUES (@cedula_paciente, @id_dosis);
+            SET @result = @result + @@ROWCOUNT;
 
-        -- Restar la cantidad del inventario de la sede solo si existe el registro
-        IF EXISTS (SELECT 1
-                   FROM sedes_inventarios
-                   WHERE id_sede = @id_sede
-                     AND id_vacuna = @uuid_vacuna
-                     AND lote_sede LIKE @Lote)
-            BEGIN
-                UPDATE sedes_inventarios
-                SET Cantidad = Cantidad - 1
-                WHERE id_sede = @id_sede
-                  AND id_vacuna = @uuid_vacuna
-                  AND lote_sede LIKE @Lote;
-            END
+            -- Restar la cantidad del inventario de la sede solo si existe el registro
+            IF EXISTS (SELECT 1
+                       FROM sedes_inventarios
+                       WHERE id_sede = @uuid_sede
+                         AND id_vacuna = @uuid_vacuna
+                         AND lote_sede LIKE @Lote)
+                BEGIN
+                    UPDATE sedes_inventarios
+                    SET Cantidad = Cantidad - 1
+                    WHERE id_sede = @uuid_sede
+                      AND id_vacuna = @uuid_vacuna
+                      AND lote_sede LIKE @Lote;
+                    SET @result = @result + @@ROWCOUNT;
+                END
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
@@ -925,17 +959,22 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE sp_vacunas_distribuir_vacunas @id_almacen SMALLINT NULL,
-                                                                    @nombre_almacen NVARCHAR(100) NULL,
-    @id_sede UNIQUEIDENTIFIER NULL,
-	@nombre_sede NVARCHAR(100) NULL,
-    @uuid_vacuna UNIQUEIDENTIFIER NULL,
-	@nombre_vacuna NVARCHAR(100) NULL,
+CREATE PROCEDURE sp_vacunas_distribuir_vacunas(
+    @id_almacen SMALLINT = NULL,
+    @nombre_almacen NVARCHAR(100) = NULL,
+    @id_sede UNIQUEIDENTIFIER = NULL,
+    @nombre_sede NVARCHAR(100) = NULL,
+    @uuid_vacuna UNIQUEIDENTIFIER = NULL,
+    @nombre_vacuna NVARCHAR(100) = NULL,
     @cantidad INT,
-	@lote NVARCHAR(10)
+    @lote NVARCHAR(10),
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
         -- Validar que se ingresó al menos 1 valor requerido para cada tabla
         IF @id_almacen IS NULL AND @nombre_almacen IS NULL
             BEGIN
@@ -1019,38 +1058,40 @@ BEGIN
                 RAISERROR (N'No se puede distribuir un lote con fecha menor al día de hoy. Revisar inventario almacen', 16, 1);
             END
 
-        BEGIN TRANSACTION;
-        -- Restar la cantidad del inventario del almacén
-        UPDATE almacenes_inventarios
-        SET cantidad = cantidad - @cantidad
-        WHERE id_almacen = @id_almacen
-          AND id_vacuna = @uuid_vacuna
-          AND lote_almacen LIKE @lote;
+        BEGIN TRANSACTION
+            -- Restar la cantidad del inventario del almacén
+            UPDATE almacenes_inventarios
+            SET cantidad = cantidad - @cantidad
+            WHERE id_almacen = @id_almacen
+              AND id_vacuna = @uuid_vacuna
+              AND lote_almacen LIKE @lote;
 
-        -- Agregar la cantidad al inventario de la sede
-        IF EXISTS (SELECT 1
-                   FROM sedes_inventarios
-                   WHERE id_sede = @id_sede
-                     AND id_vacuna = @uuid_vacuna
-                     AND lote_sede LIKE @lote)
-            BEGIN
-                UPDATE sedes_inventarios
-                SET cantidad = cantidad + @Cantidad
-                WHERE id_sede = @id_sede
-                  AND id_vacuna = @uuid_vacuna
-                  AND lote_sede LIKE @lote;
-            END
-        ELSE
-            BEGIN
-                INSERT INTO sedes_inventarios (id_sede, id_vacuna, Cantidad, Fecha_lote_sede, Lote_sede)
-                VALUES (@id_sede, @uuid_vacuna, @cantidad, @fecha_lote, @lote);
-            END
+            -- Agregar la cantidad al inventario de la sede
+            IF EXISTS (SELECT 1
+                       FROM sedes_inventarios
+                       WHERE id_sede = @id_sede
+                         AND id_vacuna = @uuid_vacuna
+                         AND lote_sede LIKE @lote)
+                BEGIN
+                    UPDATE sedes_inventarios
+                    SET cantidad = cantidad + @Cantidad
+                    WHERE id_sede = @id_sede
+                      AND id_vacuna = @uuid_vacuna
+                      AND lote_sede LIKE @lote;
+                    SET @result = @result + @@ROWCOUNT;
+                END
+            ELSE
+                BEGIN
+                    INSERT INTO sedes_inventarios (id_sede, id_vacuna, Cantidad, Fecha_lote_sede, Lote_sede)
+                    VALUES (@id_sede, @uuid_vacuna, @cantidad, @fecha_lote, @lote);
+                    SET @result = @result + @@ROWCOUNT;
+                END
 
-        -- Registrar la distribución
-        INSERT INTO distribuciones_vacunas (id_almacen, id_sede, id_vacuna, cantidad, lote, fecha_distribucion)
-        VALUES (@id_almacen, @id_sede, @uuid_vacuna, @Cantidad, @Lote, CURRENT_TIMESTAMP);
+            -- Registrar la distribución
+            INSERT INTO distribuciones_vacunas (id_almacen, id_sede, id_vacuna, cantidad, lote, fecha_distribucion)
+            VALUES (@id_almacen, @id_sede, @uuid_vacuna, @Cantidad, @Lote, CURRENT_TIMESTAMP);
+            SET @result = @result + @@ROWCOUNT;
 
-        -- Confirmar la transacción
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
@@ -1068,14 +1109,19 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE sp_vacunas_gestionar_usuario @cedula NVARCHAR(20),
-                                              @usuario NVARCHAR(50),
-                                              @clave_hash NVARCHAR(60),
-                                              @fecha_nacimiento DATETIME,
-                                              @correo_usuario NVARCHAR(254) = NULL
+CREATE PROCEDURE sp_vacunas_gestionar_usuario(
+    @cedula NVARCHAR(20),
+    @usuario NVARCHAR(50),
+    @clave_hash NVARCHAR(60),
+    @fecha_nacimiento DATETIME,
+    @correo_usuario NVARCHAR(254) = NULL,
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
         -- Validar fecha nacimiento en el formato esperado
         IF TRY_CAST(@fecha_nacimiento AS DATETIME) IS NULL OR TRY_CAST(@fecha_nacimiento AS DATE) IS NULL
             BEGIN
@@ -1097,12 +1143,14 @@ BEGIN
                            clave_hash != @clave_hash OR
                            fecha_nacimiento != @fecha_nacimiento OR
                            correo_usuario != @correo_usuario);
+                    SET @result = @result + @@ROWCOUNT;
                 END
             ELSE
                 BEGIN
                     -- Si no existe, insertar un nuevo registro
                     INSERT INTO Usuarios (cedula, usuario, clave_hash, fecha_nacimiento, correo_usuario)
                     VALUES (@Cedula, @Usuario, @clave_hash, @fecha_nacimiento, @correo_usuario);
+                    SET @result = @result + @@ROWCOUNT;
                 END
         COMMIT TRANSACTION;
     END TRY
@@ -1123,11 +1171,16 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_vacunas_insert_roles_usuario @cedula NVARCHAR(20),
-                                                 @roles NVARCHAR(MAX) -- cadena delimitada por comas los roles
+CREATE PROCEDURE sp_vacunas_insert_roles_usuario(
+    @cedula NVARCHAR(20),
+    @roles NVARCHAR(MAX), -- cadena delimitada por comas los roles
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
         DECLARE @id_usuario UNIQUEIDENTIFIER;
         DECLARE @roles_tabla TABLE
                              (
@@ -1139,14 +1192,17 @@ BEGIN
             INSERT INTO @roles_tabla (id_rol)
             SELECT value
             FROM string_split(@roles, ',')
+            SET @result = @result + @@ROWCOUNT;
 
             -- Eliminar los roles existentes
             DELETE FROM usuarios_roles WHERE id_usuario = @id_usuario
+            SET @result = @result + @@ROWCOUNT;
 
             -- Insertar los roles nuevos
             INSERT INTO usuarios_roles (id_usuario, id_rol)
             SELECT @id_usuario, id_rol
             FROM @roles_tabla
+            SET @result = @result + @@ROWCOUNT;
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
@@ -1166,13 +1222,18 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_vacunas_insert_vacuna_enfermedad @uuid_vacuna UNIQUEIDENTIFIER NULL,
-                                                                                   @nombre_vacuna NVARCHAR(100) NULL,
-	@id_enfermedad BIGINT NULL,
-	@nombre_enfermedad NVARCHAR(100) NULL
+CREATE PROCEDURE sp_vacunas_insert_vacuna_enfermedad(
+    @uuid_vacuna UNIQUEIDENTIFIER = NULL,
+    @nombre_vacuna NVARCHAR(100) = NULL,
+    @id_enfermedad BIGINT = NULL,
+    @nombre_enfermedad NVARCHAR(100) = NULL,
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
         -- Validar que se ingresó al menos 1 valor requerido para cada tabla
         IF @nombre_vacuna IS NULL AND @uuid_vacuna IS NULL
             BEGIN
@@ -1212,7 +1273,8 @@ BEGIN
         BEGIN TRANSACTION
             INSERT INTO vacunas_enfermedades (id_vacuna, id_enfermedad)
             VALUES (@uuid_vacuna, @id_enfermedad);
-        COMMIT TRANSACTION
+            SET @result = @result + @@ROWCOUNT;
+        COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
@@ -1231,14 +1293,18 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_vacunas_insert_fabricante_vacuna @id_fabricante INT NULL,
-                                                                        @nombre_fabricante NVARCHAR(100) NULL,
-	@uuid_vacuna UNIQUEIDENTIFIER NULL,
-	@nombre_vacuna NVARCHAR(100) NULL
-
+CREATE PROCEDURE sp_vacunas_insert_fabricante_vacuna(
+    @id_fabricante INT = NULL,
+    @nombre_fabricante NVARCHAR(100) = NULL,
+    @uuid_vacuna UNIQUEIDENTIFIER = NULL,
+    @nombre_vacuna NVARCHAR(100) = NULL,
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
         -- validar que se ingresó al menos 1 valor requerido para cada tabla
         IF @id_fabricante IS NULL AND @nombre_fabricante IS NULL
             BEGIN
@@ -1278,7 +1344,8 @@ BEGIN
         BEGIN TRANSACTION
             INSERT INTO fabricantes_vacunas(id_fabricante, id_vacuna)
             VALUES (@id_fabricante, @uuid_vacuna);
-        COMMIT TRANSACTION
+            SET @result = @result + @@ROWCOUNT;
+        COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
@@ -1297,16 +1364,21 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE sp_vacunas_insert_almacen_inventario @id_almacen SMALLINT NULL,
-                                                                           @nombre_almacen NVARCHAR(100) NULL,
-	@uuid_vacuna UNIQUEIDENTIFIER NULL,
-	@nombre_vacuna NVARCHAR(100) NULL,
-	@cantidad INT,
-	@fecha_lote_almacen DATETIME,
-	@lote_almacen NVARCHAR(10)
+CREATE PROCEDURE sp_vacunas_insert_almacen_inventario(
+    @id_almacen SMALLINT = NULL,
+    @nombre_almacen NVARCHAR(100) = NULL,
+    @uuid_vacuna UNIQUEIDENTIFIER = NULL,
+    @nombre_vacuna NVARCHAR(100) = NULL,
+    @cantidad INT,
+    @fecha_lote_almacen DATETIME,
+    @lote_almacen NVARCHAR(10),
+    @result INT OUTPUT
+)
 AS
 BEGIN
     BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
         -- Validar que se ingresó al menos 1 valor requerido para cada tabla
         IF @id_almacen IS NULL AND @nombre_almacen IS NULL
             BEGIN
@@ -1358,7 +1430,8 @@ BEGIN
         BEGIN TRANSACTION
             INSERT INTO almacenes_inventarios (id_almacen, id_vacuna, cantidad, fecha_lote_almacen, lote_almacen)
             VALUES (@id_almacen, @uuid_vacuna, @cantidad, @fecha_lote_almacen, @lote_almacen);
-        COMMIT TRANSACTION
+            SET @result = @result + @@ROWCOUNT;
+        COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
@@ -1433,14 +1506,14 @@ GO
 CREATE FUNCTION fn_vacunas_get_usuarios_by_cedula(@cedula NVARCHAR(20))
     RETURNS TABLE
         AS
-        RETURN(SELECT u.id_usuario
-                          cedula,
+        RETURN(SELECT u.id_usuario,
+                      cedula,
                       usuario,
                       fecha_nacimiento,
                       correo_usuario,
                       created_at,
-                      r.id_rol
-                          nombre_rol
+                      r.id_rol,
+                      nombre_rol
                FROM usuarios u
                         INNER JOIN usuarios_roles r ON u.id_usuario = r.id_usuario
                         INNER JOIN roles ON r.id_rol = roles.id_rol
@@ -1797,7 +1870,7 @@ GO
 INSERT INTO direcciones (direccion, id_distrito)
 VALUES (N'Dirección por registrar', 0);
 GO
-EXEC sp_vacunas_insert_sede 'Sede por registrar', 'Por registrar', NULL, NULL, NULL, NULL;
+EXEC sp_vacunas_insert_sede 'Sede por registrar', 'Por registrar', NULL, NULL, NULL, NULL, NULL;
 GO
 INSERT INTO enfermedades (nombre_enfermedad, nivel_gravedad)
 VALUES ('Desconocida', NULL),
@@ -2114,323 +2187,322 @@ VALUES ('Vacuna por registrar', NULL, NULL),
 GO
 
 -- Vacuna por registrar
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Vacuna por registrar', NULL, 'Desconocida'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Vacuna por registrar', NULL, 'Desconocida', NULL;
 -- enfermedad desconocida y síntomas desconocidos
 -- Adacel
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Adacel', NULL, 'Difteria'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Adacel', NULL, N'Tétanos'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Adacel', NULL, 'Tos ferina'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Adacel', NULL, 'Difteria', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Adacel', NULL, N'Tétanos', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Adacel', NULL, 'Tos ferina', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'BCG', NULL, 'Tuberculosis'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'BCG', NULL, 'Tuberculosis', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'COVID-19', NULL, 'COVID-19'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'COVID-19', NULL, 'COVID-19', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Fiebre Amarilla', NULL, 'Fiebre Amarilla'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Fiebre Amarilla', NULL, 'Fiebre Amarilla', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hep A (Euvax) (adultos)', NULL, 'Hepatitis A'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hep A (Euvax) (adultos)', NULL, 'Hepatitis A', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hep A (Euvax) (infantil)', NULL, 'Hepatitis A'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hep A (Euvax) (infantil)', NULL, 'Hepatitis A', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hep B (adultos)', NULL, 'Hepatitis B'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hep B (adultos)', NULL, 'Hepatitis B', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hep B (infantil)', NULL, 'Hepatitis B'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hep B (infantil)', NULL, 'Hepatitis B', NULL;
 -- Hexaxim
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Difteria'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, N'Tétanos'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Tos ferina'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Hepatitis B'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Poliomelitis (Polio)'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Hib (Haemophilus influenzae tipo b)'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Difteria', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, N'Tétanos', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Tos ferina', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Hepatitis B', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Poliomelitis (Polio)', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Hexaxim', NULL, 'Hib (Haemophilus influenzae tipo b)', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Influenza (FluQuadri)', NULL, 'Influenza (Gripe)'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Influenza (FluQuadri)', NULL, 'Influenza (Gripe)', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Meningococo', NULL, N'Enfermedad meningocócica'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Meningococo', NULL, N'Enfermedad meningocócica', NULL;
 -- MMR
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'MMR', NULL, N'Sarampión'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'MMR', NULL, 'Paperas'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'MMR', NULL, N'Rubéola'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'MMR', NULL, N'Sarampión', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'MMR', NULL, 'Paperas', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'MMR', NULL, N'Rubéola', NULL;
 -- MR (antisarampión, antirrubéola)
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, N'MR (antisarampión, antirrubéola)', NULL, N'Sarampión'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, N'MR (antisarampión, antirrubéola)', NULL, N'Rubéola'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, N'MR (antisarampión, antirrubéola)', NULL, N'Sarampión', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, N'MR (antisarampión, antirrubéola)', NULL, N'Rubéola', NULL;
 -- Neumoco conjugado (Prevenar 13 valente)
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Neumoco conjugado (Prevenar 13 valente)', NULL, N'Neumonía'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Neumoco conjugado (Prevenar 13 valente)', NULL, 'Meningitis'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Neumoco conjugado (Prevenar 13 valente)', NULL, 'Bacteriemia'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Neumoco conjugado (Prevenar 13 valente)', NULL, N'Neumonía', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Neumoco conjugado (Prevenar 13 valente)', NULL, 'Meningitis', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Neumoco conjugado (Prevenar 13 valente)', NULL, 'Bacteriemia', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Papiloma Humano (Gardasil)', NULL, 'Virus del papiloma humano (VPH)'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Papiloma Humano (Gardasil)', NULL, 'Virus del papiloma humano (VPH)',
+     NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Pneumo23', NULL, N'Enfermedades neumocócicas'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Pneumo23', NULL, N'Enfermedades neumocócicas', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Pneumovax', NULL, N'Enfermedades neumocócicas'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Pneumovax', NULL, N'Enfermedades neumocócicas', NULL;
 -- Priorix
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Priorix', NULL, N'Sarampión'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Priorix', NULL, N'Rubéola'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Priorix', NULL, 'Paperas'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Rotarix', NULL, 'Rotavirus'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Priorix', NULL, N'Sarampión', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Priorix', NULL, N'Rubéola', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Priorix', NULL, 'Paperas', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Rotarix', NULL, 'Rotavirus', NULL;
 -- TD
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'TD', NULL, N'Tétanos'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'TD', NULL, 'Difteria'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'TD', NULL, N'Tétanos', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'TD', NULL, 'Difteria', NULL;
 -- Tetravalente
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, 'Difteria'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, N'Tétanos'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, 'Tos ferina'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, 'Poliomelitis (Polio)'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, 'Difteria', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, N'Tétanos', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, 'Tos ferina', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, 'Poliomelitis (Polio)', NULL;
 
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Varivax', NULL, 'Varicela'
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Verorab', NULL, 'Rabia'
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Varivax', NULL, 'Varicela', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Verorab', NULL, 'Rabia', NULL;
 
 -- Pacientes ficticios
 EXEC sp_vacunas_gestionar_paciente '8-1006-14', 'Jorge', 'Ruiz', NULL, '1999-05-31', 'M', '507 6068-4595', NULL,
-     'Samaria, sector 4, casa E1', 'San Miguelito';
+     'Samaria, sector 4, casa E1', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '1-54-9635', 'Luis', 'Mendoza', NULL, '2006-05-05', 'M', '507 6325-7865', NULL,
-     'Finca 30, casa 45', 'Changuinola';
+     'Finca 30, casa 45', 'Changuinola', NULL;
 EXEC sp_vacunas_gestionar_paciente '2-4558-5479', N'José', 'Perez', NULL, '1959-12-13', 'M', '507 6265-4789', NULL,
-     N'Vía Interamericana, casa L78', N'Natá';
+     N'Vía Interamericana, casa L78', N'Natá', NULL;
 EXEC sp_vacunas_gestionar_paciente '5-554-321', 'Martha', 'Cornejo', NULL, '1979-08-24', 'F', '507 6784-1296', NULL,
-     N'Vía Interamericana, Metetí, casa 87F', 'Pinogana';
+     N'Vía Interamericana, Metetí, casa 87F', 'Pinogana', NULL;
 EXEC sp_vacunas_gestionar_paciente '8-9754-1236', 'Suleimi', 'Rodriguez', NULL, '2001-02-17', 'F', '507 6785-9631',
-     NULL, 'Calle 51, casa 74', N'Panamá';
+     NULL, 'Calle 51, casa 74', N'Panamá', NULL;
 
 EXEC sp_vacunas_gestionar_paciente 'PE-234-567', 'Carlos', 'Mendez', NULL, '1990-04-12', 'M', '507 6000-1111',
-     'carlos.mendez@example.com', 'Avenida 4B, Casa 12', N'Panamá';
+     'carlos.mendez@example.com', 'Avenida 4B, Casa 12', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-12-123456', 'Luis', N'Pérez', NULL, '1978-03-19', 'M', NULL,
-     'luis.perez@example.com', 'Edificio Las Palmas, Piso 3', N'Colón';
+     'luis.perez@example.com', 'Edificio Las Palmas, Piso 3', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-456-789', N'María', N'Rodríguez', N'Hernández', '1992-11-05', 'F',
-     '507 6000-3333',
-     NULL, 'Calle 12, Casa 56', 'David';
+     '507 6000-3333', NULL, 'Calle 12, Casa 56', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '5AV-9-1234', 'Javier', N'Fernández', NULL, '1988-02-21', 'M', '507 6000-4444',
-     'javier.fernandez@example.com', 'Avenida 1A, Local 9', N'Panamá';
+     'javier.fernandez@example.com', 'Avenida 1A, Local 9', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '2PI-3421-456', 'Ricardo', 'Mora', NULL, '1980-12-30', 'M', '507 6000-6666', NULL,
-     'Calle 14, Casa 89', 'Bocas del Toro';
+     'Calle 14, Casa 89', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-78-654321', 'Paola', N'García', 'Torres', '1996-06-11', 'F', '507 6000-7777',
-     'paola.garcia@example.com', 'Edificio El Dorado, Oficina 10', N'Panamá';
+     'paola.garcia@example.com', 'Edificio El Dorado, Oficina 10', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-9-123', 'Sergio', N'Ramírez', NULL, '1983-09-23', 'M', '507 6000-8888',
-     'sergio.ramirez@example.com', 'Avenida 8, Apartamento 20', 'Chorrera';
+     'sergio.ramirez@example.com', 'Avenida 8, Apartamento 20', 'Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente '4-4321-123', 'Elena', 'Cruz', N'Gómez', '1991-01-15', 'F', '507 6000-9999',
-     'elena.cruz@example.com', 'Calle 9, Casa 43', N'Penonomé';
+     'elena.cruz@example.com', 'Calle 9, Casa 43', N'Penonomé', NULL;
 EXEC sp_vacunas_gestionar_paciente '6-2-987654', 'Sofia', N'Méndez', N'Hernández', '1993-07-17', 'F', '507 6001-1111',
-     'sofia.mendez@example.com', 'Avenida 2B, Piso 2', N'Panamá';
+     'sofia.mendez@example.com', 'Avenida 2B, Piso 2', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-5-3456', 'Alejandro', N'Rodríguez', NULL, '1989-04-09', 'M', '507 6001-2222',
-     NULL, 'Calle 6, Edificio 5', N'Colón';
+     NULL, 'Calle 6, Edificio 5', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-1234-654', 'Camila', N'Vásquez', 'Ruiz', '1995-10-11', 'F', '507 6001-3333',
-     'camila.vasquez@example.com', 'Edificio La Roca, Apartamento 10', 'David';
+     'camila.vasquez@example.com', 'Edificio La Roca, Apartamento 10', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '8-123-56789', 'Hugo', 'Cruz', NULL, '1980-02-15', 'M', '507 6001-4444', NULL,
-     'Avenida 3, Local 14', 'San Miguelito';
+     'Avenida 3, Local 14', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '3-12-543', 'Valeria', 'Castillo', N'García', '1997-11-24', 'F', '507 6001-5555',
-     'valeria.castillo@example.com', 'Calle 13, Edificio A', 'Bocas del Toro';
+     'valeria.castillo@example.com', 'Calle 13, Edificio A', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente '7AV-678-123', 'Jorge', N'Fernández', NULL, '1986-09-30', 'M', '507 6001-6666', NULL,
-     'Calle 8, Apartamento 2', 'Chorrera';
+     'Calle 8, Apartamento 2', 'Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente '9PI-1-98765', 'Natalia', 'Morales', N'Vásquez', '1990-06-14', 'F', '507 6001-7777',
-     'natalia.morales@example.com', 'Edificio Los Pinos, Piso 4', N'Panamá';
+     'natalia.morales@example.com', 'Edificio Los Pinos, Piso 4', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-345-234', 'Laura', N'Rodríguez', N'Pérez', '1998-08-05', 'F', '507 6001-9999',
-     'laura.rodriguez@example.com', 'Avenida 6, Apartamento 8', N'Penonomé';
+     'laura.rodriguez@example.com', 'Avenida 6, Apartamento 8', N'Penonomé', NULL;
 EXEC sp_vacunas_gestionar_paciente '4-987-123456', 'Felipe', N'Hernández', NULL, '1987-03-17', 'M', '507 6002-0000',
-     'felipe.hernandez@example.com', 'Calle 5, Local 6', N'Panamá';
+     'felipe.hernandez@example.com', 'Calle 5, Local 6', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-543-567', 'Daniela', N'Gómez', N'Fernández', '1994-04-22', 'F', '507 6002-1111',
-     'daniela.gomez@example.com', 'Calle 4, Edificio 7', N'Colón';
+     'daniela.gomez@example.com', 'Calle 4, Edificio 7', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente '6AV-99-1', 'Luis', 'Salazar', NULL, '1985-12-14', 'M', '507 6002-2222',
-     'luis.salazar@example.com', 'Avenida 1, Casa 9', 'David';
+     'luis.salazar@example.com', 'Avenida 1, Casa 9', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '2-4567-876543', 'Gabriela', N'Vásquez', N'Rodríguez', '1991-07-09', 'F',
-     '507 6002-3333', 'gabriela.vasquez@example.com', 'Calle 7, Apartamento 4', 'San Miguelito';
+     '507 6002-3333', 'gabriela.vasquez@example.com', 'Calle 7, Apartamento 4', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-23-321', 'Alejandra', 'Morales', NULL, '1984-10-18', 'F', '507 6002-4444',
-     'alejandra.morales@example.com', 'Edificio El Sol, Oficina 3', 'Bocas del Toro';
+     'alejandra.morales@example.com', 'Edificio El Sol, Oficina 3', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-89-654', N'Joaquín', N'Ramírez', N'García', '1999-02-20', 'M', '507 6002-5555',
-     'joaquin.ramirez@example.com', 'Calle 10, Edificio 8', 'Chorrera';
+     'joaquin.ramirez@example.com', 'Calle 10, Edificio 8', 'Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-3456-321', 'Cristina', N'Pérez', NULL, '1988-11-12', 'F', '507 6002-6666',
-     'cristina.perez@example.com', 'Calle 11, Casa 12', N'Panamá';
+     'cristina.perez@example.com', 'Calle 11, Casa 12', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '1PI-678-12', 'Beatriz', 'Castillo', NULL, '1996-06-19', 'F', '507 6002-8888',
-     'beatriz.castillo@example.com', 'Calle 3, Local 10', N'Colón';
+     'beatriz.castillo@example.com', 'Calle 3, Local 10', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente '7-234-1234', 'Diego', N'Jiménez', 'Morales', '1983-12-15', 'M', '507 6002-9999',
-     'diego.jimenez@example.com', 'Avenida 9, Edificio B', 'David';
+     'diego.jimenez@example.com', 'Avenida 9, Edificio B', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '4-123-56789', 'Paola', 'Ramos', NULL, '1987-03-28', 'F', '507 6003-0000',
-     'paola.ramos@example.com', 'Calle 6, Edificio 3', N'Panamá';
+     'paola.ramos@example.com', 'Calle 6, Edificio 3', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-56-987', 'Juan', N'García', 'Ruiz', '1994-08-15', 'M', '507 6003-1111',
-     'juan.garcia@example.com', 'Calle 4, Casa 8', 'San Miguelito';
+     'juan.garcia@example.com', 'Calle 4, Casa 8', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '5-567-65432', 'Natalia', 'Moreno', NULL, '1992-07-21', 'F', '507 6003-2222',
-     'natalia.moreno@example.com', 'Edificio La Vista, Piso 6', N'Colón';
+     'natalia.moreno@example.com', 'Edificio La Vista, Piso 6', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-8-123', 'Marcos', 'Salinas', N'Gómez', '1989-05-30', 'M', '507 6003-3333',
-     'marcos.salinas@example.com', 'Avenida 7, Local 5', 'David';
+     'marcos.salinas@example.com', 'Avenida 7, Local 5', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-7-7654', 'Julia', N'Sánchez', NULL, '1991-12-25', 'F', '507 6003-4444',
-     'julia.sanchez@example.com', 'Calle 8, Casa 14', 'San Miguelito';
+     'julia.sanchez@example.com', 'Calle 8, Casa 14', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '6-2345-123', N'Andrés', 'Torres', 'Castillo', '1986-04-12', 'M', '507 6003-5555',
-     'andres.torres@example.com', 'Edificio La Colina, Apartamento 3', 'Bocas del Toro';
+     'andres.torres@example.com', 'Edificio La Colina, Apartamento 3', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente '3PI-1-654', 'Elena', N'González', NULL, '1993-09-29', 'F', '507 6003-6666',
-     'elena.gonzalez@example.com', 'Calle 11, Edificio C', 'Chorrera';
+     'elena.gonzalez@example.com', 'Calle 11, Edificio C', 'Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-12-3456', N'Héctor', N'Ramírez', 'Ruiz', '1997-06-14', 'M', '507 6003-7777',
-     'hector.ramirez@example.com', 'Calle 5, Casa 10', N'Panamá';
+     'hector.ramirez@example.com', 'Calle 5, Casa 10', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '9-1-123456', 'Sandra', 'Montes', NULL, '1984-08-19', 'F', '507 6003-8888',
-     'sandra.montes@example.com', 'Edificio Los Jardines, Piso 2', 'San Miguelito';
+     'sandra.montes@example.com', 'Edificio Los Jardines, Piso 2', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-78-987', 'Santiago', N'Méndez', N'Vásquez', '1990-11-25', 'M', '507 6003-9999',
-     'santiago.mendez@example.com', 'Calle 9, Apartamento 5', N'Colón';
+     'santiago.mendez@example.com', 'Calle 9, Apartamento 5', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente '7-4567-123', 'Camila', 'Ruiz', NULL, '1996-03-14', 'F', '507 6004-0000',
-     'camila.ruiz@example.com', 'Avenida 3, Casa 12', 'David';
+     'camila.ruiz@example.com', 'Avenida 3, Casa 12', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '5AV-34-654', N'Tomás', 'Alvarado', 'Castillo', '1988-02-18', 'M', '507 6004-1111',
-     'tomas.alvarado@example.com', 'Calle 2, Edificio 1', N'Panamá';
+     'tomas.alvarado@example.com', 'Calle 2, Edificio 1', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '8-12-321', 'Isabel', N'García', NULL, '1994-07-09', 'F', '507 6004-2222',
-     'isabel.garcia@example.com', 'Edificio Los Robles, Apartamento 8', 'San Miguelito';
+     'isabel.garcia@example.com', 'Edificio Los Robles, Apartamento 8', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-345-1', 'Federico', N'Gómez', NULL, '1991-06-28', 'M', '507 6004-3333',
-     'federico.gomez@example.com', 'Calle 10, Local 7', N'Colón';
+     'federico.gomez@example.com', 'Calle 10, Local 7', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-1234-567', 'Paola', N'Martínez', N'Vásquez', '1985-11-15', 'F', '507 6004-4444',
-     'paola.martinez@example.com', 'Calle 4, Casa 6', 'David';
+     'paola.martinez@example.com', 'Calle 4, Casa 6', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-9-876', 'Miguel', N'Vásquez', NULL, '1989-05-21', 'M', '507 6004-5555',
-     'miguel.vasquez@example.com', 'Avenida 8, Edificio 3', N'Panamá';
+     'miguel.vasquez@example.com', 'Avenida 8, Edificio 3', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '4-5678-12345', 'Fernanda', 'Torres', NULL, '1998-03-13', 'F', '507 6004-6666',
-     'fernanda.torres@example.com', 'Calle 7, Casa 5', 'San Miguelito';
+     'fernanda.torres@example.com', 'Calle 7, Casa 5', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '2PI-23-789', 'Alejandro', N'Jiménez', 'Salazar', '1992-08-19', 'M', '507 6004-7777',
-     'alejandro.jimenez@example.com', N'Edificio El Águila, Piso 1', 'Bocas del Toro';
+     'alejandro.jimenez@example.com', N'Edificio El Águila, Piso 1', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente '6-1234-65432', 'Rosa', N'González', NULL, '1981-10-29', 'F', '507 6004-8888',
-     'rosa.gonzalez@example.com', 'Calle 8, Edificio 6', 'Chorrera';
+     'rosa.gonzalez@example.com', 'Calle 8, Edificio 6', 'Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente '7-345-678', 'Gabriel', N'Ramírez', 'Ramos', '1996-04-21', 'M', '507 6004-9999',
-     'gabriel.ramirez@example.com', 'Calle 11, Casa 15', N'Panamá';
+     'gabriel.ramirez@example.com', 'Calle 11, Casa 15', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-9-1', 'Luisa', 'Castillo', NULL, '1990-06-25', 'F', '507 6005-0000',
-     'luisa.castillo@example.com', 'Avenida 5, Local 3', 'San Miguelito';
+     'luisa.castillo@example.com', 'Avenida 5, Local 3', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-12-54321', 'Mauricio', 'Ruiz', N'Gómez', '1987-02-16', 'M', '507 6005-1111',
-     'mauricio.ruiz@example.com', 'Edificio La Palma, Apartamento 6', N'Colón';
+     'mauricio.ruiz@example.com', 'Edificio La Palma, Apartamento 6', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-234-567', 'Daniela', N'Hernández', NULL, '1995-01-18', 'F', '507 6005-2222',
-     'daniela.hernandez@example.com', 'Calle 6, Edificio 4', 'David';
+     'daniela.hernandez@example.com', 'Calle 6, Edificio 4', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '5-678-98765', 'Ricardo', 'Salazar', N'Pérez', '1983-09-13', 'M', '507 6005-3333',
-     'ricardo.salazar@example.com', 'Calle 5, Casa 8', 'San Miguelito';
+     'ricardo.salazar@example.com', 'Calle 5, Casa 8', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '4AV-8-12', 'Victoria', N'Gómez', NULL, '1992-03-14', 'F', '507 6005-4444',
-     'victoria.gomez@example.com', 'Edificio La Vista, Piso 5', 'Bocas del Toro';
+     'victoria.gomez@example.com', 'Edificio La Vista, Piso 5', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente '8-123-1234', N'Andrés', N'Martínez', N'García', '1986-12-11', 'M', '507 6005-5555',
-     'andres.martinez@example.com', 'Calle 12, Local 2', 'Chorrera';
+     'andres.martinez@example.com', 'Calle 12, Local 2', 'Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-56-2345', 'Carla', N'Sánchez', NULL, '1994-06-28', 'F', '507 6005-6666',
-     'carla.sanchez@example.com', 'Calle 9, Casa 4', N'Panamá';
+     'carla.sanchez@example.com', 'Calle 9, Casa 4', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-7-876', 'Javier', N'García', NULL, '1991-08-20', 'M', '507 6005-7777',
-     'javier.garcia@example.com', 'Avenida 7, Edificio 9', 'San Miguelito';
+     'javier.garcia@example.com', 'Avenida 7, Edificio 9', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-345-6789', 'Elena', N'Pérez', 'Morales', '1998-05-10', 'F', '507 6005-8888',
-     'elena.perez@example.com', 'Calle 4, Apartamento 11', N'Colón';
+     'elena.perez@example.com', 'Calle 4, Apartamento 11', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente '9-123-123', 'Ricardo', 'Castillo', NULL, '1987-11-15', 'M', '507 6005-9999',
-     'ricardo.castillo@example.com', 'Edificio Los Robles, Piso 3', 'David';
+     'ricardo.castillo@example.com', 'Edificio Los Robles, Piso 3', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '3-567-9876', 'Marta', 'Alvarez', N'Rodríguez', '1992-07-19', 'F', '507 6006-0000',
-     'marta.alvarez@example.com', 'Calle 5, Casa 10', 'San Miguelito';
+     'marta.alvarez@example.com', 'Calle 5, Casa 10', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '4PI-12-345', 'Eduardo', 'Salazar', NULL, '1984-04-22', 'M', '507 6006-1111',
-     'eduardo.salazar@example.com', 'Avenida 6, Edificio 3', N'Panamá';
+     'eduardo.salazar@example.com', 'Avenida 6, Edificio 3', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '6-12345-678', 'Laura', N'Gómez', 'Morales', '1995-10-30', 'F', '507 6006-2222',
-     'laura.gomez@example.com', 'Calle 12, Edificio 7', N'Colón';
+     'laura.gomez@example.com', 'Calle 12, Edificio 7', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-2345-123', 'Luis', N'Vásquez', NULL, '1988-02-15', 'M', '507 6006-3333',
-     'luis.vasquez@example.com', 'Calle 3, Casa 7', 'David';
+     'luis.vasquez@example.com', 'Calle 3, Casa 7', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-89-1', N'Sofía', N'González', NULL, '1986-12-15', 'F', '507 6206-6666',
-     'sofia.gonzalez@example.com', 'Calle 11, Casa 6', 'Chorrera';
+     'sofia.gonzalez@example.com', 'Calle 11, Casa 6', 'Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-12-1234', N'Verónica', N'Vásquez', N'Gómez', '1992-07-15', 'F', '507 6106-8888',
-     'veronica.vasquez@example.com', 'Edificio La Vista, Piso 7', 'San Miguelito';
+     'veronica.vasquez@example.com', 'Edificio La Vista, Piso 7', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '7-456-987', 'Francisco', N'Sánchez', NULL, '1988-11-02', 'M', '507 6306-9999',
-     'francisco.sanchez@example.com', 'Calle 7, Casa 9', N'Colón';
+     'francisco.sanchez@example.com', 'Calle 7, Casa 9', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente '2-1234-654', 'Daniel', 'Cruz', 'Alvarado', '1993-10-20', 'M', '507 6107-0000',
-     'daniel.cruz@example.com', 'Avenida 2, Edificio 4', 'David';
+     'daniel.cruz@example.com', 'Avenida 2, Edificio 4', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '9PI-234-1', N'Tomás', N'González', N'Sánchez', '1991-08-15', 'M', '507 6007-2222',
-     'tomas.gonzalez@example.com', 'Calle 6, Local 8', N'Panamá';
+     'tomas.gonzalez@example.com', 'Calle 6, Local 8', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-8-567', 'Luis', 'Alvarado', NULL, '1986-05-18', 'M', '507 6407-4444',
-     'luis.alvarado@example.com', 'Calle 3, Casa 9', N'Colón';
+     'luis.alvarado@example.com', 'Calle 3, Casa 9', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-3456-78', 'Elena', N'Sánchez', N'Vásquez', '1994-09-19', 'F', '507 6507-5555',
-     'elena.sanchez@example.com', 'Avenida 8, Edificio 5', 'David';
+     'elena.sanchez@example.com', 'Avenida 8, Edificio 5', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-12-987', 'Marta', N'Gómez', 'Alvarado', '1988-11-12', 'F', '507 6607-7777',
-     'marta.gomez@example.com', 'Edificio El Sol, Apartamento 4', N'Panamá';
+     'marta.gomez@example.com', 'Edificio El Sol, Apartamento 4', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '6-789-654', 'Laura', 'Salazar', N'García', '1993-07-12', 'F', '507 6007-9999',
-     'laura.salazar@example.com', 'Calle 8, Edificio 6', N'Colón';
+     'laura.salazar@example.com', 'Calle 8, Edificio 6', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente '4-123-5678', 'Fernando', N'Pérez', NULL, '1990-05-14', 'M', '507 6708-0000',
-     'fernando.perez@example.com', 'Edificio La Roca, Apartamento 7', 'David';
+     'fernando.perez@example.com', 'Edificio La Roca, Apartamento 7', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-1-4321', 'Natalia', N'Vásquez', NULL, '1988-02-24', 'F', '507 6908-1111',
-     'natalia.vasquez@example.com', 'Calle 4, Edificio 1', N'Panamá';
+     'natalia.vasquez@example.com', 'Calle 4, Edificio 1', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '8-3456-123', N'Sofía', N'Rodríguez', NULL, '1995-12-20', 'F', '507 6808-3333',
-     'sofia.rodriguez@example.com', 'Avenida 3, Edificio 9', N'Colón';
+     'sofia.rodriguez@example.com', 'Avenida 3, Edificio 9', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-9-567', 'Carlos', 'Alvarez', N'Gómez', '1986-06-14', 'M', '507 6008-4444',
-     'carlos.alvarez@example.com', 'Calle 12, Local 7', 'David';
+     'carlos.alvarez@example.com', 'Calle 12, Local 7', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente '1-145-987', 'Luis', N'Gómez', NULL, '1984-01-12', 'M', '507 6008-6666',
-     'luis.gomez@example.com', 'Calle 7, Edificio 6', N'Panamá';
+     'luis.gomez@example.com', 'Calle 7, Edificio 6', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '3-721-284', 'Sandra', N'Pérez', 'Castillo', '1995-10-10', 'F', '507 6058-7777',
-     'sandra.perez@example.com', 'Calle 5, Casa 12', N'Colón';
+     'sandra.perez@example.com', 'Calle 5, Casa 12', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente '7-114-10', 'Antonio', N'Sánchez', NULL, '1989-07-14', 'M', '507 6008-8888',
-     'antonio.sanchez@example.com', 'Calle 9, Edificio 8', 'David';
+     'antonio.sanchez@example.com', 'Calle 9, Edificio 8', 'David', NULL;
 
 EXEC sp_vacunas_gestionar_paciente 'AB1234567X', N'Sofía', N'González', NULL, '1986-12-15', 'F', '507 6006-6666',
-     'sofia.gonzalez1@example.com', 'Calle 11, Casa 6', 'Chorrera';
+     'sofia.gonzalez1@example.com', 'Calle 11, Casa 6', 'Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'CD9876543Y', 'Mario', N'Ramírez', NULL, '1995-09-12', 'M', '507 6006-7777',
-     'mario.ramirez@example.com', 'Calle 3, Edificio 2', N'Panamá';
+     'mario.ramirez@example.com', 'Calle 3, Edificio 2', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'EF123456Z', N'Verónica', N'Vásquez', N'Gómez', '1992-07-15', 'F', '507 6006-8888',
-     'veronica.vasquez1@example.com', 'Edificio La Vista, Piso 7', 'San Miguelito';
+     'veronica.vasquez1@example.com', 'Edificio La Vista, Piso 7', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'GH6543210W', 'Francisco', N'Sánchez', NULL, '1988-11-02', 'M', '507 6006-9999',
-     'francisco.sanchez1@example.com', 'Calle 7, Casa 9', N'Colón';
+     'francisco.sanchez1@example.com', 'Calle 7, Casa 9', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'IJ789456A', 'Daniel', 'Cruz', 'Alvarado', '1993-10-20', 'M', '507 6007-0000',
-     'daniel.cruz1@example.com', 'Avenida 2, Edificio 4', 'David';
+     'daniel.cruz1@example.com', 'Avenida 2, Edificio 4', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'KL0123456B', 'Camila', N'Pérez', NULL, '1995-01-05', 'F', '507 6007-1111',
-     'camila.perez@example.com', 'Calle 4, Casa 12', 'San Miguelito';
+     'camila.perez@example.com', 'Calle 4, Casa 12', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'MN876543C', N'Tomás', N'González', N'Sánchez', '1991-08-15', 'M', '507 6607-2222',
-     'tomas.gonzalez1@example.com', 'Calle 6, Local 8', N'Panamá';
+     'tomas.gonzalez1@example.com', 'Calle 6, Local 8', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'OP3456789D', N'María', N'Rodríguez', NULL, '1987-12-25', 'F', '507 6007-3333',
-     'maria.rodriguez@example.com', 'Edificio Los Cedros, Apartamento 2', 'San Miguelito';
+     'maria.rodriguez@example.com', 'Edificio Los Cedros, Apartamento 2', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'QR4567890E', 'Luis', 'Alvarado', NULL, '1986-05-18', 'M', '507 6007-4444',
-     'luis.alvarado1@example.com', 'Calle 3, Casa 9', N'Colón';
+     'luis.alvarado1@example.com', 'Calle 3, Casa 9', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'ST2345678F', 'Elena', N'Sánchez', N'Vásquez', '1994-09-19', 'F', '507 6007-5555',
-     'elena.sanchez1@example.com', 'Avenida 8, Edificio 5', 'David';
+     'elena.sanchez1@example.com', 'Avenida 8, Edificio 5', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'UV3456789G', 'Gabriel', 'Ruiz', NULL, '1992-06-22', 'M', '507 6007-6666',
-     'gabriel.ruiz@example.com', 'Calle 7, Edificio 3', 'San Miguelito';
+     'gabriel.ruiz@example.com', 'Calle 7, Edificio 3', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'WX4561234H', 'Marta', N'Gómez', 'Alvarado', '1988-11-12', 'F', '507 6007-7777',
-     'marta.gomez1@example.com', 'Edificio El Sol, Apartamento 4', N'Panamá';
+     'marta.gomez1@example.com', 'Edificio El Sol, Apartamento 4', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'YZ7890123J', 'Juan', N'Martínez', NULL, '1996-03-28', 'M', '507 6007-8888',
-     'juan.martinez@example.com', 'Calle 12, Casa 15', 'San Miguelito';
+     'juan.martinez@example.com', 'Calle 12, Casa 15', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'AB9876543K', 'Laura', 'Salazar', N'García', '1993-07-12', 'F', '507 6707-9999',
-     'laura.salazar1@example.com', 'Calle 8, Edificio 6', N'Colón';
+     'laura.salazar1@example.com', 'Calle 8, Edificio 6', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'CD6543210L', 'Fernando', N'Pérez', NULL, '1990-05-14', 'M', '507 6008-0000',
-     'fernando.perez1@example.com', 'Edificio La Roca, Apartamento 7', 'David';
+     'fernando.perez1@example.com', 'Edificio La Roca, Apartamento 7', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'EF4321098M', 'Natalia', N'Vásquez', NULL, '1988-02-24', 'F', '507 6008-1111',
-     'natalia.vasquez1@example.com', 'Calle 4, Edificio 1', N'Panamá';
+     'natalia.vasquez1@example.com', 'Calle 4, Edificio 1', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'GH3210987N', 'Pedro', 'Castillo', 'Morales', '1992-04-18', 'M', '507 6008-2222',
-     'pedro.castillo@example.com', 'Calle 9, Casa 14', 'San Miguelito';
+     'pedro.castillo@example.com', 'Calle 9, Casa 14', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'IJ2109876O', N'Sofía', N'Rodríguez', NULL, '1995-12-20', 'F', '507 6008-3333',
-     'sofia.rodriguez1@example.com', 'Avenida 3, Edificio 9', N'Colón';
+     'sofia.rodriguez1@example.com', 'Avenida 3, Edificio 9', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'KL1098765P', 'Carlos', 'Alvarez', N'Gómez', '1986-06-14', 'M', '507 6098-4444',
-     'carlos.alvarez1@example.com', 'Calle 12, Local 7', 'David';
+     'carlos.alvarez1@example.com', 'Calle 12, Local 7', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'MN0987654Q', 'Camila', N'Hernández', NULL, '1993-08-15', 'F', '507 6008-5555',
-     'camila.hernandez@example.com', 'Edificio El Dorado, Apartamento 2', 'San Miguelito';
+     'camila.hernandez@example.com', 'Edificio El Dorado, Apartamento 2', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'OP8765432R', 'Luis', N'Gómez', NULL, '1984-01-12', 'M', '507 6208-6666',
-     'luis.gomez1@example.com', 'Calle 7, Edificio 6', N'Panamá';
+     'luis.gomez1@example.com', 'Calle 7, Edificio 6', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'QR7654321S', 'Sandra', N'Pérez', 'Castillo', '1995-10-10', 'F', '507 6008-7777',
-     'sandra.perez1@example.com', 'Calle 5, Casa 12', N'Colón';
+     'sandra.perez1@example.com', 'Calle 5, Casa 12', N'Colón', NULL;
 EXEC sp_vacunas_gestionar_paciente 'ST6543210T', 'Antonio', N'Sánchez', NULL, '1989-07-14', 'M', '507 6808-8888',
-     'antonio.sanchez1@example.com', 'Calle 9, Edificio 8', 'David';
+     'antonio.sanchez1@example.com', 'Calle 9, Edificio 8', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'UV5432109U', 'Isabella', 'Alvarado', 'Ruiz', '1996-03-22', 'F', '507 6008-9999',
-     'isabella.alvarado@example.com', 'Edificio La Vista, Piso 4', 'San Miguelito';
+     'isabella.alvarado@example.com', 'Edificio La Vista, Piso 4', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente 'WX4321098V', 'Santiago', 'Morales', N'Rodríguez', '1991-03-27', 'M',
-     '507 6006-5555',
-     'santiago.morales@example.com', 'Calle 8, Local 11', 'Bocas del Toro';
+     '507 6006-5555', 'santiago.morales@example.com', 'Calle 8, Local 11', 'Bocas del Toro', NULL;
 
 -- Sedes algunos datos no son veraces **
 EXEC sp_vacunas_insert_sede 'Hospital San Miguel Arcangel', 'MINSA', NULL, '507 523-6906',
-     N'HISMA, Vía Ricardo J. Alfaro', 'San Miguelito';
+     N'HISMA, Vía Ricardo J. Alfaro', 'San Miguelito', NULL;
 EXEC sp_vacunas_insert_sede 'MINSA CAPSI FINCA 30 CHANGINOLA', 'MINSA', NULL, '507 758-8096', 'Finca 32',
-     'Changuinola';
+     'Changuinola', NULL;
 EXEC sp_vacunas_insert_sede 'Hospital Aquilino Tejeira', 'CSS', NULL, '507 997-9386', 'Calle Manuel H Robles',
-     N'Penonomé';
-EXEC sp_vacunas_insert_sede 'CENTRO DE SALUD METETI', 'MINSA', NULL, '507 299-6151', 'La Palma', 'Pinogana';
+     N'Penonomé', NULL;
+EXEC sp_vacunas_insert_sede 'CENTRO DE SALUD METETI', 'MINSA', NULL, '507 299-6151', 'La Palma', 'Pinogana', NULL;
 EXEC sp_vacunas_insert_sede 'POLICENTRO DE SALUD de Chepo', 'MINSA', NULL, '507 296-7220',
-     'Via Panamericana Las Margaritas', 'Chepo';
+     'Via Panamericana Las Margaritas', 'Chepo', NULL;
 EXEC sp_vacunas_insert_sede N'Clínica Hospital San Fernando', 'Privada', NULL, '507 305-6300',
-     N'Via España, Hospital San Fernando', N'Panamá';
+     N'Via España, Hospital San Fernando', N'Panamá', NULL;
 EXEC sp_vacunas_insert_sede 'Complejo Hospitalario Doctor Arnulfo Arias Madrid', 'CSS', NULL, '507 503-6032',
-     N'Avenida José de Fábrega, Complejo Hospitalario', N'Panamá';
+     N'Avenida José de Fábrega, Complejo Hospitalario', N'Panamá', NULL;
 EXEC sp_vacunas_insert_sede N'Hospital Santo Tomás', 'MINSA', NULL, '507 507-5830', 'Avenida Balboa y Calle 37 Este',
-     N'Panamá';
+     N'Panamá', NULL;
 EXEC sp_vacunas_insert_sede N'Hospital Regional de Changuinola Raul Dávila Mena', 'MINSA', NULL, '507 758-8295',
-     'Changuinola, Bocas del Toro', 'Changuinola';
+     'Changuinola, Bocas del Toro', 'Changuinola', NULL;
 EXEC sp_vacunas_insert_sede N'Hospital Dr. Rafael Hernández', 'MINSA', NULL, '507 774-8400', N'David, Chiriquí',
-     'David';
+     'David', NULL;
 EXEC sp_vacunas_insert_sede N'Hospital Punta Pacífica Pacífica Salud', 'Privada', NULL, '507 204-8000',
-     N'Punta Pacífica, Ciudad de Panamá', N'Panamá';
+     N'Punta Pacífica, Ciudad de Panamá', N'Panamá', NULL;
 EXEC sp_vacunas_insert_sede 'Hospital Nacional', 'Privada', NULL, '507 307-2102', N'Av. Cuba, Ciudad de Panamá',
-     N'Panamá';
+     N'Panamá', NULL;
 EXEC sp_vacunas_insert_sede 'Centro de salud Pacora', 'MINSA', NULL, '507 296-0005', N'Pacora, Ciudad de Panamá',
-     N'Panamá';
+     N'Panamá', NULL;
 EXEC sp_vacunas_insert_sede N'Hospital Dr. Nicolás A. Solano', 'MINSA', NULL, '507 254-8926',
-     N'La Chorrera, Panamá Oeste', 'La Chorrera';
+     N'La Chorrera, Panamá Oeste', 'La Chorrera', NULL;
 EXEC sp_vacunas_insert_sede 'Complejo Hospitalario Dr. Manuel Amador Guerrero', 'CSS', NULL, '507 475-2207',
-     N'Colón, Colón', N'Colón';
+     N'Colón, Colón', N'Colón', NULL;
 EXEC sp_vacunas_insert_sede N'Policlínica Lic. Manuel María Valdés', 'CSS', NULL, '507 503-1500',
-     N'San Miguelito, Ciudad de Panamá', N'Panamá';
+     N'San Miguelito, Ciudad de Panamá', N'Panamá', NULL;
 EXEC sp_vacunas_insert_sede 'CSS Complejo Metropolitano', 'CSS', NULL, '507 506-4000', N'Vía España, Ciudad de Panamá',
-     N'Panamá';
+     N'Panamá', NULL;
 EXEC sp_vacunas_insert_sede N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', 'CSS', NULL,
-     '507 513-7008', N'Vía España, Ciudad de Panamá', N'Panamá';
+     '507 513-7008', N'Vía España, Ciudad de Panamá', N'Panamá', NULL;
 
 INSERT INTO fabricantes (licencia, nombre_fabricante, telefono_fabricante, correo_fabricante, direccion_fabricante,
                          contacto_fabricante)
@@ -2448,277 +2520,284 @@ VALUES -- algunos datos no son veraces **
 GO
 
 -- insertar la relación fabricante vacuna usando el procedimiento almacenado
-EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Adacel';
-EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'BCG';
-EXEC sp_vacunas_insert_fabricante_vacuna 2, NULL, NULL, 'COVID-19';
-EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Fiebre Amarilla';
-EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Hep A (Euvax) (adultos)';
-EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Hep A (Euvax) (infantil)';
-EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Hep B (adultos)';
-EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Hep B (infantil)';
-EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Hexaxim';
-EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Influenza (FluQuadri)';
-EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Meningococo';
-EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'MMR';
-EXEC sp_vacunas_insert_fabricante_vacuna 5, NULL, NULL, 'MR (antisarampión, antirrubéola)';
-EXEC sp_vacunas_insert_fabricante_vacuna 2, NULL, NULL, 'Neumoco conjugado (Prevenar 13 valente)';
-EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Papiloma Humano (Gardasil)';
-EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Pneumo23';
-EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Pneumovax';
-EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Priorix';
-EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Rotarix';
-EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'TD';
-EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Tetravalente';
-EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Varivax';
-EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Verorab';
+EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Adacel', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'BCG', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 2, NULL, NULL, 'COVID-19', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Fiebre Amarilla', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Hep A (Euvax) (adultos)', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Hep A (Euvax) (infantil)', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Hep B (adultos)', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Hep B (infantil)', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Hexaxim', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Influenza (FluQuadri)', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Meningococo', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'MMR', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 5, NULL, NULL, N'MR (antisarampión, antirrubéola)', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 2, NULL, NULL, 'Neumoco conjugado (Prevenar 13 valente)', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Papiloma Humano (Gardasil)', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Pneumo23', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Pneumovax', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Priorix', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 3, NULL, NULL, 'Rotarix', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'TD', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Tetravalente', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Varivax', NULL;
+EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Verorab', NULL;
 
 INSERT INTO almacenes (nombre_almacen, encargado, telefono_almacen, dependencia_almacen)
 VALUES (N'Almacen Vacúnate Panamá', 'Carlos Gonzalez', '507 275-9689', 'MINSA') -- ficticios
 GO
 
 -- Insertar el inventario en el almacén usando el procedimiento almacenado
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Adacel', 160, '2025-12-15', 'LoteA1';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'BCG', 215, '2025-12-16', 'LoteA2';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'COVID-19', 140, '2025-12-17', 'LoteA3';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Fiebre Amarilla', 325, '2025-12-18', 'LoteA4';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hep A (Euvax) (adultos)', 280, '2025-12-19', 'LoteA5';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hep A (Euvax) (infantil)', 215, '2025-12-20', 'LoteA6';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hep B (adultos)', 260, '2025-12-21', 'LoteA7';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hep B (infantil)', 235, '2025-12-22', 'LoteA8';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hexaxim', 190, '2025-12-23', 'LoteA9';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Influenza (FluQuadri)', 185, '2025-12-24', 'LoteA10';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Meningococo', 170, '2025-12-25', 'LoteA11';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'MMR', 235, '2025-12-26', 'LoteA12';
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Adacel', 160, '2025-12-15', 'LoteA1', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'BCG', 215, '2025-12-16', 'LoteA2', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'COVID-19', 140, '2025-12-17', 'LoteA3', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Fiebre Amarilla', 325, '2025-12-18', 'LoteA4', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hep A (Euvax) (adultos)', 280, '2025-12-19', 'LoteA5', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hep A (Euvax) (infantil)', 215, '2025-12-20', 'LoteA6', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hep B (adultos)', 260, '2025-12-21', 'LoteA7', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hep B (infantil)', 235, '2025-12-22', 'LoteA8', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Hexaxim', 190, '2025-12-23', 'LoteA9', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Influenza (FluQuadri)', 185, '2025-12-24', 'LoteA10', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Meningococo', 170, '2025-12-25', 'LoteA11', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'MMR', 235, '2025-12-26', 'LoteA12', NULL;
 EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, N'MR (antisarampión, antirrubéola)', 230, '2025-12-27',
-     'LoteA13';
+     'LoteA13', NULL;
 EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Neumoco conjugado (Prevenar 13 valente)', 165, '2025-12-28',
-     'LoteA14';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Papiloma Humano (Gardasil)', 160, '2025-12-29', 'LoteA15';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Pneumo23', 155, '2025-12-30', 'LoteA16';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Pneumovax', 150, '2025-12-31', 'LoteA17';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Priorix', 145, '2025-12-01', 'LoteA18';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Rotarix', 140, '2025-12-02', 'LoteA19';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'TD', 135, '2025-12-03', 'LoteA20';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Tetravalente', 130, '2025-12-04', 'LoteA21';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Varivax', 125, '2025-12-05', 'LoteA22';
-EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Verorab', 125, '2025-12-06', 'LoteA23';
+     'LoteA14', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Papiloma Humano (Gardasil)', 160, '2025-12-29', 'LoteA15',
+     NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Pneumo23', 155, '2025-12-30', 'LoteA16', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Pneumovax', 150, '2025-12-31', 'LoteA17', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Priorix', 145, '2025-12-01', 'LoteA18', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Rotarix', 140, '2025-12-02', 'LoteA19', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'TD', 135, '2025-12-03', 'LoteA20', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Tetravalente', 130, '2025-12-04', 'LoteA21', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Varivax', 125, '2025-12-05', 'LoteA22', NULL;
+EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Verorab', 125, '2025-12-06', 'LoteA23', NULL;
 
 -- Distribución de vacunas usando el procedimiento almacenado
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital San Miguel Arcangel', NULL, 'Adacel', 10, 'LoteA1';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL, 'BCG', 15, 'LoteA2';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Aquilino Tejeira', NULL, 'COVID-19', 20, 'LoteA3';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CENTRO DE SALUD METETI', NULL, 'Fiebre Amarilla', 25, 'LoteA4';
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital San Miguel Arcangel', NULL, 'Adacel', 10, 'LoteA1', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL, 'BCG', 15, 'LoteA2', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Aquilino Tejeira', NULL, 'COVID-19', 20, 'LoteA3', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CENTRO DE SALUD METETI', NULL, 'Fiebre Amarilla', 25, 'LoteA4', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'POLICENTRO DE SALUD de Chepo', NULL, 'Hep A (Euvax) (adultos)', 30,
-     'LoteA5';
+     'LoteA5', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Clínica Hospital San Fernando', NULL, 'Hep A (Euvax) (infantil)',
-     35, 'LoteA6';
+     35, 'LoteA6', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL,
-     'Hep B (adultos)', 40, 'LoteA7';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Santo Tomás', NULL, 'Hep B (infantil)', 45, 'LoteA8';
+     'Hep B (adultos)', 40, 'LoteA7', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Santo Tomás', NULL, 'Hep B (infantil)', 45, 'LoteA8', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Regional de Changuinola Raul Dávila Mena', NULL,
-     'Hexaxim', 50, 'LoteA9';
+     'Hexaxim', 50, 'LoteA9', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Dr. Rafael Hernández', NULL, 'Influenza (FluQuadri)', 55,
-     'LoteA10';
+     'LoteA10', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Punta Pacífica Pacífica Salud', NULL, 'Meningococo', 60,
-     'LoteA11';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Nacional', NULL, 'MMR', 65, 'LoteA12';
+     'LoteA11', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Nacional', NULL, 'MMR', 65, 'LoteA12', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Centro de salud Pacora', NULL, N'MR (antisarampión, antirrubéola)',
-     70, 'LoteA13';
+     70, 'LoteA13', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Dr. Nicolás A. Solano', NULL,
-     'Neumoco conjugado (Prevenar 13 valente)', 75, 'LoteA14';
+     'Neumoco conjugado (Prevenar 13 valente)', 75, 'LoteA14', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL,
-     'Papiloma Humano (Gardasil)', 80, 'LoteA15';
+     'Papiloma Humano (Gardasil)', 80, 'LoteA15', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Policlínica Lic. Manuel María Valdés', NULL, 'Pneumo23', 85,
-     'LoteA16';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CSS Complejo Metropolitano', NULL, 'Pneumovax', 90, 'LoteA17';
+     'LoteA16', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CSS Complejo Metropolitano', NULL, 'Pneumovax', 90, 'LoteA17', NULL;
 EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena',
-     NULL, 'Priorix', 95, 'LoteA18';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital San Miguel Arcangel', NULL, 'Rotarix', 100, 'LoteA19';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL, 'TD', 105, 'LoteA20';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Aquilino Tejeira', NULL, 'Tetravalente', 110, 'LoteA21';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CENTRO DE SALUD METETI', NULL, 'Varivax', 115, 'LoteA22';
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'POLICENTRO DE SALUD de Chepo', NULL, 'Verorab', 120, 'LoteA23';
+     NULL, 'Priorix', 95, 'LoteA18', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital San Miguel Arcangel', NULL, 'Rotarix', 100, 'LoteA19', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL, 'TD', 105, 'LoteA20', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Aquilino Tejeira', NULL, 'Tetravalente', 110, 'LoteA21',
+     NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CENTRO DE SALUD METETI', NULL, 'Varivax', 115, 'LoteA22', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'POLICENTRO DE SALUD de Chepo', NULL, 'Verorab', 120, 'LoteA23', NULL;
 
 -- crear las dosis y relacionar con su paciente usando el procedimiento almacenado
 EXEC sp_vacunas_insert_dosis '8-9754-1236', '2017-12-01 15:00', '1', NULL, 'Tetravalente', NULL,
-     'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL;
+     'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '9-123-123', '2016-07-20 09:45', '1', NULL, 'Hep B (infantil)', NULL,
-     'Hospital San Miguel Arcangel', NULL;
+     'Hospital San Miguel Arcangel', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'AB1234567X', '2015-03-14 13:30', '1', NULL, 'Hep B (adultos)', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '1-54-9635', '2024-08-10 10:00', '1', NULL, 'Hep B (adultos)', NULL,
-     'Hospital Aquilino Tejeira', NULL;
+     'Hospital Aquilino Tejeira', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '2-4567-876543', '2024-07-22 11:15', '1', NULL, 'Neumoco conjugado (Prevenar 13 valente)',
-     NULL, N'Hospital Dr. Rafael Hernández', NULL;
+     NULL, N'Hospital Dr. Rafael Hernández', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '3-567-9876', '2024-06-30 13:00', '1', NULL, 'Hexaxim', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '4-4321-123', '2024-05-25 14:30', '1', NULL, 'Papiloma Humano (Gardasil)', NULL,
-     N'Hospital Santo Tomás', NULL;
+     N'Hospital Santo Tomás', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '5AV-9-1234', '2024-04-15 09:00', '1', NULL, 'Varivax', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '6-2345-123', '2024-03-20 10:30', '1', NULL, 'Pneumovax', NULL, 'Centro de salud Pacora',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis '7-456-987', '2024-02-12 15:00', '1', NULL, 'Fiebre Amarilla', NULL, 'Hospital Nacional',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis '8-12-321', '2024-01-30 16:45', '1', NULL, 'TD', NULL, 'Hospital San Miguel Arcangel',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis '9-1-123456', '2023-12-25 09:30', '1', NULL, 'BCG', NULL,
-     'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL;
+     'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'AB9876543K', '2023-11-10 12:15', '1', NULL, 'Rotarix', NULL,
-     N'Hospital Punta Pacífica Pacífica Salud', NULL;
+     N'Hospital Punta Pacífica Pacífica Salud', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'CD6543210L', '2023-10-05 14:00', '1', NULL, 'Priorix', NULL, 'CSS Complejo Metropolitano',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'E-12-123456', '2023-09-20 16:30', '1', NULL, 'Influenza (FluQuadri)', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'E-7-7654', '2023-08-15 11:00', '1', NULL, 'Hep A (Euvax) (adultos)', NULL,
-     'Hospital Aquilino Tejeira', NULL;
+     'Hospital Aquilino Tejeira', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'EF123456Z', '2023-07-10 09:45', '1', NULL, 'Tetravalente', NULL,
-     N'Hospital Dr. Nicolás A. Solano', NULL;
+     N'Hospital Dr. Nicolás A. Solano', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'GH3210987N', '2023-06-05 13:30', '1', NULL, 'Meningococo', NULL, N'Hospital Santo Tomás',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'IJ789456A', '2023-05-25 10:00', '1', NULL, 'Hep B (infantil)', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'KL1098765P', '2023-04-20 14:15', '1', NULL, 'Neumoco conjugado (Prevenar 13 valente)',
-     NULL, 'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL;
+     NULL, 'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'MN876543C', '2023-03-15 16:00', '1', NULL, 'Hep A (Euvax) (infantil)', NULL,
-     'Centro de salud Pacora', NULL;
+     'Centro de salud Pacora', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'N-12-987', '2023-02-10 08:30', '1', NULL, 'BCG', NULL,
-     N'Hospital Punta Pacífica Pacífica Salud', NULL;
+     N'Hospital Punta Pacífica Pacífica Salud', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'OP8765432R', '2023-01-05 10:45', '1', NULL, 'Pneumovax', NULL,
-     'Hospital San Miguel Arcangel', NULL;
-EXEC sp_vacunas_insert_dosis 'PE-3456-321', '2022-12-25 13:00', '1', NULL, 'COVID-19', NULL, 'Hospital Nacional', NULL;
+     'Hospital San Miguel Arcangel', NULL, NULL;
+EXEC sp_vacunas_insert_dosis 'PE-3456-321', '2022-12-25 13:00', '1', NULL, 'COVID-19', NULL, 'Hospital Nacional', NULL,
+     NULL;
 EXEC sp_vacunas_insert_dosis 'QR7654321S', '2022-11-10 11:30', '1', NULL, 'Fiebre Amarilla', NULL,
-     N'Hospital Dr. Rafael Hernández', NULL;
+     N'Hospital Dr. Rafael Hernández', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'ST6543210T', '2022-10-15 09:00', '1', NULL, 'COVID-19', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'UV5432109U', '2022-09-05 15:00', '1', NULL, 'Varivax', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'WX4561234H', '2022-08-20 10:30', '1', NULL, 'Priorix', NULL,
-     'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL;
+     'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'YZ7890123J', '2022-07-10 12:45', '1', NULL, 'Influenza (FluQuadri)', NULL,
-     'CSS Complejo Metropolitano', NULL;
+     'CSS Complejo Metropolitano', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '1PI-678-12', '2022-06-05 09:00', '1', NULL, 'Hep B (adultos)', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '2PI-3421-456', '2022-05-20 11:15', '1', NULL, 'Pneumovax', NULL, N'Hospital Santo Tomás',
+     NULL, NULL;
+EXEC sp_vacunas_insert_dosis '3-721-284', '2022-04-10 10:30', '1', NULL, 'MMR', NULL, 'Hospital Aquilino Tejeira', NULL,
      NULL;
-EXEC sp_vacunas_insert_dosis '3-721-284', '2022-04-10 10:30', '1', NULL, 'MMR', NULL, 'Hospital Aquilino Tejeira', NULL;
 EXEC sp_vacunas_insert_dosis '4-987-123456', '2022-03-15 14:00', '1', NULL, 'Neumoco conjugado (Prevenar 13 valente)',
-     NULL, N'Hospital Dr. Nicolás A. Solano', NULL;
+     NULL, N'Hospital Dr. Nicolás A. Solano', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '5-678-98765', '2022-02-05 12:15', '1', NULL, 'Hep A (Euvax) (infantil)', NULL,
-     'Centro de salud Pacora', NULL;
+     'Centro de salud Pacora', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '6-12345-678', '2022-01-25 10:00', '1', NULL, 'Varivax', NULL,
-     'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL;
+     'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '7-345-678', '2021-12-15 13:30', '1', NULL, 'Hep B (infantil)', NULL,
-     'Hospital San Miguel Arcangel', NULL;
+     'Hospital San Miguel Arcangel', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '8-1006-14', '2021-11-05 09:45', '1', NULL, 'TD', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '9PI-234-1', '2021-10-20 12:00', '1', NULL, 'Hep B (adultos)', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'AB9876543K', '2021-09-10 14:15', '1', NULL, 'Pneumovax', NULL,
-     'CSS Complejo Metropolitano', NULL;
+     'CSS Complejo Metropolitano', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'CD9876543Y', '2021-08-01 10:30', '1', NULL, 'COVID-19', NULL,
-     N'Hospital Punta Pacífica Pacífica Salud', NULL;
+     N'Hospital Punta Pacífica Pacífica Salud', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'E-3456-78', '2021-07-15 13:45', '1', NULL, 'Influenza (FluQuadri)', NULL,
-     N'Hospital Dr. Rafael Hernández', NULL;
+     N'Hospital Dr. Rafael Hernández', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'EF4321098M', '2021-06-25 11:00', '1', NULL, 'Priorix', NULL, N'Hospital Santo Tomás',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'GH6543210W', '2021-05-10 12:30', '1', NULL, 'Tetravalente', NULL,
-     'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL;
+     'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'IJ2109876O', '2021-04-20 09:00', '1', NULL, 'Hep A (Euvax) (adultos)', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'KL0123456B', '2021-03-15 10:45', '1', NULL, 'Neumoco conjugado (Prevenar 13 valente)',
-     NULL, 'Hospital Aquilino Tejeira', NULL;
-EXEC sp_vacunas_insert_dosis 'MN0987654Q', '2021-02-10 14:00', '1', NULL, 'BCG', NULL, 'Centro de salud Pacora', NULL;
+     NULL, 'Hospital Aquilino Tejeira', NULL, NULL;
+EXEC sp_vacunas_insert_dosis 'MN0987654Q', '2021-02-10 14:00', '1', NULL, 'BCG', NULL, 'Centro de salud Pacora', NULL,
+     NULL;
 EXEC sp_vacunas_insert_dosis 'N-56-2345', '2021-01-05 16:30', '1', NULL, 'Varivax', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'OP3456789D', '2020-12-15 13:00', '1', NULL, 'Pneumovax', NULL, N'Hospital Santo Tomás',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'PE-8-567', '2020-11-10 10:30', '1', NULL, 'Hep B (infantil)', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'QR4567890E', '2020-10-05 09:45', '1', NULL, 'Hep A (Euvax) (infantil)', NULL,
-     N'Hospital Punta Pacífica Pacífica Salud', NULL;
+     N'Hospital Punta Pacífica Pacífica Salud', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'ST2345678F', '2020-09-20 15:00', '1', NULL, 'Priorix', NULL,
-     'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL;
-EXEC sp_vacunas_insert_dosis 'UV3456789G', '2020-08-10 14:15', '1', NULL, 'MMR', NULL, 'Hospital Nacional', NULL;
+     'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL, NULL;
+EXEC sp_vacunas_insert_dosis 'UV3456789G', '2020-08-10 14:15', '1', NULL, 'MMR', NULL, 'Hospital Nacional', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'WX4321098V', '2020-07-01 12:00', '1', NULL, 'Influenza (FluQuadri)', NULL,
-     'Hospital San Miguel Arcangel', NULL;
+     'Hospital San Miguel Arcangel', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'YZ7890123J', '2020-06-10 11:15', '1', NULL, 'Hep A (Euvax) (adultos)', NULL,
-     N'Hospital Dr. Rafael Hernández', NULL;
+     N'Hospital Dr. Rafael Hernández', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'YZ7890123J', '2020-05-15 13:30', '1', NULL, 'Fiebre Amarilla', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '2-4558-5479', '2020-04-10 10:00', '1', NULL, 'Tetravalente', NULL,
-     'Centro de salud Pacora', NULL;
+     'Centro de salud Pacora', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '3PI-1-654', '2020-03-01 09:30', '1', NULL, 'Rotarix', NULL, 'Hospital Aquilino Tejeira',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis '4-5678-12345', '2020-02-15 11:45', '1', NULL, 'Pneumo23', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '5-567-65432', '2020-01-10 10:30', '1', NULL, 'Hep A (Euvax) (adultos)', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '6-1234-65432', '2019-12-25 14:00', '1', NULL, 'Hep B (infantil)', NULL,
-     N'Hospital Santo Tomás', NULL;
-EXEC sp_vacunas_insert_dosis '7-4567-123', '2019-11-15 16:30', '1', NULL, 'COVID-19', NULL, 'Hospital Nacional', NULL;
+     N'Hospital Santo Tomás', NULL, NULL;
+EXEC sp_vacunas_insert_dosis '7-4567-123', '2019-11-15 16:30', '1', NULL, 'COVID-19', NULL, 'Hospital Nacional', NULL,
+     NULL;
 EXEC sp_vacunas_insert_dosis '8-3456-123', '2019-10-05 09:00', '1', NULL, 'Hep B (adultos)', NULL,
-     'Centro de salud Pacora', NULL;
+     'Centro de salud Pacora', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '9PI-1-98765', '2019-09-20 11:15', '1', NULL, 'Varivax', NULL,
-     N'Hospital Dr. Nicolás A. Solano', NULL;
+     N'Hospital Dr. Nicolás A. Solano', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'AB1234567X', '2019-08-10 12:30', '1', NULL, 'Influenza (FluQuadri)', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'CD6543210L', '2019-07-05 13:00', '1', NULL, 'Meningococo', NULL,
-     'Hospital Aquilino Tejeira', NULL;
+     'Hospital Aquilino Tejeira', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'E-12-123456', '2019-06-20 09:45', '1', NULL, 'TD', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'E-78-654321', '2019-05-15 10:30', '1', NULL, 'Neumoco conjugado (Prevenar 13 valente)',
-     NULL, N'Hospital Santo Tomás', NULL;
+     NULL, N'Hospital Santo Tomás', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'EF123456Z', '2019-04-10 11:45', '1', NULL, 'Hep B (adultos)', NULL,
-     'Centro de salud Pacora', NULL;
+     'Centro de salud Pacora', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'GH6543210W', '2019-03-05 14:00', '1', NULL, 'Hexaxim', NULL,
-     'Hospital San Miguel Arcangel', NULL;
+     'Hospital San Miguel Arcangel', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'IJ789456A', '2019-02-20 15:30', '1', NULL, 'COVID-19', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'KL1098765P', '2019-01-10 12:00', '1', NULL, 'Fiebre Amarilla', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'MN876543C', '2018-12-05 13:30', '1', NULL, 'Hep A (Euvax) (adultos)', NULL,
-     'Hospital Nacional', NULL;
+     'Hospital Nacional', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'N-78-987', '2018-11-10 09:00', '1', NULL, 'Pneumo23', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'OP8765432R', '2018-10-01 10:15', '1', NULL, 'Priorix', NULL, 'Hospital Aquilino Tejeira',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'PE-5-3456', '2018-09-15 12:00', '1', NULL, 'Varivax', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'QR4567890E', '2018-08-10 13:00', '1', NULL, 'Meningococo', NULL, N'Hospital Santo Tomás',
-     NULL;
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'ST6543210T', '2018-07-20 14:15', '1', NULL, 'TD', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'UV5432109U', '2018-06-10 16:00', '1', NULL, 'Hep B (infantil)', NULL,
-     N'Hospital Dr. Nicolás A. Solano', NULL;
+     N'Hospital Dr. Nicolás A. Solano', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'WX4321098V', '2018-05-05 10:30', '1', NULL, 'Neumoco conjugado (Prevenar 13 valente)',
-     NULL, 'Centro de salud Pacora', NULL;
+     NULL, 'Centro de salud Pacora', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'YZ7890123J', '2018-04-20 11:00', '1', NULL, 'Hexaxim', NULL,
-     N'Hospital Punta Pacífica Pacífica Salud', NULL;
+     N'Hospital Punta Pacífica Pacífica Salud', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '1-145-987', '2018-03-15 12:15', '1', NULL, 'Influenza (FluQuadri)', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '2-1234-654', '2018-02-10 09:45', '1', NULL, 'COVID-19', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '3-12-543', '2018-01-05 13:00', '1', NULL, 'Varivax', NULL,
-     N'Policlínica Lic. Manuel María Valdés', NULL;
+     N'Policlínica Lic. Manuel María Valdés', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '4AV-8-12', '2017-12-15 10:30', '1', NULL, 'Hep B (adultos)', NULL,
-     'Hospital Aquilino Tejeira', NULL;
+     'Hospital Aquilino Tejeira', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '5-554-321', '2017-11-10 11:45', '1', NULL, 'Priorix', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '6-2-987654', '2017-10-01 09:30', '1', NULL, 'Pneumovax', NULL,
-     'Hospital San Miguel Arcangel', NULL;
+     'Hospital San Miguel Arcangel', NULL, NULL;
 EXEC sp_vacunas_insert_dosis '7-114-10', '2017-09-20 14:00', '1', NULL, 'Neumoco conjugado (Prevenar 13 valente)', NULL,
-     'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL;
-EXEC sp_vacunas_insert_dosis '8-123-1234', '2017-08-15 12:30', '1', NULL, 'Rotarix', NULL, 'Hospital Nacional', NULL;
-EXEC sp_vacunas_insert_dosis '9PI-234-1', '2017-07-10 11:15', '1', NULL, 'Fiebre Amarilla', NULL,
-     'Centro de salud Pacora', NULL;
-EXEC sp_vacunas_insert_dosis 'AB9876543K', '2017-06-05 10:30', '1', NULL, 'Tetravalente', NULL, N'Hospital Santo Tomás',
+     'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL, NULL;
+EXEC sp_vacunas_insert_dosis '8-123-1234', '2017-08-15 12:30', '1', NULL, 'Rotarix', NULL, 'Hospital Nacional', NULL,
      NULL;
+EXEC sp_vacunas_insert_dosis '9PI-234-1', '2017-07-10 11:15', '1', NULL, 'Fiebre Amarilla', NULL,
+     'Centro de salud Pacora', NULL, NULL;
+EXEC sp_vacunas_insert_dosis 'AB9876543K', '2017-06-05 10:30', '1', NULL, 'Tetravalente', NULL, N'Hospital Santo Tomás',
+     NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'CD9876543Y', '2017-05-20 09:00', '1', NULL, 'Hep A (Euvax) (adultos)', NULL,
-     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL;
+     N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'E-12-54321', '2017-04-10 13:00', '1', NULL, 'Hexaxim', NULL,
-     N'Hospital Dr. Nicolás A. Solano', NULL;
+     N'Hospital Dr. Nicolás A. Solano', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'EF4321098M', '2017-03-05 14:15', '1', NULL, 'Varivax', NULL,
-     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL;
+     N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 
 USE master;

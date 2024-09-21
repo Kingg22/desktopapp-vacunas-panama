@@ -1,6 +1,7 @@
 package com.kingg.api_vacunas_panama.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.kingg.api_vacunas_panama.web.dto.ViewPacienteVacunaEnfermedadDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,6 +23,30 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@NamedNativeQuery(name = "view_paciente_vacuna_enfermedad", query = "SELECT v.[Nombre vacuna] AS vacuna, " +
+        "v.[Número de dosis] AS numero_dosis, " +
+        "v.[Enfermedad previene] AS enfermedad_previene, " +
+        "v.[Edad mínima recomendada en meses] AS edad_min_recomendada_meses, " +
+        "v.[Fecha de aplicación] AS fecha_aplicacion, " +
+        "v.[Intervalo recomendado entre dosis 1 y 2 en meses] AS intervalo_recomendado_dosis_meses, " +
+        "v.[Sede] AS sede, " +
+        "v.[Dependencia] AS dependencia " +
+        "FROM view_pacientes_vacunas_enfermedades v WHERE v.Cédula = :cedula",
+        resultSetMapping = "view_vacuna_enfermedad"
+)
+@SqlResultSetMapping(name = "view_vacuna_enfermedad", classes = @ConstructorResult(
+        targetClass = ViewPacienteVacunaEnfermedadDto.class,
+        columns = {
+                @ColumnResult(name = "vacuna", type = String.class),
+                @ColumnResult(name = "numero_dosis", type = String.class),
+                @ColumnResult(name = "enfermedad_previene", type = String.class),
+                @ColumnResult(name = "edad_min_recomendada_meses", type = Short.class),
+                @ColumnResult(name = "fecha_aplicacion", type = LocalDateTime.class),
+                @ColumnResult(name = "intervalo_recomendado_dosis_meses", type = Double.class),
+                @ColumnResult(name = "sede", type = String.class),
+                @ColumnResult(name = "dependencia", type = String.class)
+        }
+))
 public class Paciente {
     @Id
     @Size(max = 20)

@@ -2278,7 +2278,7 @@ EXEC sp_vacunas_gestionar_paciente '2PI-3421-456', 'Ricardo', 'Mora', NULL, '198
 EXEC sp_vacunas_gestionar_paciente 'E-78-654321', 'Paola', N'García', 'Torres', '1996-06-11', 'F', '507 6000-7777',
      'paola.garcia@example.com', 'Edificio El Dorado, Oficina 10', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-9-123', 'Sergio', N'Ramírez', NULL, '1983-09-23', 'M', '507 6000-8888',
-     'sergio.ramirez@example.com', 'Avenida 8, Apartamento 20', 'Chorrera', NULL;
+     'sergio.ramirez@example.com', 'Avenida 8, Apartamento 20', 'La Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente '4-4321-123', 'Elena', 'Cruz', N'Gómez', '1991-01-15', 'F', '507 6000-9999',
      'elena.cruz@example.com', 'Calle 9, Casa 43', N'Penonomé', NULL;
 EXEC sp_vacunas_gestionar_paciente '6-2-987654', 'Sofia', N'Méndez', N'Hernández', '1993-07-17', 'F', '507 6001-1111',
@@ -2292,7 +2292,7 @@ EXEC sp_vacunas_gestionar_paciente '8-123-56789', 'Hugo', 'Cruz', NULL, '1980-02
 EXEC sp_vacunas_gestionar_paciente '3-12-543', 'Valeria', 'Castillo', N'García', '1997-11-24', 'F', '507 6001-5555',
      'valeria.castillo@example.com', 'Calle 13, Edificio A', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente '7AV-678-123', 'Jorge', N'Fernández', NULL, '1986-09-30', 'M', '507 6001-6666', NULL,
-     'Calle 8, Apartamento 2', 'Chorrera', NULL;
+     'Calle 8, Apartamento 2', 'La Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente '9PI-1-98765', 'Natalia', 'Morales', N'Vásquez', '1990-06-14', 'F', '507 6001-7777',
      'natalia.morales@example.com', 'Edificio Los Pinos, Piso 4', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-345-234', 'Laura', N'Rodríguez', N'Pérez', '1998-08-05', 'F', '507 6001-9999',
@@ -2308,7 +2308,7 @@ EXEC sp_vacunas_gestionar_paciente '2-4567-876543', 'Gabriela', N'Vásquez', N'R
 EXEC sp_vacunas_gestionar_paciente 'E-23-321', 'Alejandra', 'Morales', NULL, '1984-10-18', 'F', '507 6002-4444',
      'alejandra.morales@example.com', 'Edificio El Sol, Oficina 3', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-89-654', N'Joaquín', N'Ramírez', N'García', '1999-02-20', 'M', '507 6002-5555',
-     'joaquin.ramirez@example.com', 'Calle 10, Edificio 8', 'Chorrera', NULL;
+     'joaquin.ramirez@example.com', 'Calle 10, Edificio 8', 'La Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-3456-321', 'Cristina', N'Pérez', NULL, '1988-11-12', 'F', '507 6002-6666',
      'cristina.perez@example.com', 'Calle 11, Casa 12', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '1PI-678-12', 'Beatriz', 'Castillo', NULL, '1996-06-19', 'F', '507 6002-8888',
@@ -2328,7 +2328,7 @@ EXEC sp_vacunas_gestionar_paciente 'E-7-7654', 'Julia', N'Sánchez', NULL, '1991
 EXEC sp_vacunas_gestionar_paciente '6-2345-123', N'Andrés', 'Torres', 'Castillo', '1986-04-12', 'M', '507 6003-5555',
      'andres.torres@example.com', 'Edificio La Colina, Apartamento 3', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente '3PI-1-654', 'Elena', N'González', NULL, '1993-09-29', 'F', '507 6003-6666',
-     'elena.gonzalez@example.com', 'Calle 11, Edificio C', 'Chorrera', NULL;
+     'elena.gonzalez@example.com', 'Calle 11, Edificio C', 'La Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-12-3456', N'Héctor', N'Ramírez', 'Ruiz', '1997-06-14', 'M', '507 6003-7777',
      'hector.ramirez@example.com', 'Calle 5, Casa 10', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente '9-1-123456', 'Sandra', 'Montes', NULL, '1984-08-19', 'F', '507 6003-8888',
@@ -2352,7 +2352,7 @@ EXEC sp_vacunas_gestionar_paciente '4-5678-12345', 'Fernanda', 'Torres', NULL, '
 EXEC sp_vacunas_gestionar_paciente '2PI-23-789', 'Alejandro', N'Jiménez', 'Salazar', '1992-08-19', 'M', '507 6004-7777',
      'alejandro.jimenez@example.com', N'Edificio El Águila, Piso 1', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente '6-1234-65432', 'Rosa', N'González', NULL, '1981-10-29', 'F', '507 6004-8888',
-     'rosa.gonzalez@example.com', 'Calle 8, Edificio 6', 'Chorrera', NULL;
+     'rosa.gonzalez@example.com', 'Calle 8, Edificio 6', 'La Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente '7-345-678', 'Gabriel', N'Ramírez', 'Ramos', '1996-04-21', 'M', '507 6004-9999',
      'gabriel.ramirez@example.com', 'Calle 11, Casa 15', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-9-1', 'Luisa', 'Castillo', NULL, '1990-06-25', 'F', '507 6005-0000',
@@ -2366,7 +2366,7 @@ EXEC sp_vacunas_gestionar_paciente '5-678-98765', 'Ricardo', 'Salazar', N'Pérez
 EXEC sp_vacunas_gestionar_paciente '4AV-8-12', 'Victoria', N'Gómez', NULL, '1992-03-14', 'F', '507 6005-4444',
      'victoria.gomez@example.com', 'Edificio La Vista, Piso 5', 'Bocas del Toro', NULL;
 EXEC sp_vacunas_gestionar_paciente '8-123-1234', N'Andrés', N'Martínez', N'García', '1986-12-11', 'M', '507 6005-5555',
-     'andres.martinez@example.com', 'Calle 12, Local 2', 'Chorrera', NULL;
+     'andres.martinez@example.com', 'Calle 12, Local 2', 'La Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-56-2345', 'Carla', N'Sánchez', NULL, '1994-06-28', 'F', '507 6005-6666',
      'carla.sanchez@example.com', 'Calle 9, Casa 4', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'E-7-876', 'Javier', N'García', NULL, '1991-08-20', 'M', '507 6005-7777',
@@ -2384,7 +2384,7 @@ EXEC sp_vacunas_gestionar_paciente '6-12345-678', 'Laura', N'Gómez', 'Morales',
 EXEC sp_vacunas_gestionar_paciente 'E-2345-123', 'Luis', N'Vásquez', NULL, '1988-02-15', 'M', '507 6006-3333',
      'luis.vasquez@example.com', 'Calle 3, Casa 7', 'David', NULL;
 EXEC sp_vacunas_gestionar_paciente 'N-89-1', N'Sofía', N'González', NULL, '1986-12-15', 'F', '507 6206-6666',
-     'sofia.gonzalez@example.com', 'Calle 11, Casa 6', 'Chorrera', NULL;
+     'sofia.gonzalez@example.com', 'Calle 11, Casa 6', 'La Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'PE-12-1234', N'Verónica', N'Vásquez', N'Gómez', '1992-07-15', 'F', '507 6106-8888',
      'veronica.vasquez@example.com', 'Edificio La Vista, Piso 7', 'San Miguelito', NULL;
 EXEC sp_vacunas_gestionar_paciente '7-456-987', 'Francisco', N'Sánchez', NULL, '1988-11-02', 'M', '507 6306-9999',
@@ -2417,7 +2417,7 @@ EXEC sp_vacunas_gestionar_paciente '7-114-10', 'Antonio', N'Sánchez', NULL, '19
      'antonio.sanchez@example.com', 'Calle 9, Edificio 8', 'David', NULL;
 
 EXEC sp_vacunas_gestionar_paciente 'AB1234567X', N'Sofía', N'González', NULL, '1986-12-15', 'F', '507 6006-6666',
-     'sofia.gonzalez1@example.com', 'Calle 11, Casa 6', 'Chorrera', NULL;
+     'sofia.gonzalez1@example.com', 'Calle 11, Casa 6', 'La Chorrera', NULL;
 EXEC sp_vacunas_gestionar_paciente 'CD9876543Y', 'Mario', N'Ramírez', NULL, '1995-09-12', 'M', '507 6006-7777',
      'mario.ramirez@example.com', 'Calle 3, Edificio 2', N'Panamá', NULL;
 EXEC sp_vacunas_gestionar_paciente 'EF123456Z', N'Verónica', N'Vásquez', N'Gómez', '1992-07-15', 'F', '507 6006-8888',

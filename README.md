@@ -14,9 +14,9 @@ solución está diseñada utilizando tecnologías como Java, Python y SQL Server
 incluyendo la precisión de los datos, la seguridad, la interoperabilidad y la facilidad de uso. Es un proyecto
 universitario y solo realizamos la interfaz de usuario para pacientes, doctores y administradores por temas de tiempo.
 
-:white_check_mark: Proyecto terminado para la universidad :white_check_mark:
-
 :rotating_light: Proyecto deprecado. Cambiado a una [API REST Full](https://github.com/Kingg22/desktopapp-vacunas-panama/tree/refactor/api) :rotating_light:
+
+:white_check_mark: Proyecto terminado para la universidad :white_check_mark:
 
 ### :pushpin: Objetivo del Proyecto
 
@@ -30,7 +30,22 @@ en salud a nivel nacional y en la integración del sistema de información de sa
 Cobertura Nacional:
 La base de datos será utilizada a nivel nacional por centros médicos estatales y centros privados que deseen participar.
 
-### :warning: Limitaciones del Proyecto
+### Características del proyecto
+- Recolección de Datos:
+   
+    Capturar información detallada sobre las vacunas, eventos supuestamente atribuibles a la vacunación e inmunización
+   (ESAVI), y datos demográficos de los pacientes.
+- Gestión de Información:
+
+   Permitir la entrada, actualización y eliminación de datos sobre vacunaciones.
+- Seguridad:
+
+    Implementar mecanismos de seguridad para proteger la información sensible de los pacientes.
+- Interoperabilidad:
+
+    Asegurar que la base de datos pueda integrarse con otros sistemas de información de salud.
+
+## :warning: Limitaciones del Proyecto
 
 - Nuestras UI están creadas para Escritorio.
 - Preferencias del usuario local de Java.
@@ -45,21 +60,6 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
   dosis.
 - El listado de vacunas (por lo tanto, enfermedades, síntomas y 1 fabricante por vacuna) fue
   del [esquema de vacunación de Panamá 2023 abril](https://www.spp.com.pa/publicaciones/documentos-interes/vacunacion/ESQUEMA-DE-VACUNACION_2023_3Abril.pdf).
-
-### Características del proyecto
-1. Recolección de Datos:
-   
-    Capturar información detallada sobre las vacunas, eventos supuestamente atribuibles a la vacunación e inmunización
-   (ESAVI), y datos demográficos de los pacientes.
-2. Gestión de Información:
-
-   Permitir la entrada, actualización y eliminación de datos sobre vacunaciones.
-3. Seguridad:
-
-    Implementar mecanismos de seguridad para proteger la información sensible de los pacientes.
-4. Interoperabilidad:
-
-    Asegurar que la base de datos pueda integrarse con otros sistemas de información de salud.
 
 ## :rocket: Recomendaciones para la Implementación
 
@@ -120,6 +120,7 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 - [JDBC SQL Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) -
   Driver para conectar con la base de datos SQL Server en Java.
 - [ODBC Driver](https://github.com/mkleehammer/pyodbc) - Driver para conectar bases de datos en Python.
+- [Flet](https://flet.dev/) - Framework de Python para construir la interfaz gráfica multiplataforma.
 
 ## :pencil: Autores
 

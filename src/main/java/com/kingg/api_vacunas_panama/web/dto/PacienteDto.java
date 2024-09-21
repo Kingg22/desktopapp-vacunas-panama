@@ -21,5 +21,6 @@ public record PacienteDto(
         @PositiveOrZero(message = "La edad debe ser mayor a 0. Tip: Usar null") Integer edad,
         @Pattern(regexp = "^[MF]$", message = "El sexo solo puede ser M o F") Character sexo, String telefono,
         @Email(message = "El email debe ser válido") String email,
-        @NotNull(message = "La dirección no puede ser null") @Valid DireccionDto direccion) implements Serializable {
+        @NotNull(message = "La dirección no puede ser null") @Valid DireccionDto direccion,
+        @NotNull @Future(message = "La fecha de creación no puede ser futura") LocalDateTime createdAt) implements Serializable {
 }

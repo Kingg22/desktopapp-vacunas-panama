@@ -9,19 +9,27 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+PRINT (N'Creando el login');
+GO
 -- Únicamente las aplicaciones deben tener un login y su user con permisos
 CREATE LOGIN ApplicationsVacunas
     WITH PASSWORD = '',
     DEFAULT_DATABASE = vacunas
 GO
+PRINT (N'Creando el user');
+GO
 -- crear usuario de la base de datos y darle permisos
 CREATE USER SpringAPI FOR LOGIN ApplicationsVacunas
+GO
+PRINT (N'Otorgando permisos al user');
 GO
 EXEC sp_addrolemember 'db_datareader', 'SpringApi'
 EXEC sp_addrolemember 'db_datawriter', 'SpringApi'
 GRANT EXECUTE ON SCHEMA::dbo TO SpringAPI
 -- dependiendo la aplicación se le puede asignar más o menos permisos**
 
+PRINT (N'Creando tablas');
+GO
 -- tablas de manejo de usuarios
 CREATE TABLE permisos
 (
@@ -50,9 +58,9 @@ CREATE TABLE usuarios
     correo_usuario   NVARCHAR(254),
     clave_hash       NVARCHAR(60)  NOT NULL,
     fecha_nacimiento SMALLDATETIME NOT NULL,
-    disabled         BIT
+    disabled         BIT           NOT NULL
         CONSTRAINT df_usuarios_disabled DEFAULT 0,
-    created_at       DATETIME
+    created_at       DATETIME      NOT NULL
         CONSTRAINT df_usuarios_created DEFAULT CURRENT_TIMESTAMP,
     updated_at       DATETIME
         CONSTRAINT df_usuarios_updated DEFAULT CURRENT_TIMESTAMP,
@@ -94,7 +102,7 @@ CREATE TABLE provincias
     id_provincia     TINYINT PRIMARY KEY IDENTITY (0,1),
     nombre_provincia NVARCHAR(30) NOT NULL,
     CONSTRAINT ck_provincia_existe CHECK (nombre_provincia IN
-                                          ('Provincia por registrar', /* Problemas o nueva provincia sin registrar aún */
+                                          ('Por registrar', /* Problemas o nueva provincia sin registrar aún */
                                            'Bocas del Toro', /*1*/
                                            N'Coclé', /*2*/
                                            N'Colón', /*3*/
@@ -122,7 +130,7 @@ CREATE TABLE distritos
     id_provincia    TINYINT       NOT NULL,
     CONSTRAINT fk_distritos_provincia FOREIGN KEY (id_provincia) REFERENCES provincias (id_provincia),
     CONSTRAINT ck_distritos_provincias CHECK (
-        (id_provincia = 0 AND nombre_distrito LIKE 'Distrito por registrar') OR
+        (id_provincia = 0 AND nombre_distrito LIKE 'Por registrar') OR
         (id_provincia = 1 AND nombre_distrito IN ('Almirante',
                                                   'Bocas del Toro',
                                                   'Changuinola',
@@ -226,15 +234,17 @@ GO
 CREATE TABLE pacientes
 (
     cedula             NVARCHAR(20) PRIMARY KEY,
-    nombre_paciente    NVARCHAR(50)  NOT NULL,
-    apellido1_paciente NVARCHAR(50)  NOT NULL,
+    nombre_paciente    NVARCHAR(50)     NOT NULL,
+    apellido1_paciente NVARCHAR(50)     NOT NULL,
     apellido2_paciente NVARCHAR(50),
-    fecha_nacimiento   SMALLDATETIME NOT NULL,
-    edad_calculada     INT,
-    sexo               CHAR(1)       NOT NULL,
+    fecha_nacimiento   SMALLDATETIME    NOT NULL,
+    edad_calculada     TINYINT,
+    sexo               CHAR(1)          NOT NULL,
     telefono_paciente  NVARCHAR(15),
     correo_paciente    NVARCHAR(50),
-    id_direccion       UNIQUEIDENTIFIER,
+    id_direccion       UNIQUEIDENTIFIER NOT NULL,
+    created_at         DATETIME         NOT NULL
+        CONSTRAINT df_pacientes_created DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT ck_pacientes_fecha_nacimiento CHECK (fecha_nacimiento <= GETDATE()),
     CONSTRAINT ck_pacientes_sexo_m_f CHECK (sexo LIKE 'M' OR sexo LIKE 'F'),
     CONSTRAINT ck_telefonos_paciente_no_signo_plus CHECK (telefono_paciente NOT LIKE '%+%'),
@@ -255,12 +265,12 @@ CREATE TABLE sedes
 (
     id_sede          UNIQUEIDENTIFIER PRIMARY KEY
         CONSTRAINT df_sedes_id DEFAULT NEWID(),
-    nombre_sede      NVARCHAR(100) NOT NULL,
+    nombre_sede      NVARCHAR(100)    NOT NULL,
     correo_sede      NVARCHAR(50),
     telefono_sede    NVARCHAR(15),
     region           NVARCHAR(50),
-    dependencia_sede NVARCHAR(13)  NOT NULL,
-    id_direccion     UNIQUEIDENTIFIER,
+    dependencia_sede NVARCHAR(13)     NOT NULL,
+    id_direccion     UNIQUEIDENTIFIER NOT NULL,
     CONSTRAINT ck_sedes_telefono CHECK (telefono_sede NOT LIKE '%+%'),
     CONSTRAINT uq_sedes_nombre UNIQUE (nombre_sede),
     CONSTRAINT ck_sedes_dependencia CHECK (dependencia_sede IN ('CSS', 'MINSA', 'Privada', 'Por registrar')),
@@ -283,6 +293,7 @@ CREATE TABLE vacunas
     nombre_vacuna             NVARCHAR(100) NOT NULL,
     edad_minima_meses         SMALLINT,
     intervalo_dosis_1_2_meses FLOAT,
+    dosisMaxima               CHAR(2),
     CONSTRAINT ck_vacunas_edad_minima CHECK (edad_minima_meses >= 0),
     INDEX ix_vacunas_nombre (nombre_vacuna)
 );
@@ -291,11 +302,13 @@ CREATE TABLE dosis
 (
     id_dosis         UNIQUEIDENTIFIER PRIMARY KEY
         CONSTRAINT df_dosis_id DEFAULT NEWID(),
-    fecha_aplicacion DATETIME         NOT NULL,
+    fecha_aplicacion DATETIME         NOT NULL
+        CONSTRAINT df_dosis_aplicacion DEFAULT CURRENT_TIMESTAMP,
     numero_dosis     CHAR(2)          NOT NULL, -- ver tabla adjunta con detalles
     id_vacuna        UNIQUEIDENTIFIER NOT NULL,
     id_sede          UNIQUEIDENTIFIER,
-    CONSTRAINT ck_dosis_numero_dosis CHECK (numero_dosis IN ('1', '2', '3', 'R', 'R1', 'R2', 'P ')),
+    lote_dosis       NVARCHAR(50),
+    CONSTRAINT ck_dosis_numero_dosis CHECK (numero_dosis IN ('1', '2', '3', 'R', 'R1', 'R2', 'P')),
     CONSTRAINT fk_dosis_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna) ON UPDATE CASCADE,
     CONSTRAINT fk_dosis_sede FOREIGN KEY (id_sede) REFERENCES sedes (id_sede) ON UPDATE CASCADE
 );
@@ -320,7 +333,7 @@ CREATE TABLE fabricantes
     telefono_fabricante  NVARCHAR(15),
     correo_fabricante    NVARCHAR(50),
     direccion_fabricante NVARCHAR(150)
-        CONSTRAINT df_fabricantes_direccion DEFAULT N'Dirección por registrar',
+        CONSTRAINT df_fabricantes_direccion DEFAULT 'Por registrar',
     contacto_fabricante  NVARCHAR(50),
     CONSTRAINT ck_fabricantes_telefono CHECK (telefono_fabricante NOT LIKE '%+%'),
     INDEX ix_fabricantes_nombre_licencia (nombre_fabricante, licencia)
@@ -341,11 +354,11 @@ GO
 CREATE TABLE almacenes
 (
     id_almacen          SMALLINT PRIMARY KEY IDENTITY (1,1),
-    nombre_almacen      NVARCHAR(100) NOT NULL,
-    dependencia_almacen NVARCHAR(7),
+    nombre_almacen      NVARCHAR(100)    NOT NULL,
+    dependencia_almacen NVARCHAR(7)      NOT NULL,
     correo_almacen      NVARCHAR(50),
     telefono_almacen    NVARCHAR(15),
-    id_direccion        UNIQUEIDENTIFIER,
+    id_direccion        UNIQUEIDENTIFIER NOT NULL,
     encargado           NVARCHAR(50),
     CONSTRAINT ck_almacenes_telefono CHECK (telefono_almacen NOT LIKE '%+%'),
     CONSTRAINT ck_almacenes_dependencia CHECK (dependencia_almacen IN ('CSS', 'MINSA', 'Privada')),
@@ -363,29 +376,34 @@ CREATE UNIQUE NONCLUSTERED INDEX ix_almacenes_email
 GO
 CREATE TABLE almacenes_inventarios
 (
-    id_almacen         SMALLINT         NOT NULL,
-    id_vacuna          UNIQUEIDENTIFIER NOT NULL,
-    cantidad           INT              NOT NULL,
-    fecha_lote_almacen DATETIME         NOT NULL,
-    lote_almacen       NVARCHAR(10)     NOT NULL,
+    id_almacen               SMALLINT         NOT NULL,
+    id_vacuna                UNIQUEIDENTIFIER NOT NULL,
+    cantidad                 INT              NOT NULL,
+    fecha_expiracion_almacen DATETIME         NOT NULL,
+    lote_almacen             NVARCHAR(50)     NOT NULL,
+    fecha_recepcion_almacen  DATETIME         NOT NULL
+        CONSTRAINT df_almacenes_inventario_recepcion DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_almacen, id_vacuna),
-    CONSTRAINT ck_almacenes_inventarios_fecha_lote CHECK (fecha_lote_almacen > GETDATE()),
+    CONSTRAINT ck_almacenes_inventarios_fecha_expiracion CHECK (fecha_expiracion_almacen > GETDATE()),
+    CONSTRAINT ck_almacenes_inventarios_cantidad CHECK (cantidad >= 0),
     CONSTRAINT fk_almacenes_inventarios_almacen FOREIGN KEY (id_almacen) REFERENCES almacenes (id_almacen),
     CONSTRAINT fk_almacenes_inventarios_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna)
 );
 GO
 CREATE TABLE sedes_inventarios
 (
-    id_sede         UNIQUEIDENTIFIER NOT NULL,
-    id_vacuna       UNIQUEIDENTIFIER NOT NULL,
-    cantidad        INT              NOT NULL,
-    fecha_lote_sede DATETIME         NOT NULL,
-    lote_sede       NVARCHAR(10)     NOT NULL,
+    id_sede               UNIQUEIDENTIFIER NOT NULL,
+    id_vacuna             UNIQUEIDENTIFIER NOT NULL,
+    cantidad              INT              NOT NULL,
+    fecha_expiracion_sede DATETIME         NOT NULL,
+    lote_sede             NVARCHAR(50)     NOT NULL,
+    fecha_recepcion_sede  DATETIME         NOT NULL
+        CONSTRAINT df_sedes_inventarios_recepcion DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_sede, id_vacuna),
-    CONSTRAINT ck_sede_inventario_fecha_lote CHECK (fecha_lote_sede > GETDATE()),
-    CONSTRAINT ck_cantidad CHECK (cantidad >= 0),
-    CONSTRAINT fk_inventario_sede FOREIGN KEY (id_sede) REFERENCES sedes (id_sede),
-    CONSTRAINT fk_inventario_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna)
+    CONSTRAINT ck_sedes_inventarios_fecha_expiracion CHECK (fecha_expiracion_sede > GETDATE()),
+    CONSTRAINT ck_sedes_inventarios_cantidad CHECK (cantidad >= 0),
+    CONSTRAINT fk_sedes_inventarios_sede FOREIGN KEY (id_sede) REFERENCES sedes (id_sede),
+    CONSTRAINT fk_sedes_inventarios_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna)
 );
 GO
 CREATE TABLE distribuciones_vacunas
@@ -396,12 +414,13 @@ CREATE TABLE distribuciones_vacunas
     id_sede            UNIQUEIDENTIFIER NOT NULL,
     id_vacuna          UNIQUEIDENTIFIER NOT NULL,
     cantidad           INT              NOT NULL,
-    lote               NVARCHAR(10)     NOT NULL,
-    fecha_distribucion DATETIME         NOT NULL,
-    CONSTRAINT ck_distribucion_fecha_distribucion CHECK (fecha_distribucion <= GETDATE()),
-    CONSTRAINT fk_distribucion_almacen FOREIGN KEY (id_almacen) REFERENCES almacenes (id_almacen),
-    CONSTRAINT fk_distribucion_sede FOREIGN KEY (id_sede) REFERENCES sedes (id_sede),
-    CONSTRAINT fk_distribucion_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna)
+    lote               NVARCHAR(50)     NOT NULL,
+    fecha_distribucion DATETIME         NOT NULL
+        CONSTRAINT df_distribucionas_fecha_distribucion DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT ck_distribuciones_fecha_distribucion CHECK (fecha_distribucion <= GETDATE()),
+    CONSTRAINT fk_distribuciones_almacen FOREIGN KEY (id_almacen) REFERENCES almacenes (id_almacen),
+    CONSTRAINT fk_distribuciones_sede FOREIGN KEY (id_sede) REFERENCES sedes (id_sede),
+    CONSTRAINT fk_distribuciones_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna)
 );
 GO
 CREATE TABLE fabricantes_vacunas
@@ -409,13 +428,13 @@ CREATE TABLE fabricantes_vacunas
     id_fabricante INT,
     id_vacuna     UNIQUEIDENTIFIER,
     PRIMARY KEY (id_fabricante, id_vacuna),
-    CONSTRAINT fk_fabricante_vacuna_fabricante FOREIGN KEY (id_fabricante) REFERENCES fabricantes (id_fabricante) ON UPDATE CASCADE,
-    CONSTRAINT fk_fabricante_vacuna_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna) ON DELETE CASCADE
+    CONSTRAINT fk_fabricantes_vacunas_fabricante FOREIGN KEY (id_fabricante) REFERENCES fabricantes (id_fabricante) ON UPDATE CASCADE,
+    CONSTRAINT fk_fabricantes_vacunas_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna) ON DELETE CASCADE
 );
 GO
 CREATE TABLE enfermedades
 (
-    id_enfermedad     BIGINT PRIMARY KEY IDENTITY (0,1),
+    id_enfermedad     INT PRIMARY KEY IDENTITY (0,1),
     nombre_enfermedad NVARCHAR(100) NOT NULL,
     nivel_gravedad    NVARCHAR(50),
     CONSTRAINT uq_enfermedades_nombre UNIQUE (nombre_enfermedad),
@@ -424,7 +443,7 @@ CREATE TABLE enfermedades
 GO
 CREATE TABLE sintomas
 (
-    id_sintoma     BIGINT PRIMARY KEY IDENTITY (0,1),
+    id_sintoma     INT PRIMARY KEY IDENTITY (0,1),
     nombre_sintoma NVARCHAR(50) NOT NULL,
     CONSTRAINT uq_sintomas_nombre UNIQUE (nombre_sintoma),
     INDEX ix_sintomas_nombre (nombre_sintoma)
@@ -432,23 +451,25 @@ CREATE TABLE sintomas
 GO
 CREATE TABLE enfermedades_sintomas
 (
-    id_sintoma    BIGINT,
-    id_enfermedad BIGINT,
+    id_sintoma    INT,
+    id_enfermedad INT,
     PRIMARY KEY (id_sintoma, id_enfermedad),
-    CONSTRAINT fk_enfermedad_sintoma_sintoma FOREIGN KEY (id_sintoma) REFERENCES sintomas (id_sintoma) ON UPDATE CASCADE,
-    CONSTRAINT fk_enfermedad_sintoma_enfermedad FOREIGN KEY (id_enfermedad) REFERENCES enfermedades (id_enfermedad) ON UPDATE CASCADE
+    CONSTRAINT fk_enfermedades_sintomas_sintoma FOREIGN KEY (id_sintoma) REFERENCES sintomas (id_sintoma) ON UPDATE CASCADE,
+    CONSTRAINT fk_enfermedades_sintomas_enfermedad FOREIGN KEY (id_enfermedad) REFERENCES enfermedades (id_enfermedad) ON UPDATE CASCADE
 );
 GO
 CREATE TABLE vacunas_enfermedades
 (
     id_vacuna     UNIQUEIDENTIFIER,
-    id_enfermedad BIGINT,
+    id_enfermedad INT,
     PRIMARY KEY (id_vacuna, id_enfermedad),
-    CONSTRAINT fk_vacuna_enfermedad_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna) ON DELETE CASCADE,
-    CONSTRAINT fk_vacuna_enfermedad_enfermedad FOREIGN KEY (id_enfermedad) REFERENCES enfermedades (id_enfermedad) ON DELETE CASCADE
+    CONSTRAINT fk_vacunas_enfermedades_vacuna FOREIGN KEY (id_vacuna) REFERENCES vacunas (id_vacuna) ON DELETE CASCADE,
+    CONSTRAINT fk_vacunas_enfermedades_enfermedad FOREIGN KEY (id_enfermedad) REFERENCES enfermedades (id_enfermedad) ON DELETE CASCADE
 );
 GO
-
+PRINT (N'Tablas terminadas');
+PRINT (N'Creando triggers');
+GO
 -- Triggers
 -- Trigger para asignar automáticamente la región a las sedes cuando coincide con la provincia y/o distrito
 CREATE TRIGGER tr_sedes_insert_region
@@ -475,7 +496,7 @@ BEGIN
                 WHEN P.id_provincia = 13 AND D.id_distrito <> 79 THEN N'Panamá Oeste'
                 WHEN P.id_provincia = 13 AND D.id_distrito = 79 THEN N'Arraiján'
                 WHEN P.id_provincia = 16 THEN N'Darién y la comarca Embera Waunán y Wargandí'
-                ELSE 'n/a'
+                ELSE 'Por registrar'
                 END
     FROM sedes S
              INNER JOIN inserted I ON S.id_sede = I.id_sede
@@ -511,7 +532,267 @@ BEGIN
     WHERE id_usuario IN (SELECT id_usuario FROM INSERTED);
 END
 GO
+-- trigger para validar las distribuciones y de forma automática actualiza o inserta en los inventarios
+CREATE TRIGGER tr_distribuciones_validate_update_insert
+    ON distribuciones_vacunas
+    INSTEAD OF INSERT
+    AS
+BEGIN
+    BEGIN TRY
+        DECLARE @id_almacen SMALLINT, @id_vacuna UNIQUEIDENTIFIER, @cantidad INT, @lote NVARCHAR(10), @id_sede UNIQUEIDENTIFIER, @fecha_lote DATETIME;
 
+        SELECT @id_almacen = id_almacen, @id_vacuna = id_vacuna, @cantidad = cantidad, @lote = lote, @id_sede = id_sede
+        FROM inserted;
+
+        -- Verificar la cantidad disponible en almacenes_inventarios
+        IF EXISTS (SELECT 1
+                   FROM almacenes_inventarios
+                   WHERE id_almacen = @id_almacen
+                     AND id_vacuna = @id_vacuna
+                     AND lote_almacen LIKE @lote
+                     AND cantidad >= @cantidad)
+            BEGIN
+                -- Actualizar inventario del almacén
+                UPDATE almacenes_inventarios
+                SET cantidad = cantidad - @cantidad
+                WHERE id_almacen = @id_almacen
+                  AND id_vacuna = @id_vacuna
+                  AND lote_almacen LIKE @lote;
+
+                SELECT @fecha_lote = fecha_expiracion_almacen
+                FROM almacenes_inventarios
+                WHERE id_almacen = @id_almacen
+                  AND id_vacuna = @id_vacuna
+                  AND lote_almacen LIKE @lote
+
+                IF @fecha_lote < GETDATE()
+                    BEGIN
+                        RAISERROR (N'No se puede distribuir un lote con fecha menor al día de hoy. Revisar inventario almacen', 16, 1);
+                    END
+
+                -- Insertar la distribución
+                INSERT INTO distribuciones_vacunas (id_distribucion, id_almacen, id_sede, id_vacuna, cantidad, lote,
+                                                    fecha_distribucion)
+                SELECT id_distribucion, id_almacen, id_sede, id_vacuna, cantidad, lote, fecha_distribucion
+                FROM inserted;
+            END
+        ELSE
+            BEGIN
+                RAISERROR (N'No hay suficiente cantidad en el almacén.', 16, 1);
+            END
+
+        -- Si existe la vacuna en la sede, se actualiza
+        IF EXISTS (SELECT 1
+                   FROM sedes_inventarios
+                   WHERE id_sede = @id_sede
+                     AND id_vacuna = @id_vacuna
+                     AND lote_sede LIKE @lote)
+            BEGIN
+                UPDATE sedes_inventarios
+                SET cantidad = cantidad + @cantidad
+                WHERE id_sede = @id_sede
+                  AND id_vacuna = @id_vacuna
+                  AND lote_sede LIKE @lote;
+            END
+        ELSE
+            BEGIN
+                -- Si no existe, se inserta un nuevo registro
+                INSERT INTO sedes_inventarios (id_sede, id_vacuna, cantidad, fecha_expiracion_sede, lote_sede)
+                VALUES (@id_sede, @id_vacuna, @cantidad, @fecha_lote, @lote);
+            END
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT @ErrorMessage = ERROR_MESSAGE(),
+               @ErrorSeverity = ERROR_SEVERITY(),
+               @ErrorState = ERROR_STATE();
+
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END;
+GO
+-- trigger que resta del inventario de la sede si existe para esa vacuna de dosis insertada
+CREATE TRIGGER tr_dosis_update_inventario
+    ON dosis
+    INSTEAD OF INSERT
+    AS
+BEGIN
+    BEGIN TRY
+        DECLARE @numero_dosis CHAR(2), @id_vacuna UNIQUEIDENTIFIER, @id_sede UNIQUEIDENTIFIER, @lote NVARCHAR(10), @cantidad_disponible INT, @fecha_lote DATETIME;
+
+        SELECT @numero_dosis = i.numero_dosis, @id_vacuna = i.id_vacuna, @id_sede = i.id_sede, @lote = i.lote_dosis
+        FROM inserted i
+
+        -- Verificar si hay suficiente inventario y fecha de vencimiento del mismo
+        IF EXISTS (SELECT 1
+                   FROM sedes_inventarios
+                   WHERE id_sede = @id_sede
+                     AND id_vacuna = @id_vacuna
+                     AND lote_sede LIKE @lote)
+            BEGIN
+                SELECT @cantidad_disponible = Cantidad, @fecha_lote = fecha_expiracion_sede
+                FROM sedes_inventarios
+                WHERE id_sede = @id_sede
+                  AND id_vacuna = @id_vacuna
+                  AND lote_sede LIKE @lote;
+
+                IF @cantidad_disponible < 1
+                    BEGIN
+                        RAISERROR ('Cantidad insuficiente de dosis de la vacuna en el inventario de la sede.', 16, 1);
+                    END
+
+                IF @fecha_lote <= CURRENT_TIMESTAMP
+                    BEGIN
+                        RAISERROR (N'La fecha de vencimiento del lote de esta vacuna es el día de hoy o anterior.', 16, 1);
+                    END
+
+                UPDATE sedes_inventarios
+                SET cantidad = cantidad - 1
+                WHERE id_sede = @id_sede
+                  AND id_vacuna = @id_vacuna
+                  AND lote_sede LIKE @lote;
+            END
+
+        INSERT INTO dosis (id_dosis, fecha_aplicacion, numero_dosis, id_vacuna, id_sede, lote_dosis)
+        SELECT id_dosis, fecha_aplicacion, numero_dosis, id_vacuna, id_sede, lote_dosis
+        FROM inserted
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT @ErrorMessage = ERROR_MESSAGE(),
+               @ErrorSeverity = ERROR_SEVERITY(),
+               @ErrorState = ERROR_STATE();
+
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END;
+GO
+-- trigger que valida las dosis previas del paciente al insertar
+CREATE TRIGGER tr_pacientes_dosis_validate_dosis_previa
+    ON pacientes_dosis
+    INSTEAD OF INSERT
+    AS
+BEGIN
+    BEGIN TRY
+        DECLARE @cedula NVARCHAR(20), @id_vacuna UNIQUEIDENTIFIER, @numero_dosis CHAR(2), @id_dosis UNIQUEIDENTIFIER;
+
+        SELECT @cedula = i.cedula_paciente,
+               @id_vacuna = d.id_vacuna,
+               @numero_dosis = d.numero_dosis,
+               @id_dosis = i.id_dosis
+        FROM inserted i
+                 JOIN dosis d ON i.id_dosis = d.id_dosis
+
+        SET @numero_dosis = RTRIM(@numero_dosis);
+        SET @numero_dosis = UPPER(@numero_dosis);
+
+        -- Verifica si la dosis vacuna - numero de dosis ya existe
+        IF EXISTS (SELECT 1
+                   FROM pacientes_dosis pd
+                            INNER JOIN dosis d ON pd.id_dosis = d.id_dosis
+                   WHERE pd.cedula_paciente = @cedula
+                     AND d.id_vacuna = @id_vacuna
+                     AND d.numero_dosis LIKE @numero_dosis)
+            BEGIN
+                RAISERROR (N'La dosis para el paciente en esa vacuna y número de dosis ya existe. Elimine o corregir la dosis', 16, 1);
+            END
+
+        -- Validar dosis anteriores
+        IF @numero_dosis = 'P' AND EXISTS (SELECT 1
+                                           FROM pacientes_dosis pd
+                                                    INNER JOIN Dosis d ON pd.id_dosis = d.id_dosis
+                                           WHERE pd.cedula_paciente = @cedula
+                                             AND d.id_vacuna = @id_vacuna)
+            BEGIN
+                RAISERROR ('La dosis P previa solo puede ser aplicada antes de la primera dosis de la misma vacuna.', 16, 1);
+            END
+
+        IF @numero_dosis = '2' AND NOT EXISTS (SELECT 1
+                                               FROM pacientes_dosis pd
+                                                        JOIN Dosis d ON pd.id_dosis = d.id_dosis
+                                               WHERE pd.cedula_paciente = @cedula
+                                                 AND d.id_vacuna = @id_vacuna
+                                                 AND d.numero_dosis = '1')
+            BEGIN
+                RAISERROR ('La dosis 1 de la misma vacuna debe ser aplicada antes de la dosis 2.', 16, 1);
+            END
+
+        IF @numero_dosis = '3' AND NOT EXISTS (SELECT 1
+                                               FROM pacientes_dosis pd
+                                                        JOIN Dosis d ON pd.id_dosis = d.id_dosis
+                                               WHERE pd.cedula_paciente = @cedula
+                                                 AND d.id_vacuna = @id_vacuna
+                                                 AND d.numero_dosis = '2')
+            BEGIN
+                RAISERROR ('La dosis 2 de la misma vacuna debe ser aplicada antes de la dosis 3.', 16, 1);
+            END
+
+        -- Validar refuerzos (R, R1, R2) para la misma vacuna
+        IF @numero_dosis = 'R' AND NOT EXISTS (SELECT 1
+                                               FROM pacientes_dosis pd
+                                                        JOIN Dosis d ON pd.id_dosis = d.id_dosis
+                                               WHERE pd.cedula_paciente = @cedula
+                                                 AND d.id_vacuna = @id_vacuna
+                                                 AND d.numero_dosis = '1')
+            BEGIN
+                RAISERROR ('La dosis 1 de la misma vacuna debe ser aplicada antes de la dosis R.', 16, 1);
+            END
+
+        IF @numero_dosis = 'R1' AND NOT EXISTS (SELECT 1
+                                                FROM pacientes_dosis pd
+                                                         JOIN Dosis d ON pd.id_dosis = d.id_dosis
+                                                WHERE pd.cedula_paciente = @cedula
+                                                  AND d.id_vacuna = @id_vacuna
+                                                  AND d.numero_dosis IN ('1', 'R'))
+            BEGIN
+                RAISERROR ('La dosis 1 o R de la misma vacuna debe ser aplicada antes de la dosis R1.', 16, 1);
+            END
+
+        IF @numero_dosis = 'R2' AND NOT EXISTS (SELECT 1
+                                                FROM pacientes_dosis pd
+                                                         JOIN Dosis d ON pd.id_dosis = d.id_dosis
+                                                WHERE pd.cedula_paciente = @cedula
+                                                  AND d.id_vacuna = @id_vacuna
+                                                  AND d.numero_dosis IN ('R1', '1'))
+            BEGIN
+                RAISERROR ('La dosis R1 o 1 de la misma vacuna debe ser aplicada antes de la dosis R2.', 16, 1);
+            END
+
+        INSERT INTO pacientes_dosis (cedula_paciente, id_dosis)
+        SELECT cedula_paciente, id_dosis
+        FROM inserted
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT @ErrorMessage = ERROR_MESSAGE(),
+               @ErrorSeverity = ERROR_SEVERITY(),
+               @ErrorState = ERROR_STATE();
+
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END
+GO
+
+PRINT (N'Creando procedimientos almacenados');
+GO
 -- Procedimientos
 -- algunos procedimiento dan opcional el nombre tabla, los sistemas deben procurar usar el id y no el nombre
 CREATE PROCEDURE sp_vacunas_update_paciente_edad(
@@ -587,13 +868,101 @@ BEGIN
                 BEGIN
                     SELECT @id_direccion = id_direccion
                     FROM direcciones
-                    WHERE direccion = N'Dirección por registrar'
+                    WHERE direccion = 'Por registrar'
                       AND id_distrito = 0
                 END
 
             -- Insertar la sede
             INSERT INTO sedes (nombre_sede, dependencia_sede, correo_sede, telefono_sede, id_direccion)
             VALUES (@nombre_sede, @dependencia_sede, @correo_sede, @telefono_sede, @id_direccion);
+            SET @result = @result + @@ROWCOUNT;
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT @ErrorMessage = ERROR_MESSAGE(),
+               @ErrorSeverity = ERROR_SEVERITY(),
+               @ErrorState = ERROR_STATE();
+
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH;
+END;
+GO
+
+CREATE PROCEDURE sp_vacunas_insert_almacen(
+    @nombre_almacen NVARCHAR(100),
+    @dependencia_almacen NVARCHAR(13),
+    @correo_almacen NVARCHAR(50) = NULL,
+    @telefono_almacen NVARCHAR(15) = NULL,
+    @direccion_almacen NVARCHAR(150) = NULL,
+    @distrito_almacen NVARCHAR(100) = NULL,
+    @encargado_almacen NVARCHAR(50) = NULL,
+    @result INT OUTPUT
+)
+AS
+BEGIN
+    BEGIN TRY
+        SET NOCOUNT ON;
+        SET @result = 0;
+        DECLARE @id_direccion UNIQUEIDENTIFIER;
+
+        -- Validar que dirección y distrito estén ambos campos o ninguno
+        IF (@direccion_almacen IS NOT NULL AND @distrito_almacen IS NULL) OR
+           (@direccion_almacen IS NULL AND @distrito_almacen IS NOT NULL)
+            BEGIN
+                RAISERROR (N'Debe especificar ambos campos: dirección y distrito o ninguno.', 16, 1);
+            END
+        -- Validar la dependencia bien escrito
+        IF (@dependencia_almacen NOT LIKE 'CSS' AND @dependencia_almacen NOT LIKE 'MINSA' AND
+            @dependencia_almacen NOT LIKE 'Privada')
+            BEGIN
+                RAISERROR (N'La dependencia del almacen debe ser MINSA o CSS o Privada, si no encuentra su opción no se puede registrar.', 16, 1);
+            END
+        -- Verifica si la sede ya existe
+        IF EXISTS (SELECT 1 FROM almacenes WHERE nombre_almacen = @nombre_almacen)
+            BEGIN
+                RAISERROR ('El almacen con ese nombre ya existe.', 16, 1);
+            END
+
+        BEGIN TRANSACTION
+
+            -- Insertar la dirección si no existe
+            IF @direccion_almacen IS NOT NULL AND @distrito_almacen IS NOT NULL
+                BEGIN
+                    -- Verificar si la dirección ya existe
+                    SELECT @id_direccion = id_direccion
+                    FROM direcciones
+                    WHERE direccion = @direccion_almacen;
+
+                    IF @id_direccion IS NULL
+                        BEGIN
+                            SET @id_direccion = NEWID();
+                            -- Insertar nueva dirección
+                            INSERT INTO direcciones (id_direccion, direccion, id_distrito)
+                            VALUES (@id_direccion, @direccion_almacen,
+                                    (SELECT id_distrito FROM distritos WHERE nombre_distrito = @distrito_almacen))
+                            SET @result = @result + @@ROWCOUNT;
+                        END
+                END
+            ELSE
+                BEGIN
+                    SELECT @id_direccion = id_direccion
+                    FROM direcciones
+                    WHERE direccion = 'Por registrar'
+                      AND id_distrito = 0
+                END
+
+            -- Insertar el almacen
+            INSERT INTO almacenes(nombre_almacen, dependencia_almacen, correo_almacen, telefono_almacen, id_direccion,
+                                  encargado)
+            VALUES (@nombre_almacen, @dependencia_almacen, @correo_almacen, @telefono_almacen, @id_direccion,
+                    @encargado_almacen);
             SET @result = @result + @@ROWCOUNT;
         COMMIT TRANSACTION;
     END TRY
@@ -645,13 +1014,6 @@ BEGIN
                 RAISERROR (N'Debe especificar el sexo como M masculino y F femenino.', 16, 1);
             END
 
-        -- Validar fecha nacimiento en el formato esperado
-        IF TRY_CAST(@fecha_nacimiento_paciente AS SMALLDATETIME) IS NULL OR
-           TRY_CAST(@fecha_nacimiento_paciente AS DATE) IS NULL
-            BEGIN
-                RAISERROR ('Las fechas deben estar en el formato YYYY-MM-DD o YYYY/MM/DD y con hora opcional HH:MM:SS', 16, 1);
-            END
-
         BEGIN TRANSACTION
             DECLARE @id_direccion UNIQUEIDENTIFIER;
 
@@ -679,7 +1041,7 @@ BEGIN
                     -- Obtener el uuid de la dirección por defecto si es null
                     SELECT @id_direccion = id_direccion
                     FROM direcciones
-                    WHERE direccion = N'Dirección por registrar'
+                    WHERE direccion = 'Por registrar'
                       AND id_distrito = 0
                 END
 
@@ -808,138 +1170,18 @@ BEGIN
                 RAISERROR ('El paciente no existe.', 16, 1);
             END
 
-        -- Validar fecha aplicación en el formato esperado
-        IF TRY_CAST(@fecha_aplicacion AS DATETIME) IS NULL OR TRY_CAST(@fecha_aplicacion AS DATE) IS NULL
-            BEGIN
-                RAISERROR ('Las fechas deben estar en el formato YYYY-MM-DD o YYYY/MM/DD y con hora opcional HH:MM:SS', 16, 1);
-            END
-
-        -- Verifica si la dosis vacuna - numero de dosis ya existe
-        IF EXISTS (SELECT 1
-                   FROM pacientes_dosis pd
-                            INNER JOIN Dosis d ON pd.id_dosis = d.id_dosis
-                   WHERE pd.cedula_paciente = @cedula_paciente
-                     AND d.id_vacuna = @uuid_vacuna
-                     AND d.numero_dosis = @numero_dosis)
-            BEGIN
-                RAISERROR (N'La dosis para el paciente en esa vacuna y número de dosis ya existe.', 16, 1);
-            END
-
-        -- Validar dosis anteriores
-        IF @numero_dosis <> '1' AND @numero_dosis <> 'P'
-            BEGIN
-                IF @numero_dosis = '2' AND NOT EXISTS (SELECT 1
-                                                       FROM pacientes_dosis pd
-                                                                JOIN Dosis d ON pd.id_dosis = d.id_dosis
-                                                       WHERE pd.cedula_paciente = @cedula_paciente
-                                                         AND d.numero_dosis = '1')
-                    BEGIN
-                        RAISERROR ('La dosis 1 debe ser aplicada antes de la dosis 2.', 16, 1);
-                    END
-
-                IF @numero_dosis = '3' AND NOT EXISTS (SELECT 1
-                                                       FROM pacientes_dosis pd
-                                                                JOIN Dosis d ON pd.id_dosis = d.id_dosis
-                                                       WHERE pd.cedula_paciente = @cedula_paciente
-                                                         AND d.numero_dosis = '1')
-                    BEGIN
-                        RAISERROR ('La dosis 1 debe ser aplicada antes de la dosis 3.', 16, 1);
-                    END
-
-                IF @numero_dosis = 'R' AND NOT EXISTS (SELECT 1
-                                                       FROM pacientes_dosis pd
-                                                                JOIN Dosis d ON pd.id_dosis = d.id_dosis
-                                                       WHERE pd.cedula_paciente = @cedula_paciente
-                                                         AND d.numero_dosis = '1')
-                    BEGIN
-                        RAISERROR ('La dosis 1 debe ser aplicada antes de la dosis R.', 16, 1);
-                    END
-
-                IF @numero_dosis = 'R1' AND NOT EXISTS (SELECT 1
-                                                        FROM pacientes_dosis pd
-                                                                 JOIN Dosis d ON pd.id_dosis = d.id_dosis
-                                                        WHERE pd.cedula_paciente = @cedula_paciente
-                                                          AND d.numero_dosis IN ('1', 'R'))
-                    BEGIN
-                        RAISERROR ('La dosis 1 o R debe ser aplicada antes de la dosis R1.', 16, 1);
-                    END
-
-                IF @numero_dosis = 'R2' AND NOT EXISTS (SELECT 1
-                                                        FROM pacientes_dosis pd
-                                                                 JOIN Dosis d ON pd.id_dosis = d.id_dosis
-                                                        WHERE pd.cedula_paciente = @cedula_paciente
-                                                          AND d.numero_dosis IN ('R1', '2'))
-                    BEGIN
-                        RAISERROR ('La dosis R1 o 2 debe ser aplicada antes de la dosis R2.', 16, 1);
-                    END
-            END
-        ELSE
-            IF @numero_dosis LIKE 'P'
-                BEGIN
-                    IF EXISTS (SELECT 1
-                               FROM pacientes_dosis pd
-                                        INNER JOIN dosis d ON pd.id_dosis = d.id_dosis
-                               WHERE pd.cedula_paciente = @cedula_paciente)
-                        BEGIN
-                            RAISERROR ('La dosis "P" previa solo puede ser antes de la primera dosis.', 16, 1);
-                        END
-                END
-
         BEGIN TRANSACTION
-            DECLARE @CantidadDisponible INT;
-            DECLARE @FechaLote DATETIME;
             DECLARE @id_dosis UNIQUEIDENTIFIER = NEWID();
 
-            -- Verificar si hay registro en el inventario de la sede
-            IF EXISTS (SELECT 1
-                       FROM sedes_inventarios
-                       WHERE id_sede = @uuid_sede
-                         AND id_vacuna = @uuid_vacuna
-                         AND lote_sede LIKE @Lote)
-                BEGIN
-                    SELECT @CantidadDisponible = Cantidad, @FechaLote = fecha_lote_sede
-                    FROM sedes_inventarios
-                    WHERE id_sede = @uuid_sede
-                      AND id_vacuna = @uuid_vacuna
-                      AND lote_sede LIKE @Lote;
-
-                    IF @CantidadDisponible < 1
-                        BEGIN
-                            RAISERROR ('Cantidad insuficiente de dosis de la vacuna en el inventario de la sede.', 16, 1);
-                        END
-
-                    IF @FechaLote <= CURRENT_TIMESTAMP
-                        BEGIN
-                            RAISERROR (N'La fecha de vencimiento del lote de esta vacuna es el día de hoy o anterior.', 16, 1);
-                        END
-                END
-
-            SET @numero_dosis = RTRIM(@numero_dosis);
-
             -- Insertar la nueva dosis
-            INSERT INTO Dosis (id_dosis, fecha_aplicacion, numero_dosis, id_vacuna, id_sede)
-            VALUES (@id_dosis, @fecha_aplicacion, @numero_dosis, @uuid_vacuna, @uuid_sede);
+            INSERT INTO Dosis (id_dosis, fecha_aplicacion, numero_dosis, id_vacuna, id_sede, lote_dosis)
+            VALUES (@id_dosis, @fecha_aplicacion, @numero_dosis, @uuid_vacuna, @uuid_sede, @lote);
             SET @result = @result + @@ROWCOUNT;
 
             -- Insertar la relación en Paciente_Dosis
             INSERT INTO pacientes_dosis (cedula_paciente, id_dosis)
             VALUES (@cedula_paciente, @id_dosis);
             SET @result = @result + @@ROWCOUNT;
-
-            -- Restar la cantidad del inventario de la sede solo si existe el registro
-            IF EXISTS (SELECT 1
-                       FROM sedes_inventarios
-                       WHERE id_sede = @uuid_sede
-                         AND id_vacuna = @uuid_vacuna
-                         AND lote_sede LIKE @Lote)
-                BEGIN
-                    UPDATE sedes_inventarios
-                    SET Cantidad = Cantidad - 1
-                    WHERE id_sede = @uuid_sede
-                      AND id_vacuna = @uuid_vacuna
-                      AND lote_sede LIKE @Lote;
-                    SET @result = @result + @@ROWCOUNT;
-                END
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
@@ -968,6 +1210,7 @@ CREATE PROCEDURE sp_vacunas_distribuir_vacunas(
     @nombre_vacuna NVARCHAR(100) = NULL,
     @cantidad INT,
     @lote NVARCHAR(10),
+    @fecha_distribucion DATETIME = NULL,
     @result INT OUTPUT
 )
 AS
@@ -1030,72 +1273,18 @@ BEGIN
                     END
             END
 
-        IF NOT EXISTS (SELECT 1
-                       FROM almacenes_inventarios
-                       WHERE id_almacen = @id_almacen
-                         AND id_vacuna = @uuid_vacuna
-                         AND lote_almacen LIKE @lote)
-            BEGIN
-                RAISERROR (N'No se pudo obtener información del lote de vacuna en el inventario almacen', 16, 1);
-            END
+        IF @fecha_distribucion IS NULL
+            SET @fecha_distribucion = CURRENT_TIMESTAMP;
 
-        -- Verificar si hay suficiente cantidad en el inventario del almacén y si la fecha de lote es válida
-        DECLARE @cantidad_disponible INT;
-        DECLARE @fecha_lote DATETIME;
-        SELECT @Cantidad_disponible = cantidad, @fecha_lote = fecha_lote_almacen
-        FROM almacenes_inventarios
-        WHERE id_almacen = @id_almacen
-          AND id_vacuna = @uuid_vacuna
-          AND lote_almacen LIKE @Lote;
+        INSERT INTO distribuciones_vacunas (id_almacen, id_sede, id_vacuna, cantidad, lote, fecha_distribucion)
+        VALUES (@id_almacen, @id_sede, @uuid_vacuna, @cantidad, @lote, @fecha_distribucion);
 
-        IF @cantidad_disponible < @Cantidad
-            BEGIN
-                RAISERROR (N'Cantidad insuficiente en el almacén para poder distribuir.', 16, 1);
-            END
-
-        IF @fecha_lote < GETDATE()
-            BEGIN
-                RAISERROR (N'No se puede distribuir un lote con fecha menor al día de hoy. Revisar inventario almacen', 16, 1);
-            END
-
-        BEGIN TRANSACTION
-            -- Restar la cantidad del inventario del almacén
-            UPDATE almacenes_inventarios
-            SET cantidad = cantidad - @cantidad
-            WHERE id_almacen = @id_almacen
-              AND id_vacuna = @uuid_vacuna
-              AND lote_almacen LIKE @lote;
-
-            -- Agregar la cantidad al inventario de la sede
-            IF EXISTS (SELECT 1
-                       FROM sedes_inventarios
-                       WHERE id_sede = @id_sede
-                         AND id_vacuna = @uuid_vacuna
-                         AND lote_sede LIKE @lote)
-                BEGIN
-                    UPDATE sedes_inventarios
-                    SET cantidad = cantidad + @Cantidad
-                    WHERE id_sede = @id_sede
-                      AND id_vacuna = @uuid_vacuna
-                      AND lote_sede LIKE @lote;
-                    SET @result = @result + @@ROWCOUNT;
-                END
-            ELSE
-                BEGIN
-                    INSERT INTO sedes_inventarios (id_sede, id_vacuna, Cantidad, Fecha_lote_sede, Lote_sede)
-                    VALUES (@id_sede, @uuid_vacuna, @cantidad, @fecha_lote, @lote);
-                    SET @result = @result + @@ROWCOUNT;
-                END
-
-            -- Registrar la distribución
-            INSERT INTO distribuciones_vacunas (id_almacen, id_sede, id_vacuna, cantidad, lote, fecha_distribucion)
-            VALUES (@id_almacen, @id_sede, @uuid_vacuna, @Cantidad, @Lote, CURRENT_TIMESTAMP);
-            SET @result = @result + @@ROWCOUNT;
-
-        COMMIT TRANSACTION;
+        SET @result = @result + @@ROWCOUNT;
     END TRY
     BEGIN CATCH
-        ROLLBACK TRANSACTION;
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
         DECLARE @ErrorMessage NVARCHAR(4000);
         DECLARE @ErrorSeverity INT;
         DECLARE @ErrorState INT;
@@ -1120,14 +1309,10 @@ CREATE PROCEDURE sp_vacunas_gestionar_usuario(
 AS
 BEGIN
     BEGIN TRY
-        SET NOCOUNT ON;
-        SET @result = 0;
-        -- Validar fecha nacimiento en el formato esperado
-        IF TRY_CAST(@fecha_nacimiento AS DATETIME) IS NULL OR TRY_CAST(@fecha_nacimiento AS DATE) IS NULL
-            BEGIN
-                RAISERROR ('Las fechas deben estar en el formato YYYY-MM-DD o YYYY/MM/DD y con hora opcional HH:MM:SS', 16, 1);
-            END
         BEGIN TRANSACTION
+            SET NOCOUNT ON;
+            SET @result = 0;
+
             -- Verificar si el usuario ya existe
             IF EXISTS (SELECT 1 FROM usuarios WHERE cedula = @cedula)
                 BEGIN
@@ -1225,7 +1410,7 @@ GO
 CREATE PROCEDURE sp_vacunas_insert_vacuna_enfermedad(
     @uuid_vacuna UNIQUEIDENTIFIER = NULL,
     @nombre_vacuna NVARCHAR(100) = NULL,
-    @id_enfermedad BIGINT = NULL,
+    @id_enfermedad INT = NULL,
     @nombre_enfermedad NVARCHAR(100) = NULL,
     @result INT OUTPUT
 )
@@ -1370,7 +1555,7 @@ CREATE PROCEDURE sp_vacunas_insert_almacen_inventario(
     @uuid_vacuna UNIQUEIDENTIFIER = NULL,
     @nombre_vacuna NVARCHAR(100) = NULL,
     @cantidad INT,
-    @fecha_lote_almacen DATETIME,
+    @fecha_expiracion_lote DATETIME,
     @lote_almacen NVARCHAR(10),
     @result INT OUTPUT
 )
@@ -1416,20 +1601,14 @@ BEGIN
                     END
             END
 
-        -- Validar fecha del lote en el formato esperado
-        IF TRY_CAST(@fecha_lote_almacen AS DATETIME) IS NULL OR TRY_CAST(@fecha_lote_almacen AS DATE) IS NULL
-            BEGIN
-                RAISERROR ('Las fechas deben estar en el formato YYYY-MM-DD o YYYY/MM/DD y con hora opcional HH:MM:SS', 16, 1);
-            END
-
-        IF @fecha_lote_almacen <= CURRENT_TIMESTAMP
+        IF @fecha_expiracion_lote <= CURRENT_TIMESTAMP
             BEGIN
                 RAISERROR ('La fecha de vencimiento del lote de la vacuna no puede ser pasada.', 16, 1);
             END
 
         BEGIN TRANSACTION
-            INSERT INTO almacenes_inventarios (id_almacen, id_vacuna, cantidad, fecha_lote_almacen, lote_almacen)
-            VALUES (@id_almacen, @uuid_vacuna, @cantidad, @fecha_lote_almacen, @lote_almacen);
+            INSERT INTO almacenes_inventarios (id_almacen, id_vacuna, cantidad, fecha_expiracion_almacen, lote_almacen)
+            VALUES (@id_almacen, @uuid_vacuna, @cantidad, @fecha_expiracion_lote, @lote_almacen);
             SET @result = @result + @@ROWCOUNT;
         COMMIT TRANSACTION;
     END TRY
@@ -1448,6 +1627,9 @@ BEGIN
         RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH;
 END
+GO
+
+PRINT (N'Creando funciones');
 GO
 -- Funciones
 CREATE FUNCTION fn_vacunas_get_paciente_by_full_name(
@@ -1535,6 +1717,8 @@ GROUP BY
 SELECT Vacuna, Cantidad, Lote, [Fecha Lote]  FROM [Sede - Inventario]
 WHERE ID_Sede = 1
 */
+PRINT (N'Creando vistas');
+GO
 CREATE VIEW view_pacientes_vacunas_enfermedades AS
 SELECT p.cedula                      AS 'Cédula',
        p.nombre_paciente             AS 'Nombre',
@@ -1749,20 +1933,23 @@ GO
 
 CREATE VIEW view_sedes_inventarios AS
 SELECT s.id_sede,
-       s.nombre_sede      AS nombre_sede,
-       s.dependencia_sede AS dependencia_sede,
-       v.id_vacuna        AS id_vacuna,
-       v.nombre_vacuna    AS vacuna,
-       si.cantidad        AS cantidad,
-       si.lote_sede       AS lote,
-       si.fecha_lote_sede AS fecha_lote
+       s.nombre_sede            AS nombre_sede,
+       s.dependencia_sede       AS dependencia_sede,
+       v.id_vacuna              AS id_vacuna,
+       v.nombre_vacuna          AS vacuna,
+       si.cantidad              AS cantidad,
+       si.lote_sede             AS lote,
+       si.fecha_expiracion_sede AS fecha_expiracion_sede
 FROM sedes_inventarios si
          INNER JOIN sedes s ON si.id_sede = s.id_sede
          INNER JOIN vacunas v ON si.id_vacuna = v.id_vacuna;
 GO
 
+PRINT (N'Creación de objetos finalizada!');
+PRINT (N'Insertando datos globales');
+GO
 INSERT INTO provincias(nombre_provincia)
-VALUES ('Provincia por registrar' /*0*/),
+VALUES ('Por registrar' /*0*/),
        ('Bocas del Toro'), /*1*/
        (N'Coclé'), /*2*/
        (N'Colón'), /*3*/
@@ -1781,7 +1968,7 @@ VALUES ('Provincia por registrar' /*0*/),
        (N'Guna de Wargandí'); /*16*/
 GO
 INSERT INTO distritos(nombre_distrito, id_provincia)
-VALUES ('Distrito por registrar', 0),
+VALUES ('Por registrar', 0),
        ('Aguadulce', 2),
        ('Alanje', 4),
        ('Almirante', 1),
@@ -1868,9 +2055,11 @@ VALUES ('Distrito por registrar', 0),
        (N'Naso Tjër Di', 14)
 GO
 INSERT INTO direcciones (direccion, id_distrito)
-VALUES (N'Dirección por registrar', 0);
+VALUES ('Por registrar', 0);
 GO
-EXEC sp_vacunas_insert_sede 'Sede por registrar', 'Por registrar', NULL, NULL, NULL, NULL, NULL;
+PRINT (N'Insertando sede por defecto');
+GO
+EXEC sp_vacunas_insert_sede 'Por registrar', 'Por registrar', NULL, NULL, NULL, NULL, NULL;
 GO
 INSERT INTO enfermedades (nombre_enfermedad, nivel_gravedad)
 VALUES ('Desconocida', NULL),
@@ -2157,10 +2346,11 @@ VALUES (1, 1),  -- Paciente, PACIENTE_READ
        (5, 10), -- Autoridad, AUTORIDAD_WRITE
        (6, 11) -- Developer, DEV_DB_ADMIN
 GO
-
+PRINT (N'Insertando datos de prueba');
+GO
 -- datos de prueba. Las direcciones se insertan a medida que se requieren. Se recomienda utilizar los procedimientos para insertar ya que respeta la lógica y facilita insertar a varias tablas
 INSERT INTO vacunas (nombre_vacuna, edad_minima_meses, intervalo_dosis_1_2_meses)
-VALUES ('Vacuna por registrar', NULL, NULL),
+VALUES ('Por registrar', NULL, NULL),
        ('Adacel', 132, NULL),
        ('BCG', 0, NULL),
        ('COVID-19', 6, 0.92),
@@ -2185,9 +2375,10 @@ VALUES ('Vacuna por registrar', NULL, NULL),
        ('Varivax', 12, 69),
        ('Verorab', NULL, NULL); -- Según el esquema de post-exposición
 GO
-
+PRINT (N'Relacionando vacunas con enfermedades');
+GO
 -- Vacuna por registrar
-EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Vacuna por registrar', NULL, 'Desconocida', NULL;
+EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Por registrar', NULL, 'Desconocida', NULL;
 -- enfermedad desconocida y síntomas desconocidos
 -- Adacel
 EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Adacel', NULL, 'Difteria', NULL;
@@ -2253,6 +2444,7 @@ EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Tetravalente', NULL, 'Poliomelit
 EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Varivax', NULL, 'Varicela', NULL;
 EXEC sp_vacunas_insert_vacuna_enfermedad NULL, 'Verorab', NULL, 'Rabia', NULL;
 
+PRINT (N'Insertando pacientes');
 -- Pacientes ficticios
 EXEC sp_vacunas_gestionar_paciente '8-1006-14', 'Jorge', 'Ruiz', NULL, '1999-05-31', 'M', '507 6068-4595', NULL,
      'Samaria, sector 4, casa E1', 'San Miguelito', NULL;
@@ -2467,6 +2659,7 @@ EXEC sp_vacunas_gestionar_paciente 'UV5432109U', 'Isabella', 'Alvarado', 'Ruiz',
 EXEC sp_vacunas_gestionar_paciente 'WX4321098V', 'Santiago', 'Morales', N'Rodríguez', '1991-03-27', 'M',
      '507 6006-5555', 'santiago.morales@example.com', 'Calle 8, Local 11', 'Bocas del Toro', NULL;
 
+PRINT (N'Insertando sedes');
 -- Sedes algunos datos no son veraces **
 EXEC sp_vacunas_insert_sede 'Hospital San Miguel Arcangel', 'MINSA', NULL, '507 523-6906',
      N'HISMA, Vía Ricardo J. Alfaro', 'San Miguelito', NULL;
@@ -2504,6 +2697,7 @@ EXEC sp_vacunas_insert_sede 'CSS Complejo Metropolitano', 'CSS', NULL, '507 506-
 EXEC sp_vacunas_insert_sede N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', 'CSS', NULL,
      '507 513-7008', N'Vía España, Ciudad de Panamá', N'Panamá', NULL;
 
+PRINT (N'Insertando fabricantes');
 INSERT INTO fabricantes (licencia, nombre_fabricante, telefono_fabricante, correo_fabricante, direccion_fabricante,
                          contacto_fabricante)
 VALUES -- algunos datos no son veraces **
@@ -2519,6 +2713,7 @@ VALUES -- algunos datos no son veraces **
         '212/2, Hadapsar, Off Soli Poonawalla Road, Pune 411028, Maharashtra, India', 'Mr. Muralidharan Poduval');
 GO
 
+PRINT (N'Relacionando fabricantes con vacunas')
 -- insertar la relación fabricante vacuna usando el procedimiento almacenado
 EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Adacel', NULL;
 EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'BCG', NULL;
@@ -2544,10 +2739,12 @@ EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Tetravalente', NULL;
 EXEC sp_vacunas_insert_fabricante_vacuna 4, NULL, NULL, 'Varivax', NULL;
 EXEC sp_vacunas_insert_fabricante_vacuna 1, NULL, NULL, 'Verorab', NULL;
 
-INSERT INTO almacenes (nombre_almacen, encargado, telefono_almacen, dependencia_almacen)
-VALUES (N'Almacen Vacúnate Panamá', 'Carlos Gonzalez', '507 275-9689', 'MINSA') -- ficticios
-GO
+PRINT (N'Insertando almacen');
+-- ficticios
+EXEC sp_vacunas_insert_almacen N'Almacen Vacúnate Panamá', 'MINSA', NULL, '507 275-9689', NULL, NULL, 'Carlos Gonzalez',
+     NULL
 
+PRINT (N'Insertando almacen inventario');
 -- Insertar el inventario en el almacén usando el procedimiento almacenado
 EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Adacel', 160, '2025-12-15', 'LoteA1', NULL;
 EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'BCG', 215, '2025-12-16', 'LoteA2', NULL;
@@ -2576,43 +2773,54 @@ EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Tetravalente', 130, '2
 EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Varivax', 125, '2025-12-05', 'LoteA22', NULL;
 EXEC sp_vacunas_insert_almacen_inventario 1, NULL, NULL, 'Verorab', 125, '2025-12-06', 'LoteA23', NULL;
 
+PRINT (N'Distribuyendo inventario a sedes');
 -- Distribución de vacunas usando el procedimiento almacenado
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital San Miguel Arcangel', NULL, 'Adacel', 10, 'LoteA1', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL, 'BCG', 15, 'LoteA2', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Aquilino Tejeira', NULL, 'COVID-19', 20, 'LoteA3', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CENTRO DE SALUD METETI', NULL, 'Fiebre Amarilla', 25, 'LoteA4', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'POLICENTRO DE SALUD de Chepo', NULL, 'Hep A (Euvax) (adultos)', 30,
-     'LoteA5', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Clínica Hospital San Fernando', NULL, 'Hep A (Euvax) (infantil)',
-     35, 'LoteA6', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL,
-     'Hep B (adultos)', 40, 'LoteA7', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Santo Tomás', NULL, 'Hep B (infantil)', 45, 'LoteA8', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Regional de Changuinola Raul Dávila Mena', NULL,
-     'Hexaxim', 50, 'LoteA9', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Dr. Rafael Hernández', NULL, 'Influenza (FluQuadri)', 55,
-     'LoteA10', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Punta Pacífica Pacífica Salud', NULL, 'Meningococo', 60,
-     'LoteA11', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Nacional', NULL, 'MMR', 65, 'LoteA12', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Centro de salud Pacora', NULL, N'MR (antisarampión, antirrubéola)',
-     70, 'LoteA13', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Dr. Nicolás A. Solano', NULL,
-     'Neumoco conjugado (Prevenar 13 valente)', 75, 'LoteA14', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL,
-     'Papiloma Humano (Gardasil)', 80, 'LoteA15', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Policlínica Lic. Manuel María Valdés', NULL, 'Pneumo23', 85,
-     'LoteA16', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CSS Complejo Metropolitano', NULL, 'Pneumovax', 90, 'LoteA17', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena',
-     NULL, 'Priorix', 95, 'LoteA18', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital San Miguel Arcangel', NULL, 'Rotarix', 100, 'LoteA19', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL, 'TD', 105, 'LoteA20', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Aquilino Tejeira', NULL, 'Tetravalente', 110, 'LoteA21',
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital San Miguel Arcangel', NULL, 'Adacel', 10, 'LoteA1', NULL,
      NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CENTRO DE SALUD METETI', NULL, 'Varivax', 115, 'LoteA22', NULL;
-EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'POLICENTRO DE SALUD de Chepo', NULL, 'Verorab', 120, 'LoteA23', NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL, 'BCG', 15, 'LoteA2', NULL,
+     NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Aquilino Tejeira', NULL, 'COVID-19', 20, 'LoteA3', NULL,
+     NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CENTRO DE SALUD METETI', NULL, 'Fiebre Amarilla', 25, 'LoteA4', NULL,
+     NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'POLICENTRO DE SALUD de Chepo', NULL, 'Hep A (Euvax) (adultos)', 30,
+     'LoteA5', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Clínica Hospital San Fernando', NULL, 'Hep A (Euvax) (infantil)',
+     35, 'LoteA6', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL,
+     'Hep B (adultos)', 40, 'LoteA7', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Santo Tomás', NULL, 'Hep B (infantil)', 45, 'LoteA8', NULL,
+     NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Regional de Changuinola Raul Dávila Mena', NULL,
+     'Hexaxim', 50, 'LoteA9', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Dr. Rafael Hernández', NULL, 'Influenza (FluQuadri)', 55,
+     'LoteA10', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Punta Pacífica Pacífica Salud', NULL, 'Meningococo', 60,
+     'LoteA11', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Nacional', NULL, 'MMR', 65, 'LoteA12', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Centro de salud Pacora', NULL, N'MR (antisarampión, antirrubéola)',
+     70, 'LoteA13', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital Dr. Nicolás A. Solano', NULL,
+     'Neumoco conjugado (Prevenar 13 valente)', 75, 'LoteA14', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL,
+     'Papiloma Humano (Gardasil)', 80, 'LoteA15', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Policlínica Lic. Manuel María Valdés', NULL, 'Pneumo23', 85,
+     'LoteA16', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CSS Complejo Metropolitano', NULL, 'Pneumovax', 90, 'LoteA17', NULL,
+     NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena',
+     NULL, 'Priorix', 95, 'LoteA18', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital San Miguel Arcangel', NULL, 'Rotarix', 100, 'LoteA19', NULL,
+     NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL, 'TD', 105, 'LoteA20', NULL,
+     NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'Hospital Aquilino Tejeira', NULL, 'Tetravalente', 110, 'LoteA21',
+     NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'CENTRO DE SALUD METETI', NULL, 'Varivax', 115, 'LoteA22', NULL, NULL;
+EXEC sp_vacunas_distribuir_vacunas 1, NULL, NULL, 'POLICENTRO DE SALUD de Chepo', NULL, 'Verorab', 120, 'LoteA23', NULL,
+     NULL;
 
+PRINT (N'Insertando dosis a pacientes');
 -- crear las dosis y relacionar con su paciente usando el procedimiento almacenado
 EXEC sp_vacunas_insert_dosis '8-9754-1236', '2017-12-01 15:00', '1', NULL, 'Tetravalente', NULL,
      'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL, NULL;
@@ -2800,4 +3008,5 @@ EXEC sp_vacunas_insert_dosis 'E-12-54321', '2017-04-10 13:00', '1', NULL, 'Hexax
 EXEC sp_vacunas_insert_dosis 'EF4321098M', '2017-03-05 14:15', '1', NULL, 'Varivax', NULL,
      N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
 
+PRINT (N'Fin de la inicialización vacunas Panamá');
 USE master;

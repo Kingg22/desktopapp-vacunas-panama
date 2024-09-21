@@ -28,7 +28,7 @@ en salud a nivel nacional y en la integración del sistema de información de sa
 Cobertura Nacional:
 La base de datos será utilizada a nivel nacional por centros médicos estatales y centros privados que deseen participar.
 
-## :x: Limitaciones actuales de la API
+## :warning: Limitaciones actuales de la API
 
 - Los roles es una entidad que se puede modificar posterior a la creación del enum utilizado por la API al verificar los
   roles y su jerarquía.
@@ -196,7 +196,8 @@ git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
    Utilizando [docker desktop](https://www.docker.com/products/docker-desktop/) podrá ver los 2 contenedores, revise el
    log de sql_server_vacunas, una de las últimas instrucciones debe ser
     ``` sql
-    (1 rows affected)
+    (X rows affected)
+    Fin de la inicialización vacunas Panamá
     Changed database context to 'master'.
     ```
    O puede ser

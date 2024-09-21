@@ -1,6 +1,5 @@
 package com.kingg.api_vacunas_panama.service;
 
-import com.kingg.api_vacunas_panama.persistence.repository.DosisRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.PacienteRepository;
 import com.kingg.api_vacunas_panama.util.mapper.PacienteMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import java.util.Map;
 public class PacienteService {
     private final PacienteMapper pacienteMapper;
     private final PacienteRepository pacienteRepository;
-    private final DosisRepository dosisRepository;
 
     public Map<String, Object> getViewVacunaEnfermedad(String cedula) {
         return pacienteRepository.findById(cedula)

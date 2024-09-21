@@ -42,6 +42,10 @@ public class Dosis {
     @JoinColumn(name = "id_sede")
     private Sede idSede;
 
+    @Size(max = 50)
+    @Column(name = "lote_dosis", length = 50)
+    private String loteDosis;
+
     @ManyToMany
     @JoinTable(name = "pacientes_dosis",
             joinColumns = @JoinColumn(name = "id_dosis"),

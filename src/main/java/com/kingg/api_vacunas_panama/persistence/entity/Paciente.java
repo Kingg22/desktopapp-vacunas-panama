@@ -76,7 +76,7 @@ public class Paciente {
     private LocalDateTime fechaNacimiento;
 
     @Column(name = "edad_calculada")
-    private Integer edadCalculada;
+    private Short edadCalculada;
 
     @NotNull
     @Column(name = "sexo", nullable = false)
@@ -95,6 +95,10 @@ public class Paciente {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_direccion")
     private Direccion idDireccion;
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @ManyToMany(mappedBy = "pacientes")
     @JsonBackReference

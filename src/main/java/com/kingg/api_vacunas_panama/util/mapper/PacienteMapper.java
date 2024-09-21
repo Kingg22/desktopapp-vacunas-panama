@@ -1,9 +1,7 @@
 package com.kingg.api_vacunas_panama.util.mapper;
 
 import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
-import com.kingg.api_vacunas_panama.persistence.entity.ViewPacientesVacunasEnfermedades;
 import com.kingg.api_vacunas_panama.web.dto.PacienteDto;
-import com.kingg.api_vacunas_panama.web.dto.ViewPacientesVacunasEnfermedadesDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;
@@ -29,16 +27,5 @@ public interface PacienteMapper {
     @Mapping(target = "apellido2", source = "apellido2Paciente")
     @Mapping(target = "apellido1", source = "apellido1Paciente")
     PacienteDto pacienteToDto(Paciente paciente);
-
-    @Mapping(target = "vacuna", source = "nombreVacuna")
-    @Mapping(target = "numero_dosis", source = "numDeDosis")
-    @Mapping(target = "intervalo_recomendado_dosis_meses", source = "intervaloRecomendadoEntreDosisEnMeses")
-    @Mapping(target = "fecha_nacimiento", source = "fechaDeNacimiento")
-    @Mapping(target = "fecha_aplicacion", source = "fechaDeAplicacion")
-    @Mapping(target = "enfermedad_previene", source = "enfermedadPreviene")
-    @Mapping(target = "email", source = "correoElectronico")
-    @Mapping(target = "edad_min_recomendada_meses", source = "edadMinRecomendadaEnMeses")
-    @Mapping(target = "direccion_residencial", source = "direccionResidencial")
-    ViewPacientesVacunasEnfermedadesDto viewPacienteVacunaEnfermedadToDto(ViewPacientesVacunasEnfermedades viewPacientesVacunasEnfermedades);
 
 }

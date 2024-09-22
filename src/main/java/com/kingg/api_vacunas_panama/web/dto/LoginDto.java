@@ -12,6 +12,6 @@ public record LoginDto(@NotBlank(message = "El usuario es requerido") String use
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
-                 "username: " + username + ")";
+                "username: " + username + ")";
     }
 }

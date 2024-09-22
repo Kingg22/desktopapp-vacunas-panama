@@ -37,10 +37,10 @@ public class UsuarioDetailsService implements UserDetailsService {
                     )).collect(Collectors.toSet());
 
             return User.withUsername(user.getCedula())
-                        .password(user.getClaveHash())
-                        .authorities(authorities)
-                        .disabled(user.getDisabled())
-                        .build();
+                    .password(user.getClaveHash())
+                    .authorities(authorities)
+                    .disabled(user.getDisabled())
+                    .build();
         }
         throw new UsernameNotFoundException("User not found");
     }

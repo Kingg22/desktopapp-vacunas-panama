@@ -27,18 +27,18 @@ public class TokenService {
 
     public String generateToken(UsuarioDto usuario) {
         Collection<String> rolesPermisos = usuario.roles().stream()
-                    .flatMap(role -> Stream.concat(
-                            Stream.of("ROLE_" + role.nombre().toUpperCase()),
-                            role.permisos().stream().map(PermisoDto::nombre))
-                    ).toList();
+                .flatMap(role -> Stream.concat(
+                        Stream.of("ROLE_" + role.nombre().toUpperCase()),
+                        role.permisos().stream().map(PermisoDto::nombre))
+                ).toList();
 
         return createToken(usuario.cedula(), rolesPermisos);
     }
 
     public String generateToken(Authentication authentication) {
         Collection<String> rolesPermisos = authentication.getAuthorities().stream()
-                                        .map(GrantedAuthority::getAuthority)
-                                        .toList();
+                .map(GrantedAuthority::getAuthority)
+                .toList();
         return createToken(authentication.getName(), rolesPermisos);
     }
 

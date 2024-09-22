@@ -160,7 +160,8 @@ git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
 
 ### 3. Crear entorno propio para deploy
 
-1. Modificar vacunas-init.sql el login colocando una contraseña segura.
+1. Modificar vacunas-init.sql el login colocando una contraseña segura. 
+Crear contraseñas con [BCrypt](https://bcrypt-generator.com/) para los usuarios con roles superiores, colocarlo en 3 parámetro del procedimiento sp_vacunas_gestionar_usuarios, últimas líneas de vacunas-init.sql
 2. Con las credenciales anteriores colocarlo en su .env DB_USER y DB_PASSWORD.
     - Recordatorio: Al estar en docker la URL de la base de datos no es localhost sino la IP del host y el puerto
       externo que coloquemos, inicialmente 1440.

@@ -53,8 +53,8 @@ public class SecurityConfig {
                         .requestMatchers("/vacunacion/v1/account/register").permitAll()
                         .requestMatchers("/vacunacion/v1/account/login").permitAll()
                         .requestMatchers("/vacunacion/v1/account/restore").permitAll()
-                        .requestMatchers("/vacunacion/v1/paciente").hasAnyAuthority("PACIENTE_READ")
-                        .requestMatchers("/vacunacion/v1/vacunas/**").hasAnyRole("DOCTOR", "ENFERMERA")
+                        .requestMatchers("/vacunacion/v1/patient/**").hasAnyAuthority("PACIENTE_READ")
+                        .requestMatchers("/vacunacion/v1/vaccines/**").hasAnyRole("DOCTOR", "ENFERMERA")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception

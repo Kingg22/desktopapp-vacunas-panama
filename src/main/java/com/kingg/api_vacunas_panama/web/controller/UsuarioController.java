@@ -3,7 +3,7 @@ package com.kingg.api_vacunas_panama.web.controller;
 import com.kingg.api_vacunas_panama.service.TokenService;
 import com.kingg.api_vacunas_panama.service.UsuarioManagementService;
 import com.kingg.api_vacunas_panama.util.ResponseUtil;
-import com.kingg.api_vacunas_panama.util.RolEnum;
+import com.kingg.api_vacunas_panama.util.RolesEnum;
 import com.kingg.api_vacunas_panama.web.dto.LoginDto;
 import com.kingg.api_vacunas_panama.web.dto.RestoreDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
@@ -48,8 +48,8 @@ public class UsuarioController {
             List<String> authenticatedAuthorities = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .toList();
-            List<RolEnum> authenticatedRoles = authenticatedAuthorities.stream()
-                    .map(RolEnum::valueOf)
+            List<RolesEnum> authenticatedRoles = authenticatedAuthorities.stream()
+                    .map(RolesEnum::valueOf)
                     .toList();
 
             if (!usuarioDto.roles().stream()

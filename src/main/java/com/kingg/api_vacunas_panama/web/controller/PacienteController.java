@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/vacunacion/v1/paciente", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/vacunacion/v1/patient", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PacienteController {
     private final PacienteService pacienteService;
 

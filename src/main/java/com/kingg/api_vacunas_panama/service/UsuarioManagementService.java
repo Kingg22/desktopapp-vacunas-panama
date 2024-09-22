@@ -6,7 +6,7 @@ import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
 import com.kingg.api_vacunas_panama.persistence.repository.PermisoRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.RolRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.UsuarioRepository;
-import com.kingg.api_vacunas_panama.util.RolEnum;
+import com.kingg.api_vacunas_panama.util.RolesEnum;
 import com.kingg.api_vacunas_panama.util.mapper.AccountMapper;
 import com.kingg.api_vacunas_panama.web.dto.PermisoDto;
 import com.kingg.api_vacunas_panama.web.dto.RolDto;
@@ -92,13 +92,13 @@ public class UsuarioManagementService {
         return correo != null && usuarioRepository.findByCorreoUsuario(correo).isPresent();
     }
 
-    public boolean canRegisterRole(RolDto rolDto, List<RolEnum> authenticatedRoles) {
+    public boolean canRegisterRole(RolDto rolDto, List<RolesEnum> authenticatedRoles) {
         int maxRolPriority = authenticatedRoles.stream()
-                .mapToInt(RolEnum::getPriority)
+                .mapToInt(RolesEnum::getPriority)
                 .max()
                 .orElse(0);
 
-        return RolEnum.valueOf(rolDto.nombre().toUpperCase()).getPriority() <= maxRolPriority;
+        return RolesEnum.valueOf(rolDto.nombre().toUpperCase()).getPriority() <= maxRolPriority;
     }
 
     public boolean hasUserManagementPermissions(List<String> authenticatedAuthorities) {

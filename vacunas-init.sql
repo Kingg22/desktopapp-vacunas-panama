@@ -755,9 +755,9 @@ BEGIN
                                                          JOIN Dosis d ON pd.id_dosis = d.id_dosis
                                                 WHERE pd.cedula_paciente = @cedula
                                                   AND d.id_vacuna = @id_vacuna
-                                                  AND d.numero_dosis IN ('1', 'R'))
+                                                  AND d.numero_dosis = '1')
             BEGIN
-                RAISERROR ('La dosis 1 o R de la misma vacuna debe ser aplicada antes de la dosis R1.', 16, 1);
+                RAISERROR ('La dosis 1 de la misma vacuna debe ser aplicada antes de la dosis R1.', 16, 1);
             END
 
         IF @numero_dosis = 'R2' AND NOT EXISTS (SELECT 1
@@ -1372,6 +1372,10 @@ BEGIN
                                  id_rol INT
                              ); -- tabla temporal para almacenar la cadena de roles
         SELECT @id_usuario = id_usuario FROM usuarios WHERE cedula = @cedula
+		IF @id_usuario IS NULL 
+		BEGIN
+			RAISERROR (N'No se ha encontrado el usuario con la cédula proporcionada', 16, 1);
+		END
         BEGIN TRANSACTION
             -- Convertir la cadena delimitada en la tabla temporal
             INSERT INTO @roles_tabla (id_rol)
@@ -3007,6 +3011,14 @@ EXEC sp_vacunas_insert_dosis 'E-12-54321', '2017-04-10 13:00', '1', NULL, 'Hexax
      N'Hospital Dr. Nicolás A. Solano', NULL, NULL;
 EXEC sp_vacunas_insert_dosis 'EF4321098M', '2017-03-05 14:15', '1', NULL, 'Varivax', NULL,
      N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, NULL;
+
+PRINT('Insertando usuarios de roles superior de pruebas');
+-- crear usuarios
+EXEC sp_vacunas_gestionar_usuario '1-1-2', NULL, '', '2000-12-12', NULL, NULL;
+EXEC sp_vacunas_insert_roles_usuario '1-1-2', '3', NULL;
+
+EXEC sp_vacunas_gestionar_usuario '1-1-1', NULL, '', '2000-01-12', NULL, NULL;
+EXEC sp_vacunas_insert_roles_usuario '1-1-1', '6', NULL;
 
 PRINT (N'Fin de la inicialización vacunas Panamá');
 USE master;

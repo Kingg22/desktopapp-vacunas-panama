@@ -3,7 +3,7 @@ package com.kingg.api_vacunas_panama.util;
 import lombok.Getter;
 
 @Getter
-public enum RolEnum {
+public enum RolesEnum {
     PACIENTE(1),
     FABRICANTE(2),
     ENFERMERA(3),
@@ -14,7 +14,7 @@ public enum RolEnum {
 
     private final int priority;
 
-    RolEnum(int priority) {
+    RolesEnum(int priority) {
         this.priority = priority;
     }
 

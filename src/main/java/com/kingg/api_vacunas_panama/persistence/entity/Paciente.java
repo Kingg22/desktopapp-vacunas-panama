@@ -25,7 +25,7 @@ import java.util.Set;
 @Setter
 @NamedNativeQuery(name = "view_paciente_vacuna_enfermedad", query = "SELECT v.[Nombre vacuna] AS vacuna, " +
         "v.[Número de dosis] AS numero_dosis, " +
-        "v.[Enfermedad previene] AS enfermedad_previene, " +
+        "v.[Enfermedades prevenidas] AS enfermedades_prevenidas, " +
         "v.[Edad mínima recomendada en meses] AS edad_min_recomendada_meses, " +
         "v.[Fecha de aplicación] AS fecha_aplicacion, " +
         "v.[Intervalo recomendado entre dosis 1 y 2 en meses] AS intervalo_recomendado_dosis_meses, " +
@@ -39,7 +39,7 @@ import java.util.Set;
         columns = {
                 @ColumnResult(name = "vacuna", type = String.class),
                 @ColumnResult(name = "numero_dosis", type = String.class),
-                @ColumnResult(name = "enfermedad_previene", type = String.class),
+                @ColumnResult(name = "enfermedades_prevenidas", type = String.class),
                 @ColumnResult(name = "edad_min_recomendada_meses", type = Short.class),
                 @ColumnResult(name = "fecha_aplicacion", type = LocalDateTime.class),
                 @ColumnResult(name = "intervalo_recomendado_dosis_meses", type = Double.class),

@@ -1738,7 +1738,7 @@ SELECT p.cedula                      AS 'Cédula',
        prov.nombre_provincia         AS 'Provincia',
        vac.nombre_vacuna             AS 'Nombre vacuna',
        dos.numero_dosis              AS 'Número de dosis',
-       e.nombre_enfermedad           AS 'Enfermedad previene',
+       STRING_AGG(e.nombre_enfermedad, ', ') AS 'Enfermedades prevenidas',
        vac.edad_minima_meses         AS 'Edad mínima recomendada en meses',
        dos.fecha_aplicacion          AS 'Fecha de aplicación',
        vac.intervalo_dosis_1_2_meses AS 'Intervalo recomendado entre dosis 1 y 2 en meses',
@@ -1753,7 +1753,10 @@ FROM pacientes p
          LEFT JOIN sedes s ON dos.id_sede = s.id_sede
          LEFT JOIN direcciones d ON p.id_direccion = d.id_direccion
          LEFT JOIN distritos dis ON d.id_distrito = dis.id_distrito
-         LEFT JOIN provincias prov ON dis.id_provincia = prov.id_provincia;
+         LEFT JOIN provincias prov ON dis.id_provincia = prov.id_provincia
+GROUP BY p.cedula, p.nombre_paciente, p.apellido1_paciente, p.apellido2_paciente, 
+p.fecha_nacimiento, p.edad_calculada, p.sexo, p.fecha_nacimiento, p.telefono_paciente, p.correo_paciente, d.direccion, 
+dis.nombre_distrito, prov.nombre_provincia, vac.nombre_vacuna, dos.numero_dosis, vac.edad_minima_meses, dos.fecha_aplicacion, vac.intervalo_dosis_1_2_meses, s.nombre_sede, s.dependencia_sede;
 GO
 
 CREATE VIEW view_pacientes_detalles AS

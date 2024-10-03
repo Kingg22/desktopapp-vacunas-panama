@@ -1,18 +1,24 @@
 package com.kingg.api_vacunas_panama.service;
 
 import com.kingg.api_vacunas_panama.persistence.entity.Permiso;
+import com.kingg.api_vacunas_panama.persistence.entity.Persona;
 import com.kingg.api_vacunas_panama.persistence.entity.Rol;
 import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
-import com.kingg.api_vacunas_panama.persistence.repository.PermisoRepository;
-import com.kingg.api_vacunas_panama.persistence.repository.RolRepository;
-import com.kingg.api_vacunas_panama.persistence.repository.UsuarioRepository;
+import com.kingg.api_vacunas_panama.persistence.repository.*;
+import com.kingg.api_vacunas_panama.util.ContentResponse;
+import com.kingg.api_vacunas_panama.util.FormatCedulaUtil;
+import com.kingg.api_vacunas_panama.util.ResponseCode;
 import com.kingg.api_vacunas_panama.util.RolesEnum;
 import com.kingg.api_vacunas_panama.util.mapper.AccountMapper;
 import com.kingg.api_vacunas_panama.web.dto.PermisoDto;
 import com.kingg.api_vacunas_panama.web.dto.RolDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,35 +26,39 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * Service for {@link Usuario}, {@link Rol} and {@link Permiso}
+ * Extends functionality from {@link PersonaService} and {@link FabricanteService}
+ * inheriting methods that involve {@link Usuario} in relation to these services.
  */
-
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UsuarioManagementService {
     private final AccountMapper mapper;
-    private final UsuarioRepository usuarioRepository;
-    private final RolRepository rolRepository;
-    private final PermisoRepository permisoRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UsuarioRepository usuarioRepository;
+    private final PermisoRepository permisoRepository;
+    private final RolRepository rolRepository;
+    private final PersonaRepository personaRepository;
+    private final EntidadRepository entidadRepository;
+    private final UsuarioValidationService validationService;
 
     @Transactional
-    public UsuarioDto createUser(UsuarioDto usuarioDto) {
+    public UsuarioDto createUser(UsuarioDto usuarioDto, ContentResponse contentResponse) {
+        validationService.validateRegistration(usuarioDto, contentResponse);
         Set<Rol> role = usuarioDto.roles().stream()
                 .map(this::convertToRoleExisting)
                 .collect(Collectors.toSet());
 
         Usuario usuario = Usuario.builder()
-                .cedula(usuarioDto.cedula())
                 .username(usuarioDto.username())
-                .correoUsuario(usuarioDto.email())
-                .claveHash(passwordEncoder.encode(usuarioDto.password()))
-                .fechaNacimiento(usuarioDto.fecha_nacimiento_usuario())
-                .disabled(usuarioDto.disabled())
+                .clave(passwordEncoder.encode(usuarioDto.password()))
                 .createdAt(LocalDateTime.now())
                 .roles(role)
                 .build();
@@ -64,54 +74,92 @@ public class UsuarioManagementService {
     }
 
     @Transactional
-    public void changePassword(String username, String newPassword, LocalDate birthdate) {
-        Usuario usuario = usuarioRepository.findByCedulaOrCorreoUsuarioOrUsername(username, username, username)
-                .filter(user -> user.getFechaNacimiento().toLocalDate().equals(birthdate))
-                .orElseThrow(() -> new UsernameNotFoundException("username not found or birthdate don't match to restore"));
-        if (passwordEncoder.matches(newPassword, usuario.getClaveHash())) {
-            throw new IllegalArgumentException("new password cannot be equals to last password");
+    @Modifying
+    public void changePasswordPersonas(Persona persona, String newPassword, LocalDate birthdate) {
+        Usuario usuario = persona.getUsuario();
+        if (!persona.getFechaNacimiento().toLocalDate().equals(birthdate)) {
+            throw new IllegalArgumentException("La fecha de cumpleaños no coincide");
         }
-        usuario.setClaveHash(passwordEncoder.encode(newPassword));
+        if (passwordEncoder.matches(newPassword, usuario.getClave())) {
+            throw new IllegalArgumentException("La nueva contraseña no puede ser igual a la contraseña actual");
+        }
+        usuario.setClave(passwordEncoder.encode(newPassword));
         usuarioRepository.save(usuario);
     }
 
-    public UsuarioDto getUsuario(String id) {
-        Usuario usuario = usuarioRepository.findByCedulaOrCorreoUsuarioOrUsername(id, id, id).orElseThrow();
+    public void validateAuthoritiesRegister(UsuarioDto usuarioDto, ContentResponse contentResponse, Authentication authentication) {
+        List<String> authenticatedAuthorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+        List<RolesEnum> authenticatedRoles = authenticatedAuthorities.stream()
+                .map(RolesEnum::valueOf)
+                .toList();
+
+        if (!usuarioDto.roles().stream().allMatch(rolDto -> validationService.canRegisterRole(rolDto, authenticatedRoles))) {
+            contentResponse.addError("code", ResponseCode.ROL_HIERARCHY_VIOLATION.toString());
+            contentResponse.addError("message", "No puede asignar roles superiores a su rol máximo actual");
+        }
+
+        if (!validationService.hasUserManagementPermissions(authenticatedAuthorities)) {
+            contentResponse.addError("code", ResponseCode.PERMISSION_DENIED.toString());
+            contentResponse.addError("message", "No tienes permisos para registrar a otros usuarios");
+        }
+    }
+
+    public UsuarioDto getUsuarioDto(String identifier) {
+        Usuario usuario = getUsuario(identifier).orElseThrow();
         return mapper.usuarioToDto(usuario);
     }
 
-    public boolean isCedulaRegistered(String cedula) {
-        return cedula != null && usuarioRepository.findByCedula(cedula).isPresent();
+    public UsuarioDto getUsuarioDto(UUID id) {
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow();
+        return mapper.usuarioToDto(usuario);
     }
 
-    public boolean isUsernameRegistered(String username) {
-        return username != null && usuarioRepository.findByUsername(username).isPresent();
-    }
+    /**
+     * Finds a user based on a given identifier by searching across multiple fields form related tables.
+     * <p>
+     * Additionally, the user's {@code disabled} status is manually set as part of the result.
+     *
+     * @param identifier the identifier used to search for the user (e.g. username, email, cedula)
+     * @return an {@link Optional} containing the found {@link Usuario} or empty if no user matches the identifier.
+     */
+    Optional<Usuario> getUsuario(@NotNull String identifier) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(identifier);
 
-    public boolean isCorreoRegistered(String correo) {
-        return correo != null && usuarioRepository.findByCorreoUsuario(correo).isPresent();
-    }
-
-    public boolean canRegisterRole(RolDto rolDto, List<RolesEnum> authenticatedRoles) {
-        int maxRolPriority = authenticatedRoles.stream()
-                .mapToInt(RolesEnum::getPriority)
-                .max()
-                .orElse(0);
-
-        return RolesEnum.valueOf(rolDto.nombre().toUpperCase()).getPriority() <= maxRolPriority;
-    }
-
-    public boolean hasUserManagementPermissions(List<String> authenticatedAuthorities) {
-        return authenticatedAuthorities.contains("ADMINISTRATIVO_WRITE")
-                || authenticatedAuthorities.contains("AUTORIDAD_WRITE")
-                || authenticatedAuthorities.contains("USER_MANAGER_WRITE");
+        usuarioOpt.ifPresent(usuario -> {
+            Optional<Persona> personaOpt = personaRepository.findByUsuario_Id(usuario.getId());
+            personaOpt.ifPresent(persona -> usuario.setDisabled(persona.getEstadoEnum()));
+        });
+        if (usuarioOpt.isEmpty()) {
+            String cedula = null;
+            String pasaporte = identifier.matches("^[A-Z0-9]{5,20}$") ? identifier : null;
+            String correo = identifier.matches("^_@_.__$") ? identifier : null;
+            try {
+                cedula = FormatCedulaUtil.formatCedula(identifier);
+            } catch (IllegalArgumentException argumentException) {
+                log.info("identifier no find a usuario is not a cedula");
+            }
+            usuarioOpt = usuarioRepository.findByCedulaOrPasaporteOrCorreo(cedula, pasaporte, correo);
+            usuarioOpt.ifPresent(usuario ->
+                    personaRepository.findByUsuario_Id(usuario.getId()).ifPresent(persona -> usuario.setDisabled(persona.getEstadoEnum()))
+            );
+        }
+        if (usuarioOpt.isEmpty()) {
+            usuarioOpt = usuarioRepository.findByLicenciaOrCorreo(identifier, identifier);
+            usuarioOpt.ifPresent(usuario ->
+                    entidadRepository.findByUsuario_Id(usuario.getId()).ifPresent(entidad -> usuario.setDisabled(entidad.getEstadoEnum()))
+            );
+        }
+        return usuarioOpt;
     }
 
     private Rol convertToRoleExisting(RolDto rolDto) {
-        return rolRepository.findByNombreRolOrId(rolDto.nombre(), rolDto.id()).orElseThrow();
+        return rolRepository.findByNombreOrId(rolDto.nombre(), rolDto.id()).orElse(null);
     }
 
     private Permiso convertToPermisoExisting(PermisoDto permisoDto) {
-        return permisoRepository.findByNombrePermisoOrId(permisoDto.nombre(), permisoDto.id()).orElseThrow();
+        return permisoRepository.findByNombreOrId(permisoDto.nombre(), permisoDto.id()).orElseThrow();
     }
+
 }

@@ -8,38 +8,30 @@ import com.kingg.api_vacunas_panama.web.dto.RolDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
 
 import java.util.Set;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface AccountMapper {
-
-    @Mapping(target = "nombrePermiso", source = "nombre")
-    @Mapping(target = "descripcionPermiso", ignore = true)
     @Mapping(target = "roles", ignore = true)
     Permiso permisoDtoToPermiso(PermisoDto permisoDto);
 
-    @Mapping(target = "nombre", source = "nombrePermiso")
     PermisoDto permisoToDto(Permiso permiso);
 
     Set<Permiso> permisosDtoToPermisos(Set<PermisoDto> permisoDtoSet);
 
-    @Mapping(target = "nombreRol", source = "nombre")
-    @Mapping(target = "descripcionRol", ignore = true)
     @Mapping(target = "usuarios", ignore = true)
     Rol rolDtoToRol(RolDto rolDto);
 
-    @Mapping(target = "nombre", source = "nombreRol")
     RolDto rolToDto(Rol rol);
 
     Set<Rol> rolesDtoToRoles(Set<RolDto> rolDtoSet);
 
     @Mapping(target = "last_used", source = "lastUsed")
-    @Mapping(target = "fecha_nacimiento_usuario", source = "fechaNacimiento")
-    @Mapping(target = "email", source = "correoUsuario")
     @Mapping(target = "created_at", source = "createdAt")
-    @Mapping(target = "password", source = "claveHash")
+    @Mapping(target = "password", source = "clave")
     UsuarioDto usuarioToDto(Usuario usuario);
 
 }

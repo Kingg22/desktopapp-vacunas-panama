@@ -19,14 +19,14 @@ import java.util.Set;
 public class Provincia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_provincia", columnDefinition = "tinyint not null")
+    @Column(name = "id", columnDefinition = "tinyint not null")
     private Short id;
 
     @Size(max = 30)
     @NotNull
     @Nationalized
-    @Column(name = "nombre_provincia", nullable = false, length = 30)
-    private String nombreProvincia;
+    @Column(name = "nombre", nullable = false, length = 30)
+    private String nombre;
 
     @OneToMany(mappedBy = "idProvincia")
     private Set<Distrito> distritos = new LinkedHashSet<>();

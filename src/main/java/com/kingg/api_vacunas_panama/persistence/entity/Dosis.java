@@ -5,9 +5,7 @@ import com.kingg.api_vacunas_panama.util.NumDosisEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
@@ -15,25 +13,16 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity
-@Table(name = "dosis")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@NamedStoredProcedureQuery(name = "Dosis.insert", procedureName = "sp_vacunas_insert_dosis", parameters = {
-        @StoredProcedureParameter(name = "cedula_paciente", mode = ParameterMode.IN, type = String.class),
-        @StoredProcedureParameter(name = "fecha_aplicacion", mode = ParameterMode.IN, type = LocalDateTime.class),
-        @StoredProcedureParameter(name = "numero_dosis", mode = ParameterMode.IN, type = String.class),
-        @StoredProcedureParameter(name = "uuid_vacuna", mode = ParameterMode.IN, type = UUID.class),
-        @StoredProcedureParameter(name = "nombre_vacuna", mode = ParameterMode.IN, type = String.class),
-        @StoredProcedureParameter(name = "uuid_sede", mode = ParameterMode.IN, type = UUID.class),
-        @StoredProcedureParameter(name = "nombre_sede", mode = ParameterMode.IN, type = String.class),
-        @StoredProcedureParameter(name = "lote", mode = ParameterMode.IN, type = String.class),
-        @StoredProcedureParameter(name = "return", mode = ParameterMode.OUT, type = Integer.class)
-})
+@Builder
+@Entity
+@Table(name = "dosis")
 public class Dosis {
     @Id
-    @Column(name = "id_dosis", nullable = false)
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @NotNull
@@ -48,30 +37,34 @@ public class Dosis {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_vacuna", nullable = false)
+    @JoinColumn(name = "vacuna", nullable = false)
     private Vacuna idVacuna;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_sede")
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sede", nullable = false)
     private Sede idSede;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor")
+    private Doctor idDoctor;
 
     @Size(max = 50)
     @Nationalized
-    @Column(name = "lote_dosis", length = 50)
-    private String loteDosis;
+    @Column(name = "lote", length = 50)
+    private String lote;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @ManyToMany
     @JoinTable(name = "pacientes_dosis",
-            joinColumns = @JoinColumn(name = "id_dosis"),
-            inverseJoinColumns = @JoinColumn(name = "cedula_paciente"))
+            joinColumns = @JoinColumn(name = "dosis"),
+            inverseJoinColumns = @JoinColumn(name = "paciente"))
     @JsonBackReference
     private Set<Paciente> pacientes = new LinkedHashSet<>();
-
-    public Dosis(LocalDateTime fechaAplicacion, NumDosisEnum numeroDosis, Vacuna idVacuna, Sede idSede) {
-        this.fechaAplicacion = fechaAplicacion;
-        this.numeroDosis = numeroDosis;
-        this.idVacuna = idVacuna;
-        this.idSede = idSede;
-    }
 
 }

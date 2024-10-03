@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface PermisoRepository extends JpaRepository<Permiso, Short> {
 
-    Optional<Permiso> findByNombrePermisoOrId(String nombre, Short id);
+    Optional<Permiso> findByNombreOrId(String nombre, Short id);
+
 }

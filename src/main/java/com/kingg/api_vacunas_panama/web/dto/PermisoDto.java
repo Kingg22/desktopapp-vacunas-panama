@@ -1,15 +1,16 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kingg.api_vacunas_panama.persistence.entity.Permiso;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.Serializable;
 
 /**
- * DTO for {@link com.kingg.api_vacunas_panama.persistence.entity.Permiso}
+ * DTO for {@link Permiso}
  */
 @Validated
-public record PermisoDto(@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) Short id,
-                         @NotBlank(message = "El nombre del permiso es requerido") String nombre) implements Serializable {
+public record PermisoDto(Short id,
+                         @NotBlank(message = "El nombre del permiso es requerido") String nombre,
+                         String descripcion) implements Serializable {
 }

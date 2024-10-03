@@ -1,6 +1,6 @@
 package com.kingg.api_vacunas_panama.security;
 
-import com.kingg.api_vacunas_panama.service.UsuarioDetailsService;
+import com.kingg.api_vacunas_panama.service.LoginTokenService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -34,11 +34,10 @@ import java.security.interfaces.RSAPublicKey;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final RSAPrivateKey privateKey;
-    private final RSAPublicKey publicKey;
     @Value("${security.jwt.issuer}")
     private String issuer;
+    private final RSAPrivateKey privateKey;
+    private final RSAPublicKey publicKey;
     private final AccessDeniedHandler accessDeniedHandler;
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
@@ -52,7 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/vacunacion/v1/account/register").permitAll()
                         .requestMatchers("/vacunacion/v1/account/login").permitAll()
-                        .requestMatchers("/vacunacion/v1/account/restore").permitAll()
+                        .requestMatchers("/vacunacion/v1/account/restore/**").permitAll()
                         .requestMatchers("/vacunacion/v1/patient/**").hasAnyAuthority("PACIENTE_READ")
                         .requestMatchers("/vacunacion/v1/vaccines/**").hasAnyRole("DOCTOR", "ENFERMERA")
                         .anyRequest().authenticated()
@@ -100,10 +99,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(UsuarioDetailsService usuarioDetailsService) {
+    AuthenticationManager authenticationManager(LoginTokenService loginTokenService) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(passwordEncoder());
 
-        daoAuthenticationProvider.setUserDetailsService(usuarioDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(loginTokenService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         daoAuthenticationProvider.setCompromisedPasswordChecker(compromisedPasswordChecker());
         return new ProviderManager(daoAuthenticationProvider);

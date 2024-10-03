@@ -20,11 +20,11 @@ public class RolesPermisosId implements Serializable {
     @Serial
     private static final long serialVersionUID = -5300599546506914322L;
     @NotNull
-    @Column(name = "id_rol", nullable = false)
+    @Column(name = "rol", nullable = false)
     private Short idRol;
 
     @NotNull
-    @Column(name = "id_permiso", nullable = false)
+    @Column(name = "permiso", nullable = false)
     private Short idPermiso;
 
     @Override

@@ -11,8 +11,7 @@ sanitario del país. A continuación, se detallan los aspectos clave del proyect
 recomendaciones para su implementación.
 Este proyecto consiste en el desarrollo de una API que gestiona la información sobre vacunación en Panamá. La
 solución está diseñada utilizando tecnologías como Java con Spring Boot y SQL Server, y se enfoca en varios aspectos
-clave,
-incluyendo la precisión de los datos, la seguridad, la interoperabilidad y la facilidad de uso.
+clave, incluyendo la precisión de los datos, la seguridad, la interoperabilidad y la facilidad de uso.
 
 :construction: Proyecto mejorado lentamente en los tiempos libres :construction:
 
@@ -31,18 +30,16 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 ## :warning: Limitaciones actuales de la API
 
 - Los roles es una entidad que se puede modificar posterior a la creación del enum utilizado por la API al verificar los
-  roles y su jerarquía.
-  Se debe modificar a medida que los roles cambien.
-- Se valida el formato del email mas no su dominio existente.
+  roles y su jerarquía. Se debe modificar a medida que los roles cambien.
+- Se valida el formato del email mas no si su dominio existe.
 - La v1 de la API está limitada en:
-    - Búsquedas por ID, por ejemplo no puedes buscar un paciente por su fecha de nacimiento solo por su CIP. Como
-      paliativo a esto se utilizan funciones.
     - No hay endpoint u operaciones asíncronas.
+    - No hay filtros de búsquedas.
+    - No paginación de resultados.
 - De las reglas de vacunación en el proyecto solo implementamos: la edad mínima, intervalo entre primera y segunda
   dosis.
 - Aún no se implementan las reglas de negocio para manejar esquemas especiales de vacunación para niños rezagados,
-  mujeres embarazadas y
-  otras poblaciones específicas.
+  mujeres embarazadas y otras poblaciones específicas.
 - El listado de vacunas (por lo tanto, enfermedades, síntomas y 1 fabricante por vacuna) se mantiene
   el [esquema de vacunación de Panamá 2023 abril](https://www.spp.com.pa/publicaciones/documentos-interes/vacunacion/ESQUEMA-DE-VACUNACION_2023_3Abril.pdf).
 
@@ -91,10 +88,11 @@ y efectividad del sistema de salud en el manejo de la información sobre vacunac
 - Se implementó una [convención de nombres](https://blog.sqlauthority.com/i/dl/SQLServerGuideLines.pdf), brindada
   por [Pinal Dave](https://blog.sqlauthority.com/) en su blog, modificada.
 - Los tipos de datos fueron cambiados para mejorar rendimiento y concurrencia.
+- Protección de los datos y reglas del negocio incrementada con más constraint y triggers.
 - Se centralizó el manejo de usuarios, roles y permisos, delegando la autorización a los sistemas.
 - Se añadieron índices para optimizar las búsquedas.
-- Las funciones devuelven columnas sin alias; los alias se usan solo en las vistas.
-- Más procedimientos almacenados para facilitar transacciones comunes.
+- Las funciones devuelven columnas sin alias; los alias se usan solo en las vistas, además se adicionan columnas id a las vistas.
+- Más procedimientos almacenados para facilitar transacciones comunes. Se recomienda crear operaciones propias a los sistemas.
 - Se define el campo "licencia" para los fabricantes puedan utilizarlo como CIP de su usuario, esto facilita la búsqueda
   del fabricante con su JWT.
 - Más datos de pruebas.
@@ -111,13 +109,12 @@ y efectividad del sistema de salud en el manejo de la información sobre vacunac
 - Manejar con otros u más datos personales la recuperación de contraseña del usuario, similar a Panamá Digital.
 - Migrar el OAuth Server de JWT
   hacia [Auth0](https://auth0.com/docs/quickstart/backend/java-spring-security5/interactive).
-    - Utilizar
-      un [Authentication Flow seguro](https://auth0.com/docs/get-started/authentication-and-authorization-flow#authorization-code-flow-with-enhanced-privacy-protection)
+    - Utilizar un [Authentication Flow seguro](https://auth0.com/docs/get-started/authentication-and-authorization-flow#authorization-code-flow-with-enhanced-privacy-protection)
       de Auth0, garantizando la seguridad y confidencialidad de la data.
     - Con este feature abre la posibilidad de tener todos los JWT con las mismas credenciales entre varios sistemas y
       poder guardarlos en la BD de logs sugerida.
 - Precisión en la Edad de los Pacientes: Utilizar eventos programados o jobs de SQL Server Agent para actualizar la edad
-  de los pacientes anualmente en su cumpleaños.
+  de los pacientes diariamente si lo necesitan.
 - Implementar un sistema de autocompletado para evitar duplicidades y mejorar la precisión en la base de datos.
 - Crear [índices de texto](https://learn.microsoft.com/es-es/sql/t-sql/statements/create-fulltext-index-transact-sql?view=sql-server-ver16)
 en el idioma de los datos para facilitar este feature y reducir el tiempo de búsquedas.
@@ -127,6 +124,7 @@ en el idioma de los datos para facilitar este feature y reducir el tiempo de bú
   niños rezagados, mujeres embarazadas y otras poblaciones específicas.
 - Autenticación de 2 Factores.
 - Cifrar los datos sensibles en la base de datos y comunicación de los sistemas.
+- Evitar duplicidad de información por ejemplo: Mismo teléfono en tabla usuarios y pacientes.
 - Se está planeando para la v2:
     - Filtrado de respuestas. Con este feature se completa la migración de la versión desktoapp.
 
@@ -144,7 +142,7 @@ en el idioma de los datos para facilitar este feature y reducir el tiempo de bú
 
 > [!NOTE]
 > Para disfrutar de un buen ambiente para **programar** necesita Java JDK 21 ya instalado.
-> Maven viene de forma portable con maven wrapper. Docker y Git son necesarios.
+> [Maven](https://maven.apache.org/) viene de forma portable con maven wrapper. [Docker](https://www.docker.com/) y [Git](https://git-scm.com/) son necesarios.
 
 Sigue estos pasos para clonar el repositorio:
 
@@ -160,9 +158,9 @@ git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
 
 ### 3. Crear entorno propio para deploy
 
-1. Modificar vacunas-init.sql el login colocando una contraseña segura. 
-Crear contraseñas con [BCrypt](https://bcrypt-generator.com/) para los usuarios con roles superiores, colocarlo en 3 parámetro del procedimiento sp_vacunas_gestionar_usuarios, últimas líneas de vacunas-init.sql
-2. Con las credenciales anteriores colocarlo en su .env DB_USER y DB_PASSWORD.
+1. Modificar vacunas-init.sql el login colocando un usuario y una contraseña segura al inicio del script. 
+Crear contraseñas con [BCrypt](https://bcrypt-generator.com/) para los usuarios con roles superiores, colocarlo en el parámetro de 'hash' del procedimiento sp_vacunas_gestionar_usuario, últimas líneas comentadas de vacunas-init.sql
+2. Con las credenciales anteriores del login colocarlo en su .env DB_USER y DB_PASSWORD.
     - Recordatorio: Al estar en docker la URL de la base de datos no es localhost sino la IP del host y el puerto
       externo que coloquemos, inicialmente 1440.
     - Colocar characterEncoding=UTF-8;useUnicode=true al final de la URL para mostrar los carácteres del español.
@@ -197,7 +195,9 @@ Crear contraseñas con [BCrypt](https://bcrypt-generator.com/) para los usuarios
    Utilizando [docker desktop](https://www.docker.com/products/docker-desktop/) podrá ver los 2 contenedores, revise el
    log de sql_server_vacunas, una de las últimas instrucciones debe ser
     ``` sql
-    (X rows affected)
+    (1 row affected)
+    -----------------------------------FIN------------------------------------------------
+    ...
     Fin de la inicialización vacunas Panamá
     Changed database context to 'master'.
     ```
@@ -232,13 +232,16 @@ Observación: Si cambia el puerto que se expone en docker-compose.yaml debe apun
     ``` bash
     docker-compose up --build -d bd-vacunas 
     ```
-2. Utilizando el IDE integrado con Maven o el siguiente comando:
-    ```bash
-    mvn clean spring-boot:run
+2. Utilizando el IDE integrado con Maven o el siguiente comando en Windows:
+    ```powershell
+    ./mvnw.cmd clean spring-boot:run
     ```
+   u otros SO:
+   ```bash
+   ./mvnw clean spring-boot:run
+   ```
 3. Utilizar el cliente Postman o su propio API client al endpoint configurado.
 
 Cualquier error verificar la versión del Java JDK 21, tu archivo .env, certificado RSA mínima 2056,
 la base de datos esté levantada y con las credenciales correctas, el login tiene su usuario con los permisos mínimos
-requeridos,
-todas las tablas y datos iniciales esten presentes.
+requeridos, todas las tablas y datos iniciales esten presentes.

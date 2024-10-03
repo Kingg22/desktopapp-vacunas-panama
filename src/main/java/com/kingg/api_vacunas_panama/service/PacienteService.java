@@ -1,29 +1,36 @@
 package com.kingg.api_vacunas_panama.service;
 
+import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
 import com.kingg.api_vacunas_panama.persistence.repository.PacienteRepository;
-import com.kingg.api_vacunas_panama.util.mapper.PacienteMapper;
+import com.kingg.api_vacunas_panama.util.ContentResponse;
+import com.kingg.api_vacunas_panama.util.ResponseCode;
+import com.kingg.api_vacunas_panama.web.dto.ViewPacienteVacunaEnfermedadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
+/**
+ * Service for {@link Paciente}.
+ * Extends {@link PersonaService} to inherit methods for directly modifying all details related to a {@link Paciente}.
+ * This service allows for comprehensive management of patient information and integrates with
+ * the underlying personal data structure.
+ */
 @Service
 @RequiredArgsConstructor
 public class PacienteService {
-    private final PacienteMapper pacienteMapper;
     private final PacienteRepository pacienteRepository;
 
-    public Map<String, Object> getViewVacunaEnfermedad(String cedula) {
-        return pacienteRepository.findById(cedula)
-                .map(paciente -> Map.of(
-                        "paciente", pacienteMapper.pacienteToDto(paciente),
-                        "view_vacuna_enfermedad", pacienteRepository.findAllFromViewVacunaEnfermedad(cedula)
-                ))
-                .orElseGet(() -> Map.of(
-                        "paciente", "",
-                        "view_vacuna_enfermedad", List.of()
-                ));
+    public ContentResponse getViewVacunaEnfermedad(UUID id) {
+        ContentResponse response = new ContentResponse();
+        List<ViewPacienteVacunaEnfermedadDto> view = pacienteRepository.findAllFromViewVacunaEnfermedad(id);
+        if (view.isEmpty()) {
+            response.addError(ResponseCode.NOT_FOUND.toString(), "El paciente no tiene dosis registradas");
+        } else {
+            response.addData("view_vacuna_enfermedad", view);
+        }
+        return response;
     }
 
 }

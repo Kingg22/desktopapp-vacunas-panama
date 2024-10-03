@@ -1,9 +1,12 @@
 package com.kingg.api_vacunas_panama.web.controller;
 
+import com.kingg.api_vacunas_panama.persistence.entity.*;
+import com.kingg.api_vacunas_panama.service.PersonaService;
 import com.kingg.api_vacunas_panama.service.TokenService;
 import com.kingg.api_vacunas_panama.service.UsuarioManagementService;
+import com.kingg.api_vacunas_panama.util.ContentResponse;
+import com.kingg.api_vacunas_panama.util.ResponseCode;
 import com.kingg.api_vacunas_panama.util.ResponseUtil;
-import com.kingg.api_vacunas_panama.util.RolesEnum;
 import com.kingg.api_vacunas_panama.web.dto.LoginDto;
 import com.kingg.api_vacunas_panama.web.dto.RestoreDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
@@ -18,137 +21,153 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
+/**
+ * Controller for {@link Usuario} registration and management, {@link Rol} and {@link Permiso}.
+ * <p>
+ * This controller handles operations related to registering users and managing their roles and associated entities
+ * (e.g., {@link Paciente}, {@link Doctor}, {@link Fabricante}). It ensures that users are linked to an existing {@link Persona} or {@link Entidad}
+ * and properly assigned roles.
+ *
+ * <p><b>Response Format:</b> The response for registration and related endpoints typically includes:</p>
+ * <ul>
+ *   <li>User details (e.g., username, roles, etc.).</li>
+ *   <li>Associated {@link Persona} or {@link Entidad} information (e.g., {@link Paciente}, {@link Doctor}, {@link Fabricante})
+ *   if applicable.</li>
+ *   <li>A JWT token, which is only generated if the associated persona or entity has an active (validated) status.</li>
+ * </ul>
+ * <p>
+ * For cases where both the {@link Persona}/{@link Entidad} and the {@link Usuario} need to created in a single request,
+ * a different endpoint should be used.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/vacunacion/v1/account", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsuarioController {
     private final TokenService tokenService;
     private final UsuarioManagementService usuarioManagementService;
+    private final PersonaService personaService;
     private final AuthenticationManager authenticationManager;
     private final CompromisedPasswordChecker compromisedPasswordChecker;
 
+    /**
+     * Handles user registration.
+     * <p>
+     * First, it checks if the current {@link Authentication} is for an authenticated user with sufficient permissions
+     * to create users with lower {@link Rol}. If not authenticated, it allows registering a {@link Paciente}.
+     * It also validates tha data to be registered (e.g., username, email) is not currently in use.
+     * <p>
+     * If all validations pass, the {@link Usuario} is created.
+     * <p><b>Note:</b> The user must be assigned roles, and empty roles are not allowed.
+     * If the associated entities is not created, the request will be rejected.</p>
+     *
+     * @param usuarioDto     the data transfer object containing the user registration details
+     * @param authentication the authentication object representing the current user (if any)
+     * @param request        the HTTP request object containing additional request data
+     * @return a {@link ResponseEntity} containing the registration result, including user details, associated {@link Persona} or {@link Entidad}
+     * information, and a token if the {@link Persona} or {@link Entidad} is validated and active.
+     */
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody @Valid UsuarioDto usuarioDto, Authentication authentication, HttpServletRequest request) {
         Map<String, Object> status = new LinkedHashMap<>();
-        MultiValueMap<String, Object> errors = new LinkedMultiValueMap<>();
+        ContentResponse contentResponse = new ContentResponse();
+
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             if (!usuarioDto.roles().stream().allMatch(rolDto -> rolDto.nombre().equalsIgnoreCase("Paciente"))) {
-                errors.add("message", "Only patients can register without authentication");
+                contentResponse.addError("code", ResponseCode.MISSING_ROLE_OR_PERMISSION.toString());
+                contentResponse.addError("message", "Solo pacientes pueden registrarse sin autenticación");
             }
         } else {
-            List<String> authenticatedAuthorities = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .toList();
-            List<RolesEnum> authenticatedRoles = authenticatedAuthorities.stream()
-                    .map(RolesEnum::valueOf)
-                    .toList();
-
-            if (!usuarioDto.roles().stream()
-                    .allMatch(rolDto -> usuarioManagementService.canRegisterRole(rolDto, authenticatedRoles))) {
-                errors.add("message", "You cannot assign roles higher than your own role");
-            }
-
-            if (!usuarioManagementService.hasUserManagementPermissions(authenticatedAuthorities)) {
-                errors.add("message", "You don't have permission to register other roles");
-            }
+            usuarioManagementService.validateAuthoritiesRegister(usuarioDto, contentResponse, authentication);
         }
-        if (!errors.isEmpty()) {
+        if (!contentResponse.hasErrors()) {
+            UsuarioDto saveUser = usuarioManagementService.createUser(usuarioDto, contentResponse);
+            if (!contentResponse.hasErrors()) {
+                status.put("code", HttpStatus.CREATED.value());
+                status.put("message", "Successful user creation");
+                contentResponse.addData("user", saveUser);
+                contentResponse.addData("token", tokenService.generateToken(saveUser));
+            } else {
+                status.put("code", HttpStatus.BAD_REQUEST.value());
+                status.put("message", ResponseCode.VALIDATION_FAILED.toString());
+            }
+        } else {
             status.put("code", HttpStatus.FORBIDDEN.value());
             status.put("message", "Insufficient authorities");
-            return ResponseEntity.badRequest().body(ResponseUtil.createResponse(status, Map.of(), errors, null, request));
         }
-
-        if (usuarioManagementService.isCedulaRegistered(usuarioDto.cedula())) {
-            errors.add("message", "Cédula is already registered");
-        }
-        if (usuarioManagementService.isUsernameRegistered(usuarioDto.username())) {
-            errors.add("message", "Username is already used");
-        }
-        if (usuarioManagementService.isCorreoRegistered(usuarioDto.email())) {
-            errors.add("message", "Email is already registered");
-        }
-        if (compromisedPasswordChecker.check(usuarioDto.password()).isCompromised()) {
-            errors.add("code", "COMPROMISED_PASSWORD");
-            errors.add("message", "The password you provided is compromised. Please use another one");
-        }
-        if (!errors.isEmpty()) {
-            status.put("code", HttpStatus.BAD_REQUEST.value());
-            status.put("message", "Validation failed");
-            return ResponseEntity.badRequest().body(ResponseUtil.createResponse(status, Map.of(), errors, null, request));
-        }
-
-        UsuarioDto saveUser = usuarioManagementService.createUser(usuarioDto);
-        status.put("code", HttpStatus.CREATED.value());
-        status.put("message", "Successful user creation");
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put("user", saveUser);
-        data.put("token", tokenService.generateToken(saveUser));
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseUtil.createResponse(status, data, null, null, request));
+        return ResponseUtil.sendResponse(status, contentResponse, request);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody @Valid LoginDto loginDto, HttpServletRequest request) {
         Map<String, Object> status = new LinkedHashMap<>();
-        MultiValueMap<String, Object> errors = new LinkedMultiValueMap<>();
+        ContentResponse contentResponse = new ContentResponse();
+
         if (compromisedPasswordChecker.check(loginDto.password()).isCompromised()) {
             status.put("code", HttpStatus.TEMPORARY_REDIRECT.value());
             status.put("message", "Please reset your password in the given uri");
             status.put("uri", "/vacunacion/v1/account/restore");
-            errors.add("code", "COMPROMISED_PASSWORD");
-            errors.add("message", "The password you provided is compromised");
-            return ResponseEntity.badRequest().body(ResponseUtil.createResponse(status, Map.of(), errors, null, request));
+            contentResponse.addError("code", ResponseCode.COMPROMISED_PASSWORD.toString());
+            contentResponse.addError("message", "The password you provided is compromised");
+        } else {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    loginDto.username(),
+                    loginDto.password()
+            ));
+            if (authentication != null && authentication.isAuthenticated()) {
+                UsuarioDto user = usuarioManagementService.getUsuarioDto(UUID.fromString(authentication.getName()));
+                status.put("code", HttpStatus.OK.value());
+                status.put("message", "Login successful");
+                contentResponse.addData("user", user);
+                contentResponse.addData("token", tokenService.generateToken(authentication));
+            }
         }
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.username(),
-                loginDto.password()
-        ));
-        UsuarioDto user = usuarioManagementService.getUsuario(authentication.getName());
-        status.put("code", HttpStatus.OK.value());
-        status.put("message", "Login successful");
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put("user", user);
-        data.put("token", tokenService.generateToken(authentication));
-        return ResponseEntity.ok(ResponseUtil.createResponse(status, data, null, null, request));
+        return ResponseUtil.sendResponse(status, contentResponse, request);
     }
 
     @PatchMapping("/restore")
     public ResponseEntity<Object> restore(@RequestBody @Valid RestoreDto restoreDto, HttpServletRequest request) {
         Map<String, Object> status = new LinkedHashMap<>();
-        MultiValueMap<String, Object> errors = new LinkedMultiValueMap<>();
+        ContentResponse contentResponse = new ContentResponse();
         if (!compromisedPasswordChecker.check(restoreDto.new_password()).isCompromised()) {
             try {
-                usuarioManagementService.changePassword(restoreDto.username(), restoreDto.new_password(), restoreDto.fecha_nacimiento_usuario());
-                status.put("code", HttpStatus.OK.value());
-                status.put("message", "Password restored successfully");
-                return ResponseEntity.ok(ResponseUtil.createResponse(status, Map.of(), null, null, request));
+                Optional<Persona> opPersona = personaService.getPersona(restoreDto.username());
+                if (opPersona.isPresent()) {
+                    usuarioManagementService.changePasswordPersonas(opPersona.get(), restoreDto.new_password(), restoreDto.fecha_nacimiento());
+                    status.put("code", HttpStatus.OK.value());
+                    status.put("message", "Password restored successfully");
+                } else {
+                    status.put("code", HttpStatus.NOT_FOUND.value());
+                    status.put("message", "Not found person with identifier");
+                    contentResponse.addError("code", ResponseCode.NOT_FOUND.toString());
+                    contentResponse.addError("message", "La persona con la identificación dada no fue encontrada");
+                }
             } catch (IllegalArgumentException argumentException) {
                 status.put("code", HttpStatus.BAD_REQUEST.value());
                 status.put("message", "Failed to change password");
-                errors.add("message", argumentException.getMessage());
-                return ResponseEntity.badRequest().body(ResponseUtil.createResponse(status, Map.of(), errors, null, request));
+                contentResponse.addError("code", ResponseCode.VALIDATION_FAILED.toString());
+                contentResponse.addError("message", argumentException.getMessage());
             }
         } else {
             status.put("code", HttpStatus.BAD_REQUEST.value());
             status.put("message", "Insecure password");
-            errors.add("code", "COMPROMISED_PASSWORD");
-            errors.add("message", "new password is compromised, please use another");
-            return ResponseEntity.badRequest().body(ResponseUtil.createResponse(status, Map.of(), errors, null, request));
+            contentResponse.addError("code", ResponseCode.COMPROMISED_PASSWORD.toString());
+            contentResponse.addError("message", "La nueva contraseña está comprometida, por favor usar otra contraseña segura");
         }
+        return ResponseUtil.sendResponse(status, contentResponse, request);
     }
 
     @GetMapping
     public ResponseEntity<Object> profile(Authentication authentication, HttpServletRequest request) {
-        UsuarioDto user = usuarioManagementService.getUsuario(authentication.getName());
-        return ResponseEntity.ok(ResponseUtil.createResponse(Map.of("code", HttpStatus.OK.value()), Map.of("user", user), null, null, request));
+        ContentResponse contentResponse = new ContentResponse();
+        contentResponse.addData("user", usuarioManagementService.getUsuarioDto(UUID.fromString(authentication.getName())));
+        return ResponseUtil.sendResponse(Map.of("code", HttpStatus.OK.value()), contentResponse, request);
     }
 
 }

@@ -20,21 +20,21 @@ import java.util.Set;
 public class Distrito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_distrito", columnDefinition = "tinyint not null")
+    @Column(name = "id", columnDefinition = "tinyint not null")
     private Short id;
 
     @Size(max = 100)
     @NotNull
     @Nationalized
-    @Column(name = "nombre_distrito", nullable = false, length = 100)
-    private String nombreDistrito;
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String nombre;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_provincia", nullable = false)
+    @JoinColumn(name = "provincia", nullable = false)
     private Provincia idProvincia;
 
-    @OneToMany(mappedBy = "idDistrito")
+    @OneToMany(mappedBy = "distrito")
     @JsonBackReference
     private Set<Direccion> direcciones = new LinkedHashSet<>();
 

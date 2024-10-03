@@ -33,7 +33,7 @@ public enum NumDosisEnum {
                 return newDosis == REFUERZO || newDosis == PRIMER_REFUERZO;
             }
             case REFUERZO -> {
-                return newDosis == PRIMER_REFUERZO;
+                return newDosis == PRIMER_REFUERZO || newDosis == REFUERZO;
             }
             case PRIMER_REFUERZO -> {
                 return newDosis == SEGUNDO_REFUERZO;

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +23,10 @@ public class PacienteController {
 
     @GetMapping
     public ResponseEntity<Object> getPaciente(Authentication authentication, HttpServletRequest request) {
-        return ResponseEntity.ok(ResponseUtil.createResponse(Map.of("code", HttpStatus.OK.value()), pacienteService.getViewVacunaEnfermedad(authentication.getName()), null, null, request));
+        return ResponseUtil.sendResponse(
+                Map.of("code", HttpStatus.OK.value()),
+                pacienteService.getViewVacunaEnfermedad(UUID.fromString(authentication.getName())),
+                request);
     }
 
 }

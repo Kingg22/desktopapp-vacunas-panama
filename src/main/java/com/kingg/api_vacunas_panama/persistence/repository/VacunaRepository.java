@@ -7,6 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface VacunaRepository extends JpaRepository<Vacuna, UUID> {
-    Optional<Vacuna> findByNombreVacuna(String nombre);
+    Optional<Vacuna> findByNombre(String nombre);
 
 }

@@ -19,13 +19,13 @@ public class RolesPermisos {
     @MapsId("idRol")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_rol", nullable = false)
+    @JoinColumn(name = "rol", nullable = false)
     private Rol idRol;
 
     @MapsId("idPermiso")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_permiso", nullable = false)
+    @JoinColumn(name = "permiso", nullable = false)
     private Permiso idPermiso;
 
 }

@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-
 public interface DistritoRepository extends JpaRepository<Distrito, Short> {
 
-    Optional<Distrito> findByNombreDistrito(String nombre);
+    Optional<Distrito> findByNombre(String nombre);
+
 }

@@ -2,6 +2,7 @@ package com.kingg.api_vacunas_panama.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.kingg.api_vacunas_panama.util.RolesEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -23,24 +24,24 @@ import java.util.Set;
 public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rol", nullable = false)
+    @Column(name = "id", nullable = false)
     private Short id;
 
     @Size(max = 100)
     @NotNull
     @Nationalized
-    @Column(name = "nombre_rol", nullable = false, length = 100)
-    private String nombreRol;
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String nombre;
 
     @Size(max = 100)
     @Nationalized
-    @Column(name = "descripcion_rol", length = 100)
-    private String descripcionRol;
+    @Column(name = "descripcion", length = 100)
+    private String descripcion;
 
     @ManyToMany
     @JoinTable(name = "roles_permisos",
-            joinColumns = @JoinColumn(name = "id_rol"),
-            inverseJoinColumns = @JoinColumn(name = "id_permiso"))
+            joinColumns = @JoinColumn(name = "rol"),
+            inverseJoinColumns = @JoinColumn(name = "permiso"))
     @JsonManagedReference
     private Set<Permiso> permisos = new LinkedHashSet<>();
 
@@ -48,10 +49,14 @@ public class Rol {
     @JsonBackReference
     private Set<Usuario> usuarios = new LinkedHashSet<>();
 
-    public Rol(String nombreRol, String descripcionRol, Set<Permiso> permisos) {
-        this.nombreRol = nombreRol;
-        this.descripcionRol = descripcionRol;
+    public Rol(RolesEnum nombre, String descripcion, Set<Permiso> permisos) {
+        this.nombre = nombre.name();
+        this.descripcion = descripcion;
         this.permisos = permisos;
+    }
+
+    public void setNombre(RolesEnum rol) {
+        this.nombre = rol.name();
     }
 
 }

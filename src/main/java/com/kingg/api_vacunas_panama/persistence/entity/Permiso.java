@@ -22,24 +22,24 @@ import java.util.Set;
 public class Permiso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_permiso", nullable = false)
+    @Column(name = "id", nullable = false)
     private Short id;
 
     @Size(max = 100)
     @NotNull
     @Nationalized
-    @Column(name = "nombre_permiso", nullable = false, length = 100)
-    private String nombrePermiso;
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String nombre;
 
     @Size(max = 100)
     @Nationalized
-    @Column(name = "descripcion_permiso", length = 100)
-    private String descripcionPermiso;
+    @Column(name = "descripcion", length = 100)
+    private String descripcion;
 
     @ManyToMany
     @JoinTable(name = "roles_permisos",
-            joinColumns = @JoinColumn(name = "id_permiso"),
-            inverseJoinColumns = @JoinColumn(name = "id_rol"))
+            joinColumns = @JoinColumn(name = "permiso"),
+            inverseJoinColumns = @JoinColumn(name = "rol"))
     @JsonBackReference
     private Set<Rol> roles = new LinkedHashSet<>();
 

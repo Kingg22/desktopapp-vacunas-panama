@@ -14,9 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "usuarios", indexes = {
-        @Index(name = "uq_usuarios_cedula", columnList = "cedula", unique = true),
-        @Index(name = "ix_usuarios_username", columnList = "usuario", unique = true),
-        @Index(name = "ix_usuarios_email", columnList = "correo_usuario", unique = true)
+        @Index(name = "ix_usuarios_username", columnList = "usuario", unique = true)
 })
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,37 +24,22 @@ import java.util.UUID;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id_usuario", nullable = false)
+    @Column(name = "id", nullable = false)
     private UUID id;
-
-    @Size(max = 20)
-    @NotNull
-    @Nationalized
-    @Column(name = "cedula", nullable = false, length = 20)
-    private String cedula;
 
     @Size(max = 50)
     @Nationalized
     @Column(name = "usuario", length = 50)
     private String username;
 
-    @Size(max = 254)
-    @Nationalized
-    @Column(name = "correo_usuario", length = 254)
-    private String correoUsuario;
-
-    @Size(max = 60)
+    @Size(max = 100)
     @NotNull
     @Nationalized
-    @Column(name = "clave_hash", nullable = false, length = 60)
-    private String claveHash;
+    @Column(name = "clave", nullable = false, length = 100)
+    private String clave;
 
-    @NotNull
-    @Column(name = "fecha_nacimiento", nullable = false)
-    private LocalDateTime fechaNacimiento;
-
-    @Column(name = "disabled")
-    private Boolean disabled;
+    @Transient
+    private boolean disabled;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -69,8 +52,8 @@ public class Usuario {
 
     @ManyToMany
     @JoinTable(name = "usuarios_roles",
-            joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "id_rol"))
+            joinColumns = @JoinColumn(name = "usuario"),
+            inverseJoinColumns = @JoinColumn(name = "rol"))
     @JsonManagedReference
     private Set<Rol> roles = new LinkedHashSet<>();
 

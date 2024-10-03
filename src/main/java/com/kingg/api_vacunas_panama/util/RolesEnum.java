@@ -9,8 +9,8 @@ public enum RolesEnum {
     ENFERMERA(3),
     DOCTOR(4),
     ADMINISTRATIVO(5),
-    AUTORIDAD(6),
-    DEVELOPER(7);
+    DEVELOPER(6),
+    AUTORIDAD(7);
 
     private final int priority;
 

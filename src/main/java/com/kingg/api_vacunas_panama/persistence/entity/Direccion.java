@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Direccion {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id_direccion", nullable = false)
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @Size(max = 150)
@@ -29,20 +29,20 @@ public class Direccion {
     private String direccion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_distrito")
-    private Distrito idDistrito;
+    @JoinColumn(name = "distrito")
+    private Distrito distrito;
 
-    @OneToMany(mappedBy = "idDireccion")
+    @OneToMany(mappedBy = "direccion")
     @JsonBackReference
     private Set<Paciente> pacientes = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "idDireccion")
+    @OneToMany(mappedBy = "direccion")
     @JsonBackReference
     private Set<Sede> sedes = new LinkedHashSet<>();
 
-    public Direccion(String direccion, Distrito idDistrito) {
+    public Direccion(String direccion, Distrito distrito) {
         this.direccion = direccion;
-        this.idDistrito = idDistrito;
+        this.distrito = distrito;
     }
 
 }

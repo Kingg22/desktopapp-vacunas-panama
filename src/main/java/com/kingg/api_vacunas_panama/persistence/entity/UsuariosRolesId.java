@@ -21,11 +21,11 @@ public class UsuariosRolesId implements Serializable {
     @Serial
     private static final long serialVersionUID = -5265922496317860603L;
     @NotNull
-    @Column(name = "id_usuario", nullable = false)
+    @Column(name = "usuario", nullable = false)
     private UUID idUsuario;
 
     @NotNull
-    @Column(name = "id_rol", nullable = false)
+    @Column(name = "rol", nullable = false)
     private Short idRol;
 
     @Override

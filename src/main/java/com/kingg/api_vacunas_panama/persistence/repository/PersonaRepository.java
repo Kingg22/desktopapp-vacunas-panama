@@ -12,10 +12,10 @@ public interface PersonaRepository extends JpaRepository<Persona, UUID> {
 
     @Query("SELECT p " +
             "FROM Persona p " +
-            "WHERE (:cedula IS NOT NULL AND p.cedula = :cedula) OR " +
-            "(:pasaporte IS NOT NULL AND p.pasaporte = :pasaporte) OR " +
-            "(:correo IS NOT NULL AND p.correo = :correo) OR " +
-            "(:username IS NOT NULL AND p.usuario.username = :username)")
+            "WHERE (:cedula IS NULL OR p.cedula = :cedula) OR " +
+            "(:pasaporte IS NULL OR p.pasaporte = :pasaporte) OR " +
+            "(:correo IS NULL OR p.correo = :correo) OR " +
+            "(:username IS NULL OR p.usuario.username = :username)")
     Optional<Persona> findByCedulaOrPasaporteOrCorreoOrUsername(@Param("cedula") String cedula,
                                                                 @Param("pasaporte") String pasaporte,
                                                                 @Param("correo") String correo,

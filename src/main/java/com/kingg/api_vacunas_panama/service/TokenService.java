@@ -36,9 +36,12 @@ public class TokenService {
 
     public String generateToken(UsuarioDto usuario) {
         Collection<String> rolesPermisos = usuario.roles().stream()
-                .flatMap(role -> Stream.concat(
-                        Stream.of("ROLE_" + role.nombre().toUpperCase()),
-                        role.permisos().stream().map(PermisoDto::nombre))
+                .flatMap(role -> {
+                            assert role.permisos() != null;
+                            return Stream.concat(
+                                    Stream.of("ROLE_" + role.nombre().toUpperCase()),
+                                    role.permisos().stream().map(PermisoDto::nombre));
+                        }
                 ).toList();
 
         return createToken(usuario.id(), rolesPermisos);
@@ -58,7 +61,7 @@ public class TokenService {
                 .issuedAt(now)
                 .notBefore(now)
                 .expiresAt(now.plusSeconds(expirationTime))
-                .subject((String) subject)
+                .subject(subject.toString())
                 .claim("scope", rolesPermisos)
                 .id(UUID.randomUUID().toString())
                 .build();

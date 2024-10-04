@@ -3,9 +3,9 @@ package com.kingg.api_vacunas_panama.service;
 import com.kingg.api_vacunas_panama.persistence.entity.Fabricante;
 import com.kingg.api_vacunas_panama.persistence.entity.Persona;
 import com.kingg.api_vacunas_panama.persistence.repository.UsuarioRepository;
-import com.kingg.api_vacunas_panama.util.ContentResponse;
+import com.kingg.api_vacunas_panama.util.ApiContentResponse;
+import com.kingg.api_vacunas_panama.util.ApiResponseCode;
 import com.kingg.api_vacunas_panama.util.FormatCedulaUtil;
-import com.kingg.api_vacunas_panama.util.ResponseCode;
 import com.kingg.api_vacunas_panama.util.RolesEnum;
 import com.kingg.api_vacunas_panama.web.dto.RolDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
@@ -27,34 +27,34 @@ class UsuarioValidationService {
     private final FabricanteService fabricanteService;
     private final UsuarioRepository usuarioRepository;
 
-    public void validateRegistration(UsuarioDto usuarioDto, ContentResponse contentResponse) {
+    public void validateRegistration(UsuarioDto usuarioDto, ApiContentResponse apiContentResponse) {
         if (isUsernameRegistered(usuarioDto.username())) {
-            contentResponse.addError("code", ResponseCode.ALREADY_TAKEN.toString());
-            contentResponse.addError("message", "El nombre de usuario ya está en uso");
+            apiContentResponse.addError("code", ApiResponseCode.ALREADY_TAKEN.toString());
+            apiContentResponse.addError("message", "El nombre de usuario ya está en uso");
         }
         if (compromisedPasswordChecker.check(usuarioDto.password()).isCompromised()) {
-            contentResponse.addError("code", ResponseCode.COMPROMISED_PASSWORD.toString());
-            contentResponse.addError("message", "La contraseña proporcionada está comprometida. Por favor use otra contraseña");
+            apiContentResponse.addError("code", ApiResponseCode.COMPROMISED_PASSWORD.toString());
+            apiContentResponse.addError("message", "La contraseña proporcionada está comprometida. Por favor use otra contraseña");
         }
         if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.nombre().equalsIgnoreCase("Fabricante"))) {
             if (usuarioDto.licencia_fabricante() == null) {
-                contentResponse.addError("code", ResponseCode.MISSING_INFORMATION.toString());
-                contentResponse.addError("message", "Los fabricantes requieren licencia autorizada por Dirección Nacional de Farmacia y Drogas del MINSA");
+                apiContentResponse.addError("code", ApiResponseCode.MISSING_INFORMATION.toString());
+                apiContentResponse.addError("message", "Los fabricantes requieren licencia autorizada por Dirección Nacional de Farmacia y Drogas del MINSA");
             } else {
-                validateRegistrationFabricante(usuarioDto, contentResponse);
+                validateRegistrationFabricante(usuarioDto, apiContentResponse);
             }
         } else {
             if (usuarioDto.cedula() == null && usuarioDto.pasaporte() == null) {
-                contentResponse.addError("code", ResponseCode.MISSING_INFORMATION.toString());
-                contentResponse.addError("message", "Las personas requieren una identificación personal como cédula panameña o pasaporte");
+                apiContentResponse.addError("code", ApiResponseCode.MISSING_INFORMATION.toString());
+                apiContentResponse.addError("message", "Las personas requieren una identificación personal como cédula panameña o pasaporte");
             } else {
-                validateRegistrationPersona(usuarioDto, contentResponse);
+                validateRegistrationPersona(usuarioDto, apiContentResponse);
             }
         }
     }
 
 
-    void validateRegistrationPersona(UsuarioDto usuarioDto, ContentResponse contentResponse) {
+    void validateRegistrationPersona(UsuarioDto usuarioDto, ApiContentResponse apiContentResponse) {
         String cedula = null;
         if (usuarioDto.cedula() != null) {
             cedula = FormatCedulaUtil.formatCedula(usuarioDto.cedula());
@@ -62,16 +62,16 @@ class UsuarioValidationService {
         String identifier = cedula != null ? cedula : usuarioDto.pasaporte();
         Optional<Persona> optPersona = personaService.getPersona(identifier);
         if (optPersona.isEmpty()) {
-            contentResponse.addError("code", ResponseCode.NOT_FOUND.toString());
-            contentResponse.addError("message", "La persona con la identificación personal proporcionada no fue encontrado");
+            apiContentResponse.addError("code", ApiResponseCode.NOT_FOUND.toString());
+            apiContentResponse.addError("message", "La persona con la identificación personal proporcionada no fue encontrado");
         }
     }
 
-    void validateRegistrationFabricante(UsuarioDto usuarioDto, ContentResponse contentResponse) {
+    void validateRegistrationFabricante(UsuarioDto usuarioDto, ApiContentResponse apiContentResponse) {
         Optional<Fabricante> optFabricante = fabricanteService.getFabricante(usuarioDto.licencia_fabricante());
         if (optFabricante.isEmpty()) {
-            contentResponse.addError("code", ResponseCode.NOT_FOUND.toString());
-            contentResponse.addError("message", "El fabricante con la licencia proporcionada no fue encontrado");
+            apiContentResponse.addError("code", ApiResponseCode.NOT_FOUND.toString());
+            apiContentResponse.addError("message", "El fabricante con la licencia proporcionada no fue encontrado");
         }
     }
 

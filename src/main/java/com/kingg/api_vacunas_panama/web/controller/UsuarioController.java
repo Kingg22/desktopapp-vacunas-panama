@@ -4,13 +4,12 @@ import com.kingg.api_vacunas_panama.persistence.entity.*;
 import com.kingg.api_vacunas_panama.service.PersonaService;
 import com.kingg.api_vacunas_panama.service.TokenService;
 import com.kingg.api_vacunas_panama.service.UsuarioManagementService;
-import com.kingg.api_vacunas_panama.util.ContentResponse;
-import com.kingg.api_vacunas_panama.util.ResponseCode;
-import com.kingg.api_vacunas_panama.util.ResponseUtil;
+import com.kingg.api_vacunas_panama.util.ApiContentResponse;
+import com.kingg.api_vacunas_panama.util.ApiResponseCode;
+import com.kingg.api_vacunas_panama.util.ApiResponseUtil;
 import com.kingg.api_vacunas_panama.web.dto.LoginDto;
 import com.kingg.api_vacunas_panama.web.dto.RestoreDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -74,47 +74,47 @@ public class UsuarioController {
      * information, and a token if the {@link Persona} or {@link Entidad} is validated and active.
      */
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody @Valid UsuarioDto usuarioDto, Authentication authentication, HttpServletRequest request) {
+    public ResponseEntity<Object> register(@RequestBody @Valid UsuarioDto usuarioDto, Authentication authentication, ServletWebRequest request) {
         Map<String, Object> status = new LinkedHashMap<>();
-        ContentResponse contentResponse = new ContentResponse();
+        ApiContentResponse apiContentResponse = new ApiContentResponse();
 
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             if (!usuarioDto.roles().stream().allMatch(rolDto -> rolDto.nombre().equalsIgnoreCase("Paciente"))) {
-                contentResponse.addError("code", ResponseCode.MISSING_ROLE_OR_PERMISSION.toString());
-                contentResponse.addError("message", "Solo pacientes pueden registrarse sin autenticación");
+                apiContentResponse.addError("code", ApiResponseCode.MISSING_ROLE_OR_PERMISSION.toString());
+                apiContentResponse.addError("message", "Solo pacientes pueden registrarse sin autenticación");
             }
         } else {
-            usuarioManagementService.validateAuthoritiesRegister(usuarioDto, contentResponse, authentication);
+            usuarioManagementService.validateAuthoritiesRegister(usuarioDto, apiContentResponse, authentication);
         }
-        if (!contentResponse.hasErrors()) {
-            UsuarioDto saveUser = usuarioManagementService.createUser(usuarioDto, contentResponse);
-            if (!contentResponse.hasErrors()) {
+        if (!apiContentResponse.hasErrors()) {
+            UsuarioDto saveUser = usuarioManagementService.createUser(usuarioDto, apiContentResponse);
+            if (!apiContentResponse.hasErrors()) {
                 status.put("code", HttpStatus.CREATED.value());
                 status.put("message", "Successful user creation");
-                contentResponse.addData("user", saveUser);
-                contentResponse.addData("token", tokenService.generateToken(saveUser));
+                apiContentResponse.addData("user", saveUser);
+                apiContentResponse.addData("token", tokenService.generateToken(saveUser));
             } else {
                 status.put("code", HttpStatus.BAD_REQUEST.value());
-                status.put("message", ResponseCode.VALIDATION_FAILED.toString());
+                status.put("message", ApiResponseCode.VALIDATION_FAILED.toString());
             }
         } else {
             status.put("code", HttpStatus.FORBIDDEN.value());
             status.put("message", "Insufficient authorities");
         }
-        return ResponseUtil.sendResponse(status, contentResponse, request);
+        return ApiResponseUtil.sendResponse(status, apiContentResponse, request);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid LoginDto loginDto, HttpServletRequest request) {
+    public ResponseEntity<Object> login(@RequestBody @Valid LoginDto loginDto, ServletWebRequest request) {
         Map<String, Object> status = new LinkedHashMap<>();
-        ContentResponse contentResponse = new ContentResponse();
+        ApiContentResponse apiContentResponse = new ApiContentResponse();
 
         if (compromisedPasswordChecker.check(loginDto.password()).isCompromised()) {
             status.put("code", HttpStatus.TEMPORARY_REDIRECT.value());
             status.put("message", "Please reset your password in the given uri");
             status.put("uri", "/vacunacion/v1/account/restore");
-            contentResponse.addError("code", ResponseCode.COMPROMISED_PASSWORD.toString());
-            contentResponse.addError("message", "The password you provided is compromised");
+            apiContentResponse.addError("code", ApiResponseCode.COMPROMISED_PASSWORD.toString());
+            apiContentResponse.addError("message", "The password you provided is compromised");
         } else {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     loginDto.username(),
@@ -124,17 +124,17 @@ public class UsuarioController {
                 UsuarioDto user = usuarioManagementService.getUsuarioDto(UUID.fromString(authentication.getName()));
                 status.put("code", HttpStatus.OK.value());
                 status.put("message", "Login successful");
-                contentResponse.addData("user", user);
-                contentResponse.addData("token", tokenService.generateToken(authentication));
+                apiContentResponse.addData("user", user);
+                apiContentResponse.addData("token", tokenService.generateToken(authentication));
             }
         }
-        return ResponseUtil.sendResponse(status, contentResponse, request);
+        return ApiResponseUtil.sendResponse(status, apiContentResponse, request);
     }
 
     @PatchMapping("/restore")
-    public ResponseEntity<Object> restore(@RequestBody @Valid RestoreDto restoreDto, HttpServletRequest request) {
+    public ResponseEntity<Object> restore(@RequestBody @Valid RestoreDto restoreDto, ServletWebRequest request) {
         Map<String, Object> status = new LinkedHashMap<>();
-        ContentResponse contentResponse = new ContentResponse();
+        ApiContentResponse apiContentResponse = new ApiContentResponse();
         if (!compromisedPasswordChecker.check(restoreDto.new_password()).isCompromised()) {
             try {
                 Optional<Persona> opPersona = personaService.getPersona(restoreDto.username());
@@ -145,29 +145,29 @@ public class UsuarioController {
                 } else {
                     status.put("code", HttpStatus.NOT_FOUND.value());
                     status.put("message", "Not found person with identifier");
-                    contentResponse.addError("code", ResponseCode.NOT_FOUND.toString());
-                    contentResponse.addError("message", "La persona con la identificación dada no fue encontrada");
+                    apiContentResponse.addError("code", ApiResponseCode.NOT_FOUND.toString());
+                    apiContentResponse.addError("message", "La persona con la identificación dada no fue encontrada");
                 }
             } catch (IllegalArgumentException argumentException) {
                 status.put("code", HttpStatus.BAD_REQUEST.value());
                 status.put("message", "Failed to change password");
-                contentResponse.addError("code", ResponseCode.VALIDATION_FAILED.toString());
-                contentResponse.addError("message", argumentException.getMessage());
+                apiContentResponse.addError("code", ApiResponseCode.VALIDATION_FAILED.toString());
+                apiContentResponse.addError("message", argumentException.getMessage());
             }
         } else {
             status.put("code", HttpStatus.BAD_REQUEST.value());
             status.put("message", "Insecure password");
-            contentResponse.addError("code", ResponseCode.COMPROMISED_PASSWORD.toString());
-            contentResponse.addError("message", "La nueva contraseña está comprometida, por favor usar otra contraseña segura");
+            apiContentResponse.addError("code", ApiResponseCode.COMPROMISED_PASSWORD.toString());
+            apiContentResponse.addError("message", "La nueva contraseña está comprometida, por favor usar otra contraseña segura");
         }
-        return ResponseUtil.sendResponse(status, contentResponse, request);
+        return ApiResponseUtil.sendResponse(status, apiContentResponse, request);
     }
 
     @GetMapping
-    public ResponseEntity<Object> profile(Authentication authentication, HttpServletRequest request) {
-        ContentResponse contentResponse = new ContentResponse();
-        contentResponse.addData("user", usuarioManagementService.getUsuarioDto(UUID.fromString(authentication.getName())));
-        return ResponseUtil.sendResponse(Map.of("code", HttpStatus.OK.value()), contentResponse, request);
+    public ResponseEntity<Object> profile(Authentication authentication, ServletWebRequest request) {
+        ApiContentResponse apiContentResponse = new ApiContentResponse();
+        apiContentResponse.addData("user", usuarioManagementService.getUsuarioDto(UUID.fromString(authentication.getName())));
+        return ApiResponseUtil.sendResponse(Map.of("code", HttpStatus.OK.value()), apiContentResponse, request);
     }
 
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -42,5 +43,15 @@ public class Permiso {
             inverseJoinColumns = @JoinColumn(name = "rol"))
     @JsonBackReference
     private Set<Rol> roles = new LinkedHashSet<>();
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "idPermiso")
+    private Set<RolesPermisos> rolesPermisos = new LinkedHashSet<>();
 
 }

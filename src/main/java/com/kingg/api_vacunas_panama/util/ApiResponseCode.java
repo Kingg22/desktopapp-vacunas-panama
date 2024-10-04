@@ -1,6 +1,6 @@
 package com.kingg.api_vacunas_panama.util;
 
-public enum ResponseCode {
+public enum ApiResponseCode {
     NOT_FOUND,
     VALIDATION_FAILED,
     COMPROMISED_PASSWORD,

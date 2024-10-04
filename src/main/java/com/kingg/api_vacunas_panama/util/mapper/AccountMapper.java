@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
 
-import java.util.Set;
+import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface AccountMapper {
@@ -20,18 +20,17 @@ public interface AccountMapper {
 
     PermisoDto permisoToDto(Permiso permiso);
 
-    Set<Permiso> permisosDtoToPermisos(Set<PermisoDto> permisoDtoSet);
-
     @Mapping(target = "usuarios", ignore = true)
     Rol rolDtoToRol(RolDto rolDto);
 
     RolDto rolToDto(Rol rol);
-
-    Set<Rol> rolesDtoToRoles(Set<RolDto> rolDtoSet);
 
     @Mapping(target = "last_used", source = "lastUsed")
     @Mapping(target = "created_at", source = "createdAt")
     @Mapping(target = "password", source = "clave")
     UsuarioDto usuarioToDto(Usuario usuario);
 
+    List<RolDto> rolListToDtoList(List<Rol> roles);
+
+    List<PermisoDto> permisoListToDtoList(List<Permiso> permisos);
 }

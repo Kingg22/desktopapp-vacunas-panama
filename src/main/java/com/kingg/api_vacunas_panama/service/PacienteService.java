@@ -2,8 +2,8 @@ package com.kingg.api_vacunas_panama.service;
 
 import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
 import com.kingg.api_vacunas_panama.persistence.repository.PacienteRepository;
-import com.kingg.api_vacunas_panama.util.ContentResponse;
-import com.kingg.api_vacunas_panama.util.ResponseCode;
+import com.kingg.api_vacunas_panama.util.ApiContentResponse;
+import com.kingg.api_vacunas_panama.util.ApiResponseCode;
 import com.kingg.api_vacunas_panama.web.dto.ViewPacienteVacunaEnfermedadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,11 +22,11 @@ import java.util.UUID;
 public class PacienteService {
     private final PacienteRepository pacienteRepository;
 
-    public ContentResponse getViewVacunaEnfermedad(UUID id) {
-        ContentResponse response = new ContentResponse();
+    public ApiContentResponse getViewVacunaEnfermedad(UUID id) {
+        ApiContentResponse response = new ApiContentResponse();
         List<ViewPacienteVacunaEnfermedadDto> view = pacienteRepository.findAllFromViewVacunaEnfermedad(id);
         if (view.isEmpty()) {
-            response.addError(ResponseCode.NOT_FOUND.toString(), "El paciente no tiene dosis registradas");
+            response.addError(ApiResponseCode.NOT_FOUND.toString(), "El paciente no tiene dosis registradas");
         } else {
             response.addData("view_vacuna_enfermedad", view);
         }

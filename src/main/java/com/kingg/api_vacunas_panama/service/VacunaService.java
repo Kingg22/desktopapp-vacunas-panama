@@ -6,9 +6,10 @@ import com.kingg.api_vacunas_panama.persistence.entity.Vacuna;
 import com.kingg.api_vacunas_panama.persistence.repository.DosisRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.PacienteRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.VacunaRepository;
-import com.kingg.api_vacunas_panama.util.ContentResponse;
+import com.kingg.api_vacunas_panama.util.ApiContentResponse;
+import com.kingg.api_vacunas_panama.util.ApiResponseCode;
+import com.kingg.api_vacunas_panama.util.IApiResponse;
 import com.kingg.api_vacunas_panama.util.NumDosisEnum;
-import com.kingg.api_vacunas_panama.util.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -49,21 +50,24 @@ public class VacunaService {
         return vacunaRepository.findByNombre(nombreVacuna).map(Vacuna::getId).orElse(null);
     }
 
-    public UUID validateAndGetId(UUID id, String nombre, ContentResponse contentResponse, String tipo, Function<String, UUID> getIdFunction) {
+    public UUID validateAndGetId(UUID id, String nombre, ApiContentResponse apiContentResponse, String tipo, Function<String, UUID> getIdFunction) {
         if (id == null && nombre == null) {
-            contentResponse.addError(tipo, "El ID o nombre del ".concat(tipo).concat(" es requerido"));
+            apiContentResponse.addError(tipo, "El ID o nombre del ".concat(tipo).concat(" es requerido"));
         } else if (id == null) {
-            contentResponse.addWarning("code", ResponseCode.MISSING_INFORMATION.toString());
-            contentResponse.addWarning(tipo, "Procure usar id y no nombres de ".concat(tipo));
+            apiContentResponse.addWarning("code", ApiResponseCode.MISSING_INFORMATION.toString());
+            apiContentResponse.addWarning(tipo, "Procure usar id y no nombres de ".concat(tipo));
             id = getIdFunction.apply(nombre);
             if (id == null) {
-                contentResponse.addError(tipo, "Failed convert nombre to ID");
+                apiContentResponse.addError(tipo, "Failed convert nombre to ID");
             }
         } else {
-            contentResponse.addWarning("code", ResponseCode.NAME_IGNORED_FOR_ID.toString());
-            contentResponse.addWarning(tipo, "El nombre del ".concat(tipo).concat("proporcionado fue ignorado para la operación"));
+            apiContentResponse.addWarning("code", ApiResponseCode.NAME_IGNORED_FOR_ID.toString());
+            apiContentResponse.addWarning(tipo, "El nombre del ".concat(tipo).concat("proporcionado fue ignorado para la operación"));
         }
         return id;
     }
 
+    public void getVacunas(IApiResponse<?, ?, Object> response) {
+        response.addData("vacunas", vacunaRepository.findAllIdAndNombreAndFabricante());
+    }
 }

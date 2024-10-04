@@ -57,4 +57,13 @@ public class Usuario {
     @JsonManagedReference
     private Set<Rol> roles = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "usuario")
+    private Set<Entidad> entidades = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "usuario")
+    private Set<Persona> personas = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "idUsuario")
+    private Set<UsuariosRoles> usuariosRoles = new LinkedHashSet<>();
+
 }

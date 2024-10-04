@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -39,6 +40,13 @@ public class Direccion {
     @OneToMany(mappedBy = "direccion")
     @JsonBackReference
     private Set<Sede> sedes = new LinkedHashSet<>();
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public Direccion(String direccion, Distrito distrito) {
         this.direccion = direccion;

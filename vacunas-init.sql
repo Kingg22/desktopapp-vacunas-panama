@@ -10,10 +10,10 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+/*
 PRINT (N'Creando el login');
 GO
 -- Únicamente las aplicaciones deben tener un login y su user con permisos
-/*
 CREATE LOGIN LOGIN_NAME
     WITH PASSWORD = '',
     DEFAULT_DATABASE = vacunas

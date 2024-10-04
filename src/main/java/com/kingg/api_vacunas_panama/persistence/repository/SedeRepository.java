@@ -1,6 +1,7 @@
 package com.kingg.api_vacunas_panama.persistence.repository;
 
 import com.kingg.api_vacunas_panama.persistence.entity.Sede;
+import com.kingg.api_vacunas_panama.web.dto.UUIdNombreDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,7 +13,7 @@ public interface SedeRepository extends JpaRepository<Sede, UUID> {
 
     Optional<Sede> findByNombre(String nombre);
 
-    @Query("SELECT s.nombre FROM Sede s")
-    List<String> findAllNombre();
+    @Query("SELECT new com.kingg.api_vacunas_panama.web.dto.UUIdNombreDto(s.id, s.nombre) FROM Sede s WHERE s.estado LIKE 'ACTIVO'")
+    List<UUIdNombreDto> findAllIdAndNombre();
 
 }

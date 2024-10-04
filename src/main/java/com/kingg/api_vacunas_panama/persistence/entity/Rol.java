@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -48,6 +49,19 @@ public class Rol {
     @ManyToMany(mappedBy = "roles")
     @JsonBackReference
     private Set<Usuario> usuarios = new LinkedHashSet<>();
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "idRol")
+    private Set<RolesPermisos> rolesPermisos = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "idRol")
+    private Set<UsuariosRoles> usuariosRoles = new LinkedHashSet<>();
 
     public Rol(RolesEnum nombre, String descripcion, Set<Permiso> permisos) {
         this.nombre = nombre.name();

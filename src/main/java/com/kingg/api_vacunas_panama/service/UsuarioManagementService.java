@@ -5,10 +5,7 @@ import com.kingg.api_vacunas_panama.persistence.entity.Persona;
 import com.kingg.api_vacunas_panama.persistence.entity.Rol;
 import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
 import com.kingg.api_vacunas_panama.persistence.repository.*;
-import com.kingg.api_vacunas_panama.util.ContentResponse;
-import com.kingg.api_vacunas_panama.util.FormatCedulaUtil;
-import com.kingg.api_vacunas_panama.util.ResponseCode;
-import com.kingg.api_vacunas_panama.util.RolesEnum;
+import com.kingg.api_vacunas_panama.util.*;
 import com.kingg.api_vacunas_panama.util.mapper.AccountMapper;
 import com.kingg.api_vacunas_panama.web.dto.PermisoDto;
 import com.kingg.api_vacunas_panama.web.dto.RolDto;
@@ -50,8 +47,8 @@ public class UsuarioManagementService {
     private final UsuarioValidationService validationService;
 
     @Transactional
-    public UsuarioDto createUser(UsuarioDto usuarioDto, ContentResponse contentResponse) {
-        validationService.validateRegistration(usuarioDto, contentResponse);
+    public UsuarioDto createUser(UsuarioDto usuarioDto, ApiContentResponse apiContentResponse) {
+        validationService.validateRegistration(usuarioDto, apiContentResponse);
         Set<Rol> role = usuarioDto.roles().stream()
                 .map(this::convertToRoleExisting)
                 .collect(Collectors.toSet());
@@ -87,7 +84,7 @@ public class UsuarioManagementService {
         usuarioRepository.save(usuario);
     }
 
-    public void validateAuthoritiesRegister(UsuarioDto usuarioDto, ContentResponse contentResponse, Authentication authentication) {
+    public void validateAuthoritiesRegister(UsuarioDto usuarioDto, ApiContentResponse apiContentResponse, Authentication authentication) {
         List<String> authenticatedAuthorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
@@ -96,13 +93,13 @@ public class UsuarioManagementService {
                 .toList();
 
         if (!usuarioDto.roles().stream().allMatch(rolDto -> validationService.canRegisterRole(rolDto, authenticatedRoles))) {
-            contentResponse.addError("code", ResponseCode.ROL_HIERARCHY_VIOLATION.toString());
-            contentResponse.addError("message", "No puede asignar roles superiores a su rol máximo actual");
+            apiContentResponse.addError("code", ApiResponseCode.ROL_HIERARCHY_VIOLATION.toString());
+            apiContentResponse.addError("message", "No puede asignar roles superiores a su rol máximo actual");
         }
 
         if (!validationService.hasUserManagementPermissions(authenticatedAuthorities)) {
-            contentResponse.addError("code", ResponseCode.PERMISSION_DENIED.toString());
-            contentResponse.addError("message", "No tienes permisos para registrar a otros usuarios");
+            apiContentResponse.addError("code", ApiResponseCode.PERMISSION_DENIED.toString());
+            apiContentResponse.addError("message", "No tienes permisos para registrar a otros usuarios");
         }
     }
 
@@ -162,4 +159,11 @@ public class UsuarioManagementService {
         return permisoRepository.findByNombreOrId(permisoDto.nombre(), permisoDto.id()).orElseThrow();
     }
 
+    public void getRoles(IApiResponse<?, ?, Object> response) {
+        response.addData("roles", rolRepository.findAllIdNombre());
+    }
+
+    public void getPermisos(IApiResponse<?, ?, Object> response) {
+        response.addData("permisos", permisoRepository.findAllIdNombre());
+    }
 }

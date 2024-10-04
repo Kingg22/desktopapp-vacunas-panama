@@ -52,6 +52,12 @@ public class Vacuna {
     @OneToMany(mappedBy = "idVacuna")
     private Set<Dosis> dosis = new LinkedHashSet<>();
 
+    @ManyToMany(mappedBy = "vacunas")
+    private Set<Fabricante> fabricantes = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "vacuna")
+    private Set<SedesInventario> sedesInventarios = new LinkedHashSet<>();
+
     public Vacuna(String nombre, Short edadMinimaMeses, Float intervaloDosisMeses) {
         this.nombre = nombre;
         this.edadMinimaMeses = edadMinimaMeses;

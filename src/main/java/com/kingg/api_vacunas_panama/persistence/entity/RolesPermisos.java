@@ -1,11 +1,14 @@
 package com.kingg.api_vacunas_panama.persistence.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "roles_permisos")
@@ -27,5 +30,12 @@ public class RolesPermisos {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "permiso", nullable = false)
     private Permiso idPermiso;
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
 }

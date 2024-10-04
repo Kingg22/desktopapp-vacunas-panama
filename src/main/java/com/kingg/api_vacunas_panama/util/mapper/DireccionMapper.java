@@ -12,6 +12,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         uses = DireccionService.class)
 public interface DireccionMapper {
@@ -33,4 +35,7 @@ public interface DireccionMapper {
 
     DireccionDto direccionToDto(Direccion direccion);
 
+    List<DistritoDto> distritoListToDto(List<Distrito> distritos);
+
+    List<ProvinciaDto> provinciaListToDto(List<Provincia> provinciaList);
 }

@@ -39,4 +39,10 @@ public class Sede extends Entidad {
     @OneToMany(mappedBy = "idSede")
     private Set<Dosis> dosis = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "sede")
+    private Set<Doctor> doctores = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "sede")
+    private Set<SedesInventario> sedesInventarios = new LinkedHashSet<>();
+
 }

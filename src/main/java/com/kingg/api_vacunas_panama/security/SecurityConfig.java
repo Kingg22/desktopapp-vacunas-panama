@@ -14,6 +14,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -32,6 +33,7 @@ import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
     @Value("${security.jwt.issuer}")
@@ -52,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/vacunacion/v1/account/register").permitAll()
                         .requestMatchers("/vacunacion/v1/account/login").permitAll()
                         .requestMatchers("/vacunacion/v1/account/restore/**").permitAll()
+                        .requestMatchers("/vacunacion/v1/public/**").permitAll()
                         .requestMatchers("/vacunacion/v1/patient/**").hasAnyAuthority("PACIENTE_READ")
                         .requestMatchers("/vacunacion/v1/vaccines/**").hasAnyRole("DOCTOR", "ENFERMERA")
                         .anyRequest().authenticated()

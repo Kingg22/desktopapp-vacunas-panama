@@ -2,7 +2,7 @@ package com.kingg.api_vacunas_panama.service;
 
 import com.kingg.api_vacunas_panama.persistence.entity.Persona;
 import com.kingg.api_vacunas_panama.persistence.repository.PersonaRepository;
-import com.kingg.api_vacunas_panama.util.FormatCedulaUtil;
+import com.kingg.api_vacunas_panama.util.FormatterUtil;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,20 +20,20 @@ import java.util.UUID;
 public class PersonaService {
     private final PersonaRepository personaRepository;
 
-    public Optional<Persona> getPersona(@NotNull String identifier) {
-        String cedula = null;
-        String pasaporte = identifier.matches("^[A-Z0-9]{5,20}$") ? identifier : null;
-        String correo = identifier.matches("^_@_.__$") ? identifier : null;
-        try {
-            cedula = FormatCedulaUtil.formatCedula(identifier);
-        } catch (IllegalArgumentException argumentException) {
-            log.info("identifier to get persona is not a cedula");
+    Optional<Persona> getPersona(@NotNull String identifier) {
+        String[] result = FormatterUtil.formatToSearch(identifier);
+        log.debug("Searching Persona by cedula: {}, pasaporte: {}, correo: {}", result[0], result[1], result[2]);
+        Optional<Persona> persona = this.personaRepository.findByCedulaOrPasaporteOrCorreo(result[0], result[1], result[2]);
+        if (persona.isEmpty()) {
+            log.debug("Searching Persona by username: {}", identifier);
+            persona = this.personaRepository.findByUsuario_Username(identifier);
         }
-        return personaRepository.findByCedulaOrPasaporteOrCorreoOrUsername(cedula, pasaporte, correo, identifier);
+
+        return persona;
     }
 
-    public Optional<Persona> getPersona(UUID id) {
-        return personaRepository.findById(id);
+    Optional<Persona> getPersonaByUserID(UUID idUser) {
+        return this.personaRepository.findByUsuario_Id(idUser);
     }
 
 }

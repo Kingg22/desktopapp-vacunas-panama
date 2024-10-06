@@ -29,4 +29,9 @@ public class PacientesDosis {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @MapsId("dosis")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dosis")
+    private Dosis dosis;
+
 }

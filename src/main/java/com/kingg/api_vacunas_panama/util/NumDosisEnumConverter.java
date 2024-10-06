@@ -25,6 +25,6 @@ public class NumDosisEnumConverter implements AttributeConverter<NumDosisEnum, S
                 return num;
             }
         }
-        throw new IllegalArgumentException("Unknown value: " + dbData);
+        throw new IllegalArgumentException("Not supported value of Numero Dosis: " + dbData);
     }
 }

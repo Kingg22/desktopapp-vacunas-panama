@@ -67,4 +67,7 @@ public class Dosis {
     @JsonBackReference
     private Set<Paciente> pacientes = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "dosis")
+    private Set<PacientesDosis> pacientesDosis = new LinkedHashSet<>();
+
 }

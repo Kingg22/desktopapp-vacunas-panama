@@ -2,6 +2,7 @@ package com.kingg.api_vacunas_panama.service;
 
 import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
  * Extends {@link UserDetailsService} and is used by Spring Security to verify and authenticate JWT tokens.
  * Delegates user operations to {@link UsuarioManagementService}.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginTokenService implements UserDetailsService {
@@ -48,6 +50,7 @@ public class LoginTokenService implements UserDetailsService {
                     .disabled(user.isDisabled())
                     .build();
         }
+        log.info("Not found user with identifier: {}, throwing UsernameNotFoundException", identifier);
         throw new UsernameNotFoundException("User not found");
     }
 

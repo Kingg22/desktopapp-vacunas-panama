@@ -17,12 +17,12 @@ import java.util.UUID;
 public class FabricanteService {
     private final FabricanteRepository fabricanteRepository;
 
-    public Optional<Fabricante> getFabricante(@NotNull UUID id) {
-        return fabricanteRepository.findById(id);
-    }
-
     public Optional<Fabricante> getFabricante(@NotNull String licencia) {
         return fabricanteRepository.findByLicencia(licencia);
+    }
+
+    public Optional<Fabricante> getFabricanteByUserID(@NotNull UUID idUser) {
+        return this.fabricanteRepository.findByUsuario_Id(idUser);
     }
 
 }

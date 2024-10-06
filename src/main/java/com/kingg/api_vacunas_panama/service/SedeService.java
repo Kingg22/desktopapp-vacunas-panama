@@ -22,7 +22,7 @@ public class SedeService {
         return sedeRepository.findByNombre(nombreSede).map(Sede::getId).orElse(null);
     }
 
-    public void getIdNombreSedes(IApiResponse<?, ?, Object> response) {
+    public void getIdNombreSedes(IApiResponse<?, Object> response) {
         response.addData("sedes", sedeRepository.findAllIdAndNombre());
     }
 }

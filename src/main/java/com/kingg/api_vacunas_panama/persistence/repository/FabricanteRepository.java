@@ -10,4 +10,6 @@ public interface FabricanteRepository extends JpaRepository<Fabricante, UUID> {
 
     Optional<Fabricante> findByLicencia(String licencia);
 
+    Optional<Fabricante> findByUsuario_Id(UUID idUsuario);
+
 }

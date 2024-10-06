@@ -40,8 +40,8 @@ public class EntidadDto implements Serializable {
     @Size(max = 50)
     @NotBlank
     String estado;
+    @NotNull
+    Boolean disabled = false;
     @Valid
     DireccionDto direccion;
-    @Valid
-    UsuarioDto usuario;
 }

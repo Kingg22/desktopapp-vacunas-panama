@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
@@ -102,12 +103,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(LoginTokenService loginTokenService) {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(passwordEncoder());
-
+    AuthenticationManager authenticationManager(LoginTokenService loginTokenService,
+                                                PasswordEncoder passwordEncoder,
+                                                CompromisedPasswordChecker compromisedPasswordChecker) {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(loginTokenService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setCompromisedPasswordChecker(compromisedPasswordChecker());
+        daoAuthenticationProvider.setCompromisedPasswordChecker(compromisedPasswordChecker);
         return new ProviderManager(daoAuthenticationProvider);
     }
 

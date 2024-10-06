@@ -253,6 +253,7 @@ cython_debug/
 # Spring Boot
 HELP.md
 !.mvn/wrapper/maven-wrapper.jar
+# Personalizado
 *.key
 *.pub
 *.pem

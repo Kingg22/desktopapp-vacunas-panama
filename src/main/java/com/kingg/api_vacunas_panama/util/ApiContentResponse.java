@@ -36,12 +36,32 @@ public class ApiContentResponse implements Serializable {
         this.errors.add(new ApiFailed(code, property, message));
     }
 
+    public void addError(ApiResponseCode code, String property, String message) {
+        this.errors.add(new ApiFailed(code.toString(), property, message));
+    }
+
+    public void addError(ApiResponseCode apiResponseCode) {
+        this.errors.add(new ApiFailed(apiResponseCode));
+    }
+
+    public void addError(ApiResponseCode apiResponseCode, Object message) {
+        this.errors.add(new ApiFailed(apiResponseCode, message.toString()));
+    }
+
+    public void addError(ApiResponseCode apiResponseCode, String message) {
+        this.errors.add(new ApiFailed(apiResponseCode, message));
+    }
+
     public void addError(String code) {
         this.errors.add(new ApiFailed(code));
     }
 
     public void addWarning(String code, String message) {
-        this.errors.add(new ApiFailed(code, message));
+        this.warnings.add(new ApiFailed(code, message));
+    }
+
+    public void addWarning(ApiResponseCode apiResponseCode, String message) {
+        this.warnings.add(new ApiFailed(apiResponseCode, message));
     }
 
     public boolean hasErrors() {

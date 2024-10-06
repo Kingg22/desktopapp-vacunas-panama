@@ -17,10 +17,11 @@ public interface PacienteRepository extends JpaRepository<Paciente, UUID> {
 
     @Query("SELECT p " +
             "FROM Paciente p " +
-            "WHERE (:cedula IS NOT NULL AND p.cedula = :cedula) OR " +
-            "(:pasaporte IS NOT NULL AND p.pasaporte = :pasaporte) OR " +
-            "(:idTemporal IS NOT NULL AND p.identificacionTemporal = :idTemporal) OR " +
-            "(:correo IS NOT NULL AND p.correo = :correo) OR " +
+            "WHERE (:cedula IS NOT NULL OR :pasaporte IS NOT NULL OR :idTemporal IS NOT NULL OR :correo IS NOT NULL OR :username IS NOT NULL) AND" +
+            "(:cedula IS NOT NULL AND p.cedula = :cedula) AND " +
+            "(:pasaporte IS NOT NULL AND p.pasaporte = :pasaporte) AND " +
+            "(:idTemporal IS NOT NULL AND p.identificacionTemporal = :idTemporal) AND " +
+            "(:correo IS NOT NULL AND p.correo = :correo) AND " +
             "(:username IS NOT NULL AND p.usuario.username = :username)")
     Optional<Paciente> findByCedulaOrPasaporteOrIdTemporalOrCorreoOrUsername(@Param("cedula") String cedula, @Param("pasaporte") String pasaporte, @Param("idTemporal") String idTemporal, @Param("correo") String correo, @Param("username") String username);
 

@@ -1,6 +1,5 @@
 package com.kingg.api_vacunas_panama.persistence.entity;
 
-import com.kingg.api_vacunas_panama.util.CategoriaType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -44,9 +43,5 @@ public class Doctor extends Persona {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public void setCategoria(CategoriaType categoria) {
-        this.categoria = categoria.name();
-    }
 
 }

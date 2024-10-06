@@ -51,6 +51,10 @@ public class Fabricante extends Entidad {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
+
     @ManyToMany
     @JoinTable(name = "fabricantes_vacunas",
             joinColumns = @JoinColumn(name = "fabricante"),

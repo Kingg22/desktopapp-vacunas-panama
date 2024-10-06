@@ -1,7 +1,5 @@
 package com.kingg.api_vacunas_panama.persistence.entity;
 
-import com.kingg.api_vacunas_panama.util.DependenciaType;
-import com.kingg.api_vacunas_panama.util.EstadoEntidadType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -53,36 +51,13 @@ public abstract class Entidad {
     @Column(name = "estado", nullable = false, length = 50)
     private String estado;
 
-    @Transient
-    private EstadoEntidadType estadoEnum;
+    @NotNull
+    @Column(name = "disabled", nullable = false)
+    private Boolean disabled = false;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "direccion", nullable = false)
     private Direccion direccion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario")
-    private Usuario usuario;
-
-    public void setEstado(EstadoEntidadType estado) {
-        this.estado = estado.name();
-    }
-
-    public void setDependencia(DependenciaType dependencia) {
-        this.dependencia = dependencia.name();
-    }
-
-    public boolean getEstadoEnum() {
-        if (this.estado == null) {
-            return false;
-        }
-        try {
-            this.estadoEnum = EstadoEntidadType.valueOf(estado.toUpperCase());
-            return estadoEnum.isDisabled();
-        } catch (IllegalArgumentException argumentException) {
-            return false;
-        }
-    }
 
 }

@@ -45,7 +45,7 @@ import java.util.UUID;
         targetClass = ViewPacienteVacunaEnfermedadDto.class,
         columns = {
                 @ColumnResult(name = "nombre_vacuna", type = String.class),
-                @ColumnResult(name = "numero_dosis", type = Short.class),
+                @ColumnResult(name = "numero_dosis", type = String.class),
                 @ColumnResult(name = "enfermedades_prevenidas", type = String.class),
                 @ColumnResult(name = "edad_minima", type = Short.class),
                 @ColumnResult(name = "fecha_aplicacion", type = LocalDateTime.class),

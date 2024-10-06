@@ -29,7 +29,6 @@ services:
     restart: on-failure
     volumes:
       - bd_data:/var/opt/mssql
-      - .\vacunas-init.sql:/vacunas-init.sql
     networks:
       - network_vacunas
     healthcheck:

@@ -788,8 +788,8 @@ GROUP BY p.id,
 GO
 
 CREATE VIEW view_distribuciones_almacenes_sedes_vacunas_fabricantes AS
-SELECT ae.nombre            AS 'Nombre Almacen',
-       ae.dependencia       AS 'Dependencia Almacen',
+SELECT ae.nombre      AS N'Nombre Almacén',
+       ae.dependencia AS N'Dependencia Almacén',
        se.nombre            AS 'Nombre Sede',
        se.dependencia       AS 'Dependencia Sede',
        v.nombre             AS 'Nombre Vacuna',
@@ -816,8 +816,8 @@ FROM distribuciones_vacunas d
 GO
 
 CREATE VIEW view_almacenes_inventarios_vacunas_fabricantes AS
-SELECT ae.nombre           AS 'Nombre Almacen',
-       ae.dependencia      AS 'Dependencia Almacen',
+SELECT ae.nombre      AS N'Nombre Almacén',
+       ae.dependencia AS N'Dependencia Almacén',
        v.nombre            AS 'Nombre Vacuna',
        fe.nombre           AS 'Nombre Fabricante',
        ai.cantidad         AS 'Cantidad Disponible',
@@ -922,6 +922,7 @@ BEGIN
     END CATCH
 END;
 GO
+
 -- trigger para mantener registro de cambios
 CREATE TRIGGER tr_usuarios_updated
     ON usuarios
@@ -1042,20 +1043,23 @@ BEGIN
                 SET @cedula = CONCAT(@inicio, '-', @libro, '-', @tomo);
             END
 
-        INSERT personas (id, cedula, pasaporte, nombre, apellido1, apellido2, fecha_nacimiento, edad, sexo, telefono,
-                         correo, estado, direccion, usuario)
+        INSERT personas (id, cedula, pasaporte, nombre, nombre2, apellido1, apellido2, fecha_nacimiento, edad, sexo,
+                         telefono,
+                         correo, estado, disabled, direccion, usuario)
         SELECT id,
                @cedula,
                pasaporte,
                nombre,
+               nombre2,
                apellido1,
                apellido2,
                fecha_nacimiento,
-               edad,
+               @edad,
                sexo,
                telefono,
                correo,
                estado,
+               disabled,
                direccion,
                usuario
         FROM inserted
@@ -1133,8 +1137,8 @@ BEGIN
                 SET @temporal = CONCAT(@recien_nacido, '-', @cedula_madre);
             END
 
-        INSERT pacientes (id, identificacion_temporal, created_at)
-        SELECT id, @temporal, created_at
+        INSERT pacientes (id, identificacion_temporal, created_at, updated_at)
+        SELECT id, @temporal, created_at, updated_at
         FROM inserted
     END TRY
     BEGIN CATCH
@@ -1180,12 +1184,12 @@ BEGIN
 
                 IF @fecha_lote < GETDATE()
                     BEGIN
-                        RAISERROR (N'No se puede distribuir un lote con fecha menor al día de hoy. Revisar inventario almacen', 16, 1);
+                        RAISERROR (N'No se puede distribuir un lote con fecha menor al día de hoy. Revisar inventario Almacén', 16, 1);
                     END
             END
         ELSE
             BEGIN
-                RAISERROR (N'No hay suficiente cantidad o no existe inventario de esa vacuna y lote en el almacen', 16, 1);
+                RAISERROR (N'No hay suficiente cantidad o no existe inventario de esa vacuna y lote en el almacén', 16, 1);
             END
 
         -- Si existe la vacuna en la sede, se actualiza
@@ -1264,8 +1268,15 @@ BEGIN
                   AND lote LIKE @lote;
             END
 
-        INSERT INTO dosis (id, fecha_aplicacion, numero_dosis, vacuna, sede, lote)
-        SELECT id, fecha_aplicacion, numero_dosis, vacuna, sede, lote
+        INSERT INTO dosis (id, fecha_aplicacion, numero_dosis, vacuna, sede, lote, created_at, updated_at)
+        SELECT id,
+               fecha_aplicacion,
+               numero_dosis,
+               vacuna,
+               sede,
+               lote,
+               created_at,
+               updated_at
         FROM inserted
     END TRY
     BEGIN CATCH
@@ -1357,8 +1368,8 @@ BEGIN
                 RAISERROR ('La dosis R1 o 1 de la misma vacuna debe ser aplicada antes de la dosis R2.', 16, 1);
             END
 
-        INSERT INTO pacientes_dosis (paciente, dosis)
-        SELECT paciente, dosis
+        INSERT INTO pacientes_dosis (paciente, dosis, created_at, updated_at)
+        SELECT paciente, dosis, created_at, updated_at
         FROM inserted
     END TRY
     BEGIN CATCH
@@ -1370,9 +1381,9 @@ GO
 PRINT (N'Creando procedimientos almacenados');
 GO
 -- Procedimientos
--- algunos procedimiento dan opcional el nombre tabla, los sistemas deben procurar usar el id y no el nombre o
--- hacer su adaptación propia de la operación, todos los procedimientos tienen una variable de salid int con el recuento total de inserted y updated.
--- En caso de dar el nombre y el id se da prioridad al id, los nombres se buscan si solo proporcionó el nombre.
+-- Algunos procedimientos dan opcional el nombre tabla, los sistemas deben procurar usar id y no el nombre o
+-- hacer su adaptación propia de la operación, todos los procedimientos tienen una variable de salida int con el recuento total de inserted y updated.
+-- En caso de dar el nombre y id se da prioridad al ID, los nombres se buscan si solo proporcionó el nombre.
 CREATE PROCEDURE sp_vacunas_update_paciente_edad(
     @result INT OUTPUT
 )
@@ -1380,7 +1391,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET @result = 0;
-    -- Solo actualiza a los pacientes que cumplen años hoy y cuya edad no esté correctamente calculada
+    -- Solo actualiza a los pacientes que cumplen años hoy y cuya edad no esté correctamente calculada.
     -- Procedimiento para el job diario, no es necesario usarlo los usuarios
     UPDATE personas
     SET edad =
@@ -1540,7 +1551,7 @@ BEGIN
                 END
 
             SET @id_entidad = NEWID();
-            -- Insertar entidad para el almacen
+            -- Insertar entidad para el Almacén
             INSERT INTO entidades (id, nombre, dependencia, correo, telefono, direccion, estado)
             VALUES (@id_entidad, @nombre, @dependencia, @correo, @telefono, @id_direccion, @estado)
             SET @result = @result + @@ROWCOUNT;
@@ -1557,7 +1568,7 @@ BEGIN
                 BEGIN
                     RAISERROR (N'los datos del encargado estan incompletos, debe proveer una identificación válida', 16, 1);
                 END
-            -- Insertar el almacen
+            -- Insertar el Almacén
             INSERT INTO almacenes (id, encargado)
             VALUES (@id_entidad, @id_encargado);
 
@@ -2713,7 +2724,7 @@ BEGIN
         -- Validar que se ingresó al menos 1 valor requerido para cada tabla
         IF @uuid_almacen IS NULL AND @nombre_almacen IS NULL
             BEGIN
-                RAISERROR ('Debe especificar el almacen por su id o nombre', 16, 1);
+                RAISERROR (N'Debe especificar el Almacén por su id o nombre', 16, 1);
             END
 
         IF @nombre_vacuna IS NULL AND @uuid_vacuna IS NULL
@@ -2736,7 +2747,7 @@ BEGIN
                 -- Verificar si se encontró la vacuna
                 IF @uuid_almacen IS NULL
                     BEGIN
-                        RAISERROR (N'No se encontró ningún almacen con el nombre proporcionado', 16, 1);
+                        RAISERROR (N'No se encontró ningún Almacén con el nombre proporcionado', 16, 1);
                     END
             END
 
@@ -3043,7 +3054,7 @@ BEGIN
         -- Validar que se ingresó al menos 1 valor requerido para cada tabla
         IF @uuid_almacen IS NULL AND @nombre_almacen IS NULL
             BEGIN
-                RAISERROR ('Debe especificar el almacen por su id o nombre', 16, 1);
+                RAISERROR (N'Debe especificar el almacén por su id o nombre', 16, 1);
             END
 
         IF @nombre_vacuna IS NULL AND @uuid_vacuna IS NULL
@@ -3061,7 +3072,7 @@ BEGIN
                 -- Verificar si se encontró la vacuna
                 IF @uuid_almacen IS NULL
                     BEGIN
-                        RAISERROR (N'No se encontró ningún almacen con el nombre proporcionado.', 16, 1);
+                        RAISERROR (N'No se encontró ningún almacén con el nombre proporcionado.', 16, 1);
                     END
             END
 
@@ -3772,187 +3783,187 @@ EXEC sp_vacunas_insert_fabricante '08-005 LA/DNFD', 'Serum Institute', 'contact@
 EXEC sp_vacunas_insert_fabricante_vacuna NULL, 'Serum Institute', NULL, N'MR (antisarampión, antirrubéola)', NULL;
 GO
 
-PRINT (N'Insertando almacen');
+PRINT (N'Insertando almacén');
 GO
 -- ficticios
-EXEC sp_vacunas_insert_almacen N'Almacen Vacúnate Panamá', 'MINSA', NULL, '+5072759689', 'ACTIVO', NULL, NULL,
+EXEC sp_vacunas_insert_almacen N'Almacén Vacúnate Panamá', 'MINSA', NULL, '+5072759689', 'ACTIVO', NULL, NULL,
      'Carlos Gonzalez', '2-1-1', NULL, NULL;
 GO
 
-PRINT (N'Insertando almacen inventario');
+PRINT (N'Insertando almacén inventario');
 GO
 -- Insertar el inventario en el almacén usando el procedimiento almacenado
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Adacel', 160, '2025-12-15', 'LoteA1',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Adacel', 160, '2025-12-15', 'LoteA1',
      NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'BCG', 215, '2025-12-16', 'LoteA2',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'BCG', 215, '2025-12-16', 'LoteA2',
      NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'COVID-19', 140, '2025-12-17',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'COVID-19', 140, '2025-12-17',
      'LoteA3', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Fiebre Amarilla', 325, '2025-12-18',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Fiebre Amarilla', 325, '2025-12-18',
      'LoteA4', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Hep A (Euvax) (adultos)', 280,
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Hep A (Euvax) (adultos)', 280,
      '2025-12-19', 'LoteA5', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Hep A (Euvax) (infantil)', 215,
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Hep A (Euvax) (infantil)', 215,
      '2025-12-20', 'LoteA6', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Hep B (adultos)', 260, '2025-12-21',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Hep B (adultos)', 260, '2025-12-21',
      'LoteA7', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Hep B (infantil)', 235, '2025-12-22',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Hep B (infantil)', 235, '2025-12-22',
      'LoteA8', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Hexaxim', 190, '2025-12-23',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Hexaxim', 190, '2025-12-23',
      'LoteA9', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Influenza (FluQuadri)', 185,
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Influenza (FluQuadri)', 185,
      '2025-12-24', 'LoteA10', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Meningococo', 170, '2025-12-25',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Meningococo', 170, '2025-12-25',
      'LoteA11', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'MMR', 235, '2025-12-26', 'LoteA12',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'MMR', 235, '2025-12-26', 'LoteA12',
      NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, N'MR (antisarampión, antirrubéola)',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, N'MR (antisarampión, antirrubéola)',
      230, '2025-12-27', 'LoteA13', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL,
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL,
      'Neumoco conjugado (Prevenar 13 valente)', 165, '2025-12-28', 'LoteA14', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Papiloma Humano (Gardasil)', 160,
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Papiloma Humano (Gardasil)', 160,
      '2025-12-29', 'LoteA15', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Pneumo23', 155, '2025-12-30',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Pneumo23', 155, '2025-12-30',
      'LoteA16', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Pneumovax', 150, '2025-12-31',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Pneumovax', 150, '2025-12-31',
      'LoteA17', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Priorix', 145, '2025-12-01',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Priorix', 145, '2025-12-01',
      'LoteA18', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Rotarix', 140, '2025-12-02',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Rotarix', 140, '2025-12-02',
      'LoteA19', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'TD', 135, '2025-12-03', 'LoteA20',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'TD', 135, '2025-12-03', 'LoteA20',
      NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Tetravalente', 130, '2025-12-04',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Tetravalente', 130, '2025-12-04',
      'LoteA21', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Varivax', 125, '2025-12-05',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Varivax', 125, '2025-12-05',
      'LoteA22', NULL;
 GO
-EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacen Vacúnate Panamá', NULL, 'Verorab', 125, '2025-12-06',
+EXEC sp_vacunas_insert_almacen_inventario NULL, N'Almacén Vacúnate Panamá', NULL, 'Verorab', 125, '2025-12-06',
      'LoteA23', NULL;
 GO
 
-PRINT (N'Insertando sedes y distribuyendo inventario de almacen a sedes');
+PRINT (N'Insertando sedes y distribuyendo inventario de Almacén a sedes');
 GO
 -- Sedes algunos datos no son veraces*
 EXEC sp_vacunas_insert_sede 'Hospital San Miguel Arcangel', 'MINSA', NULL, '+5075236906', 'ACTIVO',
      N'HISMA, Vía Ricardo J. Alfaro', 'San Miguelito', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'Hospital San Miguel Arcangel', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'Hospital San Miguel Arcangel', NULL,
      'Adacel', 10, 'LoteA1', NULL, NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'Hospital San Miguel Arcangel', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'Hospital San Miguel Arcangel', NULL,
      'Rotarix', 100, 'LoteA19', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'MINSA CAPSI FINCA 30 CHANGINOLA', 'MINSA', NULL, '+5077588096', 'ACTIVO', 'Finca 32',
      'Changuinola', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL,
      'BCG', 15, 'LoteA2', NULL, NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'MINSA CAPSI FINCA 30 CHANGINOLA', NULL,
      'TD', 105, 'LoteA20', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'Hospital Aquilino Tejeira', 'CSS', NULL, '+5079979386', 'ACTIVO', 'Calle Manuel H Robles',
      N'Penonomé', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'Hospital Aquilino Tejeira', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'Hospital Aquilino Tejeira', NULL,
      'COVID-19', 20, 'LoteA3', NULL, NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'Hospital Aquilino Tejeira', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'Hospital Aquilino Tejeira', NULL,
      'Tetravalente', 110, 'LoteA21', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'CENTRO DE SALUD METETI', 'MINSA', NULL, '+5072996151', 'ACTIVO', 'La Palma', 'Pinogana',
      NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'CENTRO DE SALUD METETI', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'CENTRO DE SALUD METETI', NULL,
      'Fiebre Amarilla', 25, 'LoteA4', NULL, NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'CENTRO DE SALUD METETI', NULL, 'Varivax',
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'CENTRO DE SALUD METETI', NULL, 'Varivax',
      115, 'LoteA22', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'POLICENTRO DE SALUD de Chepo', 'MINSA', NULL, '+5072967220', 'ACTIVO',
      'Via Panamericana Las Margaritas', 'Chepo', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'POLICENTRO DE SALUD de Chepo', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'POLICENTRO DE SALUD de Chepo', NULL,
      'Hep A (Euvax) (adultos)', 30, 'LoteA5', NULL, NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'POLICENTRO DE SALUD de Chepo', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'POLICENTRO DE SALUD de Chepo', NULL,
      'Verorab', 120, 'LoteA23', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede N'Clínica Hospital San Fernando', 'Privada', NULL, '+5073056300', 'ACTIVO',
      N'Via España, Hospital San Fernando', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, N'Clínica Hospital San Fernando', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, N'Clínica Hospital San Fernando', NULL,
      'Hep A (Euvax) (infantil)', 35, 'LoteA6', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'Complejo Hospitalario Doctor Arnulfo Arias Madrid', 'CSS', NULL, '+5075036032', 'ACTIVO',
      N'Avenida José de Fábrega, Complejo Hospitalario', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL,
      'Complejo Hospitalario Doctor Arnulfo Arias Madrid', NULL, 'Hep B (adultos)', 40, 'LoteA7', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede N'Hospital Santo Tomás', 'MINSA', NULL, '+5075075830', 'ACTIVO',
      'Avenida Balboa y Calle 37 Este', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, N'Hospital Santo Tomás', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, N'Hospital Santo Tomás', NULL,
      'Hep B (infantil)', 45, 'LoteA8', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede N'Hospital Regional de Changuinola Raul Dávila Mena', 'MINSA', NULL, '+5077588295',
      'ACTIVO', 'Changuinola, Bocas del Toro', 'Changuinola', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL,
      N'Hospital Regional de Changuinola Raul Dávila Mena', NULL, 'Hexaxim', 50, 'LoteA9', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede N'Hospital Dr. Rafael Hernández', 'MINSA', NULL, '+5077748400', 'ACTIVO',
      N'David, Chiriquí', 'David', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, N'Hospital Dr. Rafael Hernández', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, N'Hospital Dr. Rafael Hernández', NULL,
      'Influenza (FluQuadri)', 55, 'LoteA10', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede N'Pacífica Salud Hospital Punta Pacífica', 'Privada', NULL, '+5072048000', 'ACTIVO',
      N'Punta Pacífica, Ciudad de Panamá', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, N'Pacífica Salud Hospital Punta Pacífica',
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, N'Pacífica Salud Hospital Punta Pacífica',
      NULL, 'Meningococo', 60, 'LoteA11', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'Hospital Nacional', 'Privada', NULL, '+5073072102', 'ACTIVO',
      N'Av. Cuba, Ciudad de Panamá', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'Hospital Nacional', NULL, 'MMR', 65,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'Hospital Nacional', NULL, 'MMR', 65,
      'LoteA12', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'Centro de salud Pacora', 'MINSA', NULL, '+5072960005', 'ACTIVO',
      N'Pacora, Ciudad de Panamá', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'Centro de salud Pacora', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'Centro de salud Pacora', NULL,
      N'MR (antisarampión, antirrubéola)', 70, 'LoteA13', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede N'Hospital Dr. Nicolás A. Solano', 'MINSA', NULL, '+5072548926', 'ACTIVO',
      N'La Chorrera, Panamá Oeste', 'La Chorrera', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, N'Hospital Dr. Nicolás A. Solano', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, N'Hospital Dr. Nicolás A. Solano', NULL,
      'Neumoco conjugado (Prevenar 13 valente)', 75, 'LoteA14', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'Complejo Hospitalario Dr. Manuel Amador Guerrero', 'CSS', NULL, '+5074752207', 'ACTIVO',
      N'Colón, Colón', N'Colón', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL,
      'Complejo Hospitalario Dr. Manuel Amador Guerrero', NULL, 'Papiloma Humano (Gardasil)', 80, 'LoteA15', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede N'Policlínica Lic. Manuel María Valdés', 'CSS', NULL, '+5075031500', 'ACTIVO',
      N'San Miguelito, Ciudad de Panamá', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, N'Policlínica Lic. Manuel María Valdés',
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, N'Policlínica Lic. Manuel María Valdés',
      NULL, 'Pneumo23', 85, 'LoteA16', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede 'CSS Complejo Metropolitano', 'CSS', NULL, '+5075064000', 'ACTIVO',
      N'Vía España, Ciudad de Panamá', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL, 'CSS Complejo Metropolitano', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL, 'CSS Complejo Metropolitano', NULL,
      'Pneumovax', 90, 'LoteA17', NULL, NULL;
 GO
 EXEC sp_vacunas_insert_sede N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', 'CSS', NULL, '+5075137008',
      'ACTIVO', N'Vía España, Ciudad de Panamá', N'Panamá', NULL;
-EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacen Vacúnate Panamá', NULL,
+EXEC sp_vacunas_distribuir_vacunas NULL, N'Almacén Vacúnate Panamá', NULL,
      N'Hospital de Especialidades Pediátricas Omar Torrijos Herrena', NULL, 'Priorix', 95, 'LoteA18', NULL, NULL;
 GO
 

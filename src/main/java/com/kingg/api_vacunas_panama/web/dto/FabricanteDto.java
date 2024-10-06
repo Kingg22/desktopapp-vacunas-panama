@@ -1,6 +1,8 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
 import com.kingg.api_vacunas_panama.persistence.entity.Fabricante;
+import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -35,9 +37,11 @@ public class FabricanteDto extends EntidadDto implements Serializable {
             flags = {Pattern.Flag.MULTILINE},
             message = "El formato del teléfono no es válido")
     String contacto_telefono;
-    @NotNull
+    @Nullable
     @PastOrPresent
     LocalDateTime created_at;
     @PastOrPresent
     LocalDateTime updated_at;
+    @Valid
+    UsuarioDto usuario;
 }

@@ -57,6 +57,8 @@ public class PersonaDto implements Serializable {
     @NotNull
     @Size(max = 50)
     String estado;
+    @NotNull
+    Boolean disabled = false;
     @Valid
     DireccionDto direccion;
     @Valid

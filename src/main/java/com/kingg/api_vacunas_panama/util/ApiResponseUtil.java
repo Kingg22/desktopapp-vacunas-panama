@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Slf4j
 public class ApiResponseUtil {
@@ -20,35 +18,23 @@ public class ApiResponseUtil {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Map<String, Object> setMetadata(ServletWebRequest webRequest) {
-        Map<String, Object> metadata = new LinkedHashMap<>();
-        log.debug("webRequest: {}", webRequest);
-        log.debug("locale: {}", webRequest.getLocale());
-        metadata.put("path", webRequest.getRequest().getRequestURI());
-        metadata.put("timestamp", Instant.now().toString());
-        return metadata;
+    public static void setMetadata(IApiResponse<?, Object> apiResponse, ServletWebRequest servletWebRequest) {
+        log.debug("servletWebRequest: {}", servletWebRequest);
+        log.debug("locale: {}", servletWebRequest.getLocale());
+        apiResponse.addMetadata("path", servletWebRequest.getRequest().getRequestURI());
+        apiResponse.addMetadata("timestamp", Instant.now().toString());
     }
 
-    public static ResponseEntity<Object> sendResponse(Map<String, Object> status, ApiContentResponse apiContentResponse, ServletWebRequest request) {
-        IApiResponse<Map<String, Object>, String, Object> response = new ApiResponse(apiContentResponse);
-        response.setStatus(status);
-        response.setMetadata(setMetadata(request));
-        log.debug(response.toString());
-        log.debug(apiContentResponse.toString());
-        return ResponseEntity.status((Integer) status.get("code")).body(response);
-    }
-
-    public static ResponseEntity<Object> sendResponse(IApiResponse<Map<String, Object>, ?, ?> apiResponse, ServletWebRequest webRequest) {
-        apiResponse.setMetadata(setMetadata(webRequest));
+    public static ResponseEntity<Object> sendResponse(IApiResponse<?, Object> apiResponse, ServletWebRequest webRequest) {
+        setMetadata(apiResponse, webRequest);
         log.debug(apiResponse.toString());
-        return ResponseEntity.status((Integer) apiResponse.getStatus().get("code")).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getStatusCode()).body(apiResponse);
     }
 
-    public static IApiResponse<?, ?, ?> transformApiErrorResponse(ApiErrorResponse apiErrorResponse, Object request) {
-        IApiResponse<Map<String, Object>, String, Object> response = new ApiResponse();
-        Map<String, Object> status = new LinkedHashMap<>();
-        status.put("status", apiErrorResponse.getHttpStatus().value());
-        if (!apiErrorResponse.getMessage().contains("Dto")) {
+    public static IApiResponse<?, Object> transformApiErrorResponse(ApiErrorResponse apiErrorResponse, Object request) {
+        IApiResponse<String, Object> response = new ApiResponse();
+        response.addStatus("code", apiErrorResponse.getHttpStatus().value());
+        if (!apiErrorResponse.getMessage().contains("Dto") && !apiErrorResponse.getMessage().contains("api_vacunas_panama")) {
             response.addError(apiErrorResponse.getCode(), apiErrorResponse.getMessage());
         } else {
             response.addError(apiErrorResponse.getCode(), "Intente nuevamente");
@@ -73,10 +59,10 @@ public class ApiResponseUtil {
                     parameterError.getMessage()
             );
         }
-        response.setStatus(status);
         switch (request) {
-            case ServletWebRequest servletWebRequest -> response.setMetadata(setMetadata(servletWebRequest));
-            case HttpServletRequest httpServletRequest -> response.setMetadata(setMetadata(new ServletWebRequest(httpServletRequest)));
+            case ServletWebRequest servletWebRequest -> setMetadata(response, servletWebRequest);
+            case HttpServletRequest httpServletRequest ->
+                    setMetadata(response, new ServletWebRequest(httpServletRequest));
             default -> response.addMetadata("timestamp", Instant.now().toString());
         }
         log.debug(response.toString());

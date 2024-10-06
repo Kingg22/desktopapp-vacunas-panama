@@ -29,10 +29,14 @@ public interface DireccionMapper {
     @Mapping(target = "direcciones", ignore = true)
     Distrito distritoDtoToEntity(DistritoDto distritoDto);
 
+    @Mapping(target = "updatedAt", source = "updated_at")
+    @Mapping(target = "createdAt", source = "created_at")
     @Mapping(target = "sedes", ignore = true)
     @Mapping(target = "pacientes", ignore = true)
     Direccion direccionDtoToEntity(DireccionDto direccionDto);
 
+    @Mapping(target = "updated_at", source = "updatedAt")
+    @Mapping(target = "created_at", source = "createdAt")
     DireccionDto direccionToDto(Direccion direccion);
 
     List<DistritoDto> distritoListToDto(List<Distrito> distritos);

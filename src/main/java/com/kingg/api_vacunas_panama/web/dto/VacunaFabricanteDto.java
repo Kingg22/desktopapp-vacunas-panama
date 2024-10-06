@@ -7,7 +7,9 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.UUID;
 
-public record VacunaFabricanteDto(UUID id_vacuna, @NotNull @Size(max = 100) @NotBlank String nombre_vacuna,
+public record VacunaFabricanteDto(UUID id_vacuna,
+                                  @NotNull @Size(max = 100) @NotBlank
+                                  String nombre_vacuna,
                                   UUID id_fabricante,
                                   @NotNull
                                   @Size(max = 100)

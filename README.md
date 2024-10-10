@@ -47,14 +47,22 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 
 - [Java](https://www.java.com/es/) - Para el desarrollo de la API.
 - [SQL Server](https://www.microsoft.com/es-mx/sql-server) - Para la gestión de la base de datos.
-- [Spring Boot](https://spring.io/) - Framework de Java, módulos utilizados: acceso a datos, web server, validaciones,
-  seguridad y testing.
+- [Spring Boot](https://spring.io/) - Framework de Java, módulos utilizados: web, data, security, OAuth resource server,
+  validations,
+  amqp (mensajería), redis cache, testing.
 - [Spring Dotenv](https://github.com/paulschwarz/spring-dotenv) - Librería de Java para cargar las variables de entornos
-  .env para Spring.
+  para Spring.
 - [JDBC SQL Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) -
   Driver para conectar con la base de datos SQL Server en Java.
+- [MapStruct](https://mapstruct.org/) - Librería de Java que genera mappers entre DTO y Entities.
+- [Lombok](https://projectlombok.org/) - Librería de Java para reducir código con anotaciones.
+- [Jackson](https://github.com/FasterXML/jackson) - Librería de Java para parsear a JSON.
 - [Error handling Spring Boot](https://github.com/wimdeblauwe/error-handling-spring-boot-starter/) - Librería de Java
   para Spring Boot utilizada para dar Error Response uniformes y Logger de los mismos.
+- [Redis](https://redis.io/) - Base de datos en memoria para almacenar datos de forma rápida.
+- [RabbitMQ](https://www.rabbitmq.com/) - Broker de mensajería entre microservicios.
+- [license-maven-plugin](https://www.mojohaus.org/license-maven-plugin/) - Plugin de Maven para generar las licencias
+  del proyecto y sus dependencias.
 
 Puede encontrar más detalles de las licencias
 en [THIRD-PARTY](https://github.com/Kingg22/desktopapp-vacunas-panama/blob/fe49877f9930485f0dc147c5dc2938b427588f39/THIRD-PARTY.txt)
@@ -116,22 +124,23 @@ y efectividad del sistema de salud en el manejo de la información sobre vacunac
 - Precisión en la Edad de los Pacientes: Utilizar eventos programados o jobs de SQL Server Agent para actualizar la edad
   de los pacientes diariamente si lo necesitan.
 - Implementar un sistema de autocompletado para evitar duplicidades y mejorar la precisión en la base de datos.
-- Crear [índices de texto](https://learn.microsoft.com/es-es/sql/t-sql/statements/create-fulltext-index-transact-sql?view=sql-server-ver16)
-en el idioma de los datos para facilitar este feature y reducir el tiempo de búsquedas.
+    -
+    Crear [diccionarios de texto](https://learn.microsoft.com/es-es/sql/t-sql/statements/create-fulltext-index-transact-sql?view=sql-server-ver16)
+    en el idioma de los datos para facilitar este feature y reducir el tiempo de búsquedas.
 - Expediente Digital: Integrar reacciones a vacunas, efectos secundarios y contraindicaciones en el expediente digital
   del paciente.
 - Esquemas Especiales de Vacunación: Implementar reglas de negocio para manejar esquemas especiales de vacunación para
   niños rezagados, mujeres embarazadas y otras poblaciones específicas.
-- Autenticación de 2 Factores.
+- Autenticación en dos factores.
 - Cifrar los datos sensibles en la base de datos y comunicación de los sistemas.
-- Evitar duplicidad de información por ejemplo: Mismo teléfono en tabla usuarios y pacientes.
+- Velar por cumplimiento con la ley de protección de datos personales.
 - Se está planeando para la v2:
     - Filtrado de respuestas. Con este feature se completa la migración de la versión desktoapp.
 
 ### :busts_in_silhouette: Otros sistemas o API's que interactúen con la base de datos:
 
 - Todos los sistemas creados que se conectan a esta API deben mantener el formato de CIP dada.
-- Todas las contraseñas deben utilizar BCryptEncoder con strength 10.
+- Todas las contraseñas deben utilizar BCryptEncoder.
 - Validar los datos con pattern y demás, antes de conectar a la base de datos.
 - Implementar la autorización basada en los roles y permisos.
 - Si utilizan Persistence deben asegurarse que se verifique la estructura de la base de datos, NO modificarla, truncarla
@@ -141,7 +150,7 @@ en el idioma de los datos para facilitar este feature y reducir el tiempo de bú
 ## :wrench: Clonación y configuración del repositorio
 
 > [!NOTE]
-> Para disfrutar de un buen ambiente para **programar** necesita Java JDK 21 ya instalado.
+> Para disfrutar de un buen ambiente para **programar en local** necesita Java JDK 21 ya instalado.
 > [Maven](https://maven.apache.org/) viene de forma portable con maven wrapper. [Docker](https://www.docker.com/) y [Git](https://git-scm.com/) son necesarios.
 
 Sigue estos pasos para clonar el repositorio:
@@ -156,44 +165,78 @@ git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
 
 ### 2. Abrir la carpeta donde fue clonado el repositorio
 
-### 3. Crear entorno propio para deploy
+### 3. Crear un entorno propio para deploy
+
+> [!NOTE]
+> Puede utilizar un archivo .env o docker secrets, ambas deben utilizar los nombres dados en .env.example al menos que
+> modifique application.properties
+> ~~Si se decide por usar docker secrets puede eliminar la dependencia _spring-dotenv_~~
+
+> [!WARNING]
+> No hemos podido solucionar un error de conexión entre contenedores, por lo tanto, deberá utilizar la API en su entorno
+> local con JDK 21.
 
 1. Modificar vacunas-init.sql el login colocando un usuario y una contraseña segura al inicio del script. 
-Crear contraseñas con [BCrypt](https://bcrypt-generator.com/) para los usuarios con roles superiores, colocarlo en el parámetro de 'hash' del procedimiento sp_vacunas_gestionar_usuario, últimas líneas comentadas de vacunas-init.sql
-2. Con las credenciales anteriores del login colocarlo en su .env DB_USER y DB_PASSWORD.
-    - Recordatorio: Al estar en docker la URL de la base de datos no es localhost sino la IP del host y el puerto
-      externo que coloquemos, inicialmente 1440.
-    - Colocar characterEncoding=UTF-8;useUnicode=true al final de la URL para mostrar los carácteres del español.
+
+   _Opcional:_ Crear contraseñas con [BCrypt](https://bcrypt-generator.com/) para los usuarios con roles superiores,
+   colocarlo en el parámetro de
+   'hash' del procedimiento sp_vacunas_gestionar_usuario, últimas líneas comentadas de vacunas-init.sql
+2. Con las credenciales anteriores del login colocarlo como DB_USER y DB_PASSWORD estas credenciales serán usadas por la
+   API no utilizar sa.
+    - Recordatorio: Al estar en docker la base de datos el puerto externo que coloquemos, inicialmente 1440. No hemos
+      podido utilizar el nombre del contendor para conectarse, recomendamos el uso de IP del host.
+     - Colocar characterEncoding=UTF-8;useUnicode=true al final de la URL para mostrar los carácteres del español.
 3. Crear el par de llaves del certificado RSA. Abra una terminal de git en el proyecto y ejecute:
     ``` bash
     openssl genrsa -out private.pem 4096
     openssl rsa -in private.pem -pubout -out public.pem
     ```
-4. Colocar en su .env como JWT_PRIVATE y JWT_PUBLIC el contenido de cada archivo correspondiente. Puede eliminar los
-   archivos por seguridad.
-    1. Se tiene un [problema](https://github.com/cdimascio/dotenv-java/issues/77) con los valores multi líneas y la
+4. Colocar en JWT_PRIVATE y JWT_PUBLIC el contenido de cada archivo correspondiente.
+
+   Utilizando .env:
+     1. Se tiene un [problema](https://github.com/cdimascio/dotenv-java/issues/77) con los valores multi líneas y la
        dependencia real que tiene el proyecto (spring dotenv) también la sufre.
     2. Para solucionar el problema anterior debe colocar el contenido generado en las llaves de forma que cada fin de
        línea eliminar ese espacio, debe quedarle un string largo.
-5. Por último en el archivo .env, JWT_EXPIRATION_TIME y JWT_ISSUER puede personalizarlo a su gusto.
-6. Configurar su contraseña sa en docker-compose.yaml. Tenga **mucho cuidado** con subir este archivo.
-7. Crear la docker images de la API con su IDE o terminal con maven.
-    ``` bash
-    mvn clean spring-boot:build-image -DskipTests=true 
-    ```
-   Este proceso puede demorar un poco la primera vez, se recomienda skip tests para disminuir el tiempo de espera.
-8. Levantar docker compose por primera vez. Abra una terminal en el proyecto y ejecute:
-    ``` bash
-    docker-compose up --build -d bd-vacunas
-    docker exec -it sql-server-vacunas /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P '' -No -C -d master -i /vacunas-init.sql
-    ```
-   Donde en -P debe colocar la contraseña creada en el docker-compose.yaml
 
-   Observación: Si cambia el nombre del contenedor de la base de datos el comando cambia en -it <container_name>.
-9. Verificar que la base de datos fue creada con éxito.
+   Utilizando Docker secrets: Puede colocar sus archivos al final del docker-compose, estos deben estar en la misma
+   carpeta
+    ``` dockerfile
+    secrets:
+      JWT_PUBLIC_KEY:
+        file: public.pem
+      JWT_PRIVATE_KEY:
+        file: private.pem
+    ```
+   Utilizando classpath (no recomendado): Puede colocar sus archivos en src/resources/certs y application.properties
+   deberá
+   comentar las líneas de docker y des comentar las líneas siguientes, más detalles en el archivo.
 
-   Utilizando [docker desktop](https://www.docker.com/products/docker-desktop/) podrá ver los 2 contenedores, revise el
-   log de sql_server_vacunas, una de las últimas instrucciones debe ser
+5. Por último para JWT_EXPIRATION_TIME, JWT_REFRESH_TIME, JWT_ISSUER puede personalizarlo a su gusto.
+6. Configurar su contraseña sa debe crear un archivo llamado db.env donde **solo coloque la contraseña en texto plano**.
+   Esta es necesaria para los scripts configure-db.sh y el test-check.sh del contenedor de la base de datos,
+   sin esta no se puede construir la imagen ni verificar si el estado es saludable.
+7. **OMITIR** ~~Crear la docker images de la API con su IDE o terminal con maven.~~
+
+   ~~Para Windows:~~
+    ``` powershell
+    ./mvnw.cmd clean spring-boot:build-image -DskipTests=true 
+    ```
+   ~~Otros SO:~~
+   ```bash
+   ./mvnw clean spring-boot:build-image -DskipTests=true 
+   ```
+   ~~Este proceso puede demorar un poco la primera vez, se recomienda el flag skip tests para disminuir el tiempo de
+   espera.~~
+8. Crear la imagen de la base de datos
+   ```` bash
+    docker compose --progress=plain build bd-vacunas
+    ````
+9. Verificar que la base de datos fue creada con éxito en el build de esa imagen:
+   Mientras se está creando la imagen podrá ver los mensajes anteriores o
+   utilizando [docker desktop](https://www.docker.com/products/docker-desktop/) sección Builds, estará
+   api-vacunas-panama con un tag: VACUNAS-APP-BD-VACUNAS
+   Dentro del registro de este build verá en la sección de log alguna de estas líneas:
     ``` sql
     (1 row affected)
     -----------------------------------FIN------------------------------------------------
@@ -207,18 +250,31 @@ Crear contraseñas con [BCrypt](https://bcrypt-generator.com/) para los usuarios
     Parallel redo is started for database 'vacunas' with worker pool size [4].
     Parallel redo is shutdown for database 'vacunas' with worker pool size [4].
     ```
-   En su defecto utilice una terminal en el proyecto ejecute:
-    ``` bash
-    docker logs sql-server-vacunas
-    ```
 
-### 4. Levantar los contenedores después de configurar:
+10. Crear las contraseñas para RabbitMQ
 
-1. Cambiar los tiempos del healthcheck en docker-compose.yaml como mínimo de start_period 20s
-2. Abrir una terminal en el proyecto para levantar todo si no está activa, ejecutar:
-   ``` bash
-   docker-compose up --build -d
-   ```
+    Debe hacer una copia de rabbitmq_definitions_example.json a un archivo rabbitmq_definitions.json
+    En las claves "password_hash" utilizando [SHA-512](https://sha512.online/), las credenciales de producer debe
+    colocarla en RBMQ_USER, RBMQ_PASSWORD respectivamente.
+    Cambiar la contraseña de guest aunque no tiene permisos definidos en rabbitmq.conf
+
+    _Opcional:_ En el caso del fronted que se conecta a este servicio de mensajería debe usar las credenciales de
+    consumer.
+    Si ya tiene pensado los nombres para las queues, exchange y routing puede crear en el json y darle permisos
+    exclusivos a esa queue,
+    sino spring creará los objetos mencionados con el nombre dado en RabbitMQConfig, se recomienda restringir el
+    consumer a leer esa queue.
+
+> [!TIP]
+> En resumen debe crear el login de la base de datos (1), crear el certificado RSA para JWT (3), contraseña para sa de
+> la base de datos (6), generar la imagen de la base de datos (7, 8, 9), contraseña de RabbitMQ (10).
+> El resto de variables tienen valores por defectos.
+
+### 4. Levantar todos los contenedores:
+
+``` bash
+docker compose up -d
+```
 
 ### 5. Verificación
 
@@ -228,20 +284,40 @@ Observación: Si cambia el puerto que se expone en docker-compose.yaml debe apun
 
 ### Verificar modificaciones sin desplegar contenedor de API
 
-1. Levantar la base de datos si no esta activa:
+1. Levantar la base de datos si no está activa o construir una nueva imagen por cambios en vacunas-init.sql:
     ``` bash
-    docker-compose up --build -d bd-vacunas 
+    docker compose up --build -d bd-vacunas 
     ```
 2. Utilizando el IDE integrado con Maven o el siguiente comando en Windows:
     ```powershell
     ./mvnw.cmd clean spring-boot:run
     ```
-   u otros SO:
+   Otros SO:
    ```bash
    ./mvnw clean spring-boot:run
    ```
 3. Utilizar el cliente Postman o su propio API client al endpoint configurado.
 
-Cualquier error verificar la versión del Java JDK 21, tu archivo .env, certificado RSA mínima 2056,
-la base de datos esté levantada y con las credenciales correctas, el login tiene su usuario con los permisos mínimos
-requeridos, todas las tablas y datos iniciales esten presentes.
+> [!IMPORTANT]
+> ¿Qué se espera de su configuración? ~~Utilice docker secrets con los nombres dados, elimine la dependencia de
+spring-dotenv
+> al momento de generar la imagen con spring elimine el .env~~ Para pruebas de la API fuera de docker entonces utilice
+> .env
+> Eliminar los valores por defecto de application.properties y rabbitmq_definitions.json, ya que, tendrá valores
+> personalizados.
+
+Cualquier error verificar la versión del Java JDK 21, tu archivo .env o docker secrets configurados para cada servicio,
+certificado RSA mínima 2056, la base de datos vacunas esté creada con éxito con todos sus objetos y con las credenciales
+correctas,
+el login tiene su usuario con los permisos mínimos requeridos, la contraseña de sa es válida según los mínimos de SQL
+Server y
+no contiene caracteres especiales (puede causar conflictos con los scripts de configuración), ningún contenedor está en
+bucle de reinicio por errores, colocar spring con el flag -Ddebug y des comentar el bloque de líneas relacionadas a logs
+en
+application.properties para encontrar cuál es el error si es el contenedor de la API, eliminar el health_check en el
+service
+bd-vacunas y su dependencia en la API.
+
+> [!NOTE]
+> En docker compose utilizamos images latest en todos los servicios, Redis y RabbitMQ pueden cambiarse a su versión sin
+> dashboard de manejo para reducir su tamaño y en entornos productivos.

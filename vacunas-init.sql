@@ -1,27 +1,45 @@
 USE master;
+GO
+-- Verifica si la base de datos ya existe
 IF DB_ID('vacunas') IS NULL
     BEGIN
+        CREATE DATABASE vacunas;
+    END
+ELSE
+    BEGIN
+        DROP DATABASE vacunas;
         CREATE DATABASE vacunas;
     END
 GO
 
 USE vacunas;
+GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-/*
-PRINT (N'Creando el login');
+
+PRINT ('Intentando crear el login si no existe');
 GO
 -- Únicamente las aplicaciones deben tener un login y su user con permisos
-CREATE LOGIN LOGIN_NAME
-    WITH PASSWORD = '',
-    DEFAULT_DATABASE = vacunas
+-- PUEDE CAMBIAR EL NOMBRE LOGIN_NAME Y COLOCARLO COMO DB_USER para spring
+IF NOT EXISTS (SELECT *
+               FROM sys.server_principals
+               WHERE name = 'LOGIN_NAME')
+    BEGIN
+        PRINT (N'Creando el login');
+        CREATE LOGIN LOGIN_NAME
+            -- COLOCAR AQUÍ CONTRASEÑA EN TEXTO PLANO. CUIDADO AL SUBIR ESTE ARCHIVO
+            -- COLOCAR LUEGO COMO DB_PASSWORD para spring
+            WITH PASSWORD = '',
+            DEFAULT_DATABASE = vacunas
+    END
 GO
 PRINT (N'Creando el user');
 GO
 -- crear usuario de la base de datos y darle permisos
-CREATE USER SpringAPI FOR LOGIN ApplicationsVacunas
+-- COLOCAR EL MISMO LOGIN_NAME DE ARRIBA
+CREATE USER SpringAPI FOR LOGIN LOGIN_NAME
 GO
 PRINT (N'Otorgando permisos al user');
 GO
@@ -29,7 +47,8 @@ EXEC sp_addrolemember 'db_datareader', 'SpringApi'
 EXEC sp_addrolemember 'db_datawriter', 'SpringApi'
 GRANT EXECUTE ON SCHEMA::dbo TO SpringAPI
 -- dependiendo la aplicación se le puede asignar más o menos permisos**
-*/
+GO
+
 PRINT (N'Creando tablas');
 GO
 
@@ -256,6 +275,8 @@ CREATE TABLE personas
         CONSTRAINT df_personas_sexo DEFAULT ('X'),
     estado           NVARCHAR(50)     NOT NULL
         CONSTRAINT df_personas_estado DEFAULT ('NO_VALIDADO'),
+    disabled BIT
+        CONSTRAINT df_personas_disabled DEFAULT (0),
     direccion        UNIQUEIDENTIFIER NOT NULL,
     usuario          UNIQUEIDENTIFIER,
     CONSTRAINT ck_personas_sexo CHECK (sexo LIKE 'M' OR sexo LIKE 'F' OR sexo LIKE 'X'),
@@ -294,7 +315,7 @@ CREATE UNIQUE NONCLUSTERED INDEX ix_personas_telefono
     WHERE telefono IS NOT NULL;
 GO
 CREATE UNIQUE NONCLUSTERED INDEX ix_personas_usuario
-    ON personas(usuario)
+    ON personas (usuario)
     WHERE usuario IS NOT NULL;
 GO
 
@@ -308,8 +329,9 @@ CREATE TABLE entidades
     dependencia NVARCHAR(13),
     estado      NVARCHAR(50)     NOT NULL
         CONSTRAINT df_entidades_estado DEFAULT ('ACTIVO'),
+    disabled BIT
+        CONSTRAINT df_entidades_disabled DEFAULT (0),
     direccion   UNIQUEIDENTIFIER NOT NULL,
-    usuario     UNIQUEIDENTIFIER,
     CONSTRAINT ck_entidades_correo CHECK (correo IS NULL OR (correo LIKE '%_@_%.__%' AND LEN(correo) >= 5)),
     CONSTRAINT ck_entidades_telefono CHECK (telefono IS NULL OR (telefono LIKE '+[0-9]%' AND LEN(telefono) >= 5 AND
                                                                  TRY_CAST(SUBSTRING(telefono, 2, LEN(telefono)) AS BIGINT) IS NOT NULL)),
@@ -317,7 +339,6 @@ CREATE TABLE entidades
                                                dependencia IN ('CSS', 'MINSA', 'PRIVADA', 'POR_REGISTRAR')),
     CONSTRAINT ck_entidades_estado CHECK (estado IN ('ACTIVO', 'NO_VALIDADO', 'INACTIVO', 'DESACTIVADO')),
     CONSTRAINT fk_entidades_direcciones FOREIGN KEY (direccion) REFERENCES direcciones (id) ON UPDATE CASCADE,
-    CONSTRAINT fk_entidades_usuarios FOREIGN KEY (usuario) REFERENCES usuarios (id) ON UPDATE CASCADE
 );
 GO
 CREATE UNIQUE NONCLUSTERED INDEX ix_entidades_correo
@@ -327,10 +348,6 @@ GO
 CREATE UNIQUE NONCLUSTERED INDEX ix_entidades_telefono
     ON entidades (telefono)
     WHERE telefono IS NOT NULL;
-GO
-CREATE UNIQUE NONCLUSTERED INDEX ix_entidades_usuario
-    ON entidades (usuario)
-    WHERE usuario IS NOT NULL;
 GO
 
 CREATE TABLE pacientes
@@ -443,6 +460,7 @@ CREATE TABLE fabricantes
     created_at        DATETIME     NOT NULL
         CONSTRAINT df_fabricantes_created DEFAULT CURRENT_TIMESTAMP,
     updated_at        DATETIME,
+    usuario UNIQUEIDENTIFIER,
     CONSTRAINT ck_fabricantes_licencia CHECK (licencia LIKE '%/DNFD'),
     CONSTRAINT ck_fabricantes_correo CHECK (contacto_correo IS NULL OR
                                             (contacto_correo LIKE '%_@_%.__%' AND LEN(contacto_correo) >= 5)),
@@ -451,8 +469,13 @@ CREATE TABLE fabricantes
                                                LEN(contacto_telefono) >= 5 AND
                                                TRY_CAST(SUBSTRING(contacto_telefono, 2, LEN(contacto_telefono)) AS BIGINT) IS NOT NULL)),
     CONSTRAINT fk_fabricantes_entidades FOREIGN KEY (id) REFERENCES entidades (id),
+    CONSTRAINT fk_fabricantes_usuarios FOREIGN KEY (usuario) REFERENCES usuarios (id) ON UPDATE CASCADE,
     INDEX ix_fabricantes_licencia (licencia)
 );
+GO
+CREATE UNIQUE NONCLUSTERED INDEX ix_fabricantes_usuario
+    ON fabricantes (usuario)
+    WHERE usuario IS NOT NULL;
 GO
 
 CREATE TABLE almacenes
@@ -584,10 +607,10 @@ SELECT u.id,
        u.last_used
 FROM usuarios u
          LEFT JOIN personas pe ON pe.usuario = u.id
-         LEFT JOIN entidades e ON e.usuario = u.id
+         LEFT JOIN fabricantes f ON u.id = f.usuario
+         LEFT JOIN entidades e ON e.id = f.id
          LEFT JOIN pacientes p ON pe.id = p.id
          LEFT JOIN doctores doc ON pe.id = doc.id
-         LEFT JOIN fabricantes f ON e.id = f.id
 GO
 
 CREATE VIEW view_pacientes_detalles AS
@@ -634,7 +657,7 @@ SELECT e.nombre            AS 'Nombre',
        e.estado,
        f.created_at,
        f.updated_at,
-       e.usuario,
+       f.usuario,
        f.id,
        d.id                AS 'id_direccion',
        dd.id               AS 'id_distrito',
@@ -1566,7 +1589,7 @@ BEGIN
                 END
             ELSE
                 BEGIN
-                    RAISERROR (N'los datos del encargado estan incompletos, debe proveer una identificación válida', 16, 1);
+                    RAISERROR (N'los datos del encargado están incompletos, debe proveer una identificación válida', 16, 1);
                 END
             -- Insertar el Almacén
             INSERT INTO almacenes (id, encargado)
@@ -2370,8 +2393,7 @@ BEGIN
             IF EXISTS (SELECT 1
                        FROM usuarios
                                 LEFT JOIN personas ON personas.usuario = usuarios.id
-                                LEFT JOIN entidades ON entidades.usuario = usuarios.id
-                                LEFT JOIN fabricantes ON fabricantes.id = entidades.id
+                                LEFT JOIN fabricantes ON fabricantes.usuario = usuarios.id
                        WHERE (@cedula IS NULL OR cedula = @cedula)
                          AND (@pasaporte IS NULL OR pasaporte = @pasaporte)
                          AND (@licencia IS NULL OR licencia = @licencia))
@@ -2379,8 +2401,7 @@ BEGIN
                     SELECT @id_usuario = usuarios.id
                     FROM usuarios
                              LEFT JOIN personas ON personas.usuario = usuarios.id
-                             LEFT JOIN entidades ON entidades.usuario = usuarios.id
-                             LEFT JOIN fabricantes ON fabricantes.id = entidades.id
+                             LEFT JOIN fabricantes ON fabricantes.usuario = usuarios.id
                     WHERE (@cedula IS NULL OR cedula = @cedula)
                       AND (@pasaporte IS NULL OR pasaporte = @pasaporte)
                       AND (@licencia IS NULL OR licencia = @licencia)
@@ -2448,7 +2469,7 @@ BEGIN
 
                     IF @uuid_entidad IS NOT NULL
                         BEGIN
-                            UPDATE entidades
+                            UPDATE fabricantes
                             SET usuario = @id_usuario
                             WHERE id = @uuid_entidad
                             SET @result = @result + @@ROWCOUNT;
@@ -3167,8 +3188,7 @@ CREATE FUNCTION fn_vacunas_get_usuarios_by_identificacion(
                       r.nombre
                FROM usuarios u
                         LEFT JOIN personas p ON u.id = p.usuario
-                        LEFT JOIN entidades e ON u.id = e.usuario
-                        LEFT JOIN fabricantes f ON e.id = f.id
+                        LEFT JOIN fabricantes f ON u.id = f.usuario
                         INNER JOIN usuarios_roles ur ON u.id = ur.usuario
                         INNER JOIN roles r ON ur.rol = r.id
                WHERE cedula = @cedula
@@ -4508,12 +4528,14 @@ EXEC sp_vacunas_insert_dosis NULL, NULL, 'YZ7890123J', NULL, '2018-04-20 11:00',
 GO
 /*
 PRINT('Insertando usuarios de roles superior para pruebas');
+-- COLOCAR SU CONTRASEÑA HASH CON BCRYPT AQUÍ DONDE DICE 'HASH AQUI'
 EXEC sp_vacunas_gestionar_doctor '1-1-2', NULL, '123456789', 'Pedro', 'Jiménez',  NULL, '2000-12-12', 'M', NULL, NULL, 'ACTIVO', NULL, NULL, 'MEDICO GENERAL', NULL, NULL, NULL;
-EXEC sp_vacunas_gestionar_usuario NULL, '1-1-2', NULL, NULL, NULL, 'pruebasDoc', '$2a$10$Q0xaxGqZJ.4oN/gj6YTGqeQ.xd2yjJB1/Houw7JU9Z5cnTbiwLHUy', NULL, NULL;
+EXEC sp_vacunas_gestionar_usuario NULL, '1-1-2', NULL, NULL, NULL, 'pruebasDoc', 'HASH AQUI', NULL, NULL;
 EXEC sp_vacunas_insert_roles_usuario NULL, NULL, NULL, 'pruebasDoc', NULL, NULL, '4', NULL;
 GO
+
 EXEC sp_vacunas_gestionar_persona '1-1-1', NULL, 'Juan', NULL, NULL, NULL, '2000-01-12', 'M', NULL, NULL, 'ACTIVO', NULL, NULL, NULL;
-EXEC sp_vacunas_gestionar_usuario NULL, '1-1-1', NULL, NULL, NULL, 'pruebasAut', 'hash', 'ACTIVO', NULL;
+EXEC sp_vacunas_gestionar_usuario NULL, '1-1-1', NULL, NULL, NULL, 'pruebasAut', 'HASH AQUI', 'ACTIVO', NULL;
 EXEC sp_vacunas_insert_roles_usuario NULL, NULL, NULL, 'pruebasAut', NULL, NULL, '7', NULL;
 GO
 */

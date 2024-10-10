@@ -1,46 +1,97 @@
-name: vacunas_app
+name: vacunas-app
 
 services:
-  api-vacunas:
-    image: api-vacunas-panama:0.0.1
-    env_file:
-      - ".env"
-    #restart: on-failure
-    container_name: api-spring-vacunas
-    depends_on:
-      bd-vacunas:
-        condition: service_healthy
-    ports:
-      - "8080:8080"
-    volumes:
-      - .:/app
-    networks:
-      - network_vacunas
-
   bd-vacunas:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    build:
+      secrets:
+        - MSSQL_SA_PASSWORD
+      dockerfile: Dockerfile
     container_name: sql-server-vacunas
     ports:
       - "1440:1433"
+    secrets:
+      - MSSQL_SA_PASSWORD
     environment:
-      - "ACCEPT_EULA=Y"
-      - "MSSQL_PID=Express"
-      - "MSSQL_SA_PASSWORD=yourStrong(!)Password"
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
     restart: on-failure
     volumes:
-      - bd_data:/var/opt/mssql
+      - bd-data:/var/opt/mssql
+      - ./test-check.sh:/usr/src/app/test-check.sh
     networks:
-      - network_vacunas
+      - network-vacunas
     healthcheck:
-          test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -No -C -Q 'SELECT 1' -b -o /dev/null"]
-          interval: 10s
-          retries: 10
-          start_period: 90s
-          timeout: 10s
+      test: [ "CMD-SHELL", "/usr/src/app/test-check.sh" ]
+      interval: 10s
+      retries: 10
+      start_period: 90s
+      timeout: 10s
+
+  redis-vacunas:
+    image: redis/redis-stack:latest
+    container_name: cache-redis-vacunas
+    restart: always
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - cache-persistence:/data
+      - ./redis.conf:/redis-stack.conf
+    networks:
+      - network-vacunas
+
+  rabbitmq-vacunas:
+    image: rabbitmq:management-alpine
+    container_name: msg-rabbitmq-vacunas
+    restart: always
+    ports:
+      - "15692:15692"
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - msg-broker-rabbitmq:/var/lib/rabbitmq
+      - ./rabbitmq_definitions.json:/etc/rabbitmq/definitions.json
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    networks:
+      - network-vacunas
+
+        #api-vacunas:
+        #image: api-vacunas-panama:0.0.1
+        #container_name: api-spring-vacunas
+        #env_file:
+        #- ".env"
+        #secrets:
+        #- JWT_PUBLIC_KEY
+        #- JWT_PRIVATE_KEY
+        #restart: on-failure
+        #depends_on:
+        #bd-vacunas:
+        #condition: service_healthy
+        #redis-vacunas:
+        #condition: service_started
+        #rabbitmq-vacunas:
+      #condition: service_started
+      #ports:
+      #- "8080:8080"
+      #networks:
+      #- network-vacunas
 
 volumes:
-  bd_data:
+  bd-data:
+    driver: local
+  cache-persistence:
+    driver: local
+  msg-broker-rabbitmq:
     driver: local
 
 networks:
-  network_vacunas:
+  network-vacunas:
+    attachable: true
+
+secrets:
+  MSSQL_SA_PASSWORD:
+    file: db.env
+    #JWT_PUBLIC_KEY:
+    #file: public.pem
+    #JWT_PRIVATE_KEY:
+    #file: private.pem

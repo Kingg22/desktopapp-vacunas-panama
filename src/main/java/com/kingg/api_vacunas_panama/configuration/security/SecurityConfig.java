@@ -1,4 +1,4 @@
-package com.kingg.api_vacunas_panama.security;
+package com.kingg.api_vacunas_panama.configuration.security;
 
 import com.kingg.api_vacunas_panama.service.LoginTokenService;
 import com.nimbusds.jose.jwk.JWK;

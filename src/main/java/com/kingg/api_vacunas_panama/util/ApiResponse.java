@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,15 +15,15 @@ import java.util.Map;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @JsonPropertyOrder({"status", "data", "errors", "warnings", "metadata"})
-public class ApiResponse extends ApiContentResponse implements IApiResponse<String, Object> {
-    private Map<String, Object> status = new LinkedHashMap<>();
-    private Map<String, Object> metadata = new LinkedHashMap<>();
+public class ApiResponse extends ApiContentResponse implements IApiResponse<String, Serializable>, Serializable {
+    private Map<String, Serializable> status = new LinkedHashMap<>();
+    private Map<String, Serializable> metadata = new LinkedHashMap<>();
 
     public void addStatusCode(HttpStatus httpStatus) {
         this.status.put("code", httpStatus.value());
     }
 
-    public void addStatus(String key, Object value) {
+    public void addStatus(String key, Serializable value) {
         this.status.put(key, value);
     }
 
@@ -34,7 +35,7 @@ public class ApiResponse extends ApiContentResponse implements IApiResponse<Stri
         this.status.put("message", message);
     }
 
-    public void addMetadata(String key, Object value) {
+    public void addMetadata(String key, Serializable value) {
         this.metadata.put(key, value);
     }
 

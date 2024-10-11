@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Slf4j
@@ -29,12 +30,12 @@ public class PacienteController {
     private final PacienteService pacienteService;
 
     @GetMapping
-    public ResponseEntity<Object> getPaciente(@AuthenticationPrincipal Jwt jwt, ServletWebRequest request) {
-        IApiResponse<?, Object> apiResponse = new ApiResponse();
+    public ResponseEntity<IApiResponse<String, Serializable>> getPaciente(@AuthenticationPrincipal Jwt jwt, ServletWebRequest request) {
+        IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         apiResponse.addStatusCode(HttpStatus.OK);
         UUID idPersona = UUID.fromString(jwt.getClaimAsString("persona"));
         log.debug("Received a query of Paciente: {}", idPersona);
-        List<ViewPacienteVacunaEnfermedadDto> viewPacienteVacunaEnfermedadDtoList = this.pacienteService.getViewVacunaEnfermedad(idPersona);
+        ArrayList<ViewPacienteVacunaEnfermedadDto> viewPacienteVacunaEnfermedadDtoList = new ArrayList<>(this.pacienteService.getViewVacunaEnfermedad(idPersona));
         apiResponse.addData("view_vacuna_enfermedad", viewPacienteVacunaEnfermedadDtoList);
         if (viewPacienteVacunaEnfermedadDtoList.isEmpty()) {
             apiResponse.addError(ApiResponseCode.NOT_FOUND, "El paciente no tiene dosis registradas");

@@ -1,8 +1,6 @@
 package com.kingg.api_vacunas_panama.web.controller;
 
 import com.kingg.api_vacunas_panama.persistence.entity.*;
-import com.kingg.api_vacunas_panama.service.PersonaService;
-import com.kingg.api_vacunas_panama.service.TokenService;
 import com.kingg.api_vacunas_panama.service.UsuarioManagementService;
 import com.kingg.api_vacunas_panama.util.*;
 import com.kingg.api_vacunas_panama.web.dto.LoginDto;
@@ -17,12 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.authentication.password.CompromisedPasswordException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,11 +47,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping(path = "/vacunacion/v1/account", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsuarioController {
-    private final TokenService tokenService;
-    private final UsuarioManagementService usuarioManagementService;
-    private final PersonaService personaService;
     private final AuthenticationManager authenticationManager;
-    private final CompromisedPasswordChecker compromisedPasswordChecker;
+    private final UsuarioManagementService usuarioManagementService;
 
     /**
      * Handles user registration.
@@ -73,8 +68,8 @@ public class UsuarioController {
      * information, and a token if the {@link Persona} or {@link Entidad} is validated and active.
      */
     @PostMapping({"/register"})
-    public ResponseEntity<Object> register(@RequestBody @Valid UsuarioDto usuarioDto, Authentication authentication, ServletWebRequest request) {
-        IApiResponse<String, Object> apiResponse = new ApiResponse();
+    public ResponseEntity<IApiResponse<String, Serializable>> register(@RequestBody @Valid UsuarioDto usuarioDto, Authentication authentication, ServletWebRequest request) {
+        IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
             List<ApiFailed> failedList = this.usuarioManagementService.validateAuthoritiesRegister(usuarioDto, authentication);
             apiResponse.addErrors(failedList);
@@ -92,8 +87,8 @@ public class UsuarioController {
     }
 
     @PostMapping({"/login"})
-    public ResponseEntity<Object> login(@RequestBody @Valid LoginDto loginDto, ServletWebRequest request) {
-        IApiResponse<String, Object> apiResponse = new ApiResponse();
+    public ResponseEntity<IApiResponse<String, Serializable>> login(@RequestBody @Valid LoginDto loginDto, ServletWebRequest request) {
+        IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         Authentication authentication = null;
 
         try {
@@ -116,14 +111,14 @@ public class UsuarioController {
     }
 
     @PatchMapping({"/restore"})
-    public ResponseEntity<Object> restore(@RequestBody @Valid RestoreDto restoreDto, ServletWebRequest request) {
-        IApiResponse<?, Object> apiResponse = this.usuarioManagementService.changePasswordPersona(restoreDto);
+    public ResponseEntity<IApiResponse<String, Serializable>> restore(@RequestBody @Valid RestoreDto restoreDto, ServletWebRequest request) {
+        IApiResponse<String, Serializable> apiResponse = this.usuarioManagementService.changePasswordPersona(restoreDto);
         return ApiResponseUtil.sendResponse(apiResponse, request);
     }
 
     @GetMapping
-    public ResponseEntity<Object> profile(Authentication authentication, ServletWebRequest request) {
-        IApiResponse<String, Object> apiResponse = new ApiResponse();
+    public ResponseEntity<IApiResponse<String, Serializable>> profile(Authentication authentication, ServletWebRequest request) {
+        IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         apiResponse.addData(usuarioManagementService.getProfile(UUID.fromString(authentication.getName())));
         apiResponse.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(apiResponse, request);

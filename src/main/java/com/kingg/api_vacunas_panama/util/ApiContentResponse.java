@@ -15,15 +15,15 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiContentResponse implements Serializable {
-    private Map<String, Object> data = new LinkedHashMap<>();
+    private Map<String, Serializable> data = new LinkedHashMap<>();
     private List<ApiFailed> errors = new ArrayList<>();
     private List<ApiFailed> warnings = new ArrayList<>();
 
-    public void addData(String key, Object value) {
+    public void addData(String key, Serializable value) {
         this.data.put(key, value);
     }
 
-    public void addData(Map<String, Object> data) {
+    public void addData(Map<String, Serializable> data) {
         this.data.putAll(data);
     }
 

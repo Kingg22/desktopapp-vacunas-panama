@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -53,7 +54,7 @@ public class UsuarioManagementService {
         try {
             List<RolesEnum> authenticatedRoles = authenticatedAuthorities.stream().map(RolesEnum::valueOf).toList();
             if (!usuarioDto.roles().stream().allMatch(rolDto -> this.validationService.canRegisterRole(rolDto, authenticatedRoles))) {
-                errors.add(new ApiFailed(ApiResponseCode.ROL_HIERARCHY_VIOLATION, "roles[]","No puede asignar roles superiores a su rol máximo actual"));
+                errors.add(new ApiFailed(ApiResponseCode.ROL_HIERARCHY_VIOLATION, "roles[]", "No puede asignar roles superiores a su rol máximo actual"));
             }
         } catch (IllegalArgumentException exception) {
             log.debug("Argument exception by RolesEnum: {}", exception.getMessage());
@@ -66,8 +67,8 @@ public class UsuarioManagementService {
         return errors;
     }
 
-    public IApiResponse<String, Object> createUser(@NotNull UsuarioDto usuarioDto) {
-        IApiResponse<String, Object> apiResponse = new ApiResponse();
+    public IApiResponse<String, Serializable> createUser(@NotNull UsuarioDto usuarioDto) {
+        IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.permisos() != null && !rolDto.permisos().isEmpty())) {
             apiResponse.addWarning(ApiResponseCode.INFORMATION_IGNORED, "Los permisos de los roles son ignorados en el registro. Para crear o relacionar nuevos permisos a un rol debe utilizar otra opción");
         }
@@ -114,8 +115,8 @@ public class UsuarioManagementService {
         return apiResponse;
     }
 
-    public IApiResponse<String, Object> changePasswordPersona(@NotNull RestoreDto restoreDto) {
-        IApiResponse<String, Object> apiResponse = new ApiResponse();
+    public IApiResponse<String, Serializable> changePasswordPersona(@NotNull RestoreDto restoreDto) {
+        IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         Optional<Persona> opPersona = this.personaService.getPersona(restoreDto.username());
         opPersona.ifPresentOrElse(persona -> {
             List<ApiFailed> failedList = this.validationService.validateChangePasswordPersona(persona, restoreDto.new_password(), restoreDto.fecha_nacimiento());
@@ -136,8 +137,8 @@ public class UsuarioManagementService {
         return apiResponse;
     }
 
-    public Map<String, Object> setLoginResponse(UUID idUser) {
-        Map<String, Object> data = new LinkedHashMap<>();
+    public Map<String, Serializable> setLoginResponse(UUID idUser) {
+        Map<String, Serializable> data = new LinkedHashMap<>();
         UsuarioDto user = this.getUsuarioDto(idUser);
         Optional<UUID> idPersona = this.personaService.getPersonaByUserID(idUser).map(persona -> {
             data.put("persona", this.personaMapper.toDto(persona));
@@ -151,8 +152,8 @@ public class UsuarioManagementService {
         return data;
     }
 
-    public Map<String, Object> getProfile(UUID idUser) {
-        Map<String, Object> data = new LinkedHashMap<>();
+    public Map<String, Serializable> getProfile(UUID idUser) {
+        Map<String, Serializable> data = new LinkedHashMap<>();
         this.personaService.getPersonaByUserID(idUser).ifPresent(persona ->
                 data.put("persona", this.personaMapper.toDto(persona))
         );

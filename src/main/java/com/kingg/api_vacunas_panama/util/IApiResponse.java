@@ -9,12 +9,11 @@ import java.util.Map;
 
 /**
  * Generic interface for the response format of the API
+ * Extends {@link Serializable} to ensure serialization of object.
+ * Designed for error codes or status or warnings are for the programmer (client) and the messages for the end user.
  *
  * @param <S> tipo de dato para los códigos o key (e.g. status code, error code).
- * @param <T> tipo de dato para mensajes complejos (e.g. status message, data value).
- *            <p>
- *            Extends {@link Serializable} to ensure serialization of object.
- *            Designed for error codes or status or warnings are for the programmer (client) and the messages for the end user.
+ * @param <T> tipo de dato para mensajes complejos (e.g. status message, data value). Recommend using serializable data type
  */
 public interface IApiResponse<S, T> extends Serializable {
     void addStatusCode(HttpStatus message);

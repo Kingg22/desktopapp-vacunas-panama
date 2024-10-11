@@ -46,28 +46,28 @@ public class TokenService {
         List<Object> idAdiciones = new ArrayList<>();
         idAdiciones.add(uuidPersona);
         idAdiciones.add(uuidFabricante);
-        return this.createToken(usuario.id(), rolesPermisos, idAdiciones);
+        return this.createToken(usuario.id().toString(), rolesPermisos, idAdiciones);
     }
 
-    private String createToken(Object subject, Collection<String> rolesPermisos, List<Object> idsAdicionales) {
+    private String createToken(String subject, Collection<String> rolesPermisos, @NotNull List<Object> idsAdicionales) {
         Instant now = Instant.now();
         JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
                 .issuer(issuer)
                 .issuedAt(now)
                 .notBefore(now)
                 .expiresAt(now.plusSeconds(expirationTime))
-                .subject(subject.toString())
+                .subject(subject)
                 .claim("scope", rolesPermisos)
                 .id(UUID.randomUUID().toString());
         if (idsAdicionales.get(0) != null) {
-            builder.claim("persona", idsAdicionales.get(0));
+            builder.claim("persona", idsAdicionales.getFirst());
         }
         if (idsAdicionales.get(1) != null) {
             builder.claim("fabricante", idsAdicionales.get(1));
         }
         JwtClaimsSet claims = builder.build();
         JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256).type("JWT").build();
-        log.debug("created a token for Usuario: {}, expires at: {}", subject, claims.getExpiresAt());
+        log.debug("created a token for: {}, expires at: {}, id_token: {}", subject, claims.getExpiresAt(), claims.getId());
         return this.jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
     }
 

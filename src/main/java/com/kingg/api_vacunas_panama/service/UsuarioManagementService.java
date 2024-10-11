@@ -4,13 +4,11 @@ import com.kingg.api_vacunas_panama.persistence.entity.*;
 import com.kingg.api_vacunas_panama.persistence.repository.PermisoRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.RolRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.UsuarioRepository;
-import com.kingg.api_vacunas_panama.util.ApiResponseCode;
-import com.kingg.api_vacunas_panama.util.FormatterUtil;
-import com.kingg.api_vacunas_panama.util.IApiResponse;
-import com.kingg.api_vacunas_panama.util.RolesEnum;
+import com.kingg.api_vacunas_panama.util.*;
 import com.kingg.api_vacunas_panama.util.mapper.AccountMapper;
 import com.kingg.api_vacunas_panama.util.mapper.FabricanteMapper;
 import com.kingg.api_vacunas_panama.util.mapper.PersonaMapper;
+import com.kingg.api_vacunas_panama.web.dto.IdNombreDto;
 import com.kingg.api_vacunas_panama.web.dto.RestoreDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import jakarta.validation.constraints.NotNull;
@@ -21,9 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Service for {@link Usuario}, {@link Rol} and {@link Permiso}
@@ -46,123 +42,132 @@ public class UsuarioManagementService {
     private final UsuarioValidationService validationService;
     private final UsuarioTransactionService transactionService;
 
-    public void validateAuthoritiesRegister(UsuarioDto usuarioDto, IApiResponse<?, Object> apiResponse, Authentication authentication) {
-        List<String> authenticatedAuthorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+    public List<ApiFailed> validateAuthoritiesRegister(@NotNull UsuarioDto usuarioDto, @NotNull Authentication authentication) {
+        List<ApiFailed> errors = new ArrayList<>();
+        List<String> authenticatedAuthorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .map(role -> role.substring("ROLE_".length()))
+                .toList();
 
         try {
             List<RolesEnum> authenticatedRoles = authenticatedAuthorities.stream().map(RolesEnum::valueOf).toList();
-            if (!usuarioDto.roles().stream().allMatch((rolDto) -> {
-                return this.validationService.canRegisterRole(rolDto, authenticatedRoles);
-            })) {
-                apiResponse.addError(ApiResponseCode.ROL_HIERARCHY_VIOLATION, "No puede asignar roles superiores a su rol máximo actual");
+            if (!usuarioDto.roles().stream().allMatch(rolDto -> this.validationService.canRegisterRole(rolDto, authenticatedRoles))) {
+                errors.add(new ApiFailed(ApiResponseCode.ROL_HIERARCHY_VIOLATION, "roles[]","No puede asignar roles superiores a su rol máximo actual"));
             }
-        } catch (IllegalArgumentException var6) {
-            log.debug("Argument exception by RolesEnum: {}", var6.getMessage());
-            apiResponse.addWarning(ApiResponseCode.API_UPDATE_UNSUPPORTED, "Roles creados recientemente no son soportados para registrarse");
+        } catch (IllegalArgumentException exception) {
+            log.debug("Argument exception by RolesEnum: {}", exception.getMessage());
+            errors.add(new ApiFailed(ApiResponseCode.API_UPDATE_UNSUPPORTED, "roles[]", "Roles creados recientemente no son soportados para registrarse"));
         }
 
         if (!this.validationService.hasUserManagementPermissions(authenticatedAuthorities)) {
-            apiResponse.addError(ApiResponseCode.PERMISSION_DENIED, "No tienes permisos para registrar a otros usuarios");
+            errors.add(new ApiFailed(ApiResponseCode.PERMISSION_DENIED, "No tienes permisos para registrar a otros usuarios"));
         }
-
+        return errors;
     }
 
-    public void createUser(UsuarioDto usuarioDto, IApiResponse<String, Object> response) {
+    public IApiResponse<String, Object> createUser(@NotNull UsuarioDto usuarioDto) {
+        IApiResponse<String, Object> apiResponse = new ApiResponse();
         if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.permisos() != null && !rolDto.permisos().isEmpty())) {
-            response.addWarning(ApiResponseCode.INFORMATION_IGNORED, "Los permisos de los roles son ignorados en el registro. Para crear o relacionar nuevos permisos a un rol debe utilizar otra opción");
+            apiResponse.addWarning(ApiResponseCode.INFORMATION_IGNORED, "Los permisos de los roles son ignorados en el registro. Para crear o relacionar nuevos permisos a un rol debe utilizar otra opción");
         }
 
         if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.nombre() != null && !rolDto.nombre().isEmpty())) {
-            response.addWarning(ApiResponseCode.NON_IDEMPOTENCE, "Utilice ID al realizar peticiones");
+            apiResponse.addWarning(ApiResponseCode.NON_IDEMPOTENCE, "Utilice ID al realizar peticiones");
         }
 
-        Object personaFabricante = this.validationService.validateRegistration(usuarioDto, response);
-        if (!response.hasErrors()) {
-            assert personaFabricante != null;
-
+        Object validationResult = this.validationService.validateRegistration(usuarioDto);
+        if (validationResult instanceof List<?> failedList && !failedList.isEmpty()) {
+            apiResponse.addErrors(failedList);
+        }
+        if (!apiResponse.hasErrors()) {
             UUID idPersona = null;
             UUID idFabricante = null;
             Usuario user;
 
-            switch (personaFabricante) {
+            switch (validationResult) {
                 case Persona persona -> {
                     user = transactionService.createUser(usuarioDto, persona, null);
                     idPersona = persona.getId();
-                    response.addData("person", personaMapper.toDto(persona));
+                    apiResponse.addData("persona", personaMapper.toDto(persona));
                 }
                 case Fabricante fabricante -> {
                     user = transactionService.createUser(usuarioDto, null, fabricante);
                     idFabricante = fabricante.getId();
-                    response.addData("fabricante", fabricanteMapper.toDto(fabricante));
+                    apiResponse.addData("fabricante", fabricanteMapper.toDto(fabricante));
                 }
                 default -> {
-                    response.addError(ApiResponseCode.API_UPDATE_UNSUPPORTED, "Ha ocurrido un error en la validación");
-                    response.addStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-                    response.addStatus(ApiResponseCode.VALIDATION_FAILED.toString());
-                    return;
+                    apiResponse.addStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+                    apiResponse.addStatus(ApiResponseCode.VALIDATION_FAILED.toString());
+                    apiResponse.addError(ApiResponseCode.API_UPDATE_UNSUPPORTED, "Ha ocurrido un error en la validación");
+                    return apiResponse;
                 }
             }
 
-            response.addData("token", this.tokenService.generateToken(this.mapper.usuarioToDto(user), idPersona, idFabricante));
-            response.addStatusCode(HttpStatus.CREATED);
-            response.addStatus("Successful user creation");
+            apiResponse.addData("token", this.tokenService.generateToken(this.mapper.usuarioToDto(user), idPersona, idFabricante));
+            apiResponse.addStatusCode(HttpStatus.CREATED);
+            apiResponse.addStatus("Successful user creation");
         } else {
-            response.addStatusCode(HttpStatus.BAD_REQUEST);
-            response.addStatus(ApiResponseCode.VALIDATION_FAILED.toString());
+            apiResponse.addStatusCode(HttpStatus.BAD_REQUEST);
+            apiResponse.addStatus(ApiResponseCode.VALIDATION_FAILED.toString());
         }
-
+        return apiResponse;
     }
 
-    public void changePasswordPersona(IApiResponse<String, Object> apiResponse, RestoreDto restoreDto) {
+    public IApiResponse<String, Object> changePasswordPersona(@NotNull RestoreDto restoreDto) {
+        IApiResponse<String, Object> apiResponse = new ApiResponse();
         Optional<Persona> opPersona = this.personaService.getPersona(restoreDto.username());
         opPersona.ifPresentOrElse(persona -> {
-            this.validationService.validateChangePasswordPersona(persona, restoreDto.new_password(), restoreDto.fecha_nacimiento(), apiResponse);
-            if (apiResponse.hasErrors()) {
-                apiResponse.addStatusCode(HttpStatus.BAD_REQUEST);
-                apiResponse.addStatus("Failed to change password");
-            } else {
+            List<ApiFailed> failedList = this.validationService.validateChangePasswordPersona(persona, restoreDto.new_password(), restoreDto.fecha_nacimiento());
+            apiResponse.addErrors(failedList);
+            if (failedList.isEmpty()) {
                 this.transactionService.changePasswordPersonas(persona, restoreDto.new_password());
                 apiResponse.addStatusCode(HttpStatus.OK);
                 apiResponse.addStatus("Password restored successfully");
+            } else {
+                apiResponse.addStatusCode(HttpStatus.BAD_REQUEST);
+                apiResponse.addStatus("Failed to change password");
             }
         }, () -> {
             apiResponse.addStatusCode(HttpStatus.NOT_FOUND);
             apiResponse.addStatus("Not found person with identifier");
             apiResponse.addError(ApiResponseCode.NOT_FOUND, "La persona con la identificación dada no fue encontrada");
         });
+        return apiResponse;
     }
 
-    public void setLoginResponse(UUID idUser, IApiResponse<?, Object> apiResponse) {
+    public Map<String, Object> setLoginResponse(UUID idUser) {
+        Map<String, Object> data = new LinkedHashMap<>();
         UsuarioDto user = this.getUsuarioDto(idUser);
         Optional<UUID> idPersona = this.personaService.getPersonaByUserID(idUser).map(persona -> {
-            apiResponse.addData("persona", this.personaMapper.toDto(persona));
+            data.put("persona", this.personaMapper.toDto(persona));
             return persona.getId();
         });
         Optional<UUID> idFabricante = this.fabricanteService.getFabricanteByUserID(idUser).map(fabricante -> {
-            apiResponse.addData("fabricante", this.fabricanteMapper.toDto(fabricante));
+            data.put("fabricante", this.fabricanteMapper.toDto(fabricante));
             return fabricante.getId();
         });
-        apiResponse.addData("token", this.tokenService.generateToken(user, idPersona.orElse(null), idFabricante.orElse(null)));
-        apiResponse.addStatusCode(HttpStatus.OK);
-        apiResponse.addStatus("Login successful");
+        data.put("token", this.tokenService.generateToken(user, idPersona.orElse(null), idFabricante.orElse(null)));
+        return data;
     }
 
-    public void getProfile(UUID idUser, IApiResponse<?, Object> apiResponse) {
+    public Map<String, Object> getProfile(UUID idUser) {
+        Map<String, Object> data = new LinkedHashMap<>();
         this.personaService.getPersonaByUserID(idUser).ifPresent(persona ->
-                apiResponse.addData("persona", this.personaMapper.toDto(persona))
+                data.put("persona", this.personaMapper.toDto(persona))
         );
         this.fabricanteService.getFabricanteByUserID(idUser).ifPresent(fabricante ->
-                apiResponse.addData("fabricante", this.fabricanteMapper.toDto(fabricante))
+                data.put("fabricante", this.fabricanteMapper.toDto(fabricante))
         );
-        apiResponse.addStatusCode(HttpStatus.OK);
+        return data;
     }
 
-    public void getRoles(IApiResponse<?, Object> response) {
-        response.addData("roles", rolRepository.findAllIdNombre());
+    public List<IdNombreDto> getRoles() {
+        return rolRepository.findAllIdNombre();
     }
 
-    public void getPermisos(IApiResponse<?, Object> response) {
-        response.addData("permisos", permisoRepository.findAllIdNombre());
+    public List<IdNombreDto> getPermisos() {
+        return permisoRepository.findAllIdNombre();
     }
 
     public UsuarioDto getUsuarioDto(UUID id) {

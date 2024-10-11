@@ -1,5 +1,6 @@
 package com.kingg.api_vacunas_panama.util;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,14 +19,12 @@ public class ApiContentResponse implements Serializable {
     private List<ApiFailed> errors = new ArrayList<>();
     private List<ApiFailed> warnings = new ArrayList<>();
 
-    public ApiContentResponse(ApiContentResponse apiContentResponse) {
-        this.data = apiContentResponse.getData();
-        this.errors = apiContentResponse.getErrors();
-        this.warnings = apiContentResponse.getWarnings();
-    }
-
     public void addData(String key, Object value) {
         this.data.put(key, value);
+    }
+
+    public void addData(Map<String, Object> data) {
+        this.data.putAll(data);
     }
 
     public void addError(String code, String message) {
@@ -37,7 +36,7 @@ public class ApiContentResponse implements Serializable {
     }
 
     public void addError(ApiResponseCode code, String property, String message) {
-        this.errors.add(new ApiFailed(code.toString(), property, message));
+        this.errors.add(new ApiFailed(code, property, message));
     }
 
     public void addError(ApiResponseCode apiResponseCode) {
@@ -56,12 +55,32 @@ public class ApiContentResponse implements Serializable {
         this.errors.add(new ApiFailed(code));
     }
 
+    public void addErrors(@NotNull List<?> errorsList) {
+        for (Object error : errorsList) {
+            if (error instanceof ApiFailed failed) {
+                this.errors.add(failed);
+            } else {
+                throw new IllegalArgumentException("This implementation only accepts ApiFailed");
+            }
+        }
+    }
+
     public void addWarning(String code, String message) {
         this.warnings.add(new ApiFailed(code, message));
     }
 
     public void addWarning(ApiResponseCode apiResponseCode, String message) {
         this.warnings.add(new ApiFailed(apiResponseCode, message));
+    }
+
+    public void addWarnings(@NotNull List<?> warningsList) {
+        for (Object error : warningsList) {
+            if (error instanceof ApiFailed failed) {
+                this.errors.add(failed);
+            } else {
+                throw new IllegalArgumentException("This implementation only accepts ApiFailed");
+            }
+        }
     }
 
     public boolean hasErrors() {

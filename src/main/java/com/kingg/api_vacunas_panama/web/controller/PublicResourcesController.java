@@ -28,72 +28,48 @@ public class PublicResourcesController {
     @GetMapping("/distritos")
     public ResponseEntity<Object> getDistritos(ServletWebRequest request) {
         IApiResponse<?, Object> response = new ApiResponse();
-        direccionService.getDistritos(response);
-        if (!response.hasErrors()) {
-            response.addStatusCode(HttpStatus.OK);
-        } else {
-            response.addStatusCode(HttpStatus.BAD_REQUEST);
-        }
+        response.addData("distritos", direccionService.getDistritosDto());
+        response.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(response, request);
     }
 
     @GetMapping("/provincias")
     public ResponseEntity<Object> getProvincias(ServletWebRequest request) {
         IApiResponse<?, Object> response = new ApiResponse();
-        direccionService.getProvincias(response);
-        if (!response.hasErrors()) {
-            response.addStatusCode(HttpStatus.OK);
-        } else {
-            response.addStatusCode(HttpStatus.BAD_REQUEST);
-        }
+        response.addData("provincias", direccionService.getProvinciasDto());
+        response.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(response, request);
     }
 
     @GetMapping("/sedes")
     public ResponseEntity<Object> getSedes(ServletWebRequest request) {
         IApiResponse<?, Object> response = new ApiResponse();
-        sedeService.getIdNombreSedes(response);
-        if (!response.hasErrors()) {
-            response.addStatusCode(HttpStatus.OK);
-        } else {
-            response.addStatusCode(HttpStatus.BAD_REQUEST);
-        }
+        response.addData("sedes", sedeService.getIdNombreSedes());
+        response.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(response, request);
     }
 
     @GetMapping("/vacunas")
     public ResponseEntity<Object> getVacunas(ServletWebRequest request) {
         IApiResponse<?, Object> response = new ApiResponse();
-        vacunaService.getVacunas(response);
-        if (!response.hasErrors()) {
-            response.addStatusCode(HttpStatus.OK);
-        } else {
-            response.addStatusCode(HttpStatus.BAD_REQUEST);
-        }
+        response.addData("vacunas", vacunaService.getVacunas());
+        response.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(response, request);
     }
 
     @GetMapping("/roles")
     public ResponseEntity<Object> getRoles(ServletWebRequest request) {
         IApiResponse<?, Object> response = new ApiResponse();
-        usuarioManagementService.getRoles(response);
-        if (!response.hasErrors()) {
-            response.addStatusCode(HttpStatus.OK);
-        } else {
-            response.addStatusCode(HttpStatus.BAD_REQUEST);
-        }
+        response.addData("roles", usuarioManagementService.getRoles());
+        response.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(response, request);
     }
 
     @GetMapping("/roles/permisos")
     public ResponseEntity<Object> getPermisos(ServletWebRequest request) {
         IApiResponse<?, Object> response = new ApiResponse();
-        usuarioManagementService.getPermisos(response);
-        if (!response.hasErrors()) {
-            response.addStatusCode(HttpStatus.OK);
-        } else {
-            response.addStatusCode(HttpStatus.BAD_REQUEST);
-        }
+        response.addData("permisos", usuarioManagementService.getPermisos());
+        response.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(response, request);
     }
 

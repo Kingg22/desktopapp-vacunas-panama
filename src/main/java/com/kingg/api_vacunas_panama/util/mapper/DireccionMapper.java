@@ -3,7 +3,6 @@ package com.kingg.api_vacunas_panama.util.mapper;
 import com.kingg.api_vacunas_panama.persistence.entity.Direccion;
 import com.kingg.api_vacunas_panama.persistence.entity.Distrito;
 import com.kingg.api_vacunas_panama.persistence.entity.Provincia;
-import com.kingg.api_vacunas_panama.service.DireccionService;
 import com.kingg.api_vacunas_panama.web.dto.DireccionDto;
 import com.kingg.api_vacunas_panama.web.dto.DistritoDto;
 import com.kingg.api_vacunas_panama.web.dto.ProvinciaDto;
@@ -14,8 +13,7 @@ import org.mapstruct.NullValueCheckStrategy;
 
 import java.util.List;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        uses = DireccionService.class)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface DireccionMapper {
     @Mapping(target = "distritos", ignore = true)
     Provincia provinciaDtoToEntity(ProvinciaDto provinciaDto);

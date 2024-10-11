@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UsuarioTransactionService {
+class UsuarioTransactionService {
     private final AccountMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
@@ -61,10 +61,6 @@ public class UsuarioTransactionService {
         return usuarioRepository.save(usuario);
     }
 
-    RolDto createRol(RolDto rolDto) {
-        return mapper.rolToDto(rolRepository.save(mapper.rolDtoToRol(rolDto)));
-    }
-
     PermisoDto createPermiso(PermisoDto permisoDto) {
         return mapper.permisoToDto(permisoRepository.save(mapper.permisoDtoToPermiso(permisoDto)));
     }
@@ -82,6 +78,6 @@ public class UsuarioTransactionService {
     }
 
     Permiso convertToPermisoExisting(PermisoDto permisoDto) {
-        return permisoRepository.findByNombreOrId(permisoDto.nombre(), permisoDto.id()).orElseThrow();
+        return permisoRepository.findByNombreOrId(permisoDto.nombre(), permisoDto.id()).orElse(null);
     }
 }

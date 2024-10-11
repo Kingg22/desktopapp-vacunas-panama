@@ -18,10 +18,6 @@ public class ApiResponse extends ApiContentResponse implements IApiResponse<Stri
     private Map<String, Object> status = new LinkedHashMap<>();
     private Map<String, Object> metadata = new LinkedHashMap<>();
 
-    public ApiResponse(ApiContentResponse apiContentResponse) {
-        super(apiContentResponse);
-    }
-
     public void addStatusCode(HttpStatus httpStatus) {
         this.status.put("code", httpStatus.value());
     }

@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class ApiFailed implements Serializable {
+public class ApiFailed implements Serializable {
     String code;
     String property;
     String message;
@@ -34,4 +34,11 @@ class ApiFailed implements Serializable {
         this.code = code.toString();
         this.message = message;
     }
+
+    public ApiFailed(ApiResponseCode code, String property, String message) {
+        this.code = code.toString();
+        this.property = property;
+        this.message = message;
+    }
+
 }

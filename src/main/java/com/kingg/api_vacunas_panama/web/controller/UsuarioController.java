@@ -4,10 +4,7 @@ import com.kingg.api_vacunas_panama.persistence.entity.*;
 import com.kingg.api_vacunas_panama.service.PersonaService;
 import com.kingg.api_vacunas_panama.service.TokenService;
 import com.kingg.api_vacunas_panama.service.UsuarioManagementService;
-import com.kingg.api_vacunas_panama.util.ApiResponse;
-import com.kingg.api_vacunas_panama.util.ApiResponseCode;
-import com.kingg.api_vacunas_panama.util.ApiResponseUtil;
-import com.kingg.api_vacunas_panama.util.IApiResponse;
+import com.kingg.api_vacunas_panama.util.*;
 import com.kingg.api_vacunas_panama.web.dto.LoginDto;
 import com.kingg.api_vacunas_panama.web.dto.RestoreDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
@@ -26,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -78,24 +76,24 @@ public class UsuarioController {
     public ResponseEntity<Object> register(@RequestBody @Valid UsuarioDto usuarioDto, Authentication authentication, ServletWebRequest request) {
         IApiResponse<String, Object> apiResponse = new ApiResponse();
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-            this.usuarioManagementService.validateAuthoritiesRegister(usuarioDto, apiResponse, authentication);
+            List<ApiFailed> failedList = this.usuarioManagementService.validateAuthoritiesRegister(usuarioDto, authentication);
+            apiResponse.addErrors(failedList);
         } else if (!usuarioDto.roles().stream().allMatch(rolDto -> rolDto.nombre().equalsIgnoreCase("Paciente"))) {
             apiResponse.addError(ApiResponseCode.MISSING_ROLE_OR_PERMISSION, "Solo pacientes pueden registrarse sin autenticación");
         }
 
         if (!apiResponse.hasErrors()) {
-            this.usuarioManagementService.createUser(usuarioDto, apiResponse);
+            return ApiResponseUtil.sendResponse(this.usuarioManagementService.createUser(usuarioDto), request);
         } else {
             apiResponse.addStatusCode(HttpStatus.FORBIDDEN);
             apiResponse.addStatus("Insufficient authorities");
+            return ApiResponseUtil.sendResponse(apiResponse, request);
         }
-
-        return ApiResponseUtil.sendResponse(apiResponse, request);
     }
 
     @PostMapping({"/login"})
     public ResponseEntity<Object> login(@RequestBody @Valid LoginDto loginDto, ServletWebRequest request) {
-        IApiResponse<?, Object> apiResponse = new ApiResponse();
+        IApiResponse<String, Object> apiResponse = new ApiResponse();
         Authentication authentication = null;
 
         try {
@@ -109,7 +107,9 @@ public class UsuarioController {
         }
 
         if (authentication != null && authentication.isAuthenticated()) {
-            this.usuarioManagementService.setLoginResponse(UUID.fromString(authentication.getName()), apiResponse);
+            apiResponse.addData(this.usuarioManagementService.setLoginResponse(UUID.fromString(authentication.getName())));
+            apiResponse.addStatusCode(HttpStatus.OK);
+            apiResponse.addStatus("Login successful");
         }
 
         return ApiResponseUtil.sendResponse(apiResponse, request);
@@ -117,15 +117,15 @@ public class UsuarioController {
 
     @PatchMapping({"/restore"})
     public ResponseEntity<Object> restore(@RequestBody @Valid RestoreDto restoreDto, ServletWebRequest request) {
-        IApiResponse<String, Object> apiResponse = new ApiResponse();
-        this.usuarioManagementService.changePasswordPersona(apiResponse, restoreDto);
+        IApiResponse<?, Object> apiResponse = this.usuarioManagementService.changePasswordPersona(restoreDto);
         return ApiResponseUtil.sendResponse(apiResponse, request);
     }
 
     @GetMapping
     public ResponseEntity<Object> profile(Authentication authentication, ServletWebRequest request) {
         IApiResponse<String, Object> apiResponse = new ApiResponse();
-        usuarioManagementService.getProfile(UUID.fromString(authentication.getName()), apiResponse);
+        apiResponse.addData(usuarioManagementService.getProfile(UUID.fromString(authentication.getName())));
+        apiResponse.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(apiResponse, request);
     }
 

@@ -1,14 +1,12 @@
 package com.kingg.api_vacunas_panama.service;
 
-import com.kingg.api_vacunas_panama.persistence.entity.Fabricante;
 import com.kingg.api_vacunas_panama.persistence.entity.Persona;
 import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
 import com.kingg.api_vacunas_panama.persistence.repository.UsuarioRepository;
-import com.kingg.api_vacunas_panama.util.ApiResponseCode;
-import com.kingg.api_vacunas_panama.util.IApiResponse;
-import com.kingg.api_vacunas_panama.util.RolesEnum;
+import com.kingg.api_vacunas_panama.util.*;
 import com.kingg.api_vacunas_panama.web.dto.RolDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Service for {@link UsuarioManagementService} validations.
@@ -33,96 +31,102 @@ class UsuarioValidationService {
     private final FabricanteService fabricanteService;
     private final UsuarioRepository usuarioRepository;
 
-    Object validateRegistration(UsuarioDto usuarioDto, IApiResponse<String, Object> apiResponse) {
+    Object validateRegistration(@NotNull UsuarioDto usuarioDto) {
+        List<ApiFailed> errors = new ArrayList<>();
         if (this.isUsernameRegistered(usuarioDto.username())) {
-            apiResponse.addError(ApiResponseCode.ALREADY_TAKEN, "username", "El nombre de usuario ya está en uso");
+            errors.add(new ApiFailed(ApiResponseCode.ALREADY_TAKEN, "username", "El nombre de usuario ya está en uso"));
         }
 
         if (this.compromisedPasswordChecker.check(usuarioDto.password()).isCompromised()) {
-            apiResponse.addError(ApiResponseCode.COMPROMISED_PASSWORD, "password", "La contraseña proporcionada está comprometida. Por favor use otra contraseña");
+            errors.add(new ApiFailed(ApiResponseCode.COMPROMISED_PASSWORD, "password", "La contraseña proporcionada está comprometida. Por favor use otra contraseña"));
         }
 
-        if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.nombre().equalsIgnoreCase("Fabricante"))) {
+        if (!errors.isEmpty()) {
+            return errors;
+        }
+
+        // validation is delegated to other specific methods depending on the role to be registered
+        if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.nombre().equalsIgnoreCase("FABRICANTE"))) {
             if (usuarioDto.licencia_fabricante() != null) {
-                return this.validateRegistrationFabricante(usuarioDto, apiResponse);
+                return this.validateRegistrationFabricante(usuarioDto, errors);
+            } else {
+                errors.add(new ApiFailed(ApiResponseCode.MISSING_INFORMATION, "licencia_fabricante", "Los fabricantes requieren licencia autorizada por Dirección Nacional de Farmacia y Drogas del MINSA"));
             }
-            apiResponse.addError(ApiResponseCode.MISSING_INFORMATION, "licencia_fabricante", "Los fabricantes requieren licencia autorizada por Dirección Nacional de Farmacia y Drogas del MINSA");
         } else {
             if (usuarioDto.cedula() != null || usuarioDto.pasaporte() != null) {
-                return this.validateRegistrationPersona(usuarioDto, apiResponse);
+                return this.validateRegistrationPersona(usuarioDto, errors);
+            } else {
+                errors.add(new ApiFailed(ApiResponseCode.MISSING_INFORMATION, "Las personas requieren una identificación personal como cédula panameña o pasaporte"));
             }
-
-            apiResponse.addError(ApiResponseCode.MISSING_INFORMATION, "Las personas requieren una identificación personal como cédula panameña o pasaporte");
         }
-
-        return null;
+        return errors;
     }
 
-    Persona validateRegistrationPersona(UsuarioDto usuarioDto, IApiResponse<String, Object> apiResponse) {
-        AtomicReference<Persona> personaResponse = new AtomicReference<>(null);
+    Object validateRegistrationPersona(@NotNull UsuarioDto usuarioDto, List<ApiFailed> errors) {
         String identifier = usuarioDto.cedula() != null ? usuarioDto.cedula() : usuarioDto.pasaporte();
-
         assert identifier != null;
 
-        this.personaService.getPersona(identifier).ifPresentOrElse(persona -> {
+        return this.personaService.getPersona(identifier).map(persona -> {
             if (Boolean.FALSE.equals(persona.getDisabled())) {
                 Usuario user = persona.getUsuario();
                 if (user != null && user.getId() != null) {
                     log.debug("Usuario de persona: {}", user.getId());
-                    apiResponse.addError(ApiResponseCode.ALREADY_EXISTS, "La persona ya tiene un usuario registrado");
+                    errors.add(new ApiFailed(ApiResponseCode.ALREADY_EXISTS, "La persona ya tiene un usuario registrado"));
+                    return errors;
                 } else {
-                    personaResponse.set(persona);
+                    return persona;
                 }
             } else {
                 log.debug("Persona attempting register but is disabled. ID: {}", persona.getId());
-                apiResponse.addError(HttpStatus.FORBIDDEN.toString(), "No puede registrarse");
+                errors.add(new ApiFailed(HttpStatus.FORBIDDEN.toString(), "No puede registrarse"));
+                return errors;
             }
-
-        }, () -> {
-            apiResponse.addError(ApiResponseCode.NOT_FOUND, "La persona con la identificación personal proporcionada no fue encontrado");
+        }).orElseGet(() -> {
+            errors.add(new ApiFailed(ApiResponseCode.NOT_FOUND, "La persona con la identificación personal proporcionada no fue encontrado"));
+            return errors;
         });
-        return personaResponse.get();
     }
 
-    Fabricante validateRegistrationFabricante(UsuarioDto usuarioDto, IApiResponse<String, Object> apiResponse) {
-        AtomicReference<Fabricante> fabricanteResponse = new AtomicReference<>(null);
-        this.fabricanteService.getFabricante(usuarioDto.licencia_fabricante()).ifPresentOrElse(fabricante -> {
+    Object validateRegistrationFabricante(@NotNull UsuarioDto usuarioDto, List<ApiFailed> errors) {
+        return this.fabricanteService.getFabricante(usuarioDto.licencia_fabricante()).map(fabricante -> {
             if (Boolean.FALSE.equals(fabricante.getDisabled())) {
                 Usuario user = fabricante.getUsuario();
                 if (user != null && user.getId() != null) {
                     log.debug("Usuario de fabricante: {}", user.getId());
-                    apiResponse.addError(ApiResponseCode.ALREADY_EXISTS, "El fabricante ya tiene un usuario registrado");
+                    errors.add(new ApiFailed(ApiResponseCode.ALREADY_EXISTS, "El fabricante ya tiene un usuario registrado"));
+                    return errors;
                 } else {
-                    fabricanteResponse.set(fabricante);
+                    return fabricante;
                 }
             } else {
                 log.debug("Fabricante attempting register but is disabled. ID: {}", fabricante.getId());
-                apiResponse.addError(HttpStatus.FORBIDDEN.toString(), "No puede registrarse");
+                errors.add(new ApiFailed(HttpStatus.FORBIDDEN.toString(), "No puede registrarse"));
+                return errors;
             }
-
-        }, () -> {
-            apiResponse.addError(ApiResponseCode.NOT_FOUND, "El fabricante con la licencia proporcionada no fue encontrado");
+        }).orElseGet(() -> {
+            errors.add(new ApiFailed(ApiResponseCode.NOT_FOUND, "El fabricante con la licencia proporcionada no fue encontrado"));
+            return errors;
         });
-        return fabricanteResponse.get();
     }
 
-    void validateChangePasswordPersona(Persona persona, String newPassword, LocalDate birthdate, IApiResponse<?, Object> apiResponse) {
+    List<ApiFailed> validateChangePasswordPersona(@NotNull Persona persona, String newPassword, LocalDate birthdate) {
+        List<ApiFailed> errores = new ArrayList<>();
         if (!persona.getFechaNacimiento().toLocalDate().equals(birthdate)) {
-            apiResponse.addError(ApiResponseCode.VALIDATION_FAILED, "La fecha de cumpleaños no coincide");
+            errores.add(new ApiFailed(ApiResponseCode.VALIDATION_FAILED, "fecha_nacimiento", "La fecha de cumpleaños no coincide"));
         }
 
         if (this.passwordEncoder.matches(newPassword, persona.getUsuario().getClave())) {
-            apiResponse.addError(ApiResponseCode.VALIDATION_FAILED, "La nueva contraseña no puede ser igual a la contraseña actual");
+            errores.add(new ApiFailed(ApiResponseCode.VALIDATION_FAILED, "new_password", "La nueva contraseña no puede ser igual a la contraseña actual"));
         }
 
         if (persona.getUsuario().getUsername() != null && persona.getUsuario().getUsername().equalsIgnoreCase(newPassword)) {
-            apiResponse.addError(ApiResponseCode.VALIDATION_FAILED, "La nueva contraseña no puede ser igual a su username");
+            errores.add(new ApiFailed(ApiResponseCode.VALIDATION_FAILED, "new_password", "La nueva contraseña no puede ser igual a su username"));
         }
 
         if (this.compromisedPasswordChecker.check(newPassword).isCompromised()) {
-            apiResponse.addError(ApiResponseCode.VALIDATION_FAILED, "La nueva contraseña está comprometida, utilice contraseñas seguras");
+            errores.add(new ApiFailed(ApiResponseCode.VALIDATION_FAILED, "new_password", "La nueva contraseña está comprometida, utilice contraseñas seguras"));
         }
-
+        return errores;
     }
 
     boolean isCedulaRegistered(String cedula) {

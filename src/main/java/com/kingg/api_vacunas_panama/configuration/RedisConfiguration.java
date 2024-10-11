@@ -49,7 +49,6 @@ public class RedisConfiguration {
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
 
-
         Map<String, RedisCacheConfiguration> configs = new HashMap<>();
         configs.put("tiny", defaultCacheConfig.entryTtl(Duration.ofSeconds(30)));
         configs.put("short", defaultCacheConfig.entryTtl(Duration.ofMinutes(1)));

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +34,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class TokenService {
     private final JwtEncoder jwtEncoder;
+    private final RedisTemplate<String, Object> redisTemplate;
     @Value("${security.jwt.issuer}")
     private String issuer;
     @Value("${security.jwt.expiration-time}")
@@ -47,6 +50,14 @@ public class TokenService {
         idAdiciones.add(uuidPersona);
         idAdiciones.add(uuidFabricante);
         return this.createToken(usuario.id().toString(), rolesPermisos, idAdiciones);
+    }
+
+    public boolean isTokenRevoke(@NotNull String tokenId) {
+        Boolean hasKey = redisTemplate.hasKey("token:" + tokenId);
+        if (hasKey == null) {
+            throw new IllegalStateException("Redis is unavailable, token validation failed");
+        }
+        return !hasKey;
     }
 
     private String createToken(String subject, Collection<String> rolesPermisos, @NotNull List<Object> idsAdicionales) {
@@ -68,7 +79,9 @@ public class TokenService {
         JwtClaimsSet claims = builder.build();
         JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256).type("JWT").build();
         log.debug("created a token for: {}, expires at: {}, id_token: {}", subject, claims.getExpiresAt(), claims.getId());
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
+        String jwtToken = this.jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
+        redisTemplate.opsForValue().set("token:" + claims.getId(), jwtToken, Duration.ofSeconds(expirationTime));
+        return jwtToken;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.kingg.api_vacunas_panama.configuration.security;
 
 import com.kingg.api_vacunas_panama.service.LoginTokenService;
+import com.kingg.api_vacunas_panama.service.TokenService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -80,9 +81,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    JwtDecoder jwtDecoder() {
+    JwtDecoder jwtDecoder(TokenService tokenService) {
         NimbusJwtDecoder nimbusJwtDecoder = NimbusJwtDecoder.withPublicKey(this.publicKey).build();
         nimbusJwtDecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(issuer));
+        nimbusJwtDecoder.setJwtValidator(new CustomRedisJwtValidator(tokenService));
         return nimbusJwtDecoder;
     }
 

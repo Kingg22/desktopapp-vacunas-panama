@@ -1,7 +1,7 @@
 package com.kingg.api_vacunas_panama.configuration.security;
 
-import com.kingg.api_vacunas_panama.service.LoginTokenService;
 import com.kingg.api_vacunas_panama.service.TokenService;
+import com.kingg.api_vacunas_panama.service.UserDetailsServiceImpl;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -22,9 +22,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -46,7 +48,7 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, TokenService tokenService, JwtDecoder jwtDecoder) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers ->
@@ -61,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/vacunacion/v1/vaccines/**").hasAnyRole("DOCTOR", "ENFERMERA")
                         .anyRequest().authenticated()
                 )
+                .addFilterAfter(new CustomJwtRefreshFilter(tokenService, jwtDecoder), BearerTokenAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(accessDeniedHandler)
                         .authenticationEntryPoint(authenticationEntryPoint)
@@ -82,7 +85,9 @@ public class SecurityConfig {
 
     @Bean
     JwtDecoder jwtDecoder(TokenService tokenService) {
-        NimbusJwtDecoder nimbusJwtDecoder = NimbusJwtDecoder.withPublicKey(this.publicKey).build();
+        NimbusJwtDecoder nimbusJwtDecoder = NimbusJwtDecoder.withPublicKey(this.publicKey)
+                .signatureAlgorithm(SignatureAlgorithm.RS256)
+                .build();
         nimbusJwtDecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(issuer));
         nimbusJwtDecoder.setJwtValidator(new CustomRedisJwtValidator(tokenService));
         return nimbusJwtDecoder;
@@ -105,11 +110,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(LoginTokenService loginTokenService,
+    AuthenticationManager authenticationManager(UserDetailsServiceImpl userDetailsServiceImpl,
                                                 PasswordEncoder passwordEncoder,
                                                 CompromisedPasswordChecker compromisedPasswordChecker) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(passwordEncoder);
-        daoAuthenticationProvider.setUserDetailsService(loginTokenService);
+        daoAuthenticationProvider.setUserDetailsService(userDetailsServiceImpl);
         daoAuthenticationProvider.setCompromisedPasswordChecker(compromisedPasswordChecker);
         return new ProviderManager(daoAuthenticationProvider);
     }

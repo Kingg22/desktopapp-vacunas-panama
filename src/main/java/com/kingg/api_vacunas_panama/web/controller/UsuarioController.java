@@ -30,15 +30,17 @@ import java.util.UUID;
  * This controller handles operations related to registering users and managing their roles and associated entities
  * (e.g., {@link Paciente}, {@link Doctor}, {@link Fabricante}). It ensures that users are linked to an existing {@link Persona} or {@link Entidad}
  * and properly assigned roles.
+ * </p>
  *
- * <p><b>Response Format:</b> The response for registration and related endpoints typically includes:</p>
+ * <p><b>Response Format:</b> The response for registration and related endpoints typically includes:
  * <ul>
  *   <li>User details (e.g., username, roles, etc.).</li>
  *   <li>Associated {@link Persona} or {@link Entidad} information (e.g., {@link Paciente}, {@link Doctor}, {@link Fabricante})
  *   if applicable.</li>
  *   <li>A JWT token, which is only generated if the associated persona or entity has an active (validated) status.</li>
  * </ul>
- * <p>
+ * </p>
+ * <br>
  * For cases where both the {@link Persona}/{@link Entidad} and the {@link Usuario} need to created in a single request,
  * a different endpoint should be used.
  */
@@ -61,11 +63,11 @@ public class UsuarioController {
      * <p><b>Note:</b> The user must be assigned roles, and empty roles are not allowed.
      * If the associated entities is not created, the request will be rejected.</p>
      *
-     * @param usuarioDto     the data transfer object containing the user registration details
-     * @param authentication the authentication object representing the current user (if any)
-     * @param request        the HTTP request object containing additional request data
-     * @return a {@link ResponseEntity} containing the registration result, including user details, associated {@link Persona} or {@link Entidad}
-     * information, and a token if the {@link Persona} or {@link Entidad} is validated and active.
+     * @param usuarioDto     The {@link UsuarioDto} containing the user registration details.
+     * @param authentication The {@link Authentication} representing the current user (if any).
+     * @param request        The {@link ServletWebRequest} used for building the response.
+     * @return {@link IApiResponse} containing the registration result, including user details, associated {@link Persona} or {@link Entidad}
+     * information and a token if the {@link Persona} or {@link Entidad} is validated and active.
      */
     @PostMapping({"/register"})
     public ResponseEntity<IApiResponse<String, Serializable>> register(@RequestBody @Valid UsuarioDto usuarioDto, Authentication authentication, ServletWebRequest request) {
@@ -102,7 +104,7 @@ public class UsuarioController {
         }
 
         if (authentication != null && authentication.isAuthenticated()) {
-            apiResponse.addData(this.usuarioManagementService.setLoginResponse(UUID.fromString(authentication.getName())));
+            apiResponse.addData(this.usuarioManagementService.setLoginData(UUID.fromString(authentication.getName())));
             apiResponse.addStatusCode(HttpStatus.OK);
             apiResponse.addStatus("Login successful");
         }

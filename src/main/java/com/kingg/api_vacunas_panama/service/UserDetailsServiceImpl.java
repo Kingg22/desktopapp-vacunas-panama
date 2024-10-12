@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoginTokenService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     private final UsuarioManagementService usuarioManagementService;
 
     @Override

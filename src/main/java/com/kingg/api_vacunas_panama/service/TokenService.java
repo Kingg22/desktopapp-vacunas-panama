@@ -1,6 +1,7 @@
 package com.kingg.api_vacunas_panama.service;
 
-import com.kingg.api_vacunas_panama.web.controller.UsuarioController;
+import com.kingg.api_vacunas_panama.persistence.entity.Permiso;
+import com.kingg.api_vacunas_panama.persistence.entity.Usuario;
 import com.kingg.api_vacunas_panama.web.dto.PermisoDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import jakarta.validation.constraints.NotNull;
@@ -15,19 +16,32 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
- * Service for generating JWT tokens.
- * Encodes information from DTOs or entities previously fetched by {@link UsuarioController}.
- * Sets the issuer and time values based on configuration properties.
- * This service handles token creation only, without decoding or verification authorities.
+ * Service for managing JWT tokens.
+ * <p>
+ * This service is responsible for encoding information from DTOs  entities previously fetched by {@link UsuarioManagementService},
+ * Its sets the issuer and time values based on application.properties.
+ * </p>
+ * <p>
+ * The service now supports both access tokens and refresh tokens, ensuring the correct usage of each token type.
+ * Tokens are stored in Redis cache to facilitate efficient validation and retrieval.
+ * </p>
+ * <p>
+ * This service provides methods for validating the existence of tokens in the cache. It does not handler the decoding of
+ * tokens; this is managed by the {@link org.springframework.security.oauth2.jwt.JwtDecoder}
+ * </p>
+ *
+ * @see UsuarioManagementService
+ * @see org.springframework.security.oauth2.jwt.JwtDecoder
  */
 @Slf4j
 @Service
@@ -39,28 +53,58 @@ public class TokenService {
     private String issuer;
     @Value("${security.jwt.expiration-time}")
     private Integer expirationTime;
+    @Value("${security.jwt.refresh-time}")
+    private Integer refreshTime;
 
-    public String generateToken(@NotNull UsuarioDto usuario, UUID uuidPersona, UUID uuidFabricante) {
-        Collection<String> rolesPermisos = usuario.roles().stream()
+    public Map<String, Serializable> generateTokens(UsuarioDto usuarioDto, Map<String, Serializable> idsAdicionales) {
+        Map<String, Serializable> data = new LinkedHashMap<>();
+        data.put("access_token", this.createToken(usuarioDto.id().toString(), getRolesPermisos(usuarioDto), idsAdicionales));
+        data.put("refresh_token", this.createRefreshToken(usuarioDto.id().toString()));
+        return data;
+    }
+
+    public Map<String, Serializable> generateTokens(Usuario usuario, Map<String, Serializable> idsAdicionales) {
+        Map<String, Serializable> data = new LinkedHashMap<>();
+        data.put("access_token", this.createToken(usuario.getId().toString(), getRolesPermisos(usuario), idsAdicionales));
+        data.put("refresh_token", this.createRefreshToken(usuario.getId().toString()));
+        return data;
+    }
+
+    public boolean isAccessTokenValid(@NotNull String userId, @NotNull String tokenId) {
+        String key = "token:access:".concat(userId).concat(":").concat(tokenId);
+        Boolean hasKeyAccessToken = redisTemplate.hasKey(key);
+        if (hasKeyAccessToken == null) {
+            throw new IllegalStateException("Redis is unavailable, token validation failed");
+        }
+        return hasKeyAccessToken;
+    }
+
+    public boolean isRefreshTokenValid(@NotNull String userId, @NotNull String tokenId) {
+        String key = "token:refresh:".concat(userId).concat(":").concat(tokenId);
+        Boolean hasKeyRefreshToken = redisTemplate.hasKey(key);
+        if (hasKeyRefreshToken == null) {
+            throw new IllegalStateException("Redis is unavailable, token validation failed");
+        }
+        return hasKeyRefreshToken;
+    }
+
+    private Collection<String> getRolesPermisos(@NotNull UsuarioDto usuarioDto) {
+        return usuarioDto.roles().stream()
                 .flatMap(role -> role.permisos() != null ? Stream.concat(
                         Stream.of("ROLE_" + role.nombre().toUpperCase()),
                         role.permisos().stream().map(PermisoDto::nombre)) : null
                 ).toList();
-        List<Object> idAdiciones = new ArrayList<>();
-        idAdiciones.add(uuidPersona);
-        idAdiciones.add(uuidFabricante);
-        return this.createToken(usuario.id().toString(), rolesPermisos, idAdiciones);
     }
 
-    public boolean isTokenRevoke(@NotNull String tokenId) {
-        Boolean hasKey = redisTemplate.hasKey("token:" + tokenId);
-        if (hasKey == null) {
-            throw new IllegalStateException("Redis is unavailable, token validation failed");
-        }
-        return !hasKey;
+    private Collection<String> getRolesPermisos(@NotNull Usuario usuario) {
+        return usuario.getRoles().stream()
+                .flatMap(rol -> rol.getPermisos() != null ? Stream.concat(
+                        Stream.of("ROLE_" + rol.getNombre().toUpperCase()),
+                        rol.getPermisos().stream().map(Permiso::getNombre)) : null
+                ).toList();
     }
 
-    private String createToken(String subject, Collection<String> rolesPermisos, @NotNull List<Object> idsAdicionales) {
+    private String createToken(@NotNull String subject, Collection<String> rolesPermisos, Map<String, Serializable> claimsAdicionales) {
         Instant now = Instant.now();
         JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
                 .issuer(issuer)
@@ -70,17 +114,43 @@ public class TokenService {
                 .subject(subject)
                 .claim("scope", rolesPermisos)
                 .id(UUID.randomUUID().toString());
-        if (idsAdicionales.get(0) != null) {
-            builder.claim("persona", idsAdicionales.getFirst());
-        }
-        if (idsAdicionales.get(1) != null) {
-            builder.claim("fabricante", idsAdicionales.get(1));
+
+        if (claimsAdicionales != null) {
+            for (Map.Entry<String, Serializable> claim : claimsAdicionales.entrySet()) {
+                if (claim.getValue() != null) {
+                    builder.claim(claim.getKey(), claim.getValue());
+                }
+            }
         }
         JwtClaimsSet claims = builder.build();
         JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256).type("JWT").build();
-        log.debug("created a token for: {}, expires at: {}, id_token: {}", subject, claims.getExpiresAt(), claims.getId());
+
         String jwtToken = this.jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
-        redisTemplate.opsForValue().set("token:" + claims.getId(), jwtToken, Duration.ofSeconds(expirationTime));
+        log.debug("created a token for: {}, expires at: {}, id_token: {}", subject, claims.getExpiresAt(), claims.getId());
+
+        String key = "token:access:".concat(subject).concat(":").concat(claims.getId());
+        redisTemplate.opsForValue().set(key, jwtToken, Duration.ofSeconds(expirationTime));
+
+        return jwtToken;
+    }
+
+    private String createRefreshToken(@NotNull String subject) {
+        Instant now = Instant.now();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer(issuer)
+                .issuedAt(now)
+                .notBefore(now)
+                .expiresAt(now.plusSeconds(refreshTime))
+                .subject(subject)
+                .id(UUID.randomUUID().toString())
+                .build();
+        JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256).type("JWT").build();
+        String jwtToken = this.jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
+        log.debug("created a refresh token for: {}, expires at: {}, id_token: {}", subject, claims.getExpiresAt(), claims.getId());
+
+        String key = "token:refresh:".concat(subject).concat(":").concat(claims.getId());
+        redisTemplate.opsForValue().set(key, jwtToken, Duration.ofSeconds(refreshTime));
+
         return jwtToken;
     }
 

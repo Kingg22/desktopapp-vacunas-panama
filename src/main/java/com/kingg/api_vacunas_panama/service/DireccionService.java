@@ -9,6 +9,7 @@ import com.kingg.api_vacunas_panama.util.mapper.DireccionMapper;
 import com.kingg.api_vacunas_panama.web.dto.DistritoDto;
 import com.kingg.api_vacunas_panama.web.dto.ProvinciaDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class DireccionService {
         return distritoRepository.findAll();
     }
 
+    @Cacheable(cacheNames = "massive", key = "'distritosDto'")
     public List<DistritoDto> getDistritosDto() {
         return mapper.distritoListToDto(getDistritos());
     }
@@ -35,6 +37,7 @@ public class DireccionService {
         return provinciaRepository.findAll();
     }
 
+    @Cacheable(cacheNames = "massive", key = "'provinciasDto'")
     public List<ProvinciaDto> getProvinciasDto() {
         return mapper.provinciaListToDto(getProvincias());
     }

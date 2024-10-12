@@ -1,5 +1,6 @@
 package com.kingg.api_vacunas_panama.configuration;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,10 @@ public class RedisConfiguration {
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();
-        serializer.configure(objectMapper -> objectMapper.registerModule(new JavaTimeModule()));
+        serializer.configure(objectMapper -> {
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        });
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
@@ -43,7 +47,10 @@ public class RedisConfiguration {
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory factory) {
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();
-        serializer.configure(objectMapper -> objectMapper.registerModule(new JavaTimeModule()));
+        serializer.configure(objectMapper -> {
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        });
 
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
@@ -57,6 +64,7 @@ public class RedisConfiguration {
         configs.put("large", defaultCacheConfig.entryTtl(Duration.ofHours(1)));
         configs.put("extraLarge", defaultCacheConfig.entryTtl(Duration.ofHours(2)));
         configs.put("huge", defaultCacheConfig.entryTtl(Duration.ofDays(1)));
+        configs.put("massive", defaultCacheConfig.entryTtl(Duration.ofDays(30)));
 
         return RedisCacheManager.builder(factory)
                 .cacheDefaults(defaultCacheConfig)

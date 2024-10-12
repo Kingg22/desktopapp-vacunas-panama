@@ -14,6 +14,7 @@ import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -137,6 +138,7 @@ public class UsuarioManagementService {
         return apiResponse;
     }
 
+    @Cacheable(cacheNames = "short", key = "'login:' + #idUser")
     public Map<String, Serializable> setLoginResponse(UUID idUser) {
         Map<String, Serializable> data = new LinkedHashMap<>();
         UsuarioDto user = this.getUsuarioDto(idUser);
@@ -152,6 +154,7 @@ public class UsuarioManagementService {
         return data;
     }
 
+    @Cacheable(cacheNames = "short", key = "'profile:' + #idUser")
     public Map<String, Serializable> getProfile(UUID idUser) {
         Map<String, Serializable> data = new LinkedHashMap<>();
         this.personaService.getPersonaByUserID(idUser).ifPresent(persona ->
@@ -163,10 +166,12 @@ public class UsuarioManagementService {
         return data;
     }
 
+    @Cacheable(cacheNames = "massive", key = "'roles'")
     public List<IdNombreDto> getRoles() {
         return rolRepository.findAllIdNombre();
     }
 
+    @Cacheable(cacheNames = "massive", key = "'permisos'")
     public List<IdNombreDto> getPermisos() {
         return permisoRepository.findAllIdNombre();
     }

@@ -73,6 +73,10 @@ public class ApiContentResponse implements Serializable {
         this.warnings.add(new ApiFailed(apiResponseCode, message));
     }
 
+    public void addWarning(ApiResponseCode apiResponseCode, String property, String message) {
+        this.warnings.add(new ApiFailed(apiResponseCode, property, message));
+    }
+
     public void addWarnings(@NotNull List<?> warningsList) {
         for (Object error : warningsList) {
             if (error instanceof ApiFailed failed) {

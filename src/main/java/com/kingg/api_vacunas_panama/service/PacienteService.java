@@ -3,11 +3,13 @@ package com.kingg.api_vacunas_panama.service;
 import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
 import com.kingg.api_vacunas_panama.persistence.repository.PacienteRepository;
 import com.kingg.api_vacunas_panama.web.dto.ViewPacienteVacunaEnfermedadDto;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -29,6 +31,10 @@ public class PacienteService {
         } else {
             return view;
         }
+    }
+
+    public Optional<Paciente> getPacienteByUserID(@NotNull UUID idUser) {
+        return this.pacienteRepository.findByUsuario_Id(idUser);
     }
 
 }

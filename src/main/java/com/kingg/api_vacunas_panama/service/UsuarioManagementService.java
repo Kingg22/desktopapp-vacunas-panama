@@ -5,9 +5,7 @@ import com.kingg.api_vacunas_panama.persistence.repository.PermisoRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.RolRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.UsuarioRepository;
 import com.kingg.api_vacunas_panama.util.*;
-import com.kingg.api_vacunas_panama.util.mapper.AccountMapper;
-import com.kingg.api_vacunas_panama.util.mapper.FabricanteMapper;
-import com.kingg.api_vacunas_panama.util.mapper.PersonaMapper;
+import com.kingg.api_vacunas_panama.util.mapper.*;
 import com.kingg.api_vacunas_panama.web.dto.IdNombreDto;
 import com.kingg.api_vacunas_panama.web.dto.RestoreDto;
 import com.kingg.api_vacunas_panama.web.dto.UsuarioDto;
@@ -25,7 +23,7 @@ import java.util.*;
 
 /**
  * Service for {@link Usuario}, {@link Rol} and {@link Permiso}
- * Extends functionality from {@link PersonaService} and {@link FabricanteService}
+ * Extends functionality from {@link PersonaService}, {@link PacienteService}, {@link DoctorService} and {@link FabricanteService}
  * inheriting methods that involve {@link Usuario} in relation to these services.
  */
 @Slf4j
@@ -35,11 +33,15 @@ public class UsuarioManagementService {
     private final AccountMapper mapper;
     private final FabricanteMapper fabricanteMapper;
     private final PersonaMapper personaMapper;
+    private final PacienteMapper pacienteMapper;
+    private final DoctorMapper doctorMapper;
     private final UsuarioRepository usuarioRepository;
     private final PermisoRepository permisoRepository;
     private final RolRepository rolRepository;
     private final TokenService tokenService;
     private final PersonaService personaService;
+    private final PacienteService pacienteService;
+    private final DoctorService doctorService;
     private final FabricanteService fabricanteService;
     private final UsuarioValidationService validationService;
     private final UsuarioTransactionService transactionService;
@@ -55,11 +57,13 @@ public class UsuarioManagementService {
         try {
             List<RolesEnum> authenticatedRoles = authenticatedAuthorities.stream().map(RolesEnum::valueOf).toList();
             if (!usuarioDto.roles().stream().allMatch(rolDto -> this.validationService.canRegisterRole(rolDto, authenticatedRoles))) {
-                errors.add(new ApiFailed(ApiResponseCode.ROL_HIERARCHY_VIOLATION, "roles[]", "No puede asignar roles superiores a su rol máximo actual"));
+                errors.add(new ApiFailed(ApiResponseCode.ROL_HIERARCHY_VIOLATION, "roles[]",
+                        "No puede asignar roles superiores a su rol máximo actual"));
             }
         } catch (IllegalArgumentException exception) {
             log.debug("Argument exception by RolesEnum: {}", exception.getMessage());
-            errors.add(new ApiFailed(ApiResponseCode.API_UPDATE_UNSUPPORTED, "roles[]", "Roles creados recientemente no son soportados para registrarse"));
+            errors.add(new ApiFailed(ApiResponseCode.API_UPDATE_UNSUPPORTED, "roles[]",
+                    "Roles creados recientemente no son soportados para registrarse"));
         }
 
         if (!this.validationService.hasUserManagementPermissions(authenticatedAuthorities)) {
@@ -71,11 +75,12 @@ public class UsuarioManagementService {
     public IApiResponse<String, Serializable> createUser(@NotNull UsuarioDto usuarioDto) {
         IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.permisos() != null && !rolDto.permisos().isEmpty())) {
-            apiResponse.addWarning(ApiResponseCode.INFORMATION_IGNORED, "Los permisos de los roles son ignorados en el registro. Para crear o relacionar nuevos permisos a un rol debe utilizar otra opción");
+            apiResponse.addWarning(ApiResponseCode.INFORMATION_IGNORED, "roles[].permisos[]",
+                    "Los permisos de los roles son ignorados en el registro. Para crear o relacionar nuevos permisos a un rol debe utilizar otra opción");
         }
 
-        if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.nombre() != null && !rolDto.nombre().isEmpty())) {
-            apiResponse.addWarning(ApiResponseCode.NON_IDEMPOTENCE, "Utilice ID al realizar peticiones");
+        if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.id() == null && rolDto.nombre() != null && !rolDto.nombre().isEmpty())) {
+            apiResponse.addWarning(ApiResponseCode.NON_IDEMPOTENCE, "roles[]", "Utilice ID al realizar peticiones");
         }
 
         Object validationResult = this.validationService.validateRegistration(usuarioDto);
@@ -83,30 +88,38 @@ public class UsuarioManagementService {
             apiResponse.addErrors(failedList);
         }
         if (!apiResponse.hasErrors()) {
-            UUID idPersona = null;
-            UUID idFabricante = null;
+            UUID uuidPersona = null;
+            UUID uuidFabricante = null;
             Usuario user;
 
             switch (validationResult) {
                 case Persona persona -> {
                     user = transactionService.createUser(usuarioDto, persona, null);
-                    idPersona = persona.getId();
-                    apiResponse.addData("persona", personaMapper.toDto(persona));
+                    uuidPersona = persona.getId();
+                    switch (persona) {
+                        case Paciente paciente -> apiResponse.addData("paciente", pacienteMapper.toDto(paciente));
+                        case Doctor doctor -> apiResponse.addData("doctor", doctorMapper.toDto(doctor));
+                        default -> apiResponse.addData("persona", personaMapper.toDto(persona));
+                    }
                 }
                 case Fabricante fabricante -> {
                     user = transactionService.createUser(usuarioDto, null, fabricante);
-                    idFabricante = fabricante.getId();
+                    uuidFabricante = fabricante.getId();
                     apiResponse.addData("fabricante", fabricanteMapper.toDto(fabricante));
                 }
                 default -> {
                     apiResponse.addStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
                     apiResponse.addStatus(ApiResponseCode.VALIDATION_FAILED.toString());
-                    apiResponse.addError(ApiResponseCode.API_UPDATE_UNSUPPORTED, "Ha ocurrido un error en la validación");
+                    apiResponse.addError(ApiResponseCode.API_UPDATE_UNSUPPORTED, "Ha ocurrido un error posterior a la validación");
                     return apiResponse;
                 }
             }
 
-            apiResponse.addData("token", this.tokenService.generateToken(this.mapper.usuarioToDto(user), idPersona, idFabricante));
+            Map<String, Serializable> idAdicionales = new HashMap<>();
+            idAdicionales.put("persona", uuidPersona);
+            idAdicionales.put("fabricante", uuidFabricante);
+
+            apiResponse.addData(this.tokenService.generateTokens(user, idAdicionales));
             apiResponse.addStatusCode(HttpStatus.CREATED);
             apiResponse.addStatus("Successful user creation");
         } else {
@@ -133,36 +146,39 @@ public class UsuarioManagementService {
         }, () -> {
             apiResponse.addStatusCode(HttpStatus.NOT_FOUND);
             apiResponse.addStatus("Not found person with identifier");
-            apiResponse.addError(ApiResponseCode.NOT_FOUND, "La persona con la identificación dada no fue encontrada");
+            apiResponse.addError(ApiResponseCode.NOT_FOUND, "username", "La persona con la identificación dada no fue encontrada");
         });
         return apiResponse;
     }
 
     @Cacheable(cacheNames = "short", key = "'login:' + #idUser")
-    public Map<String, Serializable> setLoginResponse(UUID idUser) {
+    public Map<String, Serializable> setLoginData(UUID idUser) {
         Map<String, Serializable> data = new LinkedHashMap<>();
-        UsuarioDto user = this.getUsuarioDto(idUser);
-        Optional<UUID> idPersona = this.personaService.getPersonaByUserID(idUser).map(persona -> {
-            data.put("persona", this.personaMapper.toDto(persona));
+
+        Optional<UUID> idPersona = this.pacienteService.getPacienteByUserID(idUser).map(persona -> {
+            data.put("paciente", this.pacienteMapper.toDto(persona));
             return persona.getId();
         });
+        this.doctorService.getDoctorByUserID(idUser).ifPresent(doctor -> data.put("doctor", this.doctorMapper.toDto(doctor)));
         Optional<UUID> idFabricante = this.fabricanteService.getFabricanteByUserID(idUser).map(fabricante -> {
             data.put("fabricante", this.fabricanteMapper.toDto(fabricante));
             return fabricante.getId();
         });
-        data.put("token", this.tokenService.generateToken(user, idPersona.orElse(null), idFabricante.orElse(null)));
+
+        Map<String, Serializable> idsAdicionales = new HashMap<>();
+        idsAdicionales.put("persona", idPersona.orElse(null));
+        idsAdicionales.put("fabricante", idFabricante.orElse(null));
+
+        data.putAll(this.generateTokens(idUser, idsAdicionales));
         return data;
     }
 
     @Cacheable(cacheNames = "short", key = "'profile:' + #idUser")
     public Map<String, Serializable> getProfile(UUID idUser) {
         Map<String, Serializable> data = new LinkedHashMap<>();
-        this.personaService.getPersonaByUserID(idUser).ifPresent(persona ->
-                data.put("persona", this.personaMapper.toDto(persona))
-        );
-        this.fabricanteService.getFabricanteByUserID(idUser).ifPresent(fabricante ->
-                data.put("fabricante", this.fabricanteMapper.toDto(fabricante))
-        );
+        this.pacienteService.getPacienteByUserID(idUser).ifPresent(paciente -> data.put("paciente", this.pacienteMapper.toDto(paciente)));
+        this.doctorService.getDoctorByUserID(idUser).ifPresent(doctor -> data.put("doctor", this.doctorMapper.toDto(doctor)));
+        this.fabricanteService.getFabricanteByUserID(idUser).ifPresent(fabricante -> data.put("fabricante", this.fabricanteMapper.toDto(fabricante)));
         return data;
     }
 
@@ -177,14 +193,19 @@ public class UsuarioManagementService {
     }
 
     public UsuarioDto getUsuarioDto(UUID id) {
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow();
-        return mapper.usuarioToDto(usuario);
+        return mapper.usuarioToDto(usuarioRepository.findById(id).orElseThrow());
+    }
+
+    public Map<String, Serializable> generateTokens(UUID idUser, Map<String, Serializable> idsAdicionales) {
+        UsuarioDto usuarioDto = getUsuarioDto(idUser);
+        return tokenService.generateTokens(usuarioDto, idsAdicionales);
     }
 
     /**
      * Finds a user based on a given identifier by searching across multiple fields form related tables.
      * <p>
      * Additionally, the user's {@code disabled} status is manually set as part of the result.
+     * </p>
      *
      * @param identifier the identifier used to search for the user (e.g. username, email, cedula)
      * @return an {@link Optional} containing the found {@link Usuario} or empty if no user matches the identifier.

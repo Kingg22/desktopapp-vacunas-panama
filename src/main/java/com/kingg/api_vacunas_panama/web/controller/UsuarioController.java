@@ -100,7 +100,7 @@ public class UsuarioController {
             apiResponse.addStatusCode(HttpStatus.TEMPORARY_REDIRECT);
             apiResponse.addStatus("Please reset your password in the given uri");
             apiResponse.addStatus("/vacunacion/v1/account/restore");
-            apiResponse.addError(ApiResponseCode.COMPROMISED_PASSWORD, "Su contraseña está comprometida, por favor cambiarla lo más pronto posible");
+            apiResponse.addError(ApiResponseCode.COMPROMISED_PASSWORD, "password", "Su contraseña está comprometida, por favor cambiarla lo más pronto posible");
         }
 
         if (authentication != null && authentication.isAuthenticated()) {

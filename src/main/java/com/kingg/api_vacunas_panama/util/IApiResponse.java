@@ -51,10 +51,13 @@ public interface IApiResponse<S, T> extends Serializable {
 
     void addWarning(ApiResponseCode code, String message);
 
+    void addWarning(ApiResponseCode apiResponseCode, String property, String message);
+
     void addWarnings(List<?> warnings);
 
     @JsonIgnore
     int getStatusCode();
 
     boolean hasErrors();
+
 }

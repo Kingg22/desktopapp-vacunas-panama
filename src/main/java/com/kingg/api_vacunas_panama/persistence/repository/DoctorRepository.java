@@ -10,4 +10,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
 
     Optional<Doctor> findByIdoneidad(String idoneidad);
 
+    Optional<Doctor> findByUsuario_Id(UUID idUser);
+
 }

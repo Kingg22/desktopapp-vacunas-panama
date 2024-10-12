@@ -34,7 +34,7 @@ public class FormatterUtil {
             log.debug("cedula already in correct format: {}", cedula);
             return cedula.trim();
         }
-        log.error("cedula no match with any expected pattern: {}", cedula);
+        log.debug("cedula no match with any expected pattern: {}", cedula);
         throw new IllegalArgumentException("cedula no match to expected pattern to format");
     }
 
@@ -89,7 +89,7 @@ public class FormatterUtil {
             log.debug("cedula of mother already in correct format: {}", idRI);
             return idRI.trim();
         }
-        log.error("id of RI no match with any expected pattern: {}", idRI);
+        log.debug("id of RI no match with any expected pattern: {}", idRI);
         throw new IllegalArgumentException("id of RI no match to expected pattern to format");
     }
 

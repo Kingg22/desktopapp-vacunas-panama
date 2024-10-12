@@ -1,8 +1,8 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
-import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
+import com.kingg.api_vacunas_panama.persistence.entity.Doctor;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * DTO for {@link Paciente}
+ * DTO for {@link Doctor}
  */
 @Data
 @SuperBuilder
@@ -20,12 +20,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PacienteDto extends PersonaDto implements Serializable {
-    @Size(max = 255)
-    @Pattern(regexp = "^(RN(\\\\d{1,2}?)?)-(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\\\d{1,4})-(\\\\d{1,6})$|^NI-.+$",
-            flags = {Pattern.Flag.CASE_INSENSITIVE, Pattern.Flag.MULTILINE},
-            message = "El formato de id temporal no es válido")
-    String identificacion_temporal;
+public class DoctorDto extends PersonaDto implements Serializable {
+    @NotNull
+    @Size(max = 20)
+    String idoneidad;
+    @Size(max = 100)
+    String categoria;
     @PastOrPresent
     LocalDateTime created_at;
     @PastOrPresent

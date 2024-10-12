@@ -2,6 +2,7 @@ package com.kingg.api_vacunas_panama.persistence.repository;
 
 import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
 import com.kingg.api_vacunas_panama.web.dto.ViewPacienteVacunaEnfermedadDto;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,5 +27,7 @@ public interface PacienteRepository extends JpaRepository<Paciente, UUID> {
     Optional<Paciente> findByCedulaOrPasaporteOrIdTemporalOrCorreoOrUsername(@Param("cedula") String cedula, @Param("pasaporte") String pasaporte, @Param("idTemporal") String idTemporal, @Param("correo") String correo, @Param("username") String username);
 
     Optional<Paciente> findByIdentificacionTemporal(String idTemporal);
+
+    Optional<Paciente> findByUsuario_Id(@NotNull UUID idUser);
 
 }

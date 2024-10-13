@@ -133,10 +133,10 @@ public class UsuarioManagementService {
         IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         Optional<Persona> opPersona = this.personaService.getPersona(restoreDto.username());
         opPersona.ifPresentOrElse(persona -> {
-            List<ApiFailed> failedList = this.validationService.validateChangePasswordPersona(persona, restoreDto.new_password(), restoreDto.fecha_nacimiento());
+            List<ApiFailed> failedList = this.validationService.validateChangePasswordPersona(persona, restoreDto.newPassword(), restoreDto.fechaNacimiento());
             apiResponse.addErrors(failedList);
             if (failedList.isEmpty()) {
-                this.transactionService.changePasswordPersonas(persona, restoreDto.new_password());
+                this.transactionService.changePasswordPersonas(persona, restoreDto.newPassword());
                 apiResponse.addStatusCode(HttpStatus.OK);
                 apiResponse.addStatus("Password restored successfully");
             } else {
@@ -155,9 +155,9 @@ public class UsuarioManagementService {
     public Map<String, Serializable> setLoginData(UUID idUser) {
         Map<String, Serializable> data = new LinkedHashMap<>();
 
-        Optional<UUID> idPersona = this.pacienteService.getPacienteByUserID(idUser).map(persona -> {
-            data.put("paciente", this.pacienteMapper.toDto(persona));
-            return persona.getId();
+        Optional<UUID> idPersona = this.pacienteService.getPacienteByUserID(idUser).map(paciente -> {
+            data.put("paciente", this.pacienteMapper.toDto(paciente));
+            return paciente.getId();
         });
         this.doctorService.getDoctorByUserID(idUser).ifPresent(doctor -> data.put("doctor", this.doctorMapper.toDto(doctor)));
         Optional<UUID> idFabricante = this.fabricanteService.getFabricanteByUserID(idUser).map(fabricante -> {
@@ -198,6 +198,17 @@ public class UsuarioManagementService {
 
     public Map<String, Serializable> generateTokens(UUID idUser, Map<String, Serializable> idsAdicionales) {
         UsuarioDto usuarioDto = getUsuarioDto(idUser);
+        return tokenService.generateTokens(usuarioDto, idsAdicionales);
+    }
+
+    public Map<String, Serializable> generateTokens(UUID id) {
+        UsuarioDto usuarioDto = getUsuarioDto(id);
+        Optional<UUID> idPersona = this.personaService.getPersonaByUserID(id).map(Persona::getId);
+        Optional<UUID> idFabricante = this.fabricanteService.getFabricanteByUserID(id).map(Entidad::getId);
+
+        Map<String, Serializable> idsAdicionales = new HashMap<>();
+        idsAdicionales.put("persona", idPersona.orElse(null));
+        idsAdicionales.put("fabricante", idFabricante.orElse(null));
         return tokenService.generateTokens(usuarioDto, idsAdicionales);
     }
 

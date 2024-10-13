@@ -45,7 +45,7 @@ public class TokenController {
         String key = "token:refresh:".concat(userId).concat(":").concat(tokenId);
         redisTemplate.delete(key);
 
-        apiResponse.addData(this.usuarioManagementService.generateTokens(UUID.fromString(userId), null));
+        apiResponse.addData(this.usuarioManagementService.generateTokens(UUID.fromString(userId)));
         apiResponse.addStatusCode(HttpStatus.OK);
         return ApiResponseUtil.sendResponse(apiResponse, request);
     }

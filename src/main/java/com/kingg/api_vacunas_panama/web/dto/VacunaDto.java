@@ -1,8 +1,8 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingg.api_vacunas_panama.persistence.entity.Vacuna;
 import com.kingg.api_vacunas_panama.util.NumDosisEnum;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -18,9 +18,12 @@ import java.util.UUID;
 public record VacunaDto(UUID id,
                         @NotNull @Size(max = 100)
                         @NotBlank String nombre,
-                        Short edad_minima_meses,
-                        Float intervalo_dosis_meses,
-                        NumDosisEnum dosis_maxima,
-                        @Nullable @PastOrPresent LocalDateTime created_at,
-                        @PastOrPresent LocalDateTime updated_at) implements Serializable {
+                        @JsonProperty(value = "edad_minima_meses")
+                        Short edadMinimaMeses,
+                        @JsonProperty(value = "intervalo_dosis_meses")
+                        Float intervaloDosisMeses,
+                        @JsonProperty(value = "dosis_maxima")
+                        NumDosisEnum dosisMaxima,
+                        @PastOrPresent @JsonProperty(value = "created_at") LocalDateTime createdAt,
+                        @PastOrPresent @JsonProperty(value = "updated_at") LocalDateTime updatedAt) implements Serializable {
 }

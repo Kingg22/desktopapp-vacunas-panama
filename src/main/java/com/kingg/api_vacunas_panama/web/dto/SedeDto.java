@@ -1,5 +1,6 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingg.api_vacunas_panama.persistence.entity.Sede;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.PastOrPresent;
@@ -22,7 +23,9 @@ public class SedeDto extends EntidadDto {
     String region;
     @Nullable
     @PastOrPresent
-    LocalDateTime created_at;
+    @JsonProperty(value = "created_at")
+    LocalDateTime createdAt;
     @PastOrPresent
-    LocalDateTime updated_at;
+    @JsonProperty(value = "updated_at")
+    LocalDateTime updatedAt;
 }

@@ -36,7 +36,7 @@ public class Usuario {
     @NotNull
     @Nationalized
     @Column(name = "clave", nullable = false, length = 100)
-    private String clave;
+    private String password;
 
     @Transient
     private boolean disabled;

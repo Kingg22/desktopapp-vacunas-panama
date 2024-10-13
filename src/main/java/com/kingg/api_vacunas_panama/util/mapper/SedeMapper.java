@@ -12,13 +12,9 @@ import org.mapstruct.NullValueCheckStrategy;
 public interface SedeMapper {
     @Mapping(target = "sedesInventarios", ignore = true)
     @Mapping(target = "doctores", ignore = true)
-    @Mapping(target = "updatedAt", source = "updated_at")
     @Mapping(target = "dosis", ignore = true)
-    @Mapping(target = "createdAt", source = "created_at")
     Sede toEntity(SedeDto sedeDto);
 
-    @Mapping(target = "updated_at", source = "updatedAt")
-    @Mapping(target = "created_at", source = "createdAt")
     SedeDto toDto(Sede sede);
 
 }

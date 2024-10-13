@@ -11,15 +11,9 @@ import org.mapstruct.NullValueCheckStrategy;
         uses = PersonaMapper.class)
 public interface PacienteMapper {
 
-    @Mapping(target = "identificacionTemporal", source = "identificacion_temporal")
-    @Mapping(target = "createdAt", source = "created_at")
-    @Mapping(target = "updatedAt", source = "updated_at")
     @Mapping(target = "dosis", ignore = true)
     Paciente toEntity(PacienteDto pacienteDto);
 
-    @Mapping(target = "updated_at", source = "updatedAt")
-    @Mapping(target = "created_at", source = "createdAt")
-    @Mapping(target = "identificacion_temporal", source = "identificacionTemporal")
     PacienteDto toDto(Paciente paciente);
 
 }

@@ -1,5 +1,6 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingg.api_vacunas_panama.persistence.entity.Persona;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -51,7 +52,8 @@ public class PersonaDto implements Serializable {
             message = "El formato del teléfono no es válido")
     String telefono;
     @PastOrPresent
-    LocalDateTime fecha_nacimiento;
+    @JsonProperty(value = "fecha_nacimiento")
+    LocalDateTime fechaNacimiento;
     Short edad;
     Character sexo;
     @NotNull

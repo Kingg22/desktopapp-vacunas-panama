@@ -2,7 +2,6 @@ package com.kingg.api_vacunas_panama.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingg.api_vacunas_panama.persistence.entity.Direccion;
-import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
@@ -21,6 +20,6 @@ public record DireccionDto(UUID id,
                            @JsonProperty(defaultValue = "Por registrar")
                            String direccion,
                            @Valid DistritoDto distrito,
-                           @Nullable @PastOrPresent LocalDateTime created_at,
-                           @PastOrPresent LocalDateTime updated_at) implements Serializable {
+                           @PastOrPresent @JsonProperty(value = "created_at") LocalDateTime createdAt,
+                           @PastOrPresent @JsonProperty(value = "updated_at") LocalDateTime updatedAt) implements Serializable {
 }

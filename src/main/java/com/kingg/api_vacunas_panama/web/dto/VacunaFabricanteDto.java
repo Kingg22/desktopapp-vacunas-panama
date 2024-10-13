@@ -1,5 +1,6 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,10 +9,14 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public record VacunaFabricanteDto(UUID id_vacuna,
-                                  @NotNull @Size(max = 100) @NotBlank
-                                  String nombre_vacuna,
-                                  UUID id_fabricante,
+                                  @NotNull @Size(max = 100)
+                                  @NotBlank
+                                  @JsonProperty(value = "nombre_vacuna")
+                                  String nombreVacuna,
+                                  @JsonProperty(value = "id_fabricante")
+                                  UUID idFabricante,
                                   @NotNull
                                   @Size(max = 100)
-                                  String nombre_fabricante) implements Serializable {
+                                  @JsonProperty(value = "nombre_fabricante")
+                                  String nombreFabricante) implements Serializable {
 }

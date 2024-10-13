@@ -1,5 +1,6 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingg.api_vacunas_panama.persistence.entity.Doctor;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -27,7 +28,9 @@ public class DoctorDto extends PersonaDto implements Serializable {
     @Size(max = 100)
     String categoria;
     @PastOrPresent
-    LocalDateTime created_at;
+    @JsonProperty(value = "created_at")
+    LocalDateTime createdAt;
     @PastOrPresent
-    LocalDateTime updated_at;
+    @JsonProperty(value = "updated_at")
+    LocalDateTime updatedAt;
 }

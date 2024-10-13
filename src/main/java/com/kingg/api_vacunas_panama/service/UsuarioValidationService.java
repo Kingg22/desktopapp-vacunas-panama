@@ -49,7 +49,7 @@ class UsuarioValidationService {
 
         // validation is delegated to other specific methods depending on the role to be registered
         if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.nombre().equalsIgnoreCase("FABRICANTE"))) {
-            if (usuarioDto.licencia_fabricante() != null) {
+            if (usuarioDto.licenciaFabricante() != null) {
                 return this.validateRegistrationFabricante(usuarioDto, errors);
             } else {
                 errors.add(new ApiFailed(ApiResponseCode.MISSING_INFORMATION, "licencia_fabricante", "Los fabricantes requieren licencia autorizada por Dirección Nacional de Farmacia y Drogas del MINSA"));
@@ -90,7 +90,7 @@ class UsuarioValidationService {
     }
 
     Object validateRegistrationFabricante(@NotNull UsuarioDto usuarioDto, List<ApiFailed> errors) {
-        return this.fabricanteService.getFabricante(usuarioDto.licencia_fabricante()).map(fabricante -> {
+        return this.fabricanteService.getFabricante(usuarioDto.licenciaFabricante()).map(fabricante -> {
             if (Boolean.FALSE.equals(fabricante.getDisabled())) {
                 Usuario user = fabricante.getUsuario();
                 if (user != null && user.getId() != null) {
@@ -117,7 +117,7 @@ class UsuarioValidationService {
             errores.add(new ApiFailed(ApiResponseCode.VALIDATION_FAILED, "fecha_nacimiento", "La fecha de cumpleaños no coincide"));
         }
 
-        if (this.passwordEncoder.matches(newPassword, persona.getUsuario().getClave())) {
+        if (this.passwordEncoder.matches(newPassword, persona.getUsuario().getPassword())) {
             errores.add(new ApiFailed(ApiResponseCode.VALIDATION_FAILED, "new_password", "La nueva contraseña no puede ser igual a la contraseña actual"));
         }
 

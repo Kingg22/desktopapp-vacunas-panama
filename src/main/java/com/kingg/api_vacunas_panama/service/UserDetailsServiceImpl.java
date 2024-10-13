@@ -43,7 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     )).collect(Collectors.toSet());
 
             return User.withUsername(user.getId().toString())
-                    .password(user.getClave())
+                    .password(user.getPassword())
                     .authorities(authorities)
                     .accountExpired(false)
                     .accountLocked(false)

@@ -12,18 +12,8 @@ import org.mapstruct.NullValueCheckStrategy;
 public interface FabricanteMapper {
 
     @Mapping(target = "vacunas", ignore = true)
-    @Mapping(target = "updatedAt", source = "updated_at")
-    @Mapping(target = "createdAt", source = "created_at")
-    @Mapping(target = "contactoTelefono", source = "contacto_telefono")
-    @Mapping(target = "contactoNombre", source = "contacto_nombre")
-    @Mapping(target = "contactoCorreo", source = "contacto_correo")
     Fabricante toEntity(FabricanteDto fabricanteDto);
 
-    @Mapping(target = "updated_at", source = "updatedAt")
-    @Mapping(target = "created_at", source = "createdAt")
-    @Mapping(target = "contacto_telefono", source = "contactoTelefono")
-    @Mapping(target = "contacto_nombre", source = "contactoNombre")
-    @Mapping(target = "contacto_correo", source = "contactoCorreo")
     FabricanteDto toDto(Fabricante fabricante);
 
 }

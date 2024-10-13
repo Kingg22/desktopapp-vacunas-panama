@@ -1,5 +1,6 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
@@ -25,9 +26,12 @@ public class PacienteDto extends PersonaDto implements Serializable {
     @Pattern(regexp = "^(RN(\\\\d{1,2}?)?)-(PE|E|N|[23456789](?:AV|PI)?|1[0123]?(?:AV|PI)?)-(\\\\d{1,4})-(\\\\d{1,6})$|^NI-.+$",
             flags = {Pattern.Flag.CASE_INSENSITIVE, Pattern.Flag.MULTILINE},
             message = "El formato de id temporal no es válido")
-    String identificacion_temporal;
+    @JsonProperty(value = "identificacion_temporal")
+    String identificacionTemporal;
     @PastOrPresent
-    LocalDateTime created_at;
+    @JsonProperty(value = "created_at")
+    LocalDateTime createdAt;
     @PastOrPresent
-    LocalDateTime updated_at;
+    @JsonProperty(value = "updated_at")
+    LocalDateTime updatedAt;
 }

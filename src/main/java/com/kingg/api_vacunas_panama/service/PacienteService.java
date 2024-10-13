@@ -23,7 +23,7 @@ import java.util.UUID;
 public class PacienteService {
     private final PacienteRepository pacienteRepository;
 
-    @Cacheable(cacheNames = "cache", key = "#idPaciente")
+    @Cacheable(cacheNames = "cache", key = "'view_vacuna_enfermedad'.concat(#idPaciente)")
     public List<ViewPacienteVacunaEnfermedadDto> getViewVacunaEnfermedad(UUID idPaciente) {
         List<ViewPacienteVacunaEnfermedadDto> view = this.pacienteRepository.findAllFromViewVacunaEnfermedad(idPaciente);
         if (view.isEmpty()) {

@@ -1,39 +1,53 @@
 package com.kingg.api_vacunas_panama.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * DTO for view_pacientes_vacunas_enfermedades, details about {@link Paciente} add separate of view.
  */
 public record ViewPacienteVacunaEnfermedadDto(@JsonIgnore
-                                              UUID id_paciente,
-                                              UUID id_vacuna,
+                                              @JsonProperty(value = "id_paciente") UUID idPaciente,
+                                              @JsonProperty(value = "id_vacuna") UUID idVacuna,
                                               @NotNull @Size(max = 100) String vacuna,
-                                              @NotNull @Size(max = 2) String numero_dosis,
-                                              List<Integer> ids_enfermedades,
-                                              List<String> enfermedades_prevenidas,
-                                              Short edad_min_recomendada_meses,
-                                              @NotNull LocalDateTime fecha_aplicacion,
-                                              Double intervalo_recomendado_dosis_meses,
-                                              Integer intervalo_real_dosis_dias,
+                                              @NotNull @Size(max = 2) @JsonProperty(value = "numero_dosis") String numeroDosis,
+                                              List<IdNombreDto> enfermedades,
+                                              @JsonProperty(value = "edad_min_recomendada_meses") Short edadMinRecomendadaMeses,
+                                              @NotNull @JsonProperty(value = "fecha_aplicacion") LocalDateTime fechaAplicacion,
+                                              @JsonProperty(value = "intervalo_recomendado_dosis_meses") Double intervaloRecomendadoDosisMeses,
+                                              @JsonProperty(value = "intervalo_real_dosis_dias") Integer intervaloRealDosisDias,
                                               @Size(max = 100) String sede,
                                               @Size(max = 13) String dependencia) implements Serializable {
-    public ViewPacienteVacunaEnfermedadDto(String vacuna, String numero_dosis,
-                                           String enfermedades_prevenidas, Short edad_minima,
-                                           LocalDateTime fecha_aplicacion, Double intervalo_recomendado,
-                                           Integer intervalo_real, String sede, String dependencia, UUID id, UUID id_vacuna, String ids_enfermedades) {
-        this(id, id_vacuna, vacuna, numero_dosis.trim(),
-                Arrays.stream(ids_enfermedades.split(", ")).map(Integer::parseInt).toList(),
-                Arrays.asList(enfermedades_prevenidas.split(", ")),
-                edad_minima, fecha_aplicacion, intervalo_recomendado, intervalo_real, sede, dependencia);
+
+    public ViewPacienteVacunaEnfermedadDto(String vacuna, String numeroDosis,
+                                           String enfermedadesPrevenidas, Short edadMinima,
+                                           LocalDateTime fechaAplicacion, Double intervaloRecomendado,
+                                           Integer intervaloReal, String sede, String dependencia, UUID id, UUID idVacuna, String idsEnfermedades) {
+        this(id, idVacuna, vacuna, numeroDosis.trim(), mapEnfermedades(idsEnfermedades, enfermedadesPrevenidas),
+                edadMinima, fechaAplicacion, intervaloRecomendado, intervaloReal, sede, dependencia);
+    }
+
+    private static List<IdNombreDto> mapEnfermedades(String idsEnfermedades, String enfermedadesPrevenidas) {
+        List<Integer> ids = Arrays.stream(idsEnfermedades.split("\\s*,\\s*")).map(Integer::parseInt).toList();
+        List<String> nombres = Arrays.asList(enfermedadesPrevenidas.split("\\s*,\\s*"));
+        if (ids.isEmpty() && nombres.isEmpty()) {
+            return Collections.emptyList();
+        }
+        if (ids.size() != nombres.size()) {
+            throw new IllegalArgumentException("The ID and name lists must be the same size");
+        }
+
+        List<IdNombreDto> enfermedades = new ArrayList<>();
+        for (int i = 0; i < ids.size(); i++) {
+            enfermedades.add(new IdNombreDto(ids.get(i), nombres.get(i)));
+        }
+        return enfermedades;
     }
 }

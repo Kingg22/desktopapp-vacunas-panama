@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-class UsuarioTransactionService {
+public class UsuarioTransactionService {
     private final AccountMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
@@ -46,7 +47,7 @@ class UsuarioTransactionService {
 
         Usuario usuario = Usuario.builder()
                 .username(usuarioDto.username())
-                .clave(passwordEncoder.encode(usuarioDto.password()))
+                .password(passwordEncoder.encode(usuarioDto.password()))
                 .createdAt(LocalDateTime.now())
                 .roles(role)
                 .build();
@@ -65,12 +66,19 @@ class UsuarioTransactionService {
         return mapper.permisoToDto(permisoRepository.save(mapper.permisoDtoToPermiso(permisoDto)));
     }
 
+    @Modifying
+    public void updateLastUsed(UUID id) {
+        Usuario usuario = this.usuarioRepository.findById(id).orElseThrow();
+        usuario.setLastUsed(LocalDateTime.now());
+        usuarioRepository.save(usuario);
+    }
+
     @Transactional
     @Modifying
-    public Usuario changePasswordPersonas(Persona persona, String newPassword) {
+    public void changePasswordPersonas(Persona persona, String newPassword) {
         Usuario usuario = persona.getUsuario();
-        usuario.setClave(passwordEncoder.encode(newPassword));
-        return usuarioRepository.save(usuario);
+        usuario.setPassword(passwordEncoder.encode(newPassword));
+        usuarioRepository.save(usuario);
     }
 
     Rol convertToRoleExisting(RolDto rolDto) {

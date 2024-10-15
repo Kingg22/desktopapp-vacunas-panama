@@ -11,9 +11,6 @@ services:
       - "1440:1433"
     secrets:
       - MSSQL_SA_PASSWORD
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_PID=Express
     restart: on-failure
     volumes:
       - bd-data:/var/opt/mssql

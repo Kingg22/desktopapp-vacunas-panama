@@ -42,6 +42,7 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
   mujeres embarazadas y otras poblaciones específicas.
 - El listado de vacunas (por lo tanto, enfermedades, síntomas y 1 fabricante por vacuna) se mantiene
   el [esquema de vacunación de Panamá 2023 abril](https://www.spp.com.pa/publicaciones/documentos-interes/vacunacion/ESQUEMA-DE-VACUNACION_2023_3Abril.pdf).
+- Se debe procurar el uso correcto de las zonas horarias en campos de fechas. Recomendamos UTC.
 
 ## :hammer_and_wrench:Tecnologías Utilizadas
 

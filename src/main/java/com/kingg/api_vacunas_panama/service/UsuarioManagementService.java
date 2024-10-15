@@ -75,14 +75,11 @@ public class UsuarioManagementService {
     public IApiResponse<String, Serializable> createUser(@NotNull UsuarioDto usuarioDto) {
         IApiResponse<String, Serializable> apiResponse = new ApiResponse();
         if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.permisos() != null && !rolDto.permisos().isEmpty())) {
-            apiResponse.addWarning(ApiResponseCode.INFORMATION_IGNORED, "roles[].permisos[]",
-                    "Los permisos de los roles son ignorados en el registro. Para crear o relacionar nuevos permisos a un rol debe utilizar otra opción");
+            apiResponse.addWarning(ApiResponseCode.INFORMATION_IGNORED, "roles[].permisos[]", "Los permisos de los roles son ignorados en el registro. Para crear o relacionar nuevos permisos a un rol debe utilizar otra opción");
         }
-
-        if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.id() == null && rolDto.nombre() != null && !rolDto.nombre().isEmpty())) {
+        if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.id() == null && rolDto.nombre() != null && !rolDto.nombre().isBlank())) {
             apiResponse.addWarning(ApiResponseCode.NON_IDEMPOTENCE, "roles[]", "Utilice ID al realizar peticiones");
         }
-
         Object validationResult = this.validationService.validateRegistration(usuarioDto);
         if (validationResult instanceof List<?> failedList && !failedList.isEmpty()) {
             apiResponse.addErrors(failedList);
@@ -91,7 +88,6 @@ public class UsuarioManagementService {
             UUID uuidPersona = null;
             UUID uuidFabricante = null;
             Usuario user;
-
             switch (validationResult) {
                 case Persona persona -> {
                     user = transactionService.createUser(usuarioDto, persona, null);
@@ -114,11 +110,9 @@ public class UsuarioManagementService {
                     return apiResponse;
                 }
             }
-
             Map<String, Serializable> idAdicionales = new HashMap<>();
             idAdicionales.put("persona", uuidPersona);
             idAdicionales.put("fabricante", uuidFabricante);
-
             apiResponse.addData(this.tokenService.generateTokens(user, idAdicionales));
             apiResponse.addStatusCode(HttpStatus.CREATED);
             apiResponse.addStatus("Successful user creation");

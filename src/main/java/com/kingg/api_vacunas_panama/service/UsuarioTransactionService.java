@@ -17,7 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,7 +50,7 @@ public class UsuarioTransactionService {
         Usuario usuario = Usuario.builder()
                 .username(usuarioDto.username())
                 .password(passwordEncoder.encode(usuarioDto.password()))
-                .createdAt(LocalDateTime.now())
+                .createdAt(usuarioDto.createdAt() != null ? usuarioDto.createdAt() : LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))
                 .roles(role)
                 .build();
         if (persona != null) {
@@ -69,7 +71,7 @@ public class UsuarioTransactionService {
     @Modifying
     public void updateLastUsed(UUID id) {
         Usuario usuario = this.usuarioRepository.findById(id).orElseThrow();
-        usuario.setLastUsed(LocalDateTime.now());
+        usuario.setLastUsed(LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC));
         usuarioRepository.save(usuario);
     }
 

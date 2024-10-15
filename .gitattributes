@@ -1,0 +1,2 @@
+test-check.sh text eol=lf
+configure-db.sh text eol=lf

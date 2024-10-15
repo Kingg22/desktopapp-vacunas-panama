@@ -1,6 +1,6 @@
 # :syringe: Proyecto de Gestión de Información sobre Vacunación en Panamá
 
-![Imagen logo del proyecto](https://github.com/Kingg22/desktopapp-vacunas-panama/blob/8a9c61eaada5e77ada158bd032a3814ea4402b22/src/main/resources/images/operacionVacunas_logo_pequeno.png)
+![Imagen logo del proyecto](https://github.com/Kingg22/api-vacunas-panama/blob/de230210170feb1e29d3d4577a2092c47e5c0154/src/main/resources/images/operacionVacunas_logo_pequeno.png)
 
 ## Descripción
 
@@ -46,31 +46,30 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 
 ## :hammer_and_wrench:Tecnologías Utilizadas
 
-- [Java](https://www.java.com/es/) - Para el desarrollo de la API.
+- [Java](https://www.java.com/es/) - Lenguaje de programación para el desarrollo de la API.
 - [SQL Server](https://www.microsoft.com/es-mx/sql-server) - Para la gestión de la base de datos.
 - [Spring Boot](https://spring.io/) - Framework de Java, módulos utilizados: web, data, security, OAuth resource server,
-  validations,
-  amqp (mensajería), redis cache, testing.
-- [Spring Dotenv](https://github.com/paulschwarz/spring-dotenv) - Librería de Java para cargar las variables de entornos
-  para Spring.
+  validations, amqp (mensajería), redis cache, testing.
+- [Spring Dotenv](https://github.com/paulschwarz/spring-dotenv) - Librería para cargar las variables de entornos para
+  Spring.
 - [JDBC SQL Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16) -
   Driver para conectar con la base de datos SQL Server en Java.
-- [MapStruct](https://mapstruct.org/) - Librería de Java que genera mappers entre DTO y Entities.
-- [Lombok](https://projectlombok.org/) - Librería de Java para reducir código con anotaciones.
-- [Jackson](https://github.com/FasterXML/jackson) - Librería de Java para parsear a JSON.
-- [Error handling Spring Boot](https://github.com/wimdeblauwe/error-handling-spring-boot-starter/) - Librería de Java
-  para Spring Boot utilizada para dar Error Response uniformes y Logger de los mismos.
+- [MapStruct](https://mapstruct.org/) - Librería para generar mappers entre DTO y Entities.
+- [Lombok](https://projectlombok.org/) - Librería para reducir código con anotaciones.
+- [Jackson](https://github.com/FasterXML/jackson) - Librería para parsear a JSON.
+- [Error handling Spring Boot](https://github.com/wimdeblauwe/error-handling-spring-boot-starter/) - Librería para
+  Spring Boot utilizada para dar Error Response uniformes y Logger de los mismos.
 - [Redis](https://redis.io/) - Base de datos en memoria para almacenar datos de forma rápida.
 - [RabbitMQ](https://www.rabbitmq.com/) - Broker de mensajería entre microservicios.
 - [license-maven-plugin](https://www.mojohaus.org/license-maven-plugin/) - Plugin de Maven para generar las licencias
   del proyecto y sus dependencias.
 
 Puede encontrar más detalles de las licencias
-en [THIRD-PARTY](https://github.com/Kingg22/desktopapp-vacunas-panama/blob/fe49877f9930485f0dc147c5dc2938b427588f39/THIRD-PARTY.txt)
+en [THIRD-PARTY](https://github.com/Kingg22/api-vacunas-panama/blob/a69eb9a7e11a6df4fccfd802a4c4c46d53835099/THIRD-PARTY.txt)
 
 ## :pencil: Autores
 
-- **Rey Acosta** - _Java_ - [kingg22](https://github.com/Kingg22)
+- **Rey Acosta** - _Java_ - [Kingg22](https://github.com/Kingg22)
 
 ## Conclusión
 
@@ -125,8 +124,7 @@ y efectividad del sistema de salud en el manejo de la información sobre vacunac
 - Precisión en la Edad de los Pacientes: Utilizar eventos programados o jobs de SQL Server Agent para actualizar la edad
   de los pacientes diariamente si lo necesitan.
 - Implementar un sistema de autocompletado para evitar duplicidades y mejorar la precisión en la base de datos.
-    -
-    Crear [diccionarios de texto](https://learn.microsoft.com/es-es/sql/t-sql/statements/create-fulltext-index-transact-sql?view=sql-server-ver16)
+- Crear [diccionarios de texto](https://learn.microsoft.com/es-es/sql/t-sql/statements/create-fulltext-index-transact-sql?view=sql-server-ver16)
     en el idioma de los datos para facilitar este feature y reducir el tiempo de búsquedas.
 - Expediente Digital: Integrar reacciones a vacunas, efectos secundarios y contraindicaciones en el expediente digital
   del paciente.

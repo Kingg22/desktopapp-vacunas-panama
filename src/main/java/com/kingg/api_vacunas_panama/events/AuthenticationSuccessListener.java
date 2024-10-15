@@ -15,8 +15,10 @@ public class AuthenticationSuccessListener implements ApplicationListener<Authen
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
-        String userId = event.getAuthentication().getName();
-        usuarioTransactionService.updateLastUsed(UUID.fromString(userId));
+        if (event.getAuthentication() != null && event.getAuthentication().isAuthenticated()) {
+            String userId = event.getAuthentication().getName();
+            usuarioTransactionService.updateLastUsed(UUID.fromString(userId));
+        }
     }
 
 }

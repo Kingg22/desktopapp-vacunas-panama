@@ -1,6 +1,6 @@
 # :syringe: Proyecto de Gestión de Información sobre Vacunación en Panamá
 
-![Imagen logo del proyecto](https://github.com/Kingg22/desktopapp-vacunas-panama/blob/8a9c61eaada5e77ada158bd032a3814ea4402b22/src/main/resources/images/operacionVacunas_logo_pequeno.png)
+![Imagen logo del proyecto](https://github.com/Kingg22/api-vacunas-panama/blob/e6bb6deff78f7bf086a95dab50a0f76dada5bd00/src/main/resources/images/icon.png)
 
 ## Descripción
 
@@ -14,7 +14,7 @@ solución está diseñada utilizando tecnologías como Java, Python y SQL Server
 incluyendo la precisión de los datos, la seguridad, la interoperabilidad y la facilidad de uso. Es un proyecto
 universitario y solo realizamos la interfaz de usuario para pacientes, doctores y administradores por temas de tiempo.
 
-:rotating_light: Proyecto deprecado. Cambiado a una [API REST Full](https://github.com/Kingg22/desktopapp-vacunas-panama/tree/refactor/api) :rotating_light:
+:rotating_light: Proyecto deprecado. Cambiado a una [API REST Full](https://github.com/Kingg22/api-vacunas-panama/) :rotating_light:
 
 :white_check_mark: Proyecto terminado para la universidad :white_check_mark:
 
@@ -124,7 +124,7 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
 
 ## :pencil: Autores
 
-- **Rey Acosta** - _Java_ - [kingg22](https://github.com/Kingg22)
+- **Rey Acosta** - _Java_ - [Kingg22](https://github.com/Kingg22)
 - **Patrick Villarroel** - _Python_ - [patrickvillarroel](https://github.com/patrickvillarroel)
 
 ## Conclusión

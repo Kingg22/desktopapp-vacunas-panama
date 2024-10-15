@@ -1,6 +1,6 @@
 # :syringe: Proyecto de Gestión de Información sobre Vacunación en Panamá
 
-![Imagen logo del proyecto](https://github.com/Kingg22/api-vacunas-panama/blob/de230210170feb1e29d3d4577a2092c47e5c0154/src/main/resources/images/operacionVacunas_logo_pequeno.png)
+![Imagen logo del proyecto](https://github.com/Kingg22/api-vacunas-panama/blob/e6bb6deff78f7bf086a95dab50a0f76dada5bd00/src/main/resources/images/icon.png)
 
 ## Descripción
 
@@ -65,7 +65,7 @@ La base de datos será utilizada a nivel nacional por centros médicos estatales
   del proyecto y sus dependencias.
 
 Puede encontrar más detalles de las licencias
-en [THIRD-PARTY](https://github.com/Kingg22/api-vacunas-panama/blob/a69eb9a7e11a6df4fccfd802a4c4c46d53835099/THIRD-PARTY.txt)
+en [THIRD-PARTY](https://github.com/Kingg22/api-vacunas-panama/blob/e6bb6deff78f7bf086a95dab50a0f76dada5bd00/THIRD-PARTY.txt)
 
 ## :pencil: Autores
 

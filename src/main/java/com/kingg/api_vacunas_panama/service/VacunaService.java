@@ -54,7 +54,7 @@ public class VacunaService {
         log.debug("Paciente ID: {}", paciente.getId());
         log.debug("Vacuna ID: {}", vacuna.getId());
         log.debug("Sede ID: {}", sede.getId());
-        this.pacientesDosisRepository.findTopByPacienteAndDosis_IdVacunaOrderByCreatedAtDesc(paciente, vacuna).ifPresent(
+        this.pacientesDosisRepository.findTopByPacienteAndDosis_VacunaOrderByCreatedAtDesc(paciente, vacuna).ifPresent(
                 ultimaDosis -> {
                     if (ultimaDosis.getDosis() != null) {
                         log.debug("Dosis encontrada ID: {}", ultimaDosis.getDosis().getId());
@@ -71,10 +71,10 @@ public class VacunaService {
         Dosis dosis = Dosis.builder()
                 .fechaAplicacion(insertDosisDto.fechaAplicacion() != null ? insertDosisDto.fechaAplicacion() : LocalDateTime.now(ZoneOffset.UTC))
                 .numeroDosis(insertDosisDto.numeroDosis())
-                .idVacuna(vacuna)
-                .idSede(sede)
+                .vacuna(vacuna)
+                .sede(sede)
                 .lote(insertDosisDto.lote())
-                .idDoctor(doctor)
+                .doctor(doctor)
                 .createdAt(LocalDateTime.now(ZoneOffset.UTC))
                 .build();
         dosis = dosisRepository.save(dosis);

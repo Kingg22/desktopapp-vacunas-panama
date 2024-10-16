@@ -28,7 +28,7 @@ public class Provincia {
     @Column(name = "nombre", nullable = false, length = 30)
     private String nombre;
 
-    @OneToMany(mappedBy = "idProvincia")
+    @OneToMany(mappedBy = "provincia")
     private Set<Distrito> distritos = new LinkedHashSet<>();
 
 }

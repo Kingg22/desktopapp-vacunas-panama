@@ -38,7 +38,7 @@ public class Sede extends Entidad {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "idSede")
+    @OneToMany(mappedBy = "sede")
     private Set<Dosis> dosis = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "sede")

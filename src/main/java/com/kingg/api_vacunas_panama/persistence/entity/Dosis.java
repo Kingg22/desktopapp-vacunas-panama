@@ -37,16 +37,16 @@ public class Dosis {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vacuna", nullable = false)
-    private Vacuna idVacuna;
+    private Vacuna vacuna;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sede", nullable = false)
-    private Sede idSede;
+    private Sede sede;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor")
-    private Doctor idDoctor;
+    private Doctor doctor;
 
     @Size(max = 50)
     @Nationalized

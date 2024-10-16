@@ -50,7 +50,7 @@ public class Vacuna {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "idVacuna")
+    @OneToMany(mappedBy = "vacuna")
     private Set<Dosis> dosis = new LinkedHashSet<>();
 
     @ManyToMany(mappedBy = "vacunas")

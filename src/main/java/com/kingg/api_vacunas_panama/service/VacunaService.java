@@ -1,5 +1,6 @@
 package com.kingg.api_vacunas_panama.service;
 
+import com.kingg.api_vacunas_panama.configuration.RabbitMQConfiguration;
 import com.kingg.api_vacunas_panama.persistence.entity.*;
 import com.kingg.api_vacunas_panama.persistence.repository.DosisRepository;
 import com.kingg.api_vacunas_panama.persistence.repository.PacientesDosisRepository;
@@ -12,6 +13,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class VacunaService {
+    private final RabbitTemplate rabbitTemplate;
     private final DosisMapper dosisMapper;
     private final VacunaRepository vacunaRepository;
     private final DosisRepository dosisRepository;
@@ -90,7 +93,11 @@ public class VacunaService {
         pacientesDosis.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
         pacientesDosisRepository.save(pacientesDosis);
 
-        return dosisMapper.toDto(dosis);
+        DosisDto dosisDto = dosisMapper.toDto(dosis);
+
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.QUEUE_DOSIS, dosisDto);
+
+        return dosisDto;
     }
 
     Paciente validatePacienteExist(UUID pacienteId) {

@@ -16,7 +16,8 @@ services:
       - bd-data:/var/opt/mssql
       - ./test-check.sh:/usr/src/app/test-check.sh
     networks:
-      - network-vacunas
+      network-vacunas:
+        ipv4_address: 172.22.0.2
     healthcheck:
       test: [ "CMD-SHELL", "/usr/src/app/test-check.sh" ]
       interval: 10s
@@ -35,7 +36,8 @@ services:
       - cache-persistence:/data
       - ./redis.conf:/redis-stack.conf
     networks:
-      - network-vacunas
+      network-vacunas:
+        ipv4_address: 172.22.0.3
 
   rabbitmq-vacunas:
     image: rabbitmq:management-alpine
@@ -50,28 +52,30 @@ services:
       - ./rabbitmq_definitions.json:/etc/rabbitmq/definitions.json
       - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     networks:
-      - network-vacunas
+      network-vacunas:
+        ipv4_address: 172.22.0.4
 
-        #api-vacunas:
-        #image: api-vacunas-panama:0.0.1
-        #container_name: api-spring-vacunas
-        #env_file:
-        #- ".env"
-        #secrets:
-        #- JWT_PUBLIC_KEY
-        #- JWT_PRIVATE_KEY
+  api-vacunas:
+    image: api-vacunas-panama:0.0.1
+    container_name: api-spring-vacunas
+    env_file:
+      - "docker.env"
+    secrets:
+      - JWT_PUBLIC_KEY
+      - JWT_PRIVATE_KEY
         #restart: on-failure
-        #depends_on:
-        #bd-vacunas:
-        #condition: service_healthy
-        #redis-vacunas:
-        #condition: service_started
-        #rabbitmq-vacunas:
-      #condition: service_started
-      #ports:
-      #- "8080:8080"
-      #networks:
-      #- network-vacunas
+    depends_on:
+      bd-vacunas:
+        condition: service_healthy
+      redis-vacunas:
+        condition: service_started
+      rabbitmq-vacunas:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    networks:
+      network-vacunas:
+        ipv4_address: 172.22.0.5
 
 volumes:
   bd-data:
@@ -84,11 +88,15 @@ volumes:
 networks:
   network-vacunas:
     attachable: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
 
 secrets:
   MSSQL_SA_PASSWORD:
     file: db.env
-    #JWT_PUBLIC_KEY:
-    #file: public.pem
-    #JWT_PRIVATE_KEY:
-    #file: private.pem
+  JWT_PUBLIC_KEY:
+    file: public.pem
+  JWT_PRIVATE_KEY:
+    file: private.pem

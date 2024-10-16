@@ -9,13 +9,19 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfiguration {
-    public static final String QUEUE_NAME = "vacunas_panama";
+    public static final String QUEUE_GENERAL = "vacunas_panama";
+    public static final String QUEUE_DOSIS = "vacunas_dosis";
     public static final String EXCHANGE_NAME = "vacunas_panama";
     public static final String ROUTING_KEY = "vacunas_panama";
 
     @Bean
     public Queue queue() {
-        return new org.springframework.amqp.core.Queue(QUEUE_NAME, true);
+        return new org.springframework.amqp.core.Queue(QUEUE_GENERAL, true);
+    }
+
+    @Bean
+    public Queue queueDosis() {
+        return new org.springframework.amqp.core.Queue(QUEUE_DOSIS, true);
     }
 
     @Bean

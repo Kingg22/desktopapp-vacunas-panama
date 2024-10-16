@@ -13,8 +13,12 @@ import java.util.UUID;
 public class DoctorService {
     private final DoctorRepository doctorRepository;
 
-    public Optional<Doctor> getDoctorByUserID(UUID idUser) {
-        return doctorRepository.findByUsuario_Id(idUser);
+    Optional<Doctor> getDoctorByUserID(UUID idUser) {
+        return this.doctorRepository.findByUsuario_Id(idUser);
+    }
+
+    Optional<Doctor> getDoctorById(UUID idDoctor) {
+        return this.doctorRepository.findById(idDoctor);
     }
 
 }

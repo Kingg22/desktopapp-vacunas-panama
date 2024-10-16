@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -17,21 +18,22 @@ public class PacientesDosis {
     @EmbeddedId
     private PacientesDosisId id;
 
-    @MapsId("paciente")
+    @MapsId("idPaciente")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "paciente", nullable = false)
     private Paciente paciente;
 
+    @MapsId("idDosis")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "dosis", nullable = false)
+    private Dosis dosis;
+
     @NotNull
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @MapsId("dosis")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dosis")
-    private Dosis dosis;
 
 }

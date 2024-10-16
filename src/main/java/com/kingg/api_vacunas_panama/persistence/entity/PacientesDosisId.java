@@ -19,27 +19,27 @@ import java.util.UUID;
 @Embeddable
 public class PacientesDosisId implements Serializable {
     @Serial
-    private static final long serialVersionUID = 8900323780600888879L;
+    private static final long serialVersionUID = 1758063147274896824L;
     @NotNull
     @Column(name = "paciente", nullable = false)
-    private UUID paciente;
+    private UUID idPaciente;
 
     @NotNull
     @Column(name = "dosis", nullable = false)
-    private UUID dosis;
+    private UUID idDosis;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         PacientesDosisId entity = (PacientesDosisId) o;
-        return Objects.equals(this.paciente, entity.paciente) &&
-                Objects.equals(this.dosis, entity.dosis);
+        return Objects.equals(this.idPaciente, entity.idPaciente) &&
+                Objects.equals(this.idDosis, entity.idDosis);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(paciente, dosis);
+        return Objects.hash(idPaciente, idDosis);
     }
 
 }

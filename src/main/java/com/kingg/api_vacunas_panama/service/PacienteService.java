@@ -33,8 +33,12 @@ public class PacienteService {
         }
     }
 
-    public Optional<Paciente> getPacienteByUserID(@NotNull UUID idUser) {
+    Optional<Paciente> getPacienteByUserID(@NotNull UUID idUser) {
         return this.pacienteRepository.findByUsuario_Id(idUser);
+    }
+
+    Optional<Paciente> getPacienteById(@NotNull UUID idPaciente) {
+        return this.pacienteRepository.findById(idPaciente);
     }
 
 }

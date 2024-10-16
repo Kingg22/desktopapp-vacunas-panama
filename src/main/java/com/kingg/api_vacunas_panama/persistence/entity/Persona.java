@@ -27,6 +27,7 @@ import java.util.UUID;
 })
 public class Persona {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
 

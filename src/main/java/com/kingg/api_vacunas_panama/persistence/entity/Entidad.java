@@ -23,6 +23,7 @@ import java.util.UUID;
 })
 public abstract class Entidad {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
 

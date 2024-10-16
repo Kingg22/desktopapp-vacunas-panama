@@ -171,11 +171,7 @@ git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
 > [!NOTE]
 > Puede utilizar un archivo .env o docker secrets, ambas deben utilizar los nombres dados en .env.example al menos que
 > modifique application.properties
-> ~~Si se decide por usar docker secrets puede eliminar la dependencia _spring-dotenv_~~
-
-> [!WARNING]
-> No hemos podido solucionar un error de conexión entre contenedores, por lo tanto, deberá utilizar la API en su entorno
-> local con JDK 21.
+> Si se decide por usar docker secrets puede eliminar la dependencia _spring-dotenv_
 
 1. Modificar vacunas-init.sql el login colocando un usuario y una contraseña segura al inicio del script. 
 
@@ -217,18 +213,18 @@ git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
 6. Configurar su contraseña sa debe crear un archivo llamado db.env donde **solo coloque la contraseña en texto plano**.
    Esta es necesaria para los scripts configure-db.sh y el test-check.sh del contenedor de la base de datos,
    sin esta no se puede construir la imagen ni verificar si el estado es saludable.
-7. **OMITIR** ~~Crear la docker images de la API con su IDE o terminal con maven.~~
+7. Crear la docker images de la API con su IDE o terminal con maven.
 
-   ~~Para Windows:~~
+   Para Windows:
     ``` powershell
     ./mvnw.cmd clean spring-boot:build-image -DskipTests=true 
     ```
-   ~~Otros SO:~~
+   Otros SO:
    ```bash
    ./mvnw clean spring-boot:build-image -DskipTests=true 
    ```
-   ~~Este proceso puede demorar un poco la primera vez, se recomienda el flag skip tests para disminuir el tiempo de
-   espera.~~
+   Este proceso puede demorar un poco la primera vez, se recomienda el flag skip tests para disminuir el tiempo de
+   espera.
 8. Crear la imagen de la base de datos
    ```` bash
     docker compose --progress=plain build bd-vacunas
@@ -255,21 +251,23 @@ git clone https://github.com/Kingg22/desktopapp-vacunas-panama.git
 10. Crear las contraseñas para RabbitMQ
 
     Debe hacer una copia de rabbitmq_definitions_example.json a un archivo rabbitmq_definitions.json
-    En las claves "password_hash" utilizando [SHA-512](https://sha512.online/), las credenciales de producer debe
-    colocarla en RBMQ_USER, RBMQ_PASSWORD respectivamente.
+    En las claves "password_hash" utilizando el contenedor rabbitmq:
+    ```bash 
+    rabbitmqctl hash_password <contraseña>
+    ```
+    las credenciales de producer debe colocarla en RBMQ_USER, RBMQ_PASSWORD (como texto plano, no hash) respectivamente.
     Cambiar la contraseña de guest aunque no tiene permisos definidos en rabbitmq.conf
 
     _Opcional:_ En el caso del fronted que se conecta a este servicio de mensajería debe usar las credenciales de
     consumer.
     Si ya tiene pensado los nombres para las queues, exchange y routing puede crear en el json y darle permisos
-    exclusivos a esa queue,
-    sino spring creará los objetos mencionados con el nombre dado en RabbitMQConfig, se recomienda restringir el
-    consumer a leer esa queue.
+    exclusivos a esa queue, sino spring creará los objetos mencionados con el nombre dado en RabbitMQConfig, se 
+    recomienda restringir el consumer a leer esa queue.
 
 > [!TIP]
 > En resumen debe crear el login de la base de datos (1), crear el certificado RSA para JWT (3), contraseña para sa de
 > la base de datos (6), generar la imagen de la base de datos (7, 8, 9), contraseña de RabbitMQ (10).
-> El resto de variables tienen valores por defectos.
+> El resto de variables tienen valores por defectos para utilizar la API fuera de docker.
 
 ### 4. Levantar todos los contenedores:
 
@@ -300,24 +298,18 @@ Observación: Si cambia el puerto que se expone en docker-compose.yaml debe apun
 3. Utilizar el cliente Postman o su propio API client al endpoint configurado.
 
 > [!IMPORTANT]
-> ¿Qué se espera de su configuración? ~~Utilice docker secrets con los nombres dados, elimine la dependencia de
-spring-dotenv
-> al momento de generar la imagen con spring elimine el .env~~ Para pruebas de la API fuera de docker entonces utilice
-> .env
-> Eliminar los valores por defecto de application.properties y rabbitmq_definitions.json, ya que, tendrá valores
-> personalizados.
+> ¿Qué se espera de su configuración? Utilice docker secrets con los nombres dados, elimine la dependencia de
+> spring-dotenv al momento de generar la imagen con spring elimine el .env Para pruebas de la API fuera de docker 
+> entonces utilice .env Eliminar los valores por defecto de application.properties y rabbitmq_definitions.json, ya que, 
+> tendrá valores personalizados.
 
 Cualquier error verificar la versión del Java JDK 21, tu archivo .env o docker secrets configurados para cada servicio,
 certificado RSA mínima 2056, la base de datos vacunas esté creada con éxito con todos sus objetos y con las credenciales
-correctas,
-el login tiene su usuario con los permisos mínimos requeridos, la contraseña de sa es válida según los mínimos de SQL
-Server y
-no contiene caracteres especiales (puede causar conflictos con los scripts de configuración), ningún contenedor está en
-bucle de reinicio por errores, colocar spring con el flag -Ddebug y des comentar el bloque de líneas relacionadas a logs
-en
-application.properties para encontrar cuál es el error si es el contenedor de la API, eliminar el health_check en el
-service
-bd-vacunas y su dependencia en la API.
+correctas, el login tiene su usuario con los permisos mínimos requeridos, la contraseña de sa es válida según los 
+requisitos mínimos de SQL Server y no contenga caracteres especiales (puede causar conflictos con los scripts de 
+configuración), ningún contenedor está en bucle de reinicio por errores, colocar spring con el flag -Ddebug y des 
+comentar el bloque de líneas relacionadas a logs en application.properties para encontrar cuál es el error si es el 
+contenedor de la API, eliminar el health_check en el service bd-vacunas y su dependencia en la API.
 
 > [!NOTE]
 > En docker compose utilizamos images latest en todos los servicios, Redis y RabbitMQ pueden cambiarse a su versión sin

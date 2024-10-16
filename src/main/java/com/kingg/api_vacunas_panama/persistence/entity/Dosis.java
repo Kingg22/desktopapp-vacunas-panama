@@ -30,7 +30,6 @@ public class Dosis {
     @Column(name = "fecha_aplicacion", nullable = false)
     private LocalDateTime fechaAplicacion;
 
-    @Size(max = 2)
     @NotNull
     @Column(name = "numero_dosis", nullable = false, length = 2, columnDefinition = "CHAR(2)")
     private NumDosisEnum numeroDosis;

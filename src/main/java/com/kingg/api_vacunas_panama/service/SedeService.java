@@ -8,6 +8,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service for {@link Sede}.
@@ -21,4 +23,9 @@ public class SedeService {
     public List<UUIDNombreDto> getIdNombreSedes() {
         return sedeRepository.findAllIdAndNombre();
     }
+
+    Optional<Sede> getSedeById(UUID id) {
+        return sedeRepository.findById(id);
+    }
+
 }

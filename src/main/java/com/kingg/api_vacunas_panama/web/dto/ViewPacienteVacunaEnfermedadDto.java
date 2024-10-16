@@ -3,6 +3,7 @@ package com.kingg.api_vacunas_panama.web.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
+import com.kingg.api_vacunas_panama.util.NumDosisEnum;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -17,7 +18,7 @@ public record ViewPacienteVacunaEnfermedadDto(@JsonIgnore
                                               @JsonProperty(value = "id_paciente") UUID idPaciente,
                                               @JsonProperty(value = "id_vacuna") UUID idVacuna,
                                               @NotNull @Size(max = 100) String vacuna,
-                                              @NotNull @Size(max = 2) @JsonProperty(value = "numero_dosis") String numeroDosis,
+                                              @NotNull @JsonProperty(value = "numero_dosis") NumDosisEnum numeroDosis,
                                               List<IdNombreDto> enfermedades,
                                               @JsonProperty(value = "edad_min_recomendada_meses") Short edadMinRecomendadaMeses,
                                               @NotNull @JsonProperty(value = "fecha_aplicacion") LocalDateTime fechaAplicacion,
@@ -30,7 +31,7 @@ public record ViewPacienteVacunaEnfermedadDto(@JsonIgnore
                                            String enfermedadesPrevenidas, Short edadMinima,
                                            LocalDateTime fechaAplicacion, Double intervaloRecomendado,
                                            Integer intervaloReal, String sede, String dependencia, UUID id, UUID idVacuna, String idsEnfermedades) {
-        this(id, idVacuna, vacuna, numeroDosis.trim(), mapEnfermedades(idsEnfermedades, enfermedadesPrevenidas),
+        this(id, idVacuna, vacuna, NumDosisEnum.fromValue(numeroDosis.trim().toUpperCase()), mapEnfermedades(idsEnfermedades, enfermedadesPrevenidas),
                 edadMinima, fechaAplicacion, intervaloRecomendado, intervaloReal, sede, dependencia);
     }
 

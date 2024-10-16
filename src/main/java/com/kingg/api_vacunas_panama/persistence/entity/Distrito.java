@@ -32,7 +32,7 @@ public class Distrito {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "provincia", nullable = false)
-    private Provincia idProvincia;
+    private Provincia provincia;
 
     @OneToMany(mappedBy = "distrito")
     @JsonBackReference

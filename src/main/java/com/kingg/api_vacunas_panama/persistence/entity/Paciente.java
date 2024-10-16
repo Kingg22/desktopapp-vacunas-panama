@@ -39,7 +39,9 @@ import java.util.UUID;
                 "id," +
                 "id_vacuna," +
                 "ids_enfermedades " +
-                "FROM view_pacientes_vacunas_enfermedades WHERE id = :id",
+                "FROM view_pacientes_vacunas_enfermedades " +
+                "WHERE id = :id " +
+                "ORDER BY fecha_aplicacion DESC",
         resultSetMapping = "view_paciente_vacuna_enfermedad"
 )
 @SqlResultSetMapping(name = "view_paciente_vacuna_enfermedad", classes = @ConstructorResult(

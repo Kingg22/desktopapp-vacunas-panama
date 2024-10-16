@@ -2,8 +2,10 @@ package com.kingg.api_vacunas_panama.util;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public enum NumDosisEnum {
+public enum NumDosisEnum implements Serializable {
     DOSIS_PREVIA("P"),
     PRIMERA_DOSIS("1"),
     SEGUNDA_DOSIS("2"),

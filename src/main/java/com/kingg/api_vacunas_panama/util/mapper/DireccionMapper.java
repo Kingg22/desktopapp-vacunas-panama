@@ -20,10 +20,8 @@ public interface DireccionMapper {
 
     ProvinciaDto provinciaToDto(Provincia provincia);
 
-    @Mapping(target = "provincia", source = "idProvincia")
     DistritoDto distritoToDto(Distrito distrito);
 
-    @Mapping(target = "idProvincia", source = "provincia")
     @Mapping(target = "direcciones", ignore = true)
     Distrito distritoDtoToEntity(DistritoDto distritoDto);
 

@@ -16,15 +16,10 @@ public class NumDosisEnumConverter implements AttributeConverter<NumDosisEnum, S
 
     @Override
     public NumDosisEnum convertToEntityAttribute(String dbData) {
-        if (dbData == null) {
+        if (dbData == null || dbData.isBlank()) {
             return null;
         }
         dbData = dbData.trim().toUpperCase();
-        for (NumDosisEnum num : NumDosisEnum.values()) {
-            if (num.getValue().equalsIgnoreCase(dbData)) {
-                return num;
-            }
-        }
-        throw new IllegalArgumentException("Not supported value of Numero Dosis: " + dbData);
+        return NumDosisEnum.fromValue(dbData);
     }
 }

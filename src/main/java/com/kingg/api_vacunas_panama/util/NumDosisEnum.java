@@ -44,4 +44,13 @@ public enum NumDosisEnum {
         }
     }
 
+    public static NumDosisEnum fromValue(String value) {
+        for (NumDosisEnum numDosisEnum : NumDosisEnum.values()) {
+            if (numDosisEnum.value.equals(value)) {
+                return numDosisEnum;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant founded for: " + value);
+    }
+
 }

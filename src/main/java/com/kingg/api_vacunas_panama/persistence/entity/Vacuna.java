@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -39,11 +40,11 @@ public class Vacuna {
     @Column(name = "intervalo_dosis_1_2_meses")
     private Float intervaloDosisMeses;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "dosis_maxima", columnDefinition = "CHAR(2)")
     private NumDosisEnum dosisMaxima;
 
     @Column(name = "created_at")
+    @CreatedDate
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")

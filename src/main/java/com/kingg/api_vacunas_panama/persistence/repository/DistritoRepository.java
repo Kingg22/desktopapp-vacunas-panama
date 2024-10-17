@@ -7,6 +7,10 @@ import java.util.Optional;
 
 public interface DistritoRepository extends JpaRepository<Distrito, Short> {
 
-    Optional<Distrito> findByNombre(String nombre);
+    Optional<Distrito> findDistritoByNombre(String nombre);
+
+    Optional<Distrito> findDistritoByNombreAndProvincia_Id(String nombre, Short idProvincia);
+
+    Optional<Distrito> findDistritoByNombreAndProvincia_Nombre(String nombre, String nombreProvincia);
 
 }

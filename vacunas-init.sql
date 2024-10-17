@@ -4447,7 +4447,7 @@ EXEC sp_vacunas_gestionar_paciente NULL, 'MN0987654Q', NULL, 'Camila', N'Hernán
 EXEC sp_vacunas_insert_dosis NULL, NULL, 'MN0987654Q', NULL, '2021-02-10 14:00', '1', NULL, 'BCG', NULL,
      'Centro de salud Pacora', NULL, NULL, NULL, NULL;
 GO
-EXEC sp_vacunas_gestionar_paciente NULL, 'MN876543C', NULL, N'Tomás', N'nzález', N'Sánchez', '1991-08-15', 'M',
+EXEC sp_vacunas_gestionar_paciente NULL, 'MN876543C', NULL, N'Tomás', N'González', N'Sánchez', '1991-08-15', 'M',
      '+50766072222', 'tomas.nzalez1@example.com', 'ACTIVO', 'Calle 6, Local 8', N'Panamá', NULL;
 EXEC sp_vacunas_insert_dosis NULL, NULL, 'MN876543C', NULL, '2023-03-15 16:00', '1', NULL, 'Hep A (Euvax) (infantil)',
      NULL, 'Centro de salud Pacora', NULL, NULL, NULL, NULL;

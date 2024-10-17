@@ -6,10 +6,14 @@ import com.kingg.api_vacunas_panama.persistence.entity.PacientesDosisId;
 import com.kingg.api_vacunas_panama.persistence.entity.Vacuna;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface PacientesDosisRepository extends JpaRepository<PacientesDosis, PacientesDosisId> {
 
     Optional<PacientesDosis> findTopByPacienteAndDosis_VacunaOrderByCreatedAtDesc(Paciente paciente, Vacuna vacuna);
+
+    List<PacientesDosis> findAllByPaciente_Id(UUID idPaciente);
 
 }

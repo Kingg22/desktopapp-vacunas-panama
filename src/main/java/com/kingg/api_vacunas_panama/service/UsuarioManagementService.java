@@ -78,7 +78,7 @@ public class UsuarioManagementService {
             apiResponse.addWarning(ApiResponseCode.INFORMATION_IGNORED, "roles[].permisos[]", "Los permisos de los roles son ignorados en el registro. Para crear o relacionar nuevos permisos a un rol debe utilizar otra opción");
         }
         if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.id() == null && rolDto.nombre() != null && !rolDto.nombre().isBlank())) {
-            apiResponse.addWarning(ApiResponseCode.NON_IDEMPOTENCE, "roles[]", "Utilice ID al realizar peticiones");
+            apiResponse.addError(ApiResponseCode.NON_IDEMPOTENCE, "roles[]", "Utilice ID al realizar peticiones");
         }
         Object validationResult = this.validationService.validateRegistration(usuarioDto);
         if (validationResult instanceof List<?> failedList && !failedList.isEmpty()) {

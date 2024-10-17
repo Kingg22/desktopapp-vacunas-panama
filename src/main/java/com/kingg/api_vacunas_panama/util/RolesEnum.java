@@ -18,4 +18,13 @@ public enum RolesEnum {
         this.priority = priority;
     }
 
+    public static RolesEnum getByPriority(int priority) {
+        for (RolesEnum role : RolesEnum.values()) {
+            if (role.priority == priority) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("No Roles Enum found with priority " + priority);
+    }
+
 }

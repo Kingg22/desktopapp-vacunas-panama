@@ -50,9 +50,4 @@ public class Direccion {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Direccion(String direccion, Distrito distrito) {
-        this.direccion = direccion;
-        this.distrito = distrito;
-    }
-
 }

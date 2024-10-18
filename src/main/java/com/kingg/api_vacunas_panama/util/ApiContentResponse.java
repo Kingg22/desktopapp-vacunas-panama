@@ -78,9 +78,9 @@ public class ApiContentResponse implements Serializable {
     }
 
     public void addWarnings(@NotNull List<?> warningsList) {
-        for (Object error : warningsList) {
-            if (error instanceof ApiFailed failed) {
-                this.errors.add(failed);
+        for (Object warning : warningsList) {
+            if (warning instanceof ApiFailed failed) {
+                this.warnings.add(failed);
             } else {
                 throw new IllegalArgumentException("This implementation only accepts ApiFailed");
             }
@@ -89,6 +89,10 @@ public class ApiContentResponse implements Serializable {
 
     public boolean hasErrors() {
         return !this.errors.isEmpty();
+    }
+
+    public boolean hasWarnings() {
+        return !this.warnings.isEmpty();
     }
 
 }

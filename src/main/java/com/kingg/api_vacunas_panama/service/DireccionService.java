@@ -79,12 +79,17 @@ public class DireccionService {
     }
 
     public Optional<Direccion> getDireccionByDto(@NotNull @Valid DireccionDto direccionDto) {
-        Optional<Direccion> direccion = direccionRepository.findById(direccionDto.id());
-        if (direccion.isEmpty() && direccionDto.distrito().id() != null) {
+        Optional<Direccion> direccion = Optional.empty();
+        if (direccionDto.id() != null) {
+           direccion = direccionRepository.findById(direccionDto.id());
+        }
+        if (direccion.isEmpty() && direccionDto.distrito() != null && direccionDto.distrito().id() != null) {
             direccion = direccionRepository.findDireccionByDireccionAndDistrito_Id(direccionDto.direccion(), direccionDto.distrito().id());
-        } else if (direccion.isEmpty() && direccionDto.distrito().nombre() != null) {
+        }
+        if (direccion.isEmpty() && direccionDto.distrito() != null && direccionDto.distrito().nombre() != null) {
             direccion = direccionRepository.findDireccionByDireccionAndDistrito_Nombre(direccionDto.direccion(), direccionDto.distrito().nombre());
-        } else if (direccion.isEmpty()) {
+        }
+        if (direccion.isEmpty()) {
             direccion = direccionRepository.findDireccionByDireccionContainingIgnoreCase(direccionDto.direccion());
         }
         return direccion;

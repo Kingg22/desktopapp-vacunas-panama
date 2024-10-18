@@ -48,7 +48,8 @@ class UsuarioValidationService {
         }
 
         // validation is delegated to other specific methods depending on the role to be registered
-        if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto.nombre().equalsIgnoreCase("FABRICANTE"))) {
+        if (usuarioDto.roles().stream().anyMatch(rolDto -> rolDto != null && rolDto.nombre() != null && !rolDto.nombre().isBlank()
+                && rolDto.nombre().equalsIgnoreCase("FABRICANTE"))) {
             if (usuarioDto.licenciaFabricante() != null) {
                 return this.validateRegistrationFabricante(usuarioDto, errors);
             } else {

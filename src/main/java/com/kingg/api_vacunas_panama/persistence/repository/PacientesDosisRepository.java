@@ -16,4 +16,6 @@ public interface PacientesDosisRepository extends JpaRepository<PacientesDosis, 
 
     List<PacientesDosis> findAllByPaciente_Id(UUID idPaciente);
 
+    List<PacientesDosis> findAllByPaciente_IdAndDosis_Vacuna_Id(UUID idPaciente, UUID idVacuna);
+
 }

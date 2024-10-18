@@ -60,4 +60,6 @@ public interface IApiResponse<S, T> extends Serializable {
 
     boolean hasErrors();
 
+    boolean hasWarnings();
+
 }

@@ -54,6 +54,7 @@ public class PersonaDto implements Serializable {
     @PastOrPresent
     @JsonProperty(value = "fecha_nacimiento")
     LocalDateTime fechaNacimiento;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Short edad;
     Character sexo;
     @NotNull

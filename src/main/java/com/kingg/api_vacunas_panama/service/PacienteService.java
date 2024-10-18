@@ -3,6 +3,7 @@ package com.kingg.api_vacunas_panama.service;
 import com.kingg.api_vacunas_panama.persistence.entity.Direccion;
 import com.kingg.api_vacunas_panama.persistence.entity.Paciente;
 import com.kingg.api_vacunas_panama.persistence.repository.PacienteRepository;
+import com.kingg.api_vacunas_panama.util.FormatterUtil;
 import com.kingg.api_vacunas_panama.util.mapper.DireccionMapper;
 import com.kingg.api_vacunas_panama.util.mapper.PacienteMapper;
 import com.kingg.api_vacunas_panama.web.dto.PacienteDto;
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -42,7 +44,7 @@ public class PacienteService {
         }
     }
 
-    public PacienteDto createPaciente(@NotNull PacienteDto pacienteDto) {
+    private void validateCreatePaciente(PacienteDto pacienteDto) throws IllegalArgumentException {
         if ((pacienteDto.getNombre() == null || pacienteDto.getNombre().isBlank()) && (pacienteDto.getNombre2() == null || pacienteDto.getNombre2().isBlank())) {
             throw new IllegalArgumentException("El nombre del paciente es obligatorio");
         }
@@ -56,6 +58,14 @@ public class PacienteService {
         }
         if (pacienteDto.getFechaNacimiento() == null) {
             throw new IllegalArgumentException("La fecha del paciente es obligatorio");
+        }
+    }
+
+    @Transactional
+    public PacienteDto createPaciente(@NotNull PacienteDto pacienteDto) throws IllegalArgumentException {
+        validateCreatePaciente(pacienteDto);
+        if (pacienteDto.getCedula() != null) {
+            pacienteDto.setCedula(FormatterUtil.formatCedula(pacienteDto.getCedula()));
         }
         Direccion direccion;
         if (pacienteDto.getDireccion() != null) {

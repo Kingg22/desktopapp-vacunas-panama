@@ -90,7 +90,7 @@ public class TokenService {
 
     private Collection<String> getRolesPermisos(@NotNull UsuarioDto usuarioDto) {
         return usuarioDto.roles().stream()
-                .flatMap(role -> role.permisos() != null ? Stream.concat(
+                .flatMap(role -> role != null && role.permisos() != null ? Stream.concat(
                         Stream.of("ROLE_" + role.nombre().toUpperCase()),
                         role.permisos().stream().map(PermisoDto::nombre)) : null
                 ).toList();
@@ -98,7 +98,7 @@ public class TokenService {
 
     private Collection<String> getRolesPermisos(@NotNull Usuario usuario) {
         return usuario.getRoles().stream()
-                .flatMap(rol -> rol.getPermisos() != null ? Stream.concat(
+                .flatMap(rol -> rol != null && rol.getPermisos() != null ? Stream.concat(
                         Stream.of("ROLE_" + rol.getNombre().toUpperCase()),
                         rol.getPermisos().stream().map(Permiso::getNombre)) : null
                 ).toList();

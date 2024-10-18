@@ -21,5 +21,7 @@ public record DireccionDto(UUID id,
                            String direccion,
                            @Valid DistritoDto distrito,
                            @PastOrPresent @JsonProperty(value = "created_at") LocalDateTime createdAt,
-                           @PastOrPresent @JsonProperty(value = "updated_at") LocalDateTime updatedAt) implements Serializable {
+                           @PastOrPresent
+                           @JsonProperty(value = "updated_at", access = JsonProperty.Access.READ_ONLY)
+                           LocalDateTime updatedAt) implements Serializable {
 }
